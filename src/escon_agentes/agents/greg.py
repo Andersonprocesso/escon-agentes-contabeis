@@ -32,19 +32,26 @@ Gere mensagens prontas para WhatsApp e e-mail. Não invente que o extrato chegou
             if has_ofx:
                 continue
             pending.append(c.id)
+            tel = c.telefone or (c.contatos or {}).get("telefone") or (c.contatos or {}).get("whatsapp")
+            email = c.email or (c.contatos or {}).get("email")
+            canal = "WhatsApp" if tel else ("e-mail" if email else "este canal")
             msg = (
                 f"Olá! Aqui é o time da {self.settings.escon_office_name}. "
                 f"Para fecharmos a contabilidade de {c.name}, "
                 f"precisamos do extrato bancário (OFX ou PDF) deste mês. "
-                f"Pode nos enviar por este canal? Obrigado!"
+                f"Pode nos enviar por {canal}? Obrigado!"
             )
+            if not tel and not email:
+                msg += " ⚠ Cadastro sem telefone/e-mail — complete no painel de Clientes."
             messages.append(
                 {
                     "client_id": c.id,
                     "name": c.name,
-                    "whatsapp": c.contatos.get("whatsapp"),
-                    "email": c.contatos.get("email"),
+                    "telefone": tel,
+                    "whatsapp": tel,
+                    "email": email,
                     "message": msg,
+                    "canais_ok": bool(tel or email),
                 }
             )
             task_board.add_task(

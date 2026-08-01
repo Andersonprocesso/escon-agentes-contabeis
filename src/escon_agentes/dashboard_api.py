@@ -16,7 +16,15 @@ from escon_agentes.config import PROJECT_ROOT, get_settings
 from escon_agentes.llm import list_model_aliases
 from escon_agentes.orchestrator import Orchestrator
 from escon_agentes.tools import requests_board, tasks as task_board
-from escon_agentes.tools.clients import as_table, ensure_demo_clients, list_clients
+from escon_agentes.tools.clients import (
+    as_table,
+    create_client,
+    delete_client,
+    ensure_demo_clients,
+    get_client,
+    list_clients,
+    update_client,
+)
 from escon_agentes.workflows.contmatic_pipeline import run_contmatic_pipeline
 
 # ensure_demo_clients só no bootstrap vazio (import Radar preenche a carteira)
@@ -100,14 +108,65 @@ def create_app() -> FastAPI:
         }
 
     @app.get("/api/clients")
-    def clients() -> list[dict[str, Any]]:
+    def clients() -> dict[str, Any]:
         s = get_settings()
-        # não recria demos se já houver carteira real do Radar
         rows = as_table(list_clients(s.clients_dir))
         if not rows:
             ensure_demo_clients(s.clients_dir)
             rows = as_table(list_clients(s.clients_dir))
-        return rows
+        return {"total": len(rows), "clients": rows}
+
+    class ClientIn(BaseModel):
+        id: Optional[str] = None
+        name: Optional[str] = None
+        nome: Optional[str] = None
+        cnpj: Optional[str] = None
+        regime: Optional[str] = None
+        banco: Optional[str] = None
+        banco_principal: Optional[str] = None
+        telefone: Optional[str] = None
+        whatsapp: Optional[str] = None
+        email: Optional[str] = None
+        uf: Optional[str] = None
+        tags: Optional[list[str]] = None
+
+    @app.post("/api/clients")
+    def clients_create(body: ClientIn) -> dict[str, Any]:
+        s = get_settings()
+        try:
+            c = create_client(s.clients_dir, body.model_dump(exclude_none=True), s.inbox)
+        except ValueError as e:
+            raise HTTPException(400, str(e)) from e
+        return {"ok": True, "client": as_table([c])[0]}
+
+    @app.get("/api/clients/{client_id}")
+    def clients_get(client_id: str) -> dict[str, Any]:
+        s = get_settings()
+        c = get_client(s.clients_dir, client_id)
+        if not c:
+            raise HTTPException(404, "Cliente não encontrado")
+        return as_table([c])[0]
+
+    @app.patch("/api/clients/{client_id}")
+    def clients_patch(client_id: str, body: ClientIn) -> dict[str, Any]:
+        s = get_settings()
+        c = update_client(s.clients_dir, client_id, body.model_dump(exclude_none=True))
+        if not c:
+            raise HTTPException(404, "Cliente não encontrado")
+        return {"ok": True, "client": as_table([c])[0]}
+
+    @app.delete("/api/clients/{client_id}")
+    def clients_delete(client_id: str, remove_inbox: bool = False) -> dict[str, Any]:
+        s = get_settings()
+        ok = delete_client(
+            s.clients_dir,
+            client_id,
+            inbox_root=s.inbox,
+            remove_inbox=remove_inbox,
+        )
+        if not ok:
+            raise HTTPException(404, "Cliente não encontrado")
+        return {"ok": True, "deleted": client_id}
 
     @app.get("/api/runs")
     def runs(limit: int = 40) -> list[dict[str, Any]]:

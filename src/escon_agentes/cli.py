@@ -144,18 +144,76 @@ def list_clients_cmd() -> None:
     ensure_demo_clients(s.clients_dir)
     rows = as_table(list_clients(s.clients_dir))
     table = Table(title=f"Clientes ({len(rows)})")
-    for col in ("id", "nome", "cnpj", "regime", "uf", "source"):
+    for col in ("id", "nome", "telefone", "email", "regime", "uf"):
         table.add_column(col)
     for r in rows:
         table.add_row(
-            r["id"][:18],
-            (r["nome"] or "")[:40],
-            r["cnpj"] or "",
+            r["id"][:14],
+            (r["nome"] or "")[:32],
+            (r.get("telefone") or r.get("whatsapp") or "")[:16],
+            (r.get("email") or "")[:28],
             r["regime"],
             r.get("uf") or "",
-            r.get("source") or "",
         )
     console.print(table)
+
+
+@app.command("edit-client")
+def edit_client_cmd(
+    client_id: str = typer.Argument(...),
+    nome: Optional[str] = typer.Option(None, "--nome"),
+    telefone: Optional[str] = typer.Option(None, "--telefone"),
+    email: Optional[str] = typer.Option(None, "--email"),
+    regime: Optional[str] = typer.Option(None, "--regime"),
+    banco: Optional[str] = typer.Option(None, "--banco"),
+    uf: Optional[str] = typer.Option(None, "--uf"),
+) -> None:
+    """Edita telefone, e-mail e dados do cliente (para Greg/cobranças)."""
+    from escon_agentes.tools.clients import update_client
+
+    s = get_settings()
+    patch = {
+        k: v
+        for k, v in {
+            "nome": nome,
+            "telefone": telefone,
+            "email": email,
+            "regime": regime,
+            "banco": banco,
+            "uf": uf,
+        }.items()
+        if v is not None
+    }
+    if not patch:
+        console.print("[yellow]Nada a alterar. Use --telefone, --email, --nome…[/yellow]")
+        raise typer.Exit(1)
+    c = update_client(s.clients_dir, client_id, patch)
+    if not c:
+        console.print(f"[red]Cliente não encontrado: {client_id}[/red]")
+        raise typer.Exit(1)
+    console.print(
+        f"[green]OK[/green] {c.name} | tel={c.telefone or '-'} | email={c.email or '-'}"
+    )
+
+
+@app.command("delete-client")
+def delete_client_cmd(
+    client_id: str = typer.Argument(...),
+    yes: bool = typer.Option(False, "--yes", "-y"),
+) -> None:
+    """Exclui cliente do cadastro local."""
+    from escon_agentes.tools.clients import delete_client, get_client
+
+    s = get_settings()
+    c = get_client(s.clients_dir, client_id)
+    if not c:
+        console.print(f"[red]Não encontrado: {client_id}[/red]")
+        raise typer.Exit(1)
+    if not yes:
+        console.print(f"Confirme exclusão de {c.name} ({client_id}) com --yes")
+        raise typer.Exit(1)
+    delete_client(s.clients_dir, client_id, inbox_root=s.inbox, remove_inbox=False)
+    console.print(f"[green]Excluído:[/green] {client_id}")
 
 
 @app.command("import-radar")

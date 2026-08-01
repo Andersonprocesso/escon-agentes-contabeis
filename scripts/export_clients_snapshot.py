@@ -25,6 +25,10 @@ def main() -> None:
             "regime": r.get("regime"),
             "uf": r.get("uf"),
             "source": r.get("source"),
+            "telefone": r.get("telefone") or r.get("whatsapp"),
+            "whatsapp": r.get("whatsapp") or r.get("telefone"),
+            "email": r.get("email"),
+            "banco": r.get("banco"),
         }
         for r in rows
     ]

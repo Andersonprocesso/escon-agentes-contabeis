@@ -95,6 +95,9 @@ class ClientProfile(BaseModel):
     regime: str = "simples_nacional"  # simples_nacional | lucropresumido | lucroreal | mei
     banco_principal: str = "itau"
     contatos: dict[str, str] = Field(default_factory=dict)
+    # Contatos diretos (também espelhados em contatos para Greg/Bella)
+    telefone: str | None = None
+    email: str | None = None
     tags: list[str] = Field(default_factory=list)
     # Integração Radar Escon
     radar_id: str | None = None

@@ -318,9 +318,79 @@
 
         <section class="panel" id="tab-clients">
           <div class="scroll">
-            <input id="client-filter" placeholder="Filtrar por nome ou CNPJ…" style="width:100%;margin-bottom:.75rem;padding:.65rem .8rem;border-radius:10px;border:1px solid var(--border);background:var(--panel2);color:var(--text);font:inherit" />
+            <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:.75rem;align-items:center">
+              <input id="client-filter" placeholder="Filtrar por nome, CNPJ, telefone ou e-mail…" style="flex:1;min-width:180px;padding:.65rem .8rem;border-radius:10px;border:1px solid var(--border);background:var(--panel2);color:var(--text);font:inherit" />
+              <button type="button" class="btn" id="btn-client-new" style="width:auto">+ Novo cliente</button>
+            </div>
+            <p class="muted" id="clients-persist-note" style="margin-bottom:.75rem"></p>
+            <div id="client-form" class="service-card hidden" style="cursor:default;margin-bottom:1rem">
+              <h3 id="client-form-title">Cliente</h3>
+              <input type="hidden" id="cf-id-original" />
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:.55rem;margin-top:.5rem">
+                <div>
+                  <label class="muted">ID / CNPJ (sem máscara)</label>
+                  <input id="cf-id" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--border);background:var(--panel2);color:var(--text);font:inherit" />
+                </div>
+                <div>
+                  <label class="muted">CNPJ formatado</label>
+                  <input id="cf-cnpj" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--border);background:var(--panel2);color:var(--text);font:inherit" />
+                </div>
+                <div style="grid-column:1/-1">
+                  <label class="muted">Razão social / nome</label>
+                  <input id="cf-nome" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--border);background:var(--panel2);color:var(--text);font:inherit" />
+                </div>
+                <div>
+                  <label class="muted">Telefone / WhatsApp</label>
+                  <input id="cf-telefone" placeholder="5511999990000" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--border);background:var(--panel2);color:var(--text);font:inherit" />
+                </div>
+                <div>
+                  <label class="muted">E-mail</label>
+                  <input id="cf-email" type="email" placeholder="financeiro@empresa.com.br" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--border);background:var(--panel2);color:var(--text);font:inherit" />
+                </div>
+                <div>
+                  <label class="muted">Regime</label>
+                  <select id="cf-regime" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--border);background:var(--panel2);color:var(--text);font:inherit">
+                    <option value="simples_nacional">Simples Nacional</option>
+                    <option value="mei">MEI</option>
+                    <option value="lucropresumido">Lucro Presumido</option>
+                    <option value="lucroreal">Lucro Real</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="muted">Banco principal</label>
+                  <select id="cf-banco" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--border);background:var(--panel2);color:var(--text);font:inherit">
+                    <option value="itau">Itaú</option>
+                    <option value="bradesco">Bradesco</option>
+                    <option value="bb">Banco do Brasil</option>
+                    <option value="santander">Santander</option>
+                    <option value="cef">Caixa</option>
+                    <option value="inter">Inter</option>
+                    <option value="nubank">Nubank</option>
+                    <option value="sicoob">Sicoob</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="muted">UF</label>
+                  <input id="cf-uf" maxlength="2" style="width:100%;padding:.5rem;border-radius:8px;border:1px solid var(--border);background:var(--panel2);color:var(--text);font:inherit" />
+                </div>
+              </div>
+              <div style="display:flex;gap:.5rem;margin-top:.85rem;flex-wrap:wrap">
+                <button type="button" class="btn" id="cf-save" style="width:auto">Salvar</button>
+                <button type="button" class="btn ghost" id="cf-cancel" style="width:auto">Cancelar</button>
+              </div>
+              <p class="err" id="cf-err"></p>
+            </div>
             <table>
-              <thead><tr><th>ID</th><th>Nome</th><th>CNPJ</th><th>Regime</th><th>UF</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>CNPJ</th>
+                  <th>Telefone</th>
+                  <th>E-mail</th>
+                  <th>Regime</th>
+                  <th></th>
+                </tr>
+              </thead>
               <tbody id="clients-body"></tbody>
             </table>
           </div>
@@ -614,7 +684,13 @@
         api("/api/clients"),
       ]);
       state.agents = agentsRes.agents || [];
-      state.clients = clientsRes.clients || [];
+      state.clients = clientsRes.clients || (Array.isArray(clientsRes) ? clientsRes : []);
+      const note = document.getElementById("clients-persist-note");
+      if (note) {
+        note.textContent = clientsRes.persistence
+          ? "Persistência: " + clientsRes.persistence
+          : "Telefone e e-mail alimentam cobrança de extratos (Greg) e outros contatos.";
+      }
 
       const max = agentById("max");
       document.getElementById("channel-max").innerHTML =
@@ -704,26 +780,159 @@
 
     function renderClients() {
       const q = (document.getElementById("client-filter").value || "").toLowerCase();
-      const rows = state.clients.filter(
-        (c) =>
-          !q ||
-          (c.nome || "").toLowerCase().includes(q) ||
-          (c.cnpj || "").includes(q) ||
-          (c.id || "").includes(q)
-      );
-      document.getElementById("clients-body").innerHTML = rows
-        .slice(0, 200)
-        .map(
-          (c) =>
-            `<tr>
-              <td class="mono">${c.id}</td>
-              <td>${escapeHtml(c.nome || "")}</td>
-              <td class="mono">${c.cnpj || ""}</td>
-              <td>${c.regime || ""}</td>
-              <td>${c.uf || ""}</td>
-            </tr>`
-        )
-        .join("");
+      const rows = state.clients.filter((c) => {
+        if (!q) return true;
+        const blob = [
+          c.nome,
+          c.name,
+          c.cnpj,
+          c.id,
+          c.telefone,
+          c.whatsapp,
+          c.email,
+          c.regime,
+        ]
+          .join(" ")
+          .toLowerCase();
+        return blob.includes(q);
+      });
+      document.getElementById("clients-body").innerHTML =
+        rows
+          .slice(0, 300)
+          .map((c) => {
+            const tel = c.telefone || c.whatsapp || "—";
+            const em = c.email || "—";
+            const missing = !c.telefone && !c.whatsapp && !c.email;
+            return `<tr>
+              <td>${escapeHtml(c.nome || c.name || "")}
+                <div class="mono muted">${escapeHtml(c.id || "")}</div>
+                ${missing ? '<div class="muted" style="color:var(--amber);font-size:.72rem">sem telefone/e-mail</div>' : ""}
+              </td>
+              <td class="mono">${escapeHtml(c.cnpj || "")}</td>
+              <td class="mono">${escapeHtml(tel)}</td>
+              <td>${escapeHtml(em)}</td>
+              <td>${escapeHtml(c.regime || "")}</td>
+              <td style="white-space:nowrap">
+                <button type="button" class="chip" data-edit="${escapeHtml(c.id)}">Editar</button>
+                <button type="button" class="chip" data-del="${escapeHtml(c.id)}" style="color:var(--danger)">Excluir</button>
+              </td>
+            </tr>`;
+          })
+          .join("") ||
+        '<tr><td colspan="6" class="muted">Nenhum cliente</td></tr>';
+
+      document.querySelectorAll("[data-edit]").forEach((b) => {
+        b.onclick = () => openClientForm(b.getAttribute("data-edit"));
+      });
+      document.querySelectorAll("[data-del]").forEach((b) => {
+        b.onclick = () => deleteClient(b.getAttribute("data-del"));
+      });
+    }
+
+    function openClientForm(id) {
+      const form = document.getElementById("client-form");
+      form.classList.remove("hidden");
+      document.getElementById("cf-err").textContent = "";
+      const isNew = !id;
+      document.getElementById("client-form-title").textContent = isNew
+        ? "Novo cliente"
+        : "Editar cliente";
+      document.getElementById("cf-id").disabled = !isNew;
+      if (isNew) {
+        document.getElementById("cf-id-original").value = "";
+        document.getElementById("cf-id").value = "";
+        document.getElementById("cf-cnpj").value = "";
+        document.getElementById("cf-nome").value = "";
+        document.getElementById("cf-telefone").value = "";
+        document.getElementById("cf-email").value = "";
+        document.getElementById("cf-regime").value = "simples_nacional";
+        document.getElementById("cf-banco").value = "itau";
+        document.getElementById("cf-uf").value = "";
+        return;
+      }
+      const c = state.clients.find((x) => x.id === id);
+      if (!c) return;
+      document.getElementById("cf-id-original").value = c.id;
+      document.getElementById("cf-id").value = c.id;
+      document.getElementById("cf-cnpj").value = c.cnpj || "";
+      document.getElementById("cf-nome").value = c.nome || c.name || "";
+      document.getElementById("cf-telefone").value = c.telefone || c.whatsapp || "";
+      document.getElementById("cf-email").value = c.email || "";
+      document.getElementById("cf-regime").value = c.regime || "simples_nacional";
+      document.getElementById("cf-banco").value = c.banco || c.banco_principal || "itau";
+      document.getElementById("cf-uf").value = c.uf || "";
+      form.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    function closeClientForm() {
+      document.getElementById("client-form").classList.add("hidden");
+      document.getElementById("cf-err").textContent = "";
+    }
+
+    async function saveClientForm() {
+      const err = document.getElementById("cf-err");
+      err.textContent = "";
+      const original = document.getElementById("cf-id-original").value;
+      const payload = {
+        id: document.getElementById("cf-id").value.trim(),
+        nome: document.getElementById("cf-nome").value.trim(),
+        cnpj: document.getElementById("cf-cnpj").value.trim(),
+        telefone: document.getElementById("cf-telefone").value.trim(),
+        email: document.getElementById("cf-email").value.trim(),
+        regime: document.getElementById("cf-regime").value,
+        banco: document.getElementById("cf-banco").value,
+        uf: document.getElementById("cf-uf").value.trim().toUpperCase(),
+      };
+      if (!payload.nome) {
+        err.textContent = "Informe o nome";
+        return;
+      }
+      try {
+        if (original) {
+          await api("/api/clients/" + encodeURIComponent(original), {
+            method: "PATCH",
+            body: JSON.stringify(payload),
+          });
+        } else {
+          if (!payload.id) {
+            err.textContent = "Informe o ID (CNPJ sem máscara)";
+            return;
+          }
+          await api("/api/clients", {
+            method: "POST",
+            body: JSON.stringify(payload),
+          });
+        }
+        await reloadClients();
+        closeClientForm();
+      } catch (e) {
+        err.textContent = e.message;
+      }
+    }
+
+    async function deleteClient(id) {
+      const c = state.clients.find((x) => x.id === id);
+      if (!confirm(`Excluir cliente ${c ? c.nome || c.name : id}?`)) return;
+      try {
+        await api("/api/clients/" + encodeURIComponent(id), { method: "DELETE" });
+        await reloadClients();
+        closeClientForm();
+      } catch (e) {
+        alert(e.message);
+      }
+    }
+
+    async function reloadClients() {
+      const clientsRes = await api("/api/clients");
+      state.clients = clientsRes.clients || clientsRes || [];
+      if (!Array.isArray(state.clients)) state.clients = [];
+      const note = document.getElementById("clients-persist-note");
+      if (note) {
+        note.textContent = clientsRes.persistence
+          ? "Persistência: " + clientsRes.persistence
+          : "Telefone e e-mail são usados pelo Greg (cobrança de extratos) e contatos dos agentes.";
+      }
+      renderClients();
     }
 
     // Tabs
@@ -749,6 +958,9 @@
       }
     });
     document.getElementById("client-filter").addEventListener("input", renderClients);
+    document.getElementById("btn-client-new").addEventListener("click", () => openClientForm(null));
+    document.getElementById("cf-save").addEventListener("click", saveClientForm);
+    document.getElementById("cf-cancel").addEventListener("click", closeClientForm);
     document.querySelectorAll("[data-prompt]").forEach((b) => {
       b.addEventListener("click", () => {
         document.querySelector('.tab[data-tab="chat"]').click();

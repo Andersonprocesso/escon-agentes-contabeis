@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12988306222"
+    "whatsapp": "12988306222",
+    "telefone": "12988306222",
+    "email": "financeiro@alumax.example"
   },
+  "telefone": "12988306222",
+  "email": "financeiro@alumax.example",
   "tags": [
     "radar",
     "simples_nacional"

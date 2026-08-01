@@ -70,8 +70,20 @@ def row_to_client(row: dict[str, Any]) -> ClientProfile:
             cfg = {}
 
     contatos: dict[str, str] = {}
-    if isinstance(cfg, dict) and cfg.get("whatsapp"):
-        contatos["whatsapp"] = str(cfg["whatsapp"])
+    tel = None
+    email = None
+    if isinstance(cfg, dict):
+        if cfg.get("whatsapp"):
+            tel = str(cfg["whatsapp"]).strip()
+            contatos["whatsapp"] = tel
+            contatos["telefone"] = tel
+        if cfg.get("telefone"):
+            tel = str(cfg["telefone"]).strip()
+            contatos["telefone"] = tel
+            contatos.setdefault("whatsapp", tel)
+        if cfg.get("email"):
+            email = str(cfg["email"]).strip()
+            contatos["email"] = email
 
     client_id = slug_id(razao, str(cnpj_raw))
     tags = ["radar"]
@@ -84,6 +96,8 @@ def row_to_client(row: dict[str, Any]) -> ClientProfile:
         cnpj=format_cnpj(str(cnpj_raw)) if cnpj_raw else None,
         regime=regime,
         contatos=contatos,
+        telefone=tel,
+        email=email,
         tags=tags,
         radar_id=str(radar_id) if radar_id else None,
         uf=(row.get("uf") or None),
@@ -134,11 +148,30 @@ def import_radar_clients(
         dest = clients_dir / f"{client.id}.json"
         if dest.exists():
             existing = json.loads(dest.read_text(encoding="utf-8"))
-            # preserva banco_principal e tags manuais
+            # preserva banco, tags e contatos manuais (telefone/e-mail editados no painel)
             if existing.get("banco_principal"):
                 client.banco_principal = existing["banco_principal"]
-            extra_tags = [t for t in (existing.get("tags") or []) if t not in client.tags and t != "demo"]
+            extra_tags = [
+                t for t in (existing.get("tags") or []) if t not in client.tags and t != "demo"
+            ]
             client.tags = list(dict.fromkeys(client.tags + extra_tags))
+            ex_cont = existing.get("contatos") or {}
+            cont = dict(client.contatos or {})
+            for k in ("telefone", "whatsapp", "email"):
+                if ex_cont.get(k) and not cont.get(k):
+                    cont[k] = ex_cont[k]
+            if existing.get("telefone") and not client.telefone:
+                cont["telefone"] = existing["telefone"]
+                cont.setdefault("whatsapp", existing["telefone"])
+            if existing.get("email") and not client.email:
+                cont["email"] = existing["email"]
+            client = client.model_copy(
+                update={
+                    "contatos": cont,
+                    "telefone": client.telefone or existing.get("telefone") or cont.get("telefone"),
+                    "email": client.email or existing.get("email") or cont.get("email"),
+                }
+            )
             updated.append(client.id)
         else:
             created.append(client.id)

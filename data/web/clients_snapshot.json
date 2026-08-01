@@ -7,7 +7,11 @@
       "cnpj": "05.026.121/0001-26",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12988998264",
+      "whatsapp": "12988998264",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "07603336000198",
@@ -15,7 +19,11 @@
       "cnpj": "07.603.336/0001-98",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12988306222",
+      "whatsapp": "12988306222",
+      "email": "financeiro@alumax.example",
+      "banco": "itau"
     },
     {
       "id": "08910102000156",
@@ -23,7 +31,11 @@
       "cnpj": "08.910.102/0001-56",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12982579592",
+      "whatsapp": "12982579592",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "09054390000157",
@@ -31,7 +43,11 @@
       "cnpj": "09.054.390/0001-57",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12974026441",
+      "whatsapp": "12974026441",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "09165407000143",
@@ -39,7 +55,11 @@
       "cnpj": "09.165.407/0001-43",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12997335363",
+      "whatsapp": "12997335363",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "09377184000188",
@@ -47,7 +67,11 @@
       "cnpj": "09.377.184/0001-88",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12974035169",
+      "whatsapp": "12974035169",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "09476106000130",
@@ -55,7 +79,11 @@
       "cnpj": "09.476.106/0001-30",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12988650946",
+      "whatsapp": "12988650946",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "09502266000107",
@@ -63,7 +91,11 @@
       "cnpj": "09.502.266/0001-07",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12974012164",
+      "whatsapp": "12974012164",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "10790362000187",
@@ -71,7 +103,11 @@
       "cnpj": "10.790.362/0001-87",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12988108003",
+      "whatsapp": "12988108003",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "11123711000170",
@@ -79,7 +115,11 @@
       "cnpj": "11.123.711/0001-70",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12991827048",
+      "whatsapp": "12991827048",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "11356356000189",
@@ -87,7 +127,11 @@
       "cnpj": "11.356.356/0001-89",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12997335363",
+      "whatsapp": "12997335363",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "13181386000127",
@@ -95,7 +139,11 @@
       "cnpj": "13.181.386/0001-27",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12997247053",
+      "whatsapp": "12997247053",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "13404722000153",
@@ -103,7 +151,11 @@
       "cnpj": "13.404.722/0001-53",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12997534372",
+      "whatsapp": "12997534372",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "14158978000190",
@@ -111,7 +163,11 @@
       "cnpj": "14.158.978/0001-90",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12992565136",
+      "whatsapp": "12992565136",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "14785936000180",
@@ -119,7 +175,11 @@
       "cnpj": "14.785.936/0001-80",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12988616169",
+      "whatsapp": "12988616169",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "14795919000123",
@@ -127,7 +187,11 @@
       "cnpj": "14.795.919/0001-23",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12988256199",
+      "whatsapp": "12988256199",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "17003634000109",
@@ -135,7 +199,11 @@
       "cnpj": "17.003.634/0001-09",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12988105976",
+      "whatsapp": "12988105976",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "17718505000199",
@@ -143,7 +211,11 @@
       "cnpj": "17.718.505/0001-99",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12997651356",
+      "whatsapp": "12997651356",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "18286014000189",
@@ -151,7 +223,11 @@
       "cnpj": "18.286.014/0001-89",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "1239433491",
+      "whatsapp": "1239433491",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "18979394000137",
@@ -159,7 +235,11 @@
       "cnpj": "18.979.394/0001-37",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12981176865",
+      "whatsapp": "12981176865",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "21854833000190",
@@ -167,7 +247,11 @@
       "cnpj": "21.854.833/0001-90",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12988161417",
+      "whatsapp": "12988161417",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "22493414000132",
@@ -175,7 +259,11 @@
       "cnpj": "22.493.414/0001-32",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12991154355",
+      "whatsapp": "12991154355",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "23313543000164",
@@ -183,7 +271,11 @@
       "cnpj": "23.313.543/0001-64",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12997828318",
+      "whatsapp": "12997828318",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "23343420000176",
@@ -191,7 +283,11 @@
       "cnpj": "23.343.420/0001-76",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12996125554",
+      "whatsapp": "12996125554",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "24563612000150",
@@ -199,7 +295,11 @@
       "cnpj": "24.563.612/0001-50",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12988272376",
+      "whatsapp": "12988272376",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "25369270000103",
@@ -207,7 +307,11 @@
       "cnpj": "25.369.270/0001-03",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12974035169",
+      "whatsapp": "12974035169",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "26154520000142",
@@ -215,7 +319,11 @@
       "cnpj": "26.154.520/0001-42",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12981225369",
+      "whatsapp": "12981225369",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "26163929000125",
@@ -223,7 +331,11 @@
       "cnpj": "26.163.929/0001-25",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12997054321",
+      "whatsapp": "12997054321",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "27136383000186",
@@ -231,7 +343,11 @@
       "cnpj": "27.136.383/0001-86",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12997785005",
+      "whatsapp": "12997785005",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "27726492000153",
@@ -239,7 +355,11 @@
       "cnpj": "27.726.492/0001-53",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12988310412",
+      "whatsapp": "12988310412",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "29077304000139",
@@ -247,7 +367,11 @@
       "cnpj": "29.077.304/0001-39",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12988095286",
+      "whatsapp": "12988095286",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "29182502000162",
@@ -255,7 +379,11 @@
       "cnpj": "29.182.502/0001-62",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12992598501",
+      "whatsapp": "12992598501",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "29410864000163",
@@ -263,7 +391,11 @@
       "cnpj": "29.410.864/0001-63",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12992054377",
+      "whatsapp": "12992054377",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "29580079000159",
@@ -271,7 +403,11 @@
       "cnpj": "29.580.079/0001-59",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12997198913",
+      "whatsapp": "12997198913",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "30102736000131",
@@ -279,7 +415,11 @@
       "cnpj": "30.102.736/0001-31",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12997797400",
+      "whatsapp": "12997797400",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "30557890000106",
@@ -287,7 +427,11 @@
       "cnpj": "30.557.890/0001-06",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12982788000",
+      "whatsapp": "12982788000",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "32226778000100",
@@ -295,7 +439,11 @@
       "cnpj": "32.226.778/0001-00",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12981605593",
+      "whatsapp": "12981605593",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "32620352000136",
@@ -303,7 +451,11 @@
       "cnpj": "32.620.352/0001-36",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12996125554",
+      "whatsapp": "12996125554",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "33141246000132",
@@ -311,7 +463,11 @@
       "cnpj": "33.141.246/0001-32",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12981525461",
+      "whatsapp": "12981525461",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "34316047000180",
@@ -319,7 +475,11 @@
       "cnpj": "34.316.047/0001-80",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12982671217",
+      "whatsapp": "12982671217",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "34454481000127",
@@ -327,7 +487,11 @@
       "cnpj": "34.454.481/0001-27",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12988077252",
+      "whatsapp": "12988077252",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "34766165000190",
@@ -335,7 +499,11 @@
       "cnpj": "34.766.165/0001-90",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12997224530",
+      "whatsapp": "12997224530",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "34928980000109",
@@ -343,7 +511,11 @@
       "cnpj": "34.928.980/0001-09",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12996125554",
+      "whatsapp": "12996125554",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "35154641000185",
@@ -351,7 +523,11 @@
       "cnpj": "35.154.641/0001-85",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12982317313",
+      "whatsapp": "12982317313",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "35599073000126",
@@ -359,7 +535,11 @@
       "cnpj": "35.599.073/0001-26",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12996222711",
+      "whatsapp": "12996222711",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "37347712000191",
@@ -367,7 +547,11 @@
       "cnpj": "37.347.712/0001-91",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12996698857",
+      "whatsapp": "12996698857",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "37350724000175",
@@ -375,7 +559,11 @@
       "cnpj": "37.350.724/0001-75",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12996125554",
+      "whatsapp": "12996125554",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "37747220000193",
@@ -383,7 +571,11 @@
       "cnpj": "37.747.220/0001-93",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "11964287119",
+      "whatsapp": "11964287119",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "37986227000168",
@@ -391,7 +583,11 @@
       "cnpj": "37.986.227/0001-68",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12982985505",
+      "whatsapp": "12982985505",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "39145168000120",
@@ -399,7 +595,11 @@
       "cnpj": "39.145.168/0001-20",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12996864607",
+      "whatsapp": "12996864607",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "39452045000132",
@@ -407,7 +607,11 @@
       "cnpj": "39.452.045/0001-32",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12981299773",
+      "whatsapp": "12981299773",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "39779255000130",
@@ -415,7 +619,11 @@
       "cnpj": "39.779.255/0001-30",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12981024669",
+      "whatsapp": "12981024669",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "41167257000110",
@@ -423,7 +631,11 @@
       "cnpj": "41.167.257/0001-10",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12988161417",
+      "whatsapp": "12988161417",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "41797393000193",
@@ -431,7 +643,11 @@
       "cnpj": "41.797.393/0001-93",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "5512983076613",
+      "whatsapp": "5512983076613",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "42279160000161",
@@ -439,7 +655,11 @@
       "cnpj": "42.279.160/0001-61",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12997935341",
+      "whatsapp": "12997935341",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "42679395000140",
@@ -447,7 +667,11 @@
       "cnpj": "42.679.395/0001-40",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12981535028",
+      "whatsapp": "12981535028",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "42836060000199",
@@ -455,7 +679,11 @@
       "cnpj": "42.836.060/0001-99",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12991119976",
+      "whatsapp": "12991119976",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "43140969000170",
@@ -463,7 +691,11 @@
       "cnpj": "43.140.969/0001-70",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12997758572",
+      "whatsapp": "12997758572",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "43437159000180",
@@ -471,7 +703,11 @@
       "cnpj": "43.437.159/0001-80",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "1239075522",
+      "whatsapp": "1239075522",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "45100511000113",
@@ -479,7 +715,11 @@
       "cnpj": "45.100.511/0001-13",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12997534372",
+      "whatsapp": "12997534372",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "46040860000150",
@@ -487,7 +727,11 @@
       "cnpj": "46.040.860/0001-50",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12988161417",
+      "whatsapp": "12988161417",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "46273818000189",
@@ -495,7 +739,11 @@
       "cnpj": "46.273.818/0001-89",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12991282025",
+      "whatsapp": "12991282025",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "48360661000154",
@@ -503,7 +751,11 @@
       "cnpj": "48.360.661/0001-54",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12988161417",
+      "whatsapp": "12988161417",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "48821036000162",
@@ -511,7 +763,11 @@
       "cnpj": "48.821.036/0001-62",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12981024669",
+      "whatsapp": "12981024669",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "52201387000148",
@@ -519,7 +775,11 @@
       "cnpj": "52.201.387/0001-48",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12981264291",
+      "whatsapp": "12981264291",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "52536911000131",
@@ -527,7 +787,11 @@
       "cnpj": "52.536.911/0001-31",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12997785005",
+      "whatsapp": "12997785005",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "53425437000133",
@@ -535,7 +799,11 @@
       "cnpj": "53.425.437/0001-33",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12988161417",
+      "whatsapp": "12988161417",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "53875211000134",
@@ -543,7 +811,11 @@
       "cnpj": "53.875.211/0001-34",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12987091491",
+      "whatsapp": "12987091491",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "54167714000118",
@@ -551,7 +823,11 @@
       "cnpj": "54.167.714/0001-18",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12997561396",
+      "whatsapp": "12997561396",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "54702538000177",
@@ -559,7 +835,11 @@
       "cnpj": "54.702.538/0001-77",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12974039102",
+      "whatsapp": "12974039102",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "58360130000115",
@@ -567,7 +847,11 @@
       "cnpj": "58.360.130/0001-15",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12991918713",
+      "whatsapp": "12991918713",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "58915540000185",
@@ -575,7 +859,11 @@
       "cnpj": "58.915.540/0001-85",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12997054321",
+      "whatsapp": "12997054321",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "59069616000161",
@@ -583,7 +871,11 @@
       "cnpj": "59.069.616/0001-61",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12997785005",
+      "whatsapp": "12997785005",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "59257064000115",
@@ -591,7 +883,11 @@
       "cnpj": "59.257.064/0001-15",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12996125554",
+      "whatsapp": "12996125554",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "60932709000157",
@@ -599,7 +895,11 @@
       "cnpj": "60.932.709/0001-57",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "11964287119",
+      "whatsapp": "11964287119",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "60964555000185",
@@ -607,7 +907,11 @@
       "cnpj": "60.964.555/0001-85",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12988161417",
+      "whatsapp": "12988161417",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "61056491000187",
@@ -615,7 +919,11 @@
       "cnpj": "61.056.491/0001-87",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12982912005",
+      "whatsapp": "12982912005",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "62214634000102",
@@ -623,7 +931,11 @@
       "cnpj": "62.214.634/0001-02",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12991879921",
+      "whatsapp": "12991879921",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "62320328000142",
@@ -631,7 +943,11 @@
       "cnpj": "62.320.328/0001-42",
       "regime": "simples_nacional",
       "uf": "PE",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12996125554",
+      "whatsapp": "12996125554",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "62391868000117",
@@ -639,7 +955,11 @@
       "cnpj": "62.391.868/0001-17",
       "regime": "simples_nacional",
       "uf": "RJ",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12996125554",
+      "whatsapp": "12996125554",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "62409014000110",
@@ -647,7 +967,11 @@
       "cnpj": "62.409.014/0001-10",
       "regime": "simples_nacional",
       "uf": "RJ",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12996125554",
+      "whatsapp": "12996125554",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "62975524000155",
@@ -655,7 +979,11 @@
       "cnpj": "62.975.524/0001-55",
       "regime": "simples_nacional",
       "uf": "RJ",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12996125554",
+      "whatsapp": "12996125554",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "64935174000129",
@@ -663,7 +991,11 @@
       "cnpj": "64.935.174/0001-29",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12988491776",
+      "whatsapp": "12988491776",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "65225304000100",
@@ -671,7 +1003,11 @@
       "cnpj": "65.225.304/0001-00",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12988161417",
+      "whatsapp": "12988161417",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "66037648000140",
@@ -679,7 +1015,11 @@
       "cnpj": "66.037.648/0001-40",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12991879921",
+      "whatsapp": "12991879921",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "66196642000116",
@@ -687,7 +1027,11 @@
       "cnpj": "66.196.642/0001-16",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12988161417",
+      "whatsapp": "12988161417",
+      "email": null,
+      "banco": "itau"
     },
     {
       "id": "67874427000190",
@@ -695,7 +1039,11 @@
       "cnpj": "67.874.427/0001-90",
       "regime": "simples_nacional",
       "uf": "SP",
-      "source": "radar"
+      "source": "radar",
+      "telefone": "12988161417",
+      "whatsapp": "12988161417",
+      "email": null,
+      "banco": "itau"
     }
   ]
 }
