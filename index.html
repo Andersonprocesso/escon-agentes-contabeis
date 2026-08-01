@@ -10,18 +10,72 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     :root {
+      color-scheme: dark;
       --bg: #070b10;
       --panel: #0e1520;
       --panel2: #121c2a;
+      --panel3: #16202f;
       --border: #1e2c3f;
+      --border-strong: #2a3c54;
       --text: #e9eef6;
       --muted: #8b9cb3;
+      --muted-2: #5f7089;
       --accent: #3b9eff;
       --accent-dim: rgba(59, 158, 255, 0.15);
       --green: #34d399;
+      --green-dim: rgba(52, 211, 153, 0.15);
       --amber: #fbbf24;
+      --amber-dim: rgba(251, 191, 36, 0.15);
       --danger: #f87171;
+      --danger-dim: rgba(248, 113, 113, 0.15);
       --radius: 14px;
+      --radius-sm: 10px;
+      --shadow: 0 20px 60px rgba(0, 0, 0, .45);
+      --shadow-sm: 0 10px 30px rgba(0, 0, 0, .35);
+      --row-hover: rgba(255, 255, 255, .035);
+      --login-glow: #12203a;
+      --priority-bg: linear-gradient(90deg, #2a1f0a, var(--panel));
+      --priority-border: #5a4520;
+      --banner-bg: linear-gradient(90deg, #0a1a2e, var(--panel));
+      --banner-border: #1e4a7a;
+      --focus-card-border: #3d5a40;
+      --msg-user-bg: #1a2740;
+      --msg-user-border: #2a3f5c;
+      --msg-agent-bg: #0f1a14;
+      --msg-agent-border: #1f3a2e;
+    }
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --panel2: #f1f5f9;
+      --panel3: #e2e8f0;
+      --border: #dde3ec;
+      --border-strong: #94a3b8;
+      --text: #0f172a;
+      --muted: #475569;
+      --muted-2: #64748b;
+      --accent: #1d4ed8;
+      --accent-dim: rgba(29, 78, 216, 0.10);
+      --green: #047857;
+      --green-dim: rgba(4, 120, 87, 0.10);
+      --amber: #92400e;
+      --amber-dim: rgba(146, 64, 14, 0.10);
+      --danger: #b91c1c;
+      --danger-dim: rgba(185, 28, 28, 0.10);
+      --shadow: 0 20px 44px rgba(15, 23, 42, .12);
+      --shadow-sm: 0 8px 20px rgba(15, 23, 42, .08);
+      --row-hover: rgba(15, 23, 42, .035);
+      --login-glow: #dce9fb;
+      --priority-bg: linear-gradient(90deg, #fef3c7, var(--panel));
+      --priority-border: #f2cf7e;
+      --banner-bg: linear-gradient(90deg, #e6f1ff, var(--panel));
+      --banner-border: #bcdcff;
+      --focus-card-border: #bbe3c2;
+      --msg-user-bg: #e6f0ff;
+      --msg-user-border: #bcd6ff;
+      --msg-agent-bg: #e9f7ee;
+      --msg-agent-border: #bfe3c8;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; }
@@ -32,20 +86,26 @@
       min-height: 100%;
     }
     .hidden { display: none !important; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    body, .top, .sidebar, .right, .main, .login-card, input, select, textarea,
+    table, .kpi, .service-card, .info-card, .msg, .agent-btn, .badge, .chip, .icon-btn {
+      transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+    }
 
     /* Login */
     #login-view {
       min-height: 100vh; display: grid; place-items: center;
-      padding: 1.5rem;
-      background: radial-gradient(ellipse at 30% 20%, #12203a 0%, var(--bg) 55%);
+      padding: 1.5rem; position: relative;
+      background: radial-gradient(ellipse at 30% 20%, var(--login-glow) 0%, var(--bg) 55%);
     }
+    .login-theme-toggle { position: absolute; top: 1.25rem; right: 1.25rem; }
     .login-card {
       width: min(400px, 100%);
       background: var(--panel);
       border: 1px solid var(--border);
       border-radius: 18px;
       padding: 2rem;
-      box-shadow: 0 20px 60px rgba(0,0,0,.45);
+      box-shadow: var(--shadow);
     }
     .login-card h1 { font-size: 1.35rem; margin-bottom: .25rem; }
     .login-card p { color: var(--muted); font-size: .9rem; margin-bottom: 1.25rem; }
@@ -59,12 +119,26 @@
       border: none; border-radius: 10px; padding: .7rem 1rem;
       background: var(--accent); color: #fff; font-weight: 600;
       font: inherit; cursor: pointer; width: 100%;
+      display: inline-flex; align-items: center; justify-content: center; gap: .4rem;
     }
     .login-card button:hover, .btn:hover { filter: brightness(1.08); }
     .btn.ghost {
       background: transparent; border: 1px solid var(--border); color: var(--muted); width: auto;
     }
+    .btn.ghost:hover { color: var(--text); border-color: var(--border-strong); filter: none; }
+    .btn.ghost.danger { color: var(--danger); border-color: var(--danger-dim); }
+    .btn.ghost.danger:hover { border-color: var(--danger); }
     .err { color: var(--danger); font-size: .85rem; margin-top: .5rem; min-height: 1.2em; }
+
+    /* Icon button */
+    .icon-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); background: var(--panel);
+      color: var(--muted); cursor: pointer; flex-shrink: 0;
+    }
+    .icon-btn:hover { color: var(--text); border-color: var(--accent); }
+    .mobile-only { display: none; }
 
     /* App shell */
     #app-view { min-height: 100vh; display: flex; flex-direction: column; }
@@ -72,67 +146,114 @@
       display: flex; align-items: center; justify-content: space-between;
       gap: 1rem; padding: .85rem 1.25rem;
       border-bottom: 1px solid var(--border);
-      background: rgba(14, 21, 32, .92);
+      background: color-mix(in srgb, var(--panel) 92%, transparent);
       backdrop-filter: blur(10px);
       position: sticky; top: 0; z-index: 20;
     }
-    .brand { display: flex; align-items: center; gap: .7rem; }
+    .brand { display: flex; align-items: center; gap: .7rem; min-width: 0; }
     .logo {
-      width: 36px; height: 36px; border-radius: 10px;
+      width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
       background: linear-gradient(135deg, #3b9eff, #34d399);
-      display: grid; place-items: center; font-weight: 700; font-size: .7rem;
+      display: grid; place-items: center; font-weight: 700; font-size: .7rem; color: #051018;
     }
     .brand h1 { font-size: 1.05rem; font-weight: 700; }
-    .brand p { font-size: .75rem; color: var(--muted); }
+    .brand p { font-size: .75rem; color: var(--muted); display: flex; align-items: center; }
+    .status-dot {
+      display: inline-block; width: 7px; height: 7px; border-radius: 50%;
+      background: var(--muted-2); margin-right: .4rem; flex-shrink: 0;
+    }
+    .status-dot.ok { background: var(--green); }
+    .status-dot.warn { background: var(--amber); }
     .top-actions { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
+    .select {
+      border: 1px solid var(--border); background: var(--panel2); color: var(--text);
+      font: inherit; padding: .45rem .6rem; border-radius: var(--radius-sm);
+    }
     .chip {
       border: 1px solid var(--border); background: var(--panel);
       color: var(--muted); font-size: .8rem; padding: .4rem .7rem;
       border-radius: 999px; cursor: pointer; font-family: inherit;
+      display: inline-flex; align-items: center; gap: .35rem;
     }
     .chip.active { color: var(--text); border-color: var(--accent); background: var(--accent-dim); }
-    .chip:hover { color: var(--text); }
+    .chip:hover { color: var(--text); border-color: var(--border-strong); }
+    .chip.danger { color: var(--danger); border-color: var(--danger-dim); }
+    .chip.danger:hover { border-color: var(--danger); }
 
     .layout {
       flex: 1; display: grid;
       grid-template-columns: 260px 1fr 320px;
       min-height: 0;
     }
+    .scrim {
+      position: fixed; inset: 0; background: rgba(4, 8, 14, .55);
+      z-index: 14;
+    }
+    @media (min-width: 1101px) { .scrim { display: none; } }
+    .sidebar, .right {
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      padding: 1rem;
+      overflow: auto;
+      display: flex; flex-direction: column; gap: 1.1rem;
+    }
+    .right { border-right: none; border-left: 1px solid var(--border); }
+    .side-section { display: flex; flex-direction: column; gap: .5rem; }
+    .sidebar h2, .right h2 {
+      font-size: .7rem; text-transform: uppercase; letter-spacing: .08em;
+      color: var(--muted); display: flex; align-items: center; gap: .4rem;
+    }
+    .hint-sm { font-size: .72rem; line-height: 1.4; }
+    .drawer-close { display: none; align-self: flex-end; }
+    /* Mobile breakpoint: collapses the 3-column layout and hides the side
+       drawers unless explicitly opened. Placed after the base .sidebar/.right
+       rule so display:none actually wins the cascade at this width. */
     @media (max-width: 1100px) {
       .layout { grid-template-columns: 1fr; }
       .sidebar, .right { display: none; }
       .sidebar.open, .right.open {
         display: flex; position: fixed; inset: 57px 0 0 0; z-index: 15;
       }
+      .mobile-only { display: inline-flex; }
+      .sidebar.open .drawer-close, .right.open .drawer-close { display: inline-flex; }
     }
-    .sidebar, .right {
-      background: var(--panel);
-      border-right: 1px solid var(--border);
-      padding: 1rem;
-      overflow: auto;
-      display: flex; flex-direction: column; gap: .75rem;
-    }
-    .right { border-right: none; border-left: 1px solid var(--border); }
-    .sidebar h2, .right h2 {
-      font-size: .7rem; text-transform: uppercase; letter-spacing: .08em;
-      color: var(--muted); margin-bottom: .25rem;
-    }
+    .agent-list { display: flex; flex-direction: column; gap: .45rem; }
     .agent-btn {
-      text-align: left; border: 1px solid var(--border);
+      display: flex; align-items: center; gap: .6rem; text-align: left;
+      border: 1px solid var(--border);
       background: var(--panel2); color: var(--text);
-      border-radius: 12px; padding: .7rem .8rem; cursor: pointer;
+      border-radius: 12px; padding: .55rem .7rem; cursor: pointer;
       font-family: inherit;
     }
     .agent-btn:hover, .agent-btn.active {
       border-color: var(--accent); background: var(--accent-dim);
     }
-    .agent-btn strong { display: block; font-size: .92rem; }
-    .agent-btn span { font-size: .75rem; color: var(--muted); }
+    .agent-btn-text { min-width: 0; display: flex; flex-direction: column; }
+    .agent-name-row { display: flex; align-items: center; gap: .4rem; }
+    .agent-btn strong { font-size: .92rem; }
+    .agent-btn span { font-size: .75rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .avatar {
+      border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 700; flex-shrink: 0; line-height: 1;
+    }
+
+    .badge {
+      display: inline-flex; align-items: center; padding: .2rem .55rem;
+      border-radius: 999px; font-size: .72rem; font-weight: 600;
+    }
+    .badge.tone-green { background: var(--green-dim); color: var(--green); }
+    .badge.tone-accent { background: var(--accent-dim); color: var(--accent); }
+    .badge.tone-amber { background: var(--amber-dim); color: var(--amber); }
+    .badge.tone-danger { background: var(--danger-dim); color: var(--danger); }
+    .badge.tone-muted { background: var(--panel3); color: var(--muted); }
 
     .main {
-      display: flex; flex-direction: column; min-height: 0;
-      background: linear-gradient(180deg, #0a1018 0%, var(--bg) 40%);
+      display: flex; flex-direction: column; min-height: 0; min-width: 0;
+      background: linear-gradient(180deg, var(--panel2) 0%, var(--bg) 40%);
     }
+    .table-wrap { overflow-x: auto; border-radius: var(--radius); }
+    .table-wrap table { border-radius: 0; }
     .tabs {
       display: flex; gap: .35rem; padding: .75rem 1rem 0;
       border-bottom: 1px solid var(--border);
@@ -142,6 +263,7 @@
       border: none; background: transparent; color: var(--muted);
       padding: .55rem .9rem; border-radius: 10px 10px 0 0;
       cursor: pointer; font: inherit; font-weight: 600; font-size: .9rem;
+      display: inline-flex; align-items: center; gap: .4rem;
     }
     .tab.active { color: var(--text); background: var(--panel); border: 1px solid var(--border); border-bottom-color: var(--panel); }
     .panel { display: none; flex: 1; min-height: 0; flex-direction: column; }
@@ -160,11 +282,11 @@
     }
     .msg.user {
       align-self: flex-end;
-      background: #1a2740; border: 1px solid #2a3f5c;
+      background: var(--msg-user-bg); border: 1px solid var(--msg-user-border);
     }
     .msg.agent {
       align-self: flex-start;
-      background: #0f1a14; border: 1px solid #1f3a2e;
+      background: var(--msg-agent-bg); border: 1px solid var(--msg-agent-border);
     }
     .msg .who {
       font-size: .72rem; color: var(--muted); margin-bottom: .35rem;
@@ -197,11 +319,12 @@
     .kpi .n { font-size: 1.6rem; font-weight: 700; letter-spacing: -.03em; }
     .kpi .l { color: var(--muted); font-size: .8rem; margin-top: .2rem; }
     .priority {
-      background: linear-gradient(90deg, #2a1f0a, var(--panel));
-      border: 1px solid #5a4520; border-radius: var(--radius);
+      background: var(--priority-bg);
+      border: 1px solid var(--priority-border); border-radius: var(--radius);
       padding: .85rem 1rem; margin-bottom: 1rem; font-size: .9rem;
     }
     .priority strong { color: var(--amber); }
+    .banner-accent { background: var(--banner-bg); border-color: var(--banner-border); }
     table {
       width: 100%; border-collapse: collapse; font-size: .85rem;
       background: var(--panel); border-radius: var(--radius);
@@ -215,30 +338,49 @@
       color: var(--muted); font-size: .72rem; text-transform: uppercase;
       letter-spacing: .04em; background: var(--panel2);
     }
-    tr:hover td { background: rgba(255,255,255,.02); }
+    tr[data-row] { cursor: pointer; }
+    tr[data-row]:hover td { background: var(--row-hover); }
     .mono { font-family: "JetBrains Mono", monospace; font-size: .8rem; }
     .muted { color: var(--muted); font-size: .85rem; }
     .service-grid {
       display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: .75rem;
     }
-    .service-card {
+    .service-card, .info-card {
       background: var(--panel); border: 1px solid var(--border);
-      border-radius: 12px; padding: .9rem; cursor: pointer;
+      border-radius: 12px; padding: .9rem;
     }
+    .service-card { cursor: pointer; }
     .service-card:hover { border-color: var(--accent); }
     .service-card h3 { font-size: .95rem; margin-bottom: .35rem; }
-    .service-card p { font-size: .8rem; color: var(--muted); }
+    .service-card p, .info-card p { font-size: .8rem; color: var(--muted); }
+    .info-card.focus-highlight { border-color: var(--focus-card-border); }
     .hint {
       margin-top: 1rem; padding: .85rem 1rem;
       border-radius: 12px; border: 1px dashed var(--border);
       color: var(--muted); font-size: .85rem; line-height: 1.45;
+    }
+
+    /* Client detail (right panel) */
+    .client-head { display: flex; gap: .75rem; align-items: center; margin-bottom: .8rem; }
+    .client-head h3 { font-size: 1rem; margin-bottom: .15rem; }
+    .client-summary { font-size: .85rem; line-height: 1.55; color: var(--text); margin-bottom: 1rem; }
+    .client-rows { display: flex; flex-direction: column; gap: .55rem; margin-bottom: 1.1rem; }
+    .client-row { display: flex; gap: .55rem; align-items: center; font-size: .84rem; color: var(--muted); }
+    .client-row svg { color: var(--muted-2); flex-shrink: 0; }
+    .client-actions { display: flex; flex-direction: column; gap: .5rem; }
+    .empty-state {
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      gap: .6rem; color: var(--muted); padding: 2.5rem 1rem;
     }
   </style>
 </head>
 <body>
   <!-- LOGIN -->
   <div id="login-view">
+    <button class="icon-btn login-theme-toggle" type="button" id="theme-toggle-login" aria-label="Alternar tema" title="Alternar tema clara/escura">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4" y1="12" x2="2" y2="12"/><line x1="22" y1="12" x2="20" y2="12"/><line x1="4.9" y1="4.9" x2="6.3" y2="6.3"/><line x1="17.7" y1="17.7" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="6.3" y2="17.7"/><line x1="17.7" y1="6.3" x2="19.1" y2="4.9"/></svg>
+    </button>
     <div class="login-card">
       <div class="logo" style="margin-bottom:1rem">EA</div>
       <h1>Escon Agentes</h1>
@@ -258,13 +400,13 @@
     <header class="top">
       <div class="brand">
         <div class="logo">EA</div>
-        <div>
+        <div style="min-width:0">
           <h1>Escon Agentes Contábeis</h1>
-          <p id="top-sub">Carregando…</p>
+          <p id="top-sub"><span class="status-dot" id="status-dot"></span>Carregando…</p>
         </div>
       </div>
       <div class="top-actions">
-        <select id="model-select" class="chip" style="appearance:auto;padding:.4rem .6rem" title="Modelo OpenRouter">
+        <select id="model-select" class="select" title="Modelo OpenRouter">
           <option value="">modelo padrão (env)</option>
           <option value="openai/gpt-4o-mini">gpt-4o-mini (estável)</option>
           <option value="deepseek/deepseek-chat">deepseek</option>
@@ -273,38 +415,73 @@
           <option value="x-ai/grok-2-1212">grok-2</option>
           <option value="moonshotai/kimi-k2">kimi</option>
         </select>
-        <button class="chip" type="button" id="btn-agents-m">Agentes</button>
-        <button class="chip" type="button" id="btn-logout">Sair</button>
+        <button class="icon-btn mobile-only" type="button" id="btn-team-m" aria-label="Abrir equipe" title="Equipe">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <button class="icon-btn mobile-only" type="button" id="btn-panel-m" aria-label="Abrir painel" title="Painel">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M15.5 14a5 5 0 0 1 5.5 5"/></svg>
+        </button>
+        <button class="icon-btn" type="button" id="theme-toggle" aria-label="Alternar tema" title="Alternar tema clara/escura">
+          <span id="theme-icon"></span>
+        </button>
+        <button class="chip" type="button" id="btn-logout">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sair
+        </button>
       </div>
     </header>
 
+    <div class="scrim hidden" id="scrim"></div>
+
     <div class="layout">
       <aside class="sidebar" id="sidebar">
-        <h2>Canal do chat</h2>
-        <div id="channel-max"></div>
-        <h2 style="margin-top:.5rem">Equipe (Max aciona)</h2>
-        <p class="muted" style="font-size:.72rem;margin-bottom:.35rem">
-          Clique para ver o papel. O chat continua com <strong style="color:var(--text)">Max</strong>, que repassa à equipe.
-        </p>
-        <div id="agent-list"></div>
+        <button class="icon-btn drawer-close" id="sidebar-close" type="button" aria-label="Fechar equipe">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+        </button>
+        <div class="side-section">
+          <h2>Canal do chat</h2>
+          <div id="channel-max"></div>
+        </div>
+        <div class="side-section">
+          <h2>Equipe · Max aciona</h2>
+          <p class="muted hint-sm">
+            Clique para ver o papel. O chat continua com <strong style="color:var(--text)">Max</strong>, que repassa à equipe.
+          </p>
+          <div id="agent-list" class="agent-list"></div>
+        </div>
       </aside>
 
       <main class="main">
         <div class="tabs">
-          <button class="tab active" data-tab="chat" type="button">Chat com Max</button>
-          <button class="tab" data-tab="overview" type="button">Visão geral</button>
-          <button class="tab" data-tab="clients" type="button">Clientes</button>
-          <button class="tab" data-tab="services" type="button">Serviços</button>
+          <button class="tab active" data-tab="chat" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8.5 8.5 0 0 1-8.5 8.5c-1.4 0-2.7-.3-3.9-.9L3 21l1.4-4.6A8.5 8.5 0 1 1 21 12Z"/></svg>
+            <span>Chat com Max</span>
+          </button>
+          <button class="tab" data-tab="overview" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>
+            <span>Visão geral</span>
+          </button>
+          <button class="tab" data-tab="clients" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M15.5 14a5 5 0 0 1 5.5 5"/></svg>
+            <span>Clientes</span>
+          </button>
+          <button class="tab" data-tab="services" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="3" y1="12" x2="21" y2="12"/></svg>
+            <span>Serviços</span>
+          </button>
         </div>
 
         <section class="panel active" id="tab-chat">
-          <div id="chat-banner" class="priority" style="margin:.75rem 1rem 0;border-color:#1e4a7a;background:linear-gradient(90deg,#0a1a2e,var(--panel))">
+          <div id="chat-banner" class="priority banner-accent" style="margin:.75rem 1rem 0">
             Você fala com <strong style="color:var(--accent)">Max</strong> (gerente). Ele orquestra Xavier, Bill, John, Greg…
           </div>
           <div class="chat-log" id="chat-log"></div>
           <div class="composer">
             <textarea id="chat-input" placeholder="Fale com o Max… (Enter envia, Shift+Enter quebra linha)"></textarea>
-            <button class="btn" type="button" id="chat-send">Enviar</button>
+            <button class="btn" type="button" id="chat-send">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4Z"/></svg>
+              Enviar
+            </button>
           </div>
         </section>
 
@@ -320,7 +497,10 @@
           <div class="scroll">
             <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:.75rem;align-items:center">
               <input id="client-filter" placeholder="Filtrar por nome, CNPJ, telefone ou e-mail…" style="flex:1;min-width:180px;padding:.65rem .8rem;border-radius:10px;border:1px solid var(--border);background:var(--panel2);color:var(--text);font:inherit" />
-              <button type="button" class="btn" id="btn-client-new" style="width:auto">+ Novo cliente</button>
+              <button type="button" class="btn" id="btn-client-new" style="width:auto">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Novo cliente
+              </button>
             </div>
             <p class="muted" id="clients-persist-note" style="margin-bottom:.75rem"></p>
             <div id="client-form" class="service-card hidden" style="cursor:default;margin-bottom:1rem">
@@ -380,19 +560,21 @@
               </div>
               <p class="err" id="cf-err"></p>
             </div>
-            <table>
-              <thead>
-                <tr>
-                  <th>Nome</th>
-                  <th>CNPJ</th>
-                  <th>Telefone</th>
-                  <th>E-mail</th>
-                  <th>Regime</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody id="clients-body"></tbody>
-            </table>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>CNPJ</th>
+                    <th>Telefone</th>
+                    <th>E-mail</th>
+                    <th>Regime</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="clients-body"></tbody>
+              </table>
+            </div>
           </div>
         </section>
 
@@ -411,21 +593,49 @@
       </main>
 
       <aside class="right" id="right">
-        <h2>Com quem você fala</h2>
-        <div id="active-agent-card" class="service-card" style="cursor:default"></div>
-        <div id="focus-agent-card" class="service-card hidden" style="cursor:default;margin-top:.5rem;border-color:#3d5a40"></div>
-        <h2>Atalhos para o Max</h2>
-        <button class="agent-btn" type="button" data-prompt="Max, liste os passos do fechamento mensal Contmatic e diga quem da equipe cuida de cada etapa.">Fechamento Contmatic</button>
-        <button class="agent-btn" type="button" data-prompt="Max, peça à Lucy um resumo de CBS/IBS para empresa de serviços no Simples e me reporte.">Reforma Tributária</button>
-        <button class="agent-btn" type="button" data-prompt="Max, acione o Greg: como cobrar extratos pendentes? Me entregue as mensagens prontas.">Cobrar extratos</button>
-        <button class="agent-btn" type="button" data-prompt="Max, para conciliação e XMLs, quem acionar e em que ordem?">Orquestrar equipe</button>
-        <p class="muted" style="margin-top:auto">Escon Soluções Contábeis · OpenRouter</p>
+        <button class="icon-btn drawer-close" id="right-close" type="button" aria-label="Fechar painel">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+        </button>
+        <div id="right-chat-view">
+          <div class="side-section">
+            <h2>Com quem você fala</h2>
+            <div id="active-agent-card" class="info-card"></div>
+            <div id="focus-agent-card" class="info-card focus-highlight hidden" style="margin-top:.5rem"></div>
+          </div>
+          <div class="side-section">
+            <h2>Atalhos para o Max</h2>
+            <button class="agent-btn" type="button" data-prompt="Max, liste os passos do fechamento mensal Contmatic e diga quem da equipe cuida de cada etapa.">Fechamento Contmatic</button>
+            <button class="agent-btn" type="button" data-prompt="Max, peça à Lucy um resumo de CBS/IBS para empresa de serviços no Simples e me reporte.">Reforma Tributária</button>
+            <button class="agent-btn" type="button" data-prompt="Max, acione o Greg: como cobrar extratos pendentes? Me entregue as mensagens prontas.">Cobrar extratos</button>
+            <button class="agent-btn" type="button" data-prompt="Max, para conciliação e XMLs, quem acionar e em que ordem?">Orquestrar equipe</button>
+          </div>
+          <p class="muted" style="margin-top:auto">Escon Soluções Contábeis · OpenRouter</p>
+        </div>
+        <div id="right-client-view" class="hidden">
+          <div class="side-section">
+            <h2>Perfil do cliente</h2>
+            <div id="client-detail-body"></div>
+          </div>
+        </div>
       </aside>
     </div>
   </div>
 
   <script>
     const TOKEN_KEY = "escon_agentes_token";
+    const THEME_KEY = "escon_agentes_theme";
+
+    const REGIME_META = {
+      simples_nacional: { label: "Simples Nacional", tone: "green", desc: "do Simples Nacional" },
+      mei: { label: "MEI", tone: "accent", desc: "MEI" },
+      lucropresumido: { label: "Lucro Presumido", tone: "amber", desc: "do Lucro Presumido" },
+      lucroreal: { label: "Lucro Real", tone: "danger", desc: "do Lucro Real" },
+    };
+    const BANCO_LABELS = {
+      itau: "Itaú", bradesco: "Bradesco", bb: "Banco do Brasil", santander: "Santander",
+      cef: "Caixa Econômica", inter: "Inter", nubank: "Nubank", sicoob: "Sicoob",
+    };
+
     const state = {
       token: localStorage.getItem(TOKEN_KEY) || "",
       /** Sempre Max no chat — gerente único do canal */
@@ -436,7 +646,100 @@
       clients: [],
       history: [],
       directMode: false, // avançado: falar direto com especialista
+      selectedClientId: null,
+      activeTab: "chat",
     };
+
+    // ---------- ícones (SVG autoral, um único conjunto de traço) ----------
+    const ICONS = {
+      sun: '<circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4" y1="12" x2="2" y2="12"/><line x1="22" y1="12" x2="20" y2="12"/><line x1="4.9" y1="4.9" x2="6.3" y2="6.3"/><line x1="17.7" y1="17.7" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="6.3" y2="17.7"/><line x1="17.7" y1="6.3" x2="19.1" y2="4.9"/>',
+      moon: '<path d="M20 12.5A8 8 0 1 1 11.5 4 6.5 6.5 0 0 0 20 12.5Z"/>',
+      phone: '<rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/>',
+      mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/>',
+      bank: '<path d="M3 10l9-6 9 6"/><rect x="4" y="10" width="16" height="9" rx="1"/><line x1="9" y1="13" x2="9" y2="19"/><line x1="15" y1="13" x2="15" y2="19"/>',
+      pencil: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
+      trash: '<path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>',
+      chat: '<path d="M21 12a8.5 8.5 0 0 1-8.5 8.5c-1.4 0-2.7-.3-3.9-.9L3 21l1.4-4.6A8.5 8.5 0 1 1 21 12Z"/>',
+      info: '<circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="7.5" r=".6" fill="currentColor" stroke="none"/>',
+    };
+    function icon(name, size) {
+      size = size || 16;
+      return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${ICONS[name] || ""}</svg>`;
+    }
+
+    // ---------- avatares (iniciais + cor determinística) ----------
+    function hashCode(str) {
+      let h = 0;
+      for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) >>> 0;
+      return h;
+    }
+    function initials(name) {
+      const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
+      if (!parts.length) return "?";
+      if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+    function avatarHTML(name, size) {
+      size = size || 40;
+      const hue = hashCode(name || "?") % 360;
+      const bg = `hsl(${hue} 55% 38%)`;
+      const fontSize = Math.round(size * 0.4);
+      return `<span class="avatar" style="width:${size}px;height:${size}px;min-width:${size}px;font-size:${fontSize}px;background:${bg}">${initials(name)}</span>`;
+    }
+
+    function regimeBadge(regime) {
+      const meta = REGIME_META[regime] || { label: regime || "—", tone: "muted" };
+      return `<span class="badge tone-${meta.tone}">${escapeHtml(meta.label)}</span>`;
+    }
+    function clientSummary(c) {
+      const meta = REGIME_META[c.regime];
+      const bits = [meta ? `Cliente ${meta.desc}` : `Cliente — regime não informado`];
+      if (c.banco) bits.push(`conta principal ${BANCO_LABELS[c.banco] || c.banco}`);
+      if (c.uf) bits.push(`sediado em ${c.uf}`);
+      let out = bits.join(", ") + ".";
+      const contacts = [];
+      if (c.telefone) contacts.push("telefone");
+      if (c.email) contacts.push("e-mail");
+      out += contacts.length
+        ? ` Contato cadastrado por ${contacts.join(" e ")}.`
+        : " Nenhum contato cadastrado ainda — peça telefone/e-mail para a cobrança de extratos (Greg).";
+      return out;
+    }
+
+    // ---------- tema ----------
+    function applyTheme(t) {
+      document.documentElement.setAttribute("data-theme", t);
+      const svg = icon(t === "light" ? "moon" : "sun", 18);
+      const ic1 = document.getElementById("theme-icon");
+      if (ic1) ic1.innerHTML = svg;
+      const btnLogin = document.getElementById("theme-toggle-login");
+      if (btnLogin) btnLogin.innerHTML = svg;
+      localStorage.setItem(THEME_KEY, t);
+    }
+    function toggleTheme() {
+      const cur = document.documentElement.getAttribute("data-theme") || "dark";
+      applyTheme(cur === "dark" ? "light" : "dark");
+    }
+    function initTheme() {
+      const saved = localStorage.getItem(THEME_KEY);
+      applyTheme(saved === "light" ? "light" : "dark");
+    }
+
+    // ---------- drawers (mobile) ----------
+    function isMobile() {
+      return window.matchMedia("(max-width: 1100px)").matches;
+    }
+    function openDrawer(which) {
+      const other = which === "sidebar" ? "right" : "sidebar";
+      document.getElementById(other).classList.remove("open");
+      document.getElementById(which).classList.add("open");
+      document.getElementById("scrim").classList.remove("hidden");
+    }
+    function closeDrawers() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.getElementById("right").classList.remove("open");
+      document.getElementById("scrim").classList.add("hidden");
+    }
 
     async function api(path, opts = {}) {
       const headers = Object.assign({ "Content-Type": "application/json" }, opts.headers || {});
@@ -500,9 +803,14 @@
     function refreshChannelUI() {
       const max = agentById("max");
       document.getElementById("active-agent-card").innerHTML =
-        `<h3>Max · canal do chat</h3>
-         <p>${max.role || "Gerente de Agentes"}</p>
-         <p class="muted" style="margin-top:.4rem;font-size:.75rem">
+        `<div style="display:flex;gap:.6rem;align-items:center;margin-bottom:.5rem">
+           ${avatarHTML(max.name || "Max", 40)}
+           <div>
+             <h3 style="font-size:.95rem">Max <span class="badge tone-accent">Gerente</span></h3>
+             <p>canal do chat</p>
+           </div>
+         </div>
+         <p class="muted" style="font-size:.75rem">
            Todas as mensagens vão para o Max. Ele repassa à equipe e reporta.
          </p>`;
 
@@ -518,13 +826,18 @@
         const a = agentById(state.focusAgent);
         focusEl.classList.remove("hidden");
         focusEl.innerHTML =
-          `<h3>Especialista em foco: ${escapeHtml(a.name)}</h3>
-           <p>${escapeHtml(a.role || "")}</p>
-           <p class="muted" style="margin-top:.45rem;font-size:.75rem">
+          `<div style="display:flex;gap:.6rem;align-items:center;margin-bottom:.5rem">
+             ${avatarHTML(a.name, 36)}
+             <div>
+               <h3 style="font-size:.9rem">${escapeHtml(a.name)}</h3>
+               <p>${escapeHtml(a.role || "")}</p>
+             </div>
+           </div>
+           <p class="muted" style="font-size:.75rem;margin-bottom:.65rem">
              O chat <strong style="color:var(--text)">não</strong> muda de canal.
              Use o botão abaixo para o Max acionar ${escapeHtml(a.name)}.
            </p>
-           <button type="button" class="btn" id="btn-ask-max-about" style="margin-top:.65rem;width:100%">
+           <button type="button" class="btn" id="btn-ask-max-about">
              Pedir ao Max sobre ${escapeHtml(a.name)}
            </button>
            <button type="button" class="btn ghost" id="btn-direct" style="margin-top:.4rem;width:100%;font-size:.8rem">
@@ -547,8 +860,8 @@
           state.directMode = true;
           state.chatAgent = a.id;
           state.focusAgent = a.id;
-          document.getElementById("top-sub").textContent =
-            `Modo direto: ${a.name} (avançado)`;
+          document.getElementById("top-sub").innerHTML =
+            `<span class="status-dot" id="status-dot"></span>Modo direto: ${escapeHtml(a.name)} (avançado)`;
           document.getElementById("chat-banner").innerHTML =
             `Modo avançado: falando <strong style="color:var(--amber)">direto com ${escapeHtml(a.name)}</strong>. ` +
             `<a href="#" id="back-to-max" style="color:var(--accent)">Voltar ao Max</a>`;
@@ -568,8 +881,8 @@
       }
 
       if (!state.directMode) {
-        document.getElementById("top-sub").textContent =
-          "Canal: Max (gerente) · equipe à esquerda";
+        document.getElementById("top-sub").innerHTML =
+          `<span class="status-dot" id="status-dot"></span>Canal: Max (gerente) · equipe à esquerda`;
         document.getElementById("chat-banner").innerHTML =
           `Você fala com <strong style="color:var(--accent)">Max</strong> (gerente). ` +
           `Clique na equipe à esquerda só para ver o papel — Max aciona e reporta.`;
@@ -599,7 +912,7 @@
       const log = document.getElementById("chat-log");
       const div = document.createElement("div");
       div.className = "msg " + role;
-      div.innerHTML = `<div class="who">${who}</div>${escapeHtml(text)}`;
+      div.innerHTML = `<div class="who">${escapeHtml(who)}</div>${escapeHtml(text)}`;
       log.appendChild(div);
       log.scrollTop = log.scrollHeight;
     }
@@ -657,9 +970,9 @@
           `<div class="who">${escapeHtml(name)}</div>` + escapeHtml(reply);
         state.history.push({ role: "assistant", content: reply });
         if (!state.directMode) {
-          document.getElementById("top-sub").textContent = data.model
-            ? `Canal: Max · ${data.model}`
-            : "Canal: Max (gerente)";
+          document.getElementById("top-sub").innerHTML =
+            `<span class="status-dot ok" id="status-dot"></span>` +
+            (data.model ? `Canal: Max · ${escapeHtml(data.model)}` : "Canal: Max (gerente)");
         }
       } catch (e) {
         pending.innerHTML =
@@ -695,8 +1008,11 @@
       const max = agentById("max");
       document.getElementById("channel-max").innerHTML =
         `<button type="button" class="agent-btn active" data-agent="max" id="btn-channel-max">
-          <strong>★ ${max.name || "Max"}</strong>
-          <span>${max.role || "Gerente — canal do chat"}</span>
+          ${avatarHTML(max.name || "Max", 32)}
+          <div class="agent-btn-text">
+            <span class="agent-name-row"><strong>${escapeHtml(max.name || "Max")}</strong> <span class="badge tone-accent">Gerente</span></span>
+            <span>${escapeHtml(max.role || "Canal do chat")}</span>
+          </div>
         </button>`;
       document.getElementById("btn-channel-max").onclick = () => setFocusAgent("max");
 
@@ -705,8 +1021,11 @@
       list.innerHTML = team
         .map(
           (a) =>
-            `<button type="button" class="agent-btn" data-agent="${a.id}">
-              <strong>${a.name}</strong><span>${a.role}</span>
+            `<button type="button" class="agent-btn" data-agent="${escapeHtml(a.id)}">
+              ${avatarHTML(a.name, 32)}
+              <div class="agent-btn-text">
+                <strong>${escapeHtml(a.name)}</strong><span>${escapeHtml(a.role)}</span>
+              </div>
             </button>`
         )
         .join("");
@@ -718,8 +1037,11 @@
       state.directMode = false;
       refreshChannelUI();
 
+      const dot = document.getElementById("status-dot");
+      if (dot) dot.classList.add(overview.chat_ready ? "ok" : "warn");
+
       document.getElementById("priority-box").innerHTML =
-        `Prioridade #1: <strong>${overview.priority || "Contmatic"}</strong>`;
+        `Prioridade #1: <strong>${escapeHtml(overview.priority || "Contmatic")}</strong>`;
       document.getElementById("kpis").innerHTML = [
         ["Agentes", overview.agents_total],
         ["Clientes", overview.clients],
@@ -728,7 +1050,7 @@
       ]
         .map(
           ([l, n]) =>
-            `<div class="kpi"><div class="n">${n}</div><div class="l">${l}</div></div>`
+            `<div class="kpi"><div class="n">${escapeHtml(String(n ?? "—"))}</div><div class="l">${l}</div></div>`
         )
         .join("");
       document.getElementById("overview-note").textContent = overview.backend_note || "";
@@ -800,21 +1122,28 @@
         rows
           .slice(0, 300)
           .map((c) => {
+            const name = c.nome || c.name || "";
             const tel = c.telefone || c.whatsapp || "—";
             const em = c.email || "—";
             const missing = !c.telefone && !c.whatsapp && !c.email;
-            return `<tr>
-              <td>${escapeHtml(c.nome || c.name || "")}
-                <div class="mono muted">${escapeHtml(c.id || "")}</div>
-                ${missing ? '<div class="muted" style="color:var(--amber);font-size:.72rem">sem telefone/e-mail</div>' : ""}
+            return `<tr data-row="${escapeHtml(c.id)}">
+              <td>
+                <div style="display:flex;align-items:center;gap:.55rem">
+                  ${avatarHTML(name || c.id, 30)}
+                  <div>
+                    <div>${escapeHtml(name)}</div>
+                    <div class="mono muted" style="font-size:.72rem">${escapeHtml(c.id || "")}</div>
+                    ${missing ? '<div class="muted" style="color:var(--amber);font-size:.7rem">sem telefone/e-mail</div>' : ""}
+                  </div>
+                </div>
               </td>
               <td class="mono">${escapeHtml(c.cnpj || "")}</td>
               <td class="mono">${escapeHtml(tel)}</td>
               <td>${escapeHtml(em)}</td>
-              <td>${escapeHtml(c.regime || "")}</td>
+              <td>${regimeBadge(c.regime)}</td>
               <td style="white-space:nowrap">
-                <button type="button" class="chip" data-edit="${escapeHtml(c.id)}">Editar</button>
-                <button type="button" class="chip" data-del="${escapeHtml(c.id)}" style="color:var(--danger)">Excluir</button>
+                <button type="button" class="chip" data-edit="${escapeHtml(c.id)}">${icon("pencil", 13)} Editar</button>
+                <button type="button" class="chip danger" data-del="${escapeHtml(c.id)}">${icon("trash", 13)} Excluir</button>
               </td>
             </tr>`;
           })
@@ -822,11 +1151,74 @@
         '<tr><td colspan="6" class="muted">Nenhum cliente</td></tr>';
 
       document.querySelectorAll("[data-edit]").forEach((b) => {
-        b.onclick = () => openClientForm(b.getAttribute("data-edit"));
+        b.onclick = (e) => {
+          e.stopPropagation();
+          openClientForm(b.getAttribute("data-edit"));
+        };
       });
       document.querySelectorAll("[data-del]").forEach((b) => {
-        b.onclick = () => deleteClient(b.getAttribute("data-del"));
+        b.onclick = (e) => {
+          e.stopPropagation();
+          deleteClient(b.getAttribute("data-del"));
+        };
       });
+      document.querySelectorAll("tr[data-row]").forEach((tr) => {
+        tr.addEventListener("click", () => selectClient(tr.getAttribute("data-row")));
+      });
+    }
+
+    function setRightView(view) {
+      document.getElementById("right-chat-view").classList.toggle("hidden", view !== "chat");
+      document.getElementById("right-client-view").classList.toggle("hidden", view !== "client");
+    }
+
+    function selectClient(id) {
+      state.selectedClientId = id;
+      renderClientDetail();
+      if (isMobile()) openDrawer("right");
+    }
+
+    function renderClientDetail() {
+      const body = document.getElementById("client-detail-body");
+      const id = state.selectedClientId;
+      const c = id ? state.clients.find((x) => x.id === id) : null;
+      if (!c) {
+        body.innerHTML = `<div class="empty-state">${icon("info", 22)}<p>Selecione um cliente na lista para ver o perfil completo.</p></div>`;
+        return;
+      }
+      const name = c.nome || c.name || c.id;
+      const tel = c.telefone || c.whatsapp || "";
+      const email = c.email || "";
+      body.innerHTML = `
+        <div class="client-head">
+          ${avatarHTML(name, 52)}
+          <div style="min-width:0">
+            <h3>${escapeHtml(name)}</h3>
+            <div class="mono muted" style="font-size:.76rem;margin-bottom:.3rem">${escapeHtml(c.cnpj || c.id || "")}</div>
+            ${regimeBadge(c.regime)}
+          </div>
+        </div>
+        <p class="client-summary">${escapeHtml(clientSummary(c))}</p>
+        <div class="client-rows">
+          <div class="client-row">${icon("phone", 16)}<span>${escapeHtml(tel || "Telefone não informado")}</span></div>
+          <div class="client-row">${icon("mail", 16)}<span>${escapeHtml(email || "E-mail não informado")}</span></div>
+          <div class="client-row">${icon("bank", 16)}<span>${escapeHtml(BANCO_LABELS[c.banco] || c.banco || "Banco não informado")}${c.uf ? " · " + escapeHtml(c.uf) : ""}</span></div>
+        </div>
+        <div class="client-actions">
+          <button type="button" class="btn" id="cd-edit">${icon("pencil", 15)} Editar cliente</button>
+          <button type="button" class="btn ghost" id="cd-ask-max">${icon("chat", 15)} Perguntar ao Max sobre ${escapeHtml(name)}</button>
+          <button type="button" class="btn ghost danger" id="cd-delete">${icon("trash", 15)} Excluir</button>
+        </div>
+      `;
+      document.getElementById("cd-edit").onclick = () => openClientForm(c.id);
+      document.getElementById("cd-delete").onclick = () => deleteClient(c.id);
+      document.getElementById("cd-ask-max").onclick = () => {
+        document.querySelector('.tab[data-tab="chat"]').click();
+        sendChat(
+          `Max, me dê um resumo rápido do cliente ${name} (regime ${c.regime || "não informado"}) ` +
+          `e o que falta para o fechamento Contmatic dele.`
+        );
+      };
     }
 
     function openClientForm(id) {
@@ -848,6 +1240,7 @@
         document.getElementById("cf-regime").value = "simples_nacional";
         document.getElementById("cf-banco").value = "itau";
         document.getElementById("cf-uf").value = "";
+        form.scrollIntoView({ behavior: "smooth", block: "nearest" });
         return;
       }
       const c = state.clients.find((x) => x.id === id);
@@ -861,6 +1254,7 @@
       document.getElementById("cf-regime").value = c.regime || "simples_nacional";
       document.getElementById("cf-banco").value = c.banco || c.banco_principal || "itau";
       document.getElementById("cf-uf").value = c.uf || "";
+      document.querySelector('.tab[data-tab="clients"]').click();
       form.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
 
@@ -915,8 +1309,10 @@
       if (!confirm(`Excluir cliente ${c ? c.nome || c.name : id}?`)) return;
       try {
         await api("/api/clients/" + encodeURIComponent(id), { method: "DELETE" });
+        if (state.selectedClientId === id) state.selectedClientId = null;
         await reloadClients();
         closeClientForm();
+        renderClientDetail();
       } catch (e) {
         alert(e.message);
       }
@@ -942,6 +1338,13 @@
         document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
         t.classList.add("active");
         document.getElementById("tab-" + t.dataset.tab).classList.add("active");
+        state.activeTab = t.dataset.tab;
+        if (t.dataset.tab === "clients") {
+          setRightView("client");
+          renderClientDetail();
+        } else {
+          setRightView("chat");
+        }
       });
     });
 
@@ -967,11 +1370,23 @@
         sendChat(b.dataset.prompt);
       });
     });
-    document.getElementById("btn-agents-m").addEventListener("click", () => {
-      document.getElementById("sidebar").classList.toggle("open");
+    document.getElementById("btn-team-m").addEventListener("click", () => openDrawer("sidebar"));
+    document.getElementById("btn-panel-m").addEventListener("click", () => {
+      const right = document.getElementById("right");
+      if (right.classList.contains("open")) closeDrawers();
+      else openDrawer("right");
     });
+    document.getElementById("sidebar-close").addEventListener("click", closeDrawers);
+    document.getElementById("right-close").addEventListener("click", closeDrawers);
+    document.getElementById("scrim").addEventListener("click", closeDrawers);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeDrawers();
+    });
+    document.getElementById("theme-toggle").addEventListener("click", toggleTheme);
+    document.getElementById("theme-toggle-login").addEventListener("click", toggleTheme);
 
     // boot
+    initTheme();
     if (state.token) {
       bootApp().catch((e) => {
         console.error(e);
