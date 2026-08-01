@@ -17,7 +17,8 @@ const BOOTSTRAP_PASSWORD_HASH =
   "a1b2c3d4e5f6789012345678abcdef01:8f3c9e2a1b0d4f5e6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f";
 
 function getAdminUser() {
-  return (process.env.ADMIN_USER || "admin").trim();
+  // Ex.: anderson@escondigital.com.br (defina ADMIN_USER no Vercel)
+  return (process.env.ADMIN_USER || "admin").trim().toLowerCase();
 }
 
 function getAdminPassword() {
@@ -127,7 +128,8 @@ function validateCredentials(username, password) {
     };
   }
   const user = getAdminUser();
-  if (!timingSafeEqualStr(String(username || "").trim(), user)) {
+  const given = String(username || "").trim().toLowerCase();
+  if (!timingSafeEqualStr(given, user)) {
     return { ok: false, status: 401, error: "Usuário ou senha inválidos" };
   }
   if (!passwordMatches(password)) {
