@@ -10,7 +10,8 @@
     "api/login.js": { "maxDuration": 10 },
     "api/agents.js": { "maxDuration": 10 },
     "api/overview.js": { "maxDuration": 10 },
-    "api/clients.js": { "maxDuration": 10 }
+    "api/clients.js": { "maxDuration": 10 },
+    "api/health.js": { "maxDuration": 5 }
   },
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" }

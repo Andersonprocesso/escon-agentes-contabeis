@@ -264,14 +264,14 @@
         </div>
       </div>
       <div class="top-actions">
-        <select id="model-select" class="chip" style="appearance:auto;padding:.4rem .6rem">
-          <option value="">modelo padrão</option>
+        <select id="model-select" class="chip" style="appearance:auto;padding:.4rem .6rem" title="Modelo OpenRouter">
+          <option value="">modelo padrão (env)</option>
+          <option value="openai/gpt-4o-mini">gpt-4o-mini (estável)</option>
           <option value="deepseek/deepseek-chat">deepseek</option>
+          <option value="google/gemini-2.0-flash-001">gemini flash</option>
+          <option value="anthropic/claude-3.5-sonnet">claude 3.5</option>
+          <option value="x-ai/grok-2-1212">grok-2</option>
           <option value="moonshotai/kimi-k2">kimi</option>
-          <option value="openai/gpt-4o-mini">gpt</option>
-          <option value="x-ai/grok-4">grok</option>
-          <option value="google/gemini-2.5-flash">gemini</option>
-          <option value="anthropic/claude-sonnet-4">claude</option>
         </select>
         <button class="chip" type="button" id="btn-agents-m">Agentes</button>
         <button class="chip" type="button" id="btn-logout">Sair</button>
@@ -358,13 +358,24 @@
     async function api(path, opts = {}) {
       const headers = Object.assign({ "Content-Type": "application/json" }, opts.headers || {});
       if (state.token) headers.Authorization = "Bearer " + state.token;
-      const r = await fetch(path, Object.assign({}, opts, { headers }));
-      const data = await r.json().catch(() => ({}));
-      if (r.status === 401) {
-        logout(false);
-        throw new Error(data.error || "Sessão expirada");
+      let r;
+      try {
+        r = await fetch(path, Object.assign({}, opts, { headers }));
+      } catch (net) {
+        throw new Error("Sem conexão com a API (" + path + "). Verifique o deploy Vercel.");
       }
-      if (!r.ok) throw new Error(data.error || r.statusText);
+      let data = {};
+      const raw = await r.text();
+      try {
+        data = raw ? JSON.parse(raw) : {};
+      } catch {
+        data = { error: raw.slice(0, 200) || r.statusText };
+      }
+      if (r.status === 401 && path !== "/api/login") {
+        logout(false);
+        throw new Error(data.error || "Sessão expirada — faça login de novo");
+      }
+      if (!r.ok) throw new Error(data.error || data.message || r.statusText || "Erro " + r.status);
       return data;
     }
 
@@ -426,35 +437,60 @@
         .replace(/>/g, "&gt;");
     }
 
+    let chatBusy = false;
     async function sendChat(text) {
+      if (chatBusy) return;
       const input = document.getElementById("chat-input");
+      const btn = document.getElementById("chat-send");
       const msg = (text || input.value || "").trim();
       if (!msg) return;
       input.value = "";
+      chatBusy = true;
+      if (btn) btn.disabled = true;
+
       addMsg("user", "Você", msg);
+      const histBefore = state.history.slice();
       state.history.push({ role: "user", content: msg });
-      const agentMeta = state.agents.find((a) => a.id === state.agent) || { name: "Agente" };
+
+      const agentMeta = state.agents.find((a) => a.id === state.agent) || {
+        name: "Agente",
+        id: state.agent,
+      };
       addMsg("agent", agentMeta.name + "…", "Pensando…");
       const pending = document.getElementById("chat-log").lastChild;
+
       try {
         const model = document.getElementById("model-select").value || undefined;
         const data = await api("/api/chat", {
           method: "POST",
           body: JSON.stringify({
             message: msg,
-            agent: state.agent,
-            model,
-            history: state.history.slice(0, -1),
+            agent: state.agent || "max",
+            model: model || undefined,
+            history: histBefore.slice(-10),
           }),
         });
-        pending.querySelector(".who").textContent = data.agent_name || agentMeta.name;
-        pending.lastChild
-          ? (pending.innerHTML = `<div class="who">${escapeHtml(data.agent_name || agentMeta.name)}</div>${escapeHtml(data.reply)}`)
-          : null;
-        pending.innerHTML = `<div class="who">${escapeHtml(data.agent_name || agentMeta.name)}</div>${escapeHtml(data.reply)}`;
-        state.history.push({ role: "assistant", content: data.reply });
+        const name = data.agent_name || agentMeta.name;
+        const reply = (data.reply || "").trim() || "(sem texto)";
+        pending.innerHTML =
+          `<div class="who">${escapeHtml(name)}</div>` + escapeHtml(reply);
+        state.history.push({ role: "assistant", content: reply });
+        if (data.model) {
+          document.getElementById("top-sub").textContent =
+            `Falando com ${name} · ${data.model}`;
+        }
       } catch (e) {
-        pending.innerHTML = `<div class="who">Erro</div>${escapeHtml(e.message)}`;
+        pending.innerHTML =
+          `<div class="who">Erro</div>` +
+          escapeHtml(e.message || "Falha no chat") +
+          `\n\nDicas: 1) OPENROUTER_API_KEY no Vercel  2) Redeploy  3) modelo gpt-4o-mini  4) faça login de novo`;
+        // desfaz user no histórico se falhou
+        state.history = histBefore;
+      } finally {
+        chatBusy = false;
+        if (btn) btn.disabled = false;
+        const log = document.getElementById("chat-log");
+        log.scrollTop = log.scrollHeight;
       }
     }
 
@@ -527,10 +563,15 @@
       });
 
       if (!document.getElementById("chat-log").children.length) {
+        const chatHint = overview.chat_ready
+          ? "Chat online. Escolha um agente e envie uma mensagem."
+          : "⚠ Chat offline: configure OPENROUTER_API_KEY no Vercel e faça Redeploy.";
         addMsg(
           "agent",
           "Max",
-          "Olá! Sou o Max. Escolha um agente na lateral e peça: fechamento Contmatic, XMLs, conciliação, Reforma Tributária ou status da carteira."
+          "Olá! Sou o Max, gerente dos agentes Escon.\n\n" +
+            chatHint +
+            "\n\nPeça por exemplo: fechamento Contmatic, XMLs, conciliação, Reforma Tributária ou status da carteira."
         );
       }
     }

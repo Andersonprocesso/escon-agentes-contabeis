@@ -6,18 +6,8 @@
 const crypto = require("crypto");
 
 const TOKEN_TTL_MS = 12 * 60 * 60 * 1000;
-const PBKDF2_ITERS = 120000;
-const PBKDF2_KEYLEN = 32;
-const PBKDF2_DIGEST = "sha256";
-
-// Bootstrap: troque por ADMIN_PASSWORD no Vercel. Senha padrão só se hash bater.
-// Hash de "escon-agentes-2026" (altere em produção!)
-const BOOTSTRAP_PASSWORD_HASH =
-  process.env.ADMIN_PASSWORD_HASH ||
-  "a1b2c3d4e5f6789012345678abcdef01:8f3c9e2a1b0d4f5e6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f";
 
 function getAdminUser() {
-  // Ex.: anderson@escondigital.com.br (defina ADMIN_USER no Vercel)
   return (process.env.ADMIN_USER || "admin").trim().toLowerCase();
 }
 
@@ -35,12 +25,12 @@ function getAuthSecret() {
   }
   return crypto
     .createHmac("sha256", "escon-agentes-auth-v1")
-    .update(BOOTSTRAP_PASSWORD_HASH)
+    .update("escon-agentes-no-secret-fallback")
     .digest("hex");
 }
 
 function isAuthConfigured() {
-  return Boolean(getAdminPassword() || process.env.ADMIN_PASSWORD_HASH);
+  return Boolean(getAdminPassword());
 }
 
 function timingSafeEqualStr(a, b) {
@@ -53,42 +43,18 @@ function timingSafeEqualStr(a, b) {
   return crypto.timingSafeEqual(ba, bb);
 }
 
-function verifyPasswordAgainstHash(password, saltHash) {
-  if (!saltHash || typeof saltHash !== "string" || !saltHash.includes(":")) return false;
-  const [saltHex, hashHex] = saltHash.split(":");
-  try {
-    const salt = Buffer.from(saltHex, "hex");
-    const expected = Buffer.from(hashHex, "hex");
-    const actual = crypto.pbkdf2Sync(
-      String(password || ""),
-      salt,
-      PBKDF2_ITERS,
-      PBKDF2_KEYLEN,
-      PBKDF2_DIGEST
-    );
-    if (actual.length !== expected.length) return false;
-    return crypto.timingSafeEqual(actual, expected);
-  } catch {
-    return false;
-  }
-}
-
-function passwordMatches(password) {
-  const envPw = getAdminPassword();
-  if (envPw) return timingSafeEqualStr(String(password || ""), envPw);
-  if (process.env.ADMIN_PASSWORD_HASH) {
-    return verifyPasswordAgainstHash(password, process.env.ADMIN_PASSWORD_HASH);
-  }
-  // Dev only: se nada configurado, permite "admin"/"admin" em localhost? Fail closed.
-  return false;
-}
-
 function b64url(buf) {
   return Buffer.from(buf)
     .toString("base64")
     .replace(/=/g, "")
     .replace(/\+/g, "-")
     .replace(/\//g, "_");
+}
+
+function b64urlDecode(s) {
+  let t = String(s).replace(/-/g, "+").replace(/_/g, "/");
+  while (t.length % 4) t += "=";
+  return Buffer.from(t, "base64").toString("utf8");
 }
 
 function b64urlJson(obj) {
@@ -109,13 +75,18 @@ function verifyToken(token, secret) {
   const expected = b64url(crypto.createHmac("sha256", secret).update(data).digest());
   if (!timingSafeEqualStr(sig, expected)) return null;
   try {
-    const json = Buffer.from(data.replace(/-/g, "+").replace(/_/g, "/"), "base64").toString("utf8");
-    const payload = JSON.parse(json);
+    const payload = JSON.parse(b64urlDecode(data));
     if (!payload.exp || Date.now() > payload.exp) return null;
     return payload;
   } catch {
     return null;
   }
+}
+
+function passwordMatches(password) {
+  const envPw = getAdminPassword();
+  if (!envPw) return false;
+  return timingSafeEqualStr(String(password || ""), envPw);
 }
 
 function validateCredentials(username, password) {
@@ -154,7 +125,7 @@ function requireAuth(req) {
   const m = String(h).match(/^Bearer\s+(.+)$/i);
   if (!m) return { ok: false, status: 401, error: "Não autenticado" };
   const payload = verifyToken(m[1].trim(), getAuthSecret());
-  if (!payload) return { ok: false, status: 401, error: "Sessão expirada ou inválida" };
+  if (!payload) return { ok: false, status: 401, error: "Sessão expirada ou inválida — faça login de novo" };
   return { ok: true, user: payload };
 }
 
