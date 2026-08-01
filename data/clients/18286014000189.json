@@ -1,0 +1,21 @@
+{
+  "id": "18286014000189",
+  "name": "ALFATORRE MONTAGENS E INSTALACOES LTDA",
+  "cnpj": "18.286.014/0001-89",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "1239433491"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "8ae23e58-3dda-4113-8564-cdcf5309e991",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "ALFATORRE MONTAGENS E INSTALACOES LTDA",
+  "source": "radar"
+}

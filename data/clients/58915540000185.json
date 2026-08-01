@@ -1,0 +1,21 @@
+{
+  "id": "58915540000185",
+  "name": "SCHULZ SERVICOS DE MANUTENCOES E REFORMAS LTDA",
+  "cnpj": "58.915.540/0001-85",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12997054321"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "e948c134-28e5-4eee-87ab-fa71db159a54",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "SCHULZ SERVICOS DE MANUTENCOES E REFORMAS LTDA",
+  "source": "radar"
+}

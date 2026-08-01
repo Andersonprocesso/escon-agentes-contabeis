@@ -1,0 +1,21 @@
+{
+  "id": "41797393000193",
+  "name": "41.797.393 Mauricio Ferreira de Moura",
+  "cnpj": "41.797.393/0001-93",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "5512983076613"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "53b0201d-866d-4803-9b97-e5707d6fcc20",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "41.797.393 Mauricio Ferreira de Moura",
+  "source": "radar"
+}

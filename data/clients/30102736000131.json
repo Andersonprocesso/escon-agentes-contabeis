@@ -1,0 +1,21 @@
+{
+  "id": "30102736000131",
+  "name": "ALLAN CARLOS TREGNAGO 38855922823",
+  "cnpj": "30.102.736/0001-31",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12997797400"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "b60b4dff-261d-44c9-8e46-23ff494ca9f7",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "ALLAN CARLOS TREGNAGO 38855922823",
+  "source": "radar"
+}

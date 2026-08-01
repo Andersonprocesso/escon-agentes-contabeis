@@ -1,0 +1,21 @@
+{
+  "id": "22493414000132",
+  "name": "GOULART ARQUITETURA, OBRAS E ACABAMENTO LTDA",
+  "cnpj": "22.493.414/0001-32",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12991154355"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "043ba4f8-73f8-448e-b495-a7ff2615557e",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "GOULART ARQUITETURA OBRAS E ACABAMENTO LTDA",
+  "source": "radar"
+}

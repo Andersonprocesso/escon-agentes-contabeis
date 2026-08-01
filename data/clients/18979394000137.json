@@ -1,0 +1,21 @@
+{
+  "id": "18979394000137",
+  "name": "WALDIR A FERNANDES REPRESENTACOES",
+  "cnpj": "18.979.394/0001-37",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12981176865"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "a4fb2e48-18b0-4326-8e12-f49559f41b0a",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "WALDIR A FERNANDES REPRESENTACOES",
+  "source": "radar"
+}

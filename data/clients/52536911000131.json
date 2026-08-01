@@ -1,0 +1,21 @@
+{
+  "id": "52536911000131",
+  "name": "FARIA RESTAURANTE, LANCHONETE E MERCEARIA LTDA",
+  "cnpj": "52.536.911/0001-31",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12997785005"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "0ed32ee2-9a2f-422f-a851-e3793e2ce4ec",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "FARIA RESTAURANTE LANCHONETE E MERCEARIA LTDA",
+  "source": "radar"
+}

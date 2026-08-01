@@ -1,0 +1,21 @@
+{
+  "id": "27726492000153",
+  "name": "LUCAS BERNARDES 38033296801",
+  "cnpj": "27.726.492/0001-53",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12988310412"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "f8c1ad64-0f3e-4db6-8d25-1cd3ec251b50",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "LUCAS BERNARDES 38033296801",
+  "source": "radar"
+}

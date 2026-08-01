@@ -1,0 +1,21 @@
+{
+  "id": "10790362000187",
+  "name": "SOLEX FERRAGENS E CONSTRUCOES LTDA",
+  "cnpj": "10.790.362/0001-87",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12988108003"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "249bb718-e185-4faf-ba2f-beb1eb2c84c3",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "SOLEX FERRAGENS E CONSTRUCOES LTDA",
+  "source": "radar"
+}

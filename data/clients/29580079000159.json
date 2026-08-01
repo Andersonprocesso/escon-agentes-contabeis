@@ -1,0 +1,21 @@
+{
+  "id": "29580079000159",
+  "name": "NUCLEO TERAPEUTICO VIVENCIA LTDA",
+  "cnpj": "29.580.079/0001-59",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12997198913"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "d12aa825-18b1-47c3-b645-04cecfb70b4d",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "NUCLEO TERAPEUTICO VIVENCIA LTDA",
+  "source": "radar"
+}

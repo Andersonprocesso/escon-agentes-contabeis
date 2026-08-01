@@ -1,0 +1,21 @@
+{
+  "id": "39779255000130",
+  "name": "TANGE YONEDA & YONEDA OHARA JOGOS ELETRONICOS LTDA",
+  "cnpj": "39.779.255/0001-30",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12981024669"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "c85b0e73-50f0-4f05-90d8-f381b058fc97",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "TANGE YONEDA YONEDA OHARA JOGOS ELETRONICOS LTDA",
+  "source": "radar"
+}

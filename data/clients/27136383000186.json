@@ -1,0 +1,21 @@
+{
+  "id": "27136383000186",
+  "name": "FERNANDES FARIA E TOLEDO CABELOS LTDA",
+  "cnpj": "27.136.383/0001-86",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12997785005"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "1ef6ab17-28ca-4278-8ea8-5d0a91d2e307",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "FERNANDES FARIA E TOLEDO CABELOS LTDA",
+  "source": "radar"
+}

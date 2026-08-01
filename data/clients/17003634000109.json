@@ -1,0 +1,21 @@
+{
+  "id": "17003634000109",
+  "name": "LUANA CRISTINA DA SILVA SORVETERIA",
+  "cnpj": "17.003.634/0001-09",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12988105976"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "6262d141-1061-4b32-a215-d84b8b874c96",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "LUANA CRISTINA DA SILVA SORVETERIA",
+  "source": "radar"
+}

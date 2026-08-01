@@ -1,0 +1,701 @@
+{
+  "total": 87,
+  "clients": [
+    {
+      "id": "05026121000126",
+      "nome": "CASA PADUA COMERCIAL LTDA",
+      "cnpj": "05.026.121/0001-26",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "07603336000198",
+      "nome": "ALUMAX MATERIAIS DE CONSTRUCAO LTDA",
+      "cnpj": "07.603.336/0001-98",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "08910102000156",
+      "nome": "MR DE SOUZA OLIVEIRA TREINAMENTO LTDA",
+      "cnpj": "08.910.102/0001-56",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "09054390000157",
+      "nome": "SOUSA GOULART OFICINA MECANICA LTDA",
+      "cnpj": "09.054.390/0001-57",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "09165407000143",
+      "nome": "SOUSA & SOUSA COMERCIO DE FERRAMENTAS LTDA",
+      "cnpj": "09.165.407/0001-43",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "09377184000188",
+      "nome": "DIAS DE PAULA ESCRITORIO DE APOIO ADMINISTRATIVO LTDA",
+      "cnpj": "09.377.184/0001-88",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "09476106000130",
+      "nome": "PAULO EDUARDO SANTOS LANCHONETE",
+      "cnpj": "09.476.106/0001-30",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "09502266000107",
+      "nome": "MARSON & DANTAS MANUTENCAO EM T. I . LTDA",
+      "cnpj": "09.502.266/0001-07",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "10790362000187",
+      "nome": "SOLEX FERRAGENS E CONSTRUCOES LTDA",
+      "cnpj": "10.790.362/0001-87",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "11123711000170",
+      "nome": "NASCIMENTO DE ARAUJO AGENCIA DE VIAGENS LTDA",
+      "cnpj": "11.123.711/0001-70",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "11356356000189",
+      "nome": "USIPED CALDERARIA, FERRAMENTARIA, USINAGEM E MONTAGEM LTDA",
+      "cnpj": "11.356.356/0001-89",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "13181386000127",
+      "nome": "FARIA E MATOS COMERCIO DE EQUIPAMENTOS MEDICOS LTDA",
+      "cnpj": "13.181.386/0001-27",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "13404722000153",
+      "nome": "RICARDO FAGUNDES DO NASCIMENTO TRANSPORTES",
+      "cnpj": "13.404.722/0001-53",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "14158978000190",
+      "nome": "SJ ARTE E CABELO LTDA",
+      "cnpj": "14.158.978/0001-90",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "14785936000180",
+      "nome": "M.A. MONTAGENS LTDA",
+      "cnpj": "14.785.936/0001-80",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "14795919000123",
+      "nome": "FERREIRA BARBOSA LOCACAO DE ANDAIMES LTDA",
+      "cnpj": "14.795.919/0001-23",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "17003634000109",
+      "nome": "LUANA CRISTINA DA SILVA SORVETERIA",
+      "cnpj": "17.003.634/0001-09",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "17718505000199",
+      "nome": "J.L. BARBOSA TRANSPORTE DE CARGAS LTDA",
+      "cnpj": "17.718.505/0001-99",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "18286014000189",
+      "nome": "ALFATORRE MONTAGENS E INSTALACOES LTDA",
+      "cnpj": "18.286.014/0001-89",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "18979394000137",
+      "nome": "WALDIR A FERNANDES REPRESENTACOES",
+      "cnpj": "18.979.394/0001-37",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "21854833000190",
+      "nome": "MARIA IVANI DE JESUS DROGARIA",
+      "cnpj": "21.854.833/0001-90",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "22493414000132",
+      "nome": "GOULART ARQUITETURA, OBRAS E ACABAMENTO LTDA",
+      "cnpj": "22.493.414/0001-32",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "23313543000164",
+      "nome": "M.A. HOTEL LTDA",
+      "cnpj": "23.313.543/0001-64",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "23343420000176",
+      "nome": "COMPASSO ASSESSORIA E SERVICOS LTDA",
+      "cnpj": "23.343.420/0001-76",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "24563612000150",
+      "nome": "YONEDA & OHARA JOGOS ELETRONICOS LTDA",
+      "cnpj": "24.563.612/0001-50",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "25369270000103",
+      "nome": "Escon Solucoes Contabeis",
+      "cnpj": "25.369.270/0001-03",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "26154520000142",
+      "nome": "SANTIAGO MINIMERCADO LTDA",
+      "cnpj": "26.154.520/0001-42",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "26163929000125",
+      "nome": "REQUENE SCHULZ ENGENHARIA LTDA",
+      "cnpj": "26.163.929/0001-25",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "27136383000186",
+      "nome": "FERNANDES FARIA E TOLEDO CABELOS LTDA",
+      "cnpj": "27.136.383/0001-86",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "27726492000153",
+      "nome": "LUCAS BERNARDES 38033296801",
+      "cnpj": "27.726.492/0001-53",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "29077304000139",
+      "nome": "CARLOS EDUARDO MACEDO 26533919881",
+      "cnpj": "29.077.304/0001-39",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "29182502000162",
+      "nome": "MARLI DA SILVA CIRILO 22307237828",
+      "cnpj": "29.182.502/0001-62",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "29410864000163",
+      "nome": "29.410.864 MARIO KAWATA",
+      "cnpj": "29.410.864/0001-63",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "29580079000159",
+      "nome": "NUCLEO TERAPEUTICO VIVENCIA LTDA",
+      "cnpj": "29.580.079/0001-59",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "30102736000131",
+      "nome": "ALLAN CARLOS TREGNAGO 38855922823",
+      "cnpj": "30.102.736/0001-31",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "30557890000106",
+      "nome": "JONAS CARVALHO SOCIEDADE INDIVIDUAL DE ADVOCACIA",
+      "cnpj": "30.557.890/0001-06",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "32226778000100",
+      "nome": "PSICOLOGIA J R C MOURA LTDA",
+      "cnpj": "32.226.778/0001-00",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "32620352000136",
+      "nome": "COMPASSO SERVICOS ADMINISTRATIVOS LTDA",
+      "cnpj": "32.620.352/0001-36",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "33141246000132",
+      "nome": "ERIC KENZO WAKASUGI 47008496818",
+      "cnpj": "33.141.246/0001-32",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "34316047000180",
+      "nome": "JULIANO DIAS CARVALHO FERRAGENS",
+      "cnpj": "34.316.047/0001-80",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "34454481000127",
+      "nome": "EDSON ROBERTO SALES DOS SANTOS",
+      "cnpj": "34.454.481/0001-27",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "34766165000190",
+      "nome": "ELIANA DAS GRACAS DIAS CARVALHO",
+      "cnpj": "34.766.165/0001-90",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "34928980000109",
+      "nome": "CTX SERVICOS LTDA",
+      "cnpj": "34.928.980/0001-09",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "35154641000185",
+      "nome": "GUILHERME DE ALMEIDA ROVETTA 35259340841",
+      "cnpj": "35.154.641/0001-85",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "35599073000126",
+      "nome": "SOARES E DE PAULA PRODUTOS PARA FESTAS LTDA",
+      "cnpj": "35.599.073/0001-26",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "37347712000191",
+      "nome": "KAIROS COMERCIO E SERVICOS DE JARDINAGEM E PAISAGISMO LTDA",
+      "cnpj": "37.347.712/0001-91",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "37350724000175",
+      "nome": "ARAL SOLUCOES E SERVICOS LTDA",
+      "cnpj": "37.350.724/0001-75",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "37747220000193",
+      "nome": "JORGE PAULO RODRIGUES ARAUJO ACABAMENTO",
+      "cnpj": "37.747.220/0001-93",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "37986227000168",
+      "nome": "TOBIAS ARANTES DA SILVA 43289333884",
+      "cnpj": "37.986.227/0001-68",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "39145168000120",
+      "nome": "RIBEIRO & ROCHA COMERCIO DE VIDROS LTDA",
+      "cnpj": "39.145.168/0001-20",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "39452045000132",
+      "nome": "39.452.045 TANIA CARLA MUNIZ SILVA",
+      "cnpj": "39.452.045/0001-32",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "39779255000130",
+      "nome": "TANGE YONEDA & YONEDA OHARA JOGOS ELETRONICOS LTDA",
+      "cnpj": "39.779.255/0001-30",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "41167257000110",
+      "nome": "LUIZ REINALDO DA SILVA DROGARIA",
+      "cnpj": "41.167.257/0001-10",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "41797393000193",
+      "nome": "41.797.393 Mauricio Ferreira de Moura",
+      "cnpj": "41.797.393/0001-93",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "42279160000161",
+      "nome": "MAURA HELENA DOS SANTOS 09859141819",
+      "cnpj": "42.279.160/0001-61",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "42679395000140",
+      "nome": "ADALGISA DA SILVA QUEIROZ 02331389861",
+      "cnpj": "42.679.395/0001-40",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "42836060000199",
+      "nome": "MI FERREIRA BEBIDAS LTDA",
+      "cnpj": "42.836.060/0001-99",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "43140969000170",
+      "nome": "FLAVIO DOS SANTOS 14462385802",
+      "cnpj": "43.140.969/0001-70",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "43437159000180",
+      "nome": "RICHARD FERNANDES VILELA DE MANCILHA 41161493816",
+      "cnpj": "43.437.159/0001-80",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "45100511000113",
+      "nome": "R. FAGUNDES MATERIAIS DE CONSTRUCAO LTDA",
+      "cnpj": "45.100.511/0001-13",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "46040860000150",
+      "nome": "L C REINALDO SILVA FARMACIA LTDA",
+      "cnpj": "46.040.860/0001-50",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "46273818000189",
+      "nome": "46.273.818 MAGNA REGINA DE SOUZA OLIVEIRA",
+      "cnpj": "46.273.818/0001-89",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "48360661000154",
+      "nome": "LC & AR DROGABELLA LTDA",
+      "cnpj": "48.360.661/0001-54",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "48821036000162",
+      "nome": "SIMONE THAMY YONEDA 40131833820",
+      "cnpj": "48.821.036/0001-62",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "52201387000148",
+      "nome": "52.201.387 EDMAR DA SILVA PEREIRA",
+      "cnpj": "52.201.387/0001-48",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "52536911000131",
+      "nome": "FARIA RESTAURANTE, LANCHONETE E MERCEARIA LTDA",
+      "cnpj": "52.536.911/0001-31",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "53425437000133",
+      "nome": "FARMA SANJA DROGARIA LTDA",
+      "cnpj": "53.425.437/0001-33",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "53875211000134",
+      "nome": "SANTOS E SOARES MATERIAIS DE CONSTRUCAO LTDA",
+      "cnpj": "53.875.211/0001-34",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "54167714000118",
+      "nome": "EDUARDO RIBEIRO MARTINES REPARAÇÃO E MANUTENÇÃO LTDA",
+      "cnpj": "54.167.714/0001-18",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "54702538000177",
+      "nome": "BONFIM ACADEMIA DE MUSCULACAO LTDA",
+      "cnpj": "54.702.538/0001-77",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "58360130000115",
+      "nome": "58.360.130 SERGIO FERNANDES DA SILVA",
+      "cnpj": "58.360.130/0001-15",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "58915540000185",
+      "nome": "SCHULZ SERVICOS DE MANUTENCOES E REFORMAS LTDA",
+      "cnpj": "58.915.540/0001-85",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "59069616000161",
+      "nome": "FARIA PERES E TOLEDO SALAO DE BELEZA LTDA",
+      "cnpj": "59.069.616/0001-61",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "59257064000115",
+      "nome": "APOLO EDUCACIONAL E SERVICOS LTDA",
+      "cnpj": "59.257.064/0001-15",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "60932709000157",
+      "nome": "ARAUJO CAMPOS OBRAS DE ALVENARIA LTDA",
+      "cnpj": "60.932.709/0001-57",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "60964555000185",
+      "nome": "ROCHA E REINALDO SILVA PERFUMARIA E COSMETICOS LTDA",
+      "cnpj": "60.964.555/0001-85",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "61056491000187",
+      "nome": "ANA GABRIELA RAMOS DE CAMPOS REPRESENTACOES",
+      "cnpj": "61.056.491/0001-87",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "62214634000102",
+      "nome": "MARTINS SANTOS PIZZARIA E HAMBURGUERIA LTDA",
+      "cnpj": "62.214.634/0001-02",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "62320328000142",
+      "nome": "ANDRADE DE MORAES SOLUCOES E SERVIÇOS LTDA",
+      "cnpj": "62.320.328/0001-42",
+      "regime": "simples_nacional",
+      "uf": "PE",
+      "source": "radar"
+    },
+    {
+      "id": "62391868000117",
+      "nome": "ARAL QUEIMADOS SOLUCOES E SERVIÇOS LTDA",
+      "cnpj": "62.391.868/0001-17",
+      "regime": "simples_nacional",
+      "uf": "RJ",
+      "source": "radar"
+    },
+    {
+      "id": "62409014000110",
+      "nome": "MORAES APOIO A EDUCAÇÃO LTDA",
+      "cnpj": "62.409.014/0001-10",
+      "regime": "simples_nacional",
+      "uf": "RJ",
+      "source": "radar"
+    },
+    {
+      "id": "62975524000155",
+      "nome": "ARAL SOLUCOES ITATIAIA LTDA",
+      "cnpj": "62.975.524/0001-55",
+      "regime": "simples_nacional",
+      "uf": "RJ",
+      "source": "radar"
+    },
+    {
+      "id": "64935174000129",
+      "nome": "MARSAN FABRICACAO DE ESQUADRIAS DE ALUMINIO LTDA",
+      "cnpj": "64.935.174/0001-29",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "65225304000100",
+      "nome": "REINALDO E ROCHA PERFUMARIA E COSMETICOS LTDA",
+      "cnpj": "65.225.304/0001-00",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "66037648000140",
+      "nome": "SOUZA SANTOS OBRAS DE ALVENARIA LTDA",
+      "cnpj": "66.037.648/0001-40",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "66196642000116",
+      "nome": "FARMA SANJA SETVILLE DROGARIA LTDA",
+      "cnpj": "66.196.642/0001-16",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    },
+    {
+      "id": "67874427000190",
+      "nome": "FARMA SANJA JACAREI DROGARIA LTDA",
+      "cnpj": "67.874.427/0001-90",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar"
+    }
+  ]
+}

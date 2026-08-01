@@ -1,0 +1,21 @@
+{
+  "id": "60932709000157",
+  "name": "ARAUJO CAMPOS OBRAS DE ALVENARIA LTDA",
+  "cnpj": "60.932.709/0001-57",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "11964287119"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "1d2f8f8a-fd84-4453-a5ab-aa10ce92cd7e",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "ARAUJO CAMPOS OBRAS DE ALVENARIA LTDA",
+  "source": "radar"
+}

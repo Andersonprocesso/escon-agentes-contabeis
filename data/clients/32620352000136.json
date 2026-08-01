@@ -1,0 +1,21 @@
+{
+  "id": "32620352000136",
+  "name": "COMPASSO SERVICOS ADMINISTRATIVOS LTDA",
+  "cnpj": "32.620.352/0001-36",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12996125554"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "3e1caeb3-36ef-493a-ba94-d7958d17cae4",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "COMPASSO SERVICOS ADMINISTRATIVOS LTDA",
+  "source": "radar"
+}

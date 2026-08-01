@@ -1,0 +1,16 @@
+.venv
+venv
+__pycache__
+*.pyc
+src/escon_agentes.egg-info
+data/inbox
+data/outbox
+data/tasks
+data/requests
+data/imports
+.env
+.env.local
+.pytest_cache
+.git
+*.xlsx
+!data/models/0001_2026_lctos.xlsx

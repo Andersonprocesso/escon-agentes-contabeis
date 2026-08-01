@@ -1,0 +1,21 @@
+{
+  "id": "05026121000126",
+  "name": "CASA PADUA COMERCIAL LTDA",
+  "cnpj": "05.026.121/0001-26",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12988998264"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "c90e695c-b8f9-47f8-9958-ecee91e6583b",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "CASA PADUA COMERCIAL LTDA",
+  "source": "radar"
+}

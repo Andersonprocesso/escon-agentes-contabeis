@@ -1,0 +1,21 @@
+{
+  "id": "48821036000162",
+  "name": "SIMONE THAMY YONEDA 40131833820",
+  "cnpj": "48.821.036/0001-62",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12981024669"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "a93dce23-9f81-4945-a806-d0b0a3a8bfb4",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "SIMONE THAMY YONEDA 40131833820",
+  "source": "radar"
+}

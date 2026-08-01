@@ -1,0 +1,21 @@
+{
+  "id": "11123711000170",
+  "name": "NASCIMENTO DE ARAUJO AGENCIA DE VIAGENS LTDA",
+  "cnpj": "11.123.711/0001-70",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12991827048"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "0eecd29a-444e-4155-bfa7-7e0d70b10de0",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "NASCIMENTO DE ARAUJO AGENCIA DE VIAGENS LTDA",
+  "source": "radar"
+}

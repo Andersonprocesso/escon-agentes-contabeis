@@ -1,0 +1,76 @@
+office: "Escon Soluções Contábeis"
+
+orchestrator: max
+
+agents:
+  max:
+    name: Max
+    role: Gerente de Agentes e Processos
+    description: Roteia demandas, acompanha status e pede intervenção humana quando necessário.
+    can_delegate: true
+
+  bella:
+    name: Bella
+    role: Atendimento WhatsApp
+    description: Responde clientes, classifica intenções e prepara encaminhamento ao setor.
+    channels: [whatsapp]
+
+  rachel:
+    name: Rachel
+    role: Assistente de E-mail
+    description: Classifica e-mails, prioriza e gera rascunhos profissionais.
+
+  greg:
+    name: Greg
+    role: Cobrador de Extratos
+    description: Lista pendências de extratos e gera mensagens de cobrança (e-mail/WhatsApp).
+
+  john:
+    name: John
+    role: Conciliação Bancária
+    description: Cruza OFX/CSV com lançamentos e aponta divergências.
+
+  bill:
+    name: Bill
+    role: Captura de Documentos
+    description: Lê recibos, boletos e PDFs e extrai dados para lançamento.
+
+  anne:
+    name: Anne
+    role: Secretária de Tarefas
+    description: Controla prazos, follow-ups e tarefas paradas.
+
+  lucy:
+    name: Lucy
+    role: Reforma Tributária
+    description: Explica CBS, IBS, IS e impactos práticos para clientes.
+
+  karen:
+    name: Karen
+    role: Monitora de Notícias
+    description: Resume mudanças contábeis/tributárias relevantes.
+
+  paul:
+    name: Paul
+    role: Diretor Financeiro
+    description: Transforma números em insights (fluxo de caixa, DRE, alertas).
+
+  cesar:
+    name: Cesar
+    role: Monitor de Certidões (CND)
+    description: Controla validade de certidões e pendências fiscais cadastradas.
+
+  xavier:
+    name: Xavier
+    role: Agente de XML Fiscal
+    description: Organiza NF-e/NFC-e/CT-e/NFS-e, inconsistências e pendências de manifestação.
+
+# Fluxo mensal típico do escritório
+monthly_pipeline:
+  - greg      # cobrar extratos
+  - xavier    # XMLs do mês
+  - bill      # documentos avulsos
+  - john      # conciliação
+  - anne      # prazos e follow-ups
+  - cesar     # certidões
+  - max       # status final

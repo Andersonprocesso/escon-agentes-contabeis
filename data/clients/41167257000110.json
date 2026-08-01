@@ -1,0 +1,21 @@
+{
+  "id": "41167257000110",
+  "name": "LUIZ REINALDO DA SILVA DROGARIA",
+  "cnpj": "41.167.257/0001-10",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12988161417"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "e3223563-b970-4560-aa21-8a63225a2f53",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "LUIZ REINALDO DA SILVA DROGARIA",
+  "source": "radar"
+}

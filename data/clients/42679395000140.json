@@ -1,0 +1,21 @@
+{
+  "id": "42679395000140",
+  "name": "ADALGISA DA SILVA QUEIROZ 02331389861",
+  "cnpj": "42.679.395/0001-40",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12981535028"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "d8fbf0fe-bd68-40b1-a7ef-bd3ffb1e3f97",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "ADALGISA DA SILVA QUEIROZ 02331389861",
+  "source": "radar"
+}

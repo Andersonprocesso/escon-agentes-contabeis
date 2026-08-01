@@ -1,0 +1,21 @@
+{
+  "id": "61056491000187",
+  "name": "ANA GABRIELA RAMOS DE CAMPOS REPRESENTACOES",
+  "cnpj": "61.056.491/0001-87",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12982912005"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "df3f5fa4-a145-42db-aaf0-31f3bd9ece12",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "ANA GABRIELA RAMOS DE CAMPOS REPRESENTACOES",
+  "source": "radar"
+}

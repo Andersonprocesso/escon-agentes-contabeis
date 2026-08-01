@@ -1,0 +1,21 @@
+{
+  "id": "25369270000103",
+  "name": "Escon Solucoes Contabeis",
+  "cnpj": "25.369.270/0001-03",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12974035169"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "6f765b55-bcbb-4dd9-bb9c-3d838f8532f1",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "Escon Solucoes Contabeis",
+  "source": "radar"
+}

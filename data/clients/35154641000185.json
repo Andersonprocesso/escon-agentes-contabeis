@@ -1,0 +1,21 @@
+{
+  "id": "35154641000185",
+  "name": "GUILHERME DE ALMEIDA ROVETTA 35259340841",
+  "cnpj": "35.154.641/0001-85",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12982317313"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "4c11fbd3-c026-4bc9-98a6-9917e8ace5e5",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "GUILHERME DE ALMEIDA ROVETTA 35259340841",
+  "source": "radar"
+}

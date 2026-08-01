@@ -1,0 +1,21 @@
+{
+  "id": "53875211000134",
+  "name": "SANTOS E SOARES MATERIAIS DE CONSTRUCAO LTDA",
+  "cnpj": "53.875.211/0001-34",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12987091491"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "3c698238-17ee-4d76-b7d3-e17b1291a36b",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "SANTOS E SOARES MATERIAIS DE CONSTRUCAO LTDA",
+  "source": "radar"
+}

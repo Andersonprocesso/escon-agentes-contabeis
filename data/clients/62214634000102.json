@@ -1,0 +1,21 @@
+{
+  "id": "62214634000102",
+  "name": "MARTINS SANTOS PIZZARIA E HAMBURGUERIA LTDA",
+  "cnpj": "62.214.634/0001-02",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12991879921"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "9219d611-e65c-4663-89bf-adb2ee50439f",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "MARTINS SANTOS PIZZARIA E HAMBURGUERIA LTDA",
+  "source": "radar"
+}

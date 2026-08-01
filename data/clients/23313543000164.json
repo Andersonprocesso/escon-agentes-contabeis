@@ -1,0 +1,21 @@
+{
+  "id": "23313543000164",
+  "name": "M.A. HOTEL LTDA",
+  "cnpj": "23.313.543/0001-64",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12997828318"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "21490820-5758-435c-be19-382fe8cda226",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "M.A. HOTEL LTDA",
+  "source": "radar"
+}

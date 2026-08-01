@@ -1,0 +1,21 @@
+{
+  "id": "13181386000127",
+  "name": "FARIA E MATOS COMERCIO DE EQUIPAMENTOS MEDICOS LTDA",
+  "cnpj": "13.181.386/0001-27",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12997247053"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "25fa2e42-2ef4-40ef-bd88-5bef28b9d4d9",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "FARIA E MATOS COMERCIO DE EQUIPAMENTOS MEDICOS LTDA",
+  "source": "radar"
+}

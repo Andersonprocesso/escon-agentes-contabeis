@@ -1,0 +1,21 @@
+{
+  "id": "52201387000148",
+  "name": "52.201.387 EDMAR DA SILVA PEREIRA",
+  "cnpj": "52.201.387/0001-48",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12981264291"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "c20952e0-3792-4396-b89e-9cf79ab1dd34",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "52.201.387 EDMAR DA SILVA PEREIRA",
+  "source": "radar"
+}

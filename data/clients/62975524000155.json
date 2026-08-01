@@ -1,0 +1,21 @@
+{
+  "id": "62975524000155",
+  "name": "ARAL SOLUCOES ITATIAIA LTDA",
+  "cnpj": "62.975.524/0001-55",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12996125554"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "ec2f9bae-b0f2-41b4-9e09-503b866e0b24",
+  "uf": "RJ",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "ARAL SOLUCOES ITATIAIA LTDA",
+  "source": "radar"
+}

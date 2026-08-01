@@ -1,0 +1,21 @@
+{
+  "id": "60964555000185",
+  "name": "ROCHA E REINALDO SILVA PERFUMARIA E COSMETICOS LTDA",
+  "cnpj": "60.964.555/0001-85",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12988161417"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "e0c99b16-044f-4693-b7b1-7023bfed7cbd",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "ROCHA E REINALDO SILVA PERFUMARIA E COSMETICOS LTDA",
+  "source": "radar"
+}

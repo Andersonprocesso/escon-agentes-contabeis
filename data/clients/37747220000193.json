@@ -1,0 +1,21 @@
+{
+  "id": "37747220000193",
+  "name": "JORGE PAULO RODRIGUES ARAUJO ACABAMENTO",
+  "cnpj": "37.747.220/0001-93",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "11964287119"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "12b7d44e-f8e2-402b-9f49-1823e347b773",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "JORGE PAULO RODRIGUES ARAUJO ACABAMENTO",
+  "source": "radar"
+}

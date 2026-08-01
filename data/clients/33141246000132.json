@@ -1,0 +1,21 @@
+{
+  "id": "33141246000132",
+  "name": "ERIC KENZO WAKASUGI 47008496818",
+  "cnpj": "33.141.246/0001-32",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12981525461"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "615be2f9-0f47-415c-8d6c-9fe55cb95482",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "ERIC KENZO WAKASUGI 47008496818",
+  "source": "radar"
+}

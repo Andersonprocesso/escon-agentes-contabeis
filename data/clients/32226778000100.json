@@ -1,0 +1,21 @@
+{
+  "id": "32226778000100",
+  "name": "PSICOLOGIA J R C MOURA LTDA",
+  "cnpj": "32.226.778/0001-00",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12981605593"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "61e55bf1-c84a-4489-8cae-38381c2e136e",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "PSICOLOGIA J R C MOURA LTDA",
+  "source": "radar"
+}

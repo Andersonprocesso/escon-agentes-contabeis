@@ -1,0 +1,21 @@
+{
+  "id": "35599073000126",
+  "name": "SOARES E DE PAULA PRODUTOS PARA FESTAS LTDA",
+  "cnpj": "35.599.073/0001-26",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12996222711"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "9adb0c88-dccf-44f6-aace-82a8e9889fbf",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "SOARES E DE PAULA PRODUTOS PARA FESTAS LTDA",
+  "source": "radar"
+}

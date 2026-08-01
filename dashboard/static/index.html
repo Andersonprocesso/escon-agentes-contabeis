@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Escon Agentes — Painel da Equipe</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --panel: #1a2332;
+      --panel2: #243044;
+      --text: #e7ecf3;
+      --muted: #8b9bb4;
+      --accent: #3d8bfd;
+      --ok: #3ecf8e;
+      --warn: #f5a524;
+      --bad: #f31260;
+      --border: #2d3a4f;
+      --radius: 12px;
+      --font: "Segoe UI", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background: linear-gradient(160deg, #0b1020 0%, #0f1419 40%, #152238 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(15, 20, 25, 0.85);
+      backdrop-filter: blur(8px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+    }
+    header .sub { color: var(--muted); font-size: 0.85rem; margin-top: 0.2rem; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .badge.ok { color: var(--ok); border-color: #2a5a44; }
+    .badge.warn { color: var(--warn); border-color: #5a4520; }
+    main {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 1.25rem 1.5rem 3rem;
+      display: grid;
+      gap: 1.25rem;
+    }
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.75rem;
+    }
+    .kpi {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+    }
+    .kpi .n { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.03em; }
+    .kpi .l { color: var(--muted); font-size: 0.8rem; margin-top: 0.25rem; }
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 1.25rem;
+    }
+    @media (max-width: 960px) {
+      .grid2 { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .card h2 {
+      margin: 0;
+      padding: 0.9rem 1rem;
+      font-size: 0.95rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .card .body { padding: 1rem; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 0.55rem 0.4rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    th { color: var(--muted); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+    .status {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.15rem 0.45rem;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+    .status.waiting_human, .status.queued { background: #3d2e10; color: var(--warn); }
+    .status.done { background: #143528; color: var(--ok); }
+    .status.running { background: #1a2f4a; color: var(--accent); }
+    .status.failed { background: #3a1520; color: var(--bad); }
+    label { display: block; font-size: 0.78rem; color: var(--muted); margin-bottom: 0.3rem; }
+    input, select, textarea, button {
+      font: inherit;
+      color: var(--text);
+    }
+    input, select, textarea {
+      width: 100%;
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.55rem 0.65rem;
+      margin-bottom: 0.75rem;
+    }
+    textarea { min-height: 72px; resize: vertical; }
+    button {
+      background: var(--accent);
+      border: none;
+      border-radius: 8px;
+      padding: 0.65rem 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover { filter: brightness(1.08); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    button.ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .row > * { flex: 1; min-width: 120px; }
+    .muted { color: var(--muted); font-size: 0.8rem; }
+    .mono { font-family: ui-monospace, Consolas, monospace; font-size: 0.8rem; }
+    .detail {
+      white-space: pre-wrap;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem;
+      max-height: 280px;
+      overflow: auto;
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+    .priority {
+      background: linear-gradient(90deg, #2a1f0a, var(--panel));
+      border: 1px solid #5a4520;
+      border-radius: var(--radius);
+      padding: 0.85rem 1rem;
+      font-size: 0.9rem;
+    }
+    .priority strong { color: var(--warn); }
+    a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Escon Soluções Contábeis — Agentes</h1>
+      <div class="sub">Painel da equipe · fluxos · solicitações · revisão humana</div>
+    </div>
+    <div class="row" style="flex:0; align-items:center;">
+      <span class="badge" id="llmBadge">LLM…</span>
+      <button class="ghost" type="button" onclick="refreshAll()">Atualizar</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="priority" id="priorityBox">
+      Prioridade #1: <strong>Lançamentos Contmatic</strong> (zerar atraso → migrar Contábil 100% Oneflow)
+    </div>
+
+    <section class="kpis" id="kpis"></section>
+
+    <section class="grid2">
+      <div class="card">
+        <h2>Solicitar serviço <span class="muted">colaboradoras</span></h2>
+        <div class="body">
+          <form id="reqForm">
+            <label>Serviço</label>
+            <select id="service" required></select>
+            <div class="row">
+              <div>
+                <label>Cliente</label>
+                <select id="client"></select>
+              </div>
+              <div>
+                <label>Modelo (OpenRouter)</label>
+                <select id="model"></select>
+              </div>
+            </div>
+            <label>Seu nome</label>
+            <input id="by" placeholder="Ex.: Maria" value="equipe" />
+            <label>Observações / pasta (opcional)</label>
+            <textarea id="notes" placeholder="Ex.: competência 07/2026, pasta com XMLs já na inbox"></textarea>
+            <button type="submit" id="btnSubmit">Solicitar e executar</button>
+            <p class="muted" style="margin-top:0.75rem;">
+              WhatsApp de produção: use a <strong>Secretaria / EsconZap</strong> (não duplicar aqui).
+              Contmatic gera Excel em <span class="mono">data/outbox/{cliente}/contmatic/</span> para revisão.
+            </p>
+          </form>
+          <div id="reqResult" class="detail" style="display:none;margin-top:0.75rem;"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Fila de solicitações</h2>
+        <div class="body" style="padding:0;">
+          <div style="overflow:auto; max-height:420px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Serviço</th>
+                  <th>Cliente</th>
+                  <th>Status</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="reqBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>
+        Execuções dos agentes
+        <span class="muted" id="runsMeta"></span>
+      </h2>
+      <div class="body" style="padding:0;">
+        <div style="overflow:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Quando</th>
+                <th>Run</th>
+                <th>Pedido</th>
+                <th>Cliente</th>
+                <th>Agentes</th>
+                <th>Status</th>
+                <th>Modelo</th>
+              </tr>
+            </thead>
+            <tbody id="runsBody"></tbody>
+          </table>
+        </div>
+        <div class="body">
+          <label>Detalhe do run selecionado</label>
+          <div class="detail" id="runDetail">Clique em um run para ver o que cada agente fez.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid2">
+      <div class="card">
+        <h2>Tarefas abertas (Anne)</h2>
+        <div class="body" style="padding:0; max-height:280px; overflow:auto;">
+          <table>
+            <thead><tr><th>Tarefa</th><th>Cliente</th><th>Vence</th></tr></thead>
+            <tbody id="tasksBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Agentes disponíveis</h2>
+        <div class="body" style="padding:0; max-height:280px; overflow:auto;">
+          <table>
+            <thead><tr><th>ID</th><th>Nome</th><th>Papel</th></tr></thead>
+            <tbody id="agentsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    async function j(url, opts) {
+      const r = await fetch(url, opts);
+      if (!r.ok) {
+        const t = await r.text();
+        throw new Error(t || r.statusText);
+      }
+      return r.json();
+    }
+
+    function statusHtml(s) {
+      const cls = (s || '').replace(/\s/g, '_');
+      return `<span class="status ${cls}">${s || '-'}</span>`;
+    }
+
+    async function loadHealth() {
+      const h = await j('/api/health');
+      const el = document.getElementById('llmBadge');
+      if (h.offline) {
+        el.textContent = 'LLM offline (tools OK)';
+        el.className = 'badge warn';
+      } else {
+        el.textContent = `${h.llm_provider} · ${h.llm_model || ''}`;
+        el.className = 'badge ok';
+      }
+    }
+
+    async function loadOverview() {
+      const o = await j('/api/overview');
+      document.getElementById('priorityBox').innerHTML =
+        `Prioridade #1: <strong>${o.priority}</strong>`;
+      document.getElementById('kpis').innerHTML = [
+        ['Aguardando humano', o.runs_waiting_human, 'warn'],
+        ['Solicitações abertas', o.requests_open, ''],
+        ['Na fila', o.requests_queued, ''],
+        ['Tarefas Anne', o.tasks_open, ''],
+        ['Runs recentes', o.runs_total, ''],
+        ['Clientes cad.', o.clients, ''],
+      ].map(([l, n, c]) => `
+        <div class="kpi">
+          <div class="n" style="${c==='warn'&&n>0?'color:var(--warn)':''}">${n}</div>
+          <div class="l">${l}</div>
+        </div>`).join('');
+    }
+
+    async function loadSelects() {
+      const [services, clients, models] = await Promise.all([
+        j('/api/services'),
+        j('/api/clients'),
+        j('/api/models'),
+      ]);
+      const svc = document.getElementById('service');
+      svc.innerHTML = services.map(s =>
+        `<option value="${s.id}">${s.label}</option>`).join('');
+      const cl = document.getElementById('client');
+      cl.innerHTML = `<option value="">— opcional / todos —</option>` +
+        clients.map(c => `<option value="${c.id}">${c.nome} (${c.id})</option>`).join('');
+      const md = document.getElementById('model');
+      const aliases = models.aliases || {};
+      md.innerHTML = `<option value="">padrão (${models.default || 'offline'})</option>` +
+        Object.entries(aliases).map(([k, v]) =>
+          `<option value="${k}">${k} → ${v}</option>`).join('');
+    }
+
+    async function loadRequests() {
+      const items = await j('/api/requests');
+      document.getElementById('reqBody').innerHTML = items.slice(0, 30).map(it => `
+        <tr>
+          <td class="mono">${it.id}</td>
+          <td>${it.service_label || it.service_id}<div class="muted">${(it.result_summary||'').slice(0,80)}</div></td>
+          <td>${it.client_id || '—'}</td>
+          <td>${statusHtml(it.status)}</td>
+          <td>${it.status==='queued' ? `<button class="ghost" type="button" onclick="execReq('${it.id}')">Rodar</button>` : ''}</td>
+        </tr>`).join('') || '<tr><td colspan="5" class="muted">Nenhuma solicitação ainda</td></tr>';
+    }
+
+    async function loadRuns() {
+      const runs = await j('/api/runs?limit=40');
+      document.getElementById('runsMeta').textContent = `${runs.length} recentes`;
+      document.getElementById('runsBody').innerHTML = runs.map(r => `
+        <tr style="cursor:pointer" onclick="showRun('${r.id}')">
+          <td class="muted">${(r.created_at||'').replace('T',' ')}</td>
+          <td class="mono">${r.id}</td>
+          <td>${(r.title||'').slice(0,60)}</td>
+          <td>${r.client_id || '—'}</td>
+          <td class="mono">${(r.agents||[]).join(', ')}</td>
+          <td>${statusHtml(r.status)}</td>
+          <td class="muted">${r.llm || ''}</td>
+        </tr>`).join('') || '<tr><td colspan="7" class="muted">Nenhum run</td></tr>';
+    }
+
+    async function showRun(id) {
+      const d = await j('/api/runs/' + id);
+      const lines = [];
+      lines.push(`# Run ${d.id} · ${d.status}`);
+      lines.push(`Pedido: ${d.title || ''}`);
+      lines.push(`Cliente: ${d.client_id || '—'} · modelo: ${d.model || d.llm || '—'}`);
+      lines.push(`Roteamento: ${d.reasoning || ''}`);
+      lines.push('');
+      for (const r of (d.results || [])) {
+        lines.push(`## ${r.agent} ${r.success ? '✓' : '✗'}`);
+        lines.push(r.summary || '');
+        if (r.needs_human) lines.push(`⏸ Humano: ${r.human_prompt || ''}`);
+        if (r.artifacts && r.artifacts.length) lines.push('Artefatos:\n- ' + r.artifacts.join('\n- '));
+        lines.push('');
+      }
+      if (d.needs_human && d.needs_human.length) {
+        lines.push('Revisão humana:');
+        d.needs_human.forEach(n => lines.push('• ' + n));
+      }
+      if (d.pipeline) {
+        lines.push('Pipeline Contmatic:');
+        lines.push(JSON.stringify(d.pipeline.checklist || d.pipeline.summary, null, 2));
+      }
+      document.getElementById('runDetail').textContent = lines.join('\n');
+    }
+
+    async function loadTasks() {
+      const tasks = await j('/api/tasks');
+      const open = tasks.filter(t => t.status === 'open');
+      document.getElementById('tasksBody').innerHTML = open.map(t => `
+        <tr>
+          <td>${t.title}<div class="muted mono">${t.id}</div></td>
+          <td>${t.client_id || '—'}</td>
+          <td>${t.due_at || '—'}</td>
+        </tr>`).join('') || '<tr><td colspan="3" class="muted">Nenhuma tarefa aberta</td></tr>';
+    }
+
+    async function loadAgents() {
+      const agents = await j('/api/agents');
+      document.getElementById('agentsBody').innerHTML = agents.map(a => `
+        <tr><td class="mono">${a.id}</td><td>${a.name}</td><td class="muted">${a.role}</td></tr>
+      `).join('');
+    }
+
+    async function execReq(id) {
+      const el = document.getElementById('reqResult');
+      el.style.display = 'block';
+      el.textContent = 'Executando ' + id + '…';
+      try {
+        const r = await j('/api/requests/' + id + '/execute', { method: 'POST' });
+        el.textContent = JSON.stringify(r, null, 2);
+        await refreshAll();
+      } catch (e) {
+        el.textContent = 'Erro: ' + e.message;
+      }
+    }
+
+    document.getElementById('reqForm').addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const btn = document.getElementById('btnSubmit');
+      const el = document.getElementById('reqResult');
+      btn.disabled = true;
+      el.style.display = 'block';
+      el.textContent = 'Enviando…';
+      try {
+        const body = {
+          service_id: document.getElementById('service').value,
+          client_id: document.getElementById('client').value || null,
+          notes: document.getElementById('notes').value,
+          requested_by: document.getElementById('by').value || 'equipe',
+          model: document.getElementById('model').value || null,
+          execute_now: true,
+        };
+        const r = await j('/api/requests', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        el.textContent = JSON.stringify(r, null, 2);
+        await refreshAll();
+        if (r.run_id) showRun(r.run_id);
+        else if (r.service_id === 'contmatic') {
+          // show pipeline summary
+        }
+      } catch (e) {
+        el.textContent = 'Erro: ' + e.message;
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    async function refreshAll() {
+      await Promise.all([
+        loadHealth(),
+        loadOverview(),
+        loadRequests(),
+        loadRuns(),
+        loadTasks(),
+        loadAgents(),
+      ]);
+    }
+
+    loadSelects().then(refreshAll).catch(e => {
+      document.getElementById('runDetail').textContent = 'Falha ao carregar API: ' + e.message;
+    });
+    setInterval(refreshAll, 20000);
+  </script>
+</body>
+</html>

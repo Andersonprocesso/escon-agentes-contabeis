@@ -1,0 +1,21 @@
+{
+  "id": "64935174000129",
+  "name": "MARSAN FABRICACAO DE ESQUADRIAS DE ALUMINIO LTDA",
+  "cnpj": "64.935.174/0001-29",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12988491776"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "32e34dce-e3d5-4f70-af78-2b4a7b70d0e3",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "MARSAN FABRICACAO DE ESQUADRIAS DE ALUMINIO LTDA",
+  "source": "radar"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "42279160000161",
+  "name": "MAURA HELENA DOS SANTOS 09859141819",
+  "cnpj": "42.279.160/0001-61",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12997935341"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "a901e49b-ac06-4169-80d6-269de1794032",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "MAURA HELENA DOS SANTOS 09859141819",
+  "source": "radar"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "42836060000199",
+  "name": "MI FERREIRA BEBIDAS LTDA",
+  "cnpj": "42.836.060/0001-99",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12991119976"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "237b3487-93e5-4666-a258-f0eff00c78fb",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "MI FERREIRA BEBIDAS LTDA",
+  "source": "radar"
+}

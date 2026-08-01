@@ -1,0 +1,21 @@
+{
+  "id": "53425437000133",
+  "name": "FARMA SANJA DROGARIA LTDA",
+  "cnpj": "53.425.437/0001-33",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12988161417"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "11cfb113-4ead-4c60-9602-0b8d99f06dac",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "FARMA SANJA DROGARIA LTDA",
+  "source": "radar"
+}

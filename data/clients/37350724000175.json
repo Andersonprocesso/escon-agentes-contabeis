@@ -1,0 +1,21 @@
+{
+  "id": "37350724000175",
+  "name": "ARAL SOLUCOES E SERVICOS LTDA",
+  "cnpj": "37.350.724/0001-75",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12996125554"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "341b950f-7228-4597-8189-daf2209962b1",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "ARAL SOLUCOES E SERVICOS LTDA",
+  "source": "radar"
+}

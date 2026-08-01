@@ -1,0 +1,21 @@
+{
+  "id": "14785936000180",
+  "name": "M.A. MONTAGENS LTDA",
+  "cnpj": "14.785.936/0001-80",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12988616169"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "470a9882-15e7-44ed-bd83-d652cc7f7cb2",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "M.A. MONTAGENS LTDA",
+  "source": "radar"
+}

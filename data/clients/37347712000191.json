@@ -1,0 +1,21 @@
+{
+  "id": "37347712000191",
+  "name": "KAIROS COMERCIO E SERVICOS DE JARDINAGEM E PAISAGISMO LTDA",
+  "cnpj": "37.347.712/0001-91",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12996698857"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "5f40ceb0-60df-4ba1-829b-5847e5731ebe",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "KAIROS COMERCIO E SERVICOS DE JARDINAGEM E PAISAGISMO LTDA",
+  "source": "radar"
+}

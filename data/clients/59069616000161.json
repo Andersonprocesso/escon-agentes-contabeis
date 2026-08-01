@@ -1,0 +1,21 @@
+{
+  "id": "59069616000161",
+  "name": "FARIA PERES E TOLEDO SALAO DE BELEZA LTDA",
+  "cnpj": "59.069.616/0001-61",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12997785005"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "4fc72749-f33b-4db9-b89a-70f569ca99ef",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "FARIA PERES E TOLEDO SALAO DE BELEZA LTDA",
+  "source": "radar"
+}

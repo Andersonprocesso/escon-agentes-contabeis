@@ -1,0 +1,21 @@
+{
+  "id": "14795919000123",
+  "name": "FERREIRA BARBOSA LOCACAO DE ANDAIMES LTDA",
+  "cnpj": "14.795.919/0001-23",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12988256199"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "452e574c-28b3-4277-a67d-48d42204f9c1",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "FERREIRA BARBOSA LOCACAO DE ANDAIMES LTDA",
+  "source": "radar"
+}

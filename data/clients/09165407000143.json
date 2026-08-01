@@ -1,0 +1,21 @@
+{
+  "id": "09165407000143",
+  "name": "SOUSA & SOUSA COMERCIO DE FERRAMENTAS LTDA",
+  "cnpj": "09.165.407/0001-43",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12997335363"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "1ec693e9-0d69-4b12-a9db-3afaf1028244",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "SOUSA SOUSA COMERCIO DE FERRAMENTAS LTDA",
+  "source": "radar"
+}

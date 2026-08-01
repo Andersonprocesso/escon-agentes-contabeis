@@ -1,0 +1,21 @@
+{
+  "id": "09502266000107",
+  "name": "MARSON & DANTAS MANUTENCAO EM T. I . LTDA",
+  "cnpj": "09.502.266/0001-07",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12974012164"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "146083e6-9ef2-4bff-9ec2-c170c65e4cfc",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "MARSON DANTAS MANUTENCAO EM T. I . LTDA",
+  "source": "radar"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "54702538000177",
+  "name": "BONFIM ACADEMIA DE MUSCULACAO LTDA",
+  "cnpj": "54.702.538/0001-77",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12974039102"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "d8c5c084-3070-4bc7-94b4-0b927d7afec4",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "BONFIM ACADEMIA DE MUSCULACAO LTDA",
+  "source": "radar"
+}

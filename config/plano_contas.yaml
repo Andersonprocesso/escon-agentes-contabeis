@@ -1,0 +1,110 @@
+# Plano de contas Contmatic — Escon Soluções Contábeis
+# Fonte única alinhada à skill Contabilizador:
+#   C:\Users\ander\.claude\skills\user\contabilizador\contabilizador.py
+# Códigos usados no Excel de importação (colunas Débito / Crédito).
+
+versao: "2026-08-01"
+sistema: contmatic
+escritorio: Escon Soluções Contábeis
+
+contas:
+  # Ativo
+  caixa: 1111101
+  banco_itau: 1112201
+  banco_bradesco: 1112202
+  banco_cef: 1112203
+  banco_inter: 1112204
+  banco_bb: 1112205
+  banco_santander: 1112206
+  banco_sicoob: 1112207
+  banco_mercadopago: 1112208
+  banco_nubank: 1112211
+  duplicatas_receber: 1121101
+  inss_retido_fonte: 1131910
+
+  # Passivo
+  fornecedores: 2111101
+  simples_nacional: 2131101
+  inss_pagar: 2131201
+  fgts_pagar: 2131202
+  salarios_pagar: 2141101
+  prolabore_pagar: 2141202
+
+  # Resultado
+  receita_produtos: 4111103
+  receita_servicos: 4111201
+  desp_prolabore: 4121101
+  desp_inss_prolabore: 4121201
+  desp_salarios: 4121301
+  desp_fgts: 4121401
+  desp_simples: 4121501
+  desp_aluguel: 4122101
+  desp_energia: 4122201
+  desp_agua: 4122202
+  desp_telefone: 4122301
+  desp_honorario: 4122401
+  desp_material_escr: 4122501
+  desp_combustivel: 4122601
+  desp_manutencao: 4122701
+  desp_publicidade: 4122801
+  desp_vale_transp: 4122901
+  desp_alimentacao: 4123001
+  desp_depreciacao: 4123101
+
+bancos:
+  itau: banco_itau
+  bradesco: banco_bradesco
+  cef: banco_cef
+  inter: banco_inter
+  bb: banco_bb
+  santander: banco_santander
+  sicoob: banco_sicoob
+  nubank: banco_nubank
+  mercadopago: banco_mercadopago
+
+historicos:
+  1: "Pro-Labore do Mes"
+  2: "INSS sobre Pro-Labore"
+  3: "Salario do Mes"
+  5: "FGTS do Mes"
+  6: "INSS sobre Salarios"
+  7: "Simples Nacional Mes"
+  8: "Vale Transporte Mes"
+  9: "Prestação de Serviços"
+  10: "Sabesp Mes"
+  11: "Energia Eletrica Mes"
+  12: "Combustivel"
+  14: "Auxilio Alimentação"
+  15: "Pagamento INSS Mes"
+  16: "Pgto Simples Nacional Mes"
+  18: "Depreciação do Mes"
+  19: "Pagamento FGTS Mes"
+  21: "IPTU"
+  24: "Material de Escritorio"
+  25: "NF"
+  26: "Valor Referente"
+  27: "Honorario Contabilidade Mes"
+  28: "Aluguel Mes"
+  29: "Telefone/Internet Mes"
+  34: "INSS Retido na Fonte"
+  35: "Pagamento Salario mes"
+  36: "Pagamento Pro-Labore mes"
+  37: "Pagamento Honorario Mes"
+  38: "Pagamento Simples Nacional mes"
+  40: "Pagamento de Aluguel mes"
+
+# Regras de lançamento (resumo — implementação em contabilizador_engine.py)
+regras:
+  nfe_saida:
+    - { deb: duplicatas_receber, cred: receita_servicos, hist: 9, nota: "valor total" }
+    - { deb: caixa, cred: duplicatas_receber, hist: 26, nota: "recebimento líquido (se aplicável)" }
+  nfe_entrada:
+    - { deb: desp_material_escr, cred: fornecedores, hist: 25 }
+  das:
+    - { deb: desp_simples, cred: simples_nacional, hist: 7 }
+    - { deb: simples_nacional, cred: banco, hist: 38 }
+  prolabore:
+    - { deb: desp_prolabore, cred: prolabore_pagar, hist: 1 }
+    - { deb: desp_inss_prolabore, cred: inss_pagar, hist: 2 }
+    - { deb: prolabore_pagar, cred: banco, hist: 36 }
+    - { deb: inss_pagar, cred: banco, hist: 15 }

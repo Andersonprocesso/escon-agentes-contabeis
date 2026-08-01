@@ -1,0 +1,21 @@
+{
+  "id": "29182502000162",
+  "name": "MARLI DA SILVA CIRILO 22307237828",
+  "cnpj": "29.182.502/0001-62",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12992598501"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "d1d691ee-3a0d-4bd4-ad22-17f4e4eee737",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "MARLI DA SILVA CIRILO 22307237828",
+  "source": "radar"
+}

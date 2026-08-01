@@ -1,0 +1,21 @@
+{
+  "id": "62320328000142",
+  "name": "ANDRADE DE MORAES SOLUCOES E SERVIÇOS LTDA",
+  "cnpj": "62.320.328/0001-42",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12996125554"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "e198fd0f-0d00-417c-8b39-01363a76ccc7",
+  "uf": "PE",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "ANDRADE DE MORAES SOLUCOES E SERVICOS LTDA",
+  "source": "radar"
+}

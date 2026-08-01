@@ -1,0 +1,21 @@
+{
+  "id": "34766165000190",
+  "name": "ELIANA DAS GRACAS DIAS CARVALHO",
+  "cnpj": "34.766.165/0001-90",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12997224530"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "36011175-13ff-477f-9a65-ebeff3c3642b",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "ELIANA DAS GRACAS DIAS CARVALHO",
+  "source": "radar"
+}

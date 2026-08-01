@@ -1,0 +1,21 @@
+{
+  "id": "59257064000115",
+  "name": "APOLO EDUCACIONAL E SERVICOS LTDA",
+  "cnpj": "59.257.064/0001-15",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12996125554"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "445a7bc1-5968-445a-bf98-0204ecd4623c",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "APOLO EDUCACIONAL E SERVICOS LTDA",
+  "source": "radar"
+}

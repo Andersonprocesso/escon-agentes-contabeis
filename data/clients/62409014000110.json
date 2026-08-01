@@ -1,0 +1,21 @@
+{
+  "id": "62409014000110",
+  "name": "MORAES APOIO A EDUCAÇÃO LTDA",
+  "cnpj": "62.409.014/0001-10",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12996125554"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "ed77a3f2-77f7-4fce-9785-f3ddc642c730",
+  "uf": "RJ",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "MORAES APOIO A EDUCACAO LTDA",
+  "source": "radar"
+}

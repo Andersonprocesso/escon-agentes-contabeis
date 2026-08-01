@@ -1,0 +1,21 @@
+{
+  "id": "46273818000189",
+  "name": "46.273.818 MAGNA REGINA DE SOUZA OLIVEIRA",
+  "cnpj": "46.273.818/0001-89",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12991282025"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "14a2177b-bbc7-4b58-b726-ff5c8510f092",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "46.273.818 MAGNA REGINA DE SOUZA OLIVEIRA",
+  "source": "radar"
+}

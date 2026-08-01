@@ -1,0 +1,21 @@
+{
+  "id": "09054390000157",
+  "name": "SOUSA GOULART OFICINA MECANICA LTDA",
+  "cnpj": "09.054.390/0001-57",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12974026441"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "d92bc006-f157-400b-a23a-0638c45f7845",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "SOUSA GOULART OFICINA MECANICA LTDA",
+  "source": "radar"
+}

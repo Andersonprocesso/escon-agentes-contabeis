@@ -1,0 +1,21 @@
+{
+  "id": "65225304000100",
+  "name": "REINALDO E ROCHA PERFUMARIA E COSMETICOS LTDA",
+  "cnpj": "65.225.304/0001-00",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12988161417"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "a2476f61-30ec-461b-8888-172c9037dd8a",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "REINALDO E ROCHA PERFUMARIA E COSMETICOS LTDA",
+  "source": "radar"
+}

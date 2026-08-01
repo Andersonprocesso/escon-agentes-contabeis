@@ -1,0 +1,21 @@
+{
+  "id": "39145168000120",
+  "name": "RIBEIRO & ROCHA COMERCIO DE VIDROS LTDA",
+  "cnpj": "39.145.168/0001-20",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12996864607"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "1cb49d05-f84a-4261-be14-7e4409eebf23",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "RIBEIRO ROCHA COMERCIO DE VIDROS LTDA",
+  "source": "radar"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "26163929000125",
+  "name": "REQUENE SCHULZ ENGENHARIA LTDA",
+  "cnpj": "26.163.929/0001-25",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12997054321"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "47da8393-0609-4572-972a-533df3ec3843",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "REQUENE SCHULZ ENGENHARIA LTDA",
+  "source": "radar"
+}

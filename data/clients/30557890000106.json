@@ -1,0 +1,21 @@
+{
+  "id": "30557890000106",
+  "name": "JONAS CARVALHO SOCIEDADE INDIVIDUAL DE ADVOCACIA",
+  "cnpj": "30.557.890/0001-06",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12982788000"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "fdeb0b9f-8226-4e4b-a0ff-886af013ab22",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "JONAS CARVALHO SOCIEDADE INDIVIDUAL DE ADVOCACIA",
+  "source": "radar"
+}

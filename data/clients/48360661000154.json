@@ -1,0 +1,21 @@
+{
+  "id": "48360661000154",
+  "name": "LC & AR DROGABELLA LTDA",
+  "cnpj": "48.360.661/0001-54",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12988161417"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "8065bacf-b4c6-410b-a19d-fc87708e75de",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "LC AR DROGABELLA LTDA",
+  "source": "radar"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "13404722000153",
+  "name": "RICARDO FAGUNDES DO NASCIMENTO TRANSPORTES",
+  "cnpj": "13.404.722/0001-53",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12997534372"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "98e08a25-0081-4e9a-9114-2ab4ab4d1550",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "RICARDO FAGUNDES DO NASCIMENTO TRANSPORTES",
+  "source": "radar"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "34316047000180",
+  "name": "JULIANO DIAS CARVALHO FERRAGENS",
+  "cnpj": "34.316.047/0001-80",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12982671217"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "4b867080-071a-462e-8b8d-b48802d5c658",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "JULIANO DIAS CARVALHO FERRAGENS",
+  "source": "radar"
+}

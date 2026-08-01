@@ -1,0 +1,21 @@
+{
+  "id": "45100511000113",
+  "name": "R. FAGUNDES MATERIAIS DE CONSTRUCAO LTDA",
+  "cnpj": "45.100.511/0001-13",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12997534372"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "821b9c88-1cae-4591-8e88-5626ca6c8c14",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "R. FAGUNDES MATERIAIS DE CONSTRUCAO LTDA",
+  "source": "radar"
+}

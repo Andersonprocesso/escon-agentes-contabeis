@@ -1,0 +1,21 @@
+{
+  "id": "62391868000117",
+  "name": "ARAL QUEIMADOS SOLUCOES E SERVIÇOS LTDA",
+  "cnpj": "62.391.868/0001-17",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12996125554"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "4d781cd4-ea36-4f4f-b4d0-b90cb4064ae0",
+  "uf": "RJ",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "ARAL QUEIMADOS SOLUCOES E SERVICOS LTDA",
+  "source": "radar"
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "date": "10/07/2026",
+    "amount": 1500.0,
+    "memo": "Recebimento NF 123",
+    "valor": 1500.0
+  },
+  {
+    "date": "12/07/2026",
+    "amount": -350.0,
+    "memo": "Aluguel",
+    "valor": -350.0
+  }
+]

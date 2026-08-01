@@ -1,0 +1,21 @@
+{
+  "id": "09476106000130",
+  "name": "PAULO EDUARDO SANTOS LANCHONETE",
+  "cnpj": "09.476.106/0001-30",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12988650946"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "499587e5-8540-448a-ab59-6470199699ed",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "PAULO EDUARDO SANTOS LANCHONETE",
+  "source": "radar"
+}

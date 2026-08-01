@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Escon Agentes Contábeis</title>
+  <meta name="description" content="Dashboard multiagente — Escon Soluções Contábeis" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #070b10;
+      --panel: #0e1520;
+      --panel2: #121c2a;
+      --border: #1e2c3f;
+      --text: #e9eef6;
+      --muted: #8b9cb3;
+      --accent: #3b9eff;
+      --accent-dim: rgba(59, 158, 255, 0.15);
+      --green: #34d399;
+      --amber: #fbbf24;
+      --danger: #f87171;
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: "DM Sans", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100%;
+    }
+    .hidden { display: none !important; }
+
+    /* Login */
+    #login-view {
+      min-height: 100vh; display: grid; place-items: center;
+      padding: 1.5rem;
+      background: radial-gradient(ellipse at 30% 20%, #12203a 0%, var(--bg) 55%);
+    }
+    .login-card {
+      width: min(400px, 100%);
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 2rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,.45);
+    }
+    .login-card h1 { font-size: 1.35rem; margin-bottom: .25rem; }
+    .login-card p { color: var(--muted); font-size: .9rem; margin-bottom: 1.25rem; }
+    .login-card label { display: block; font-size: .8rem; color: var(--muted); margin-bottom: .35rem; }
+    .login-card input {
+      width: 100%; padding: .7rem .8rem; margin-bottom: .9rem;
+      border-radius: 10px; border: 1px solid var(--border);
+      background: var(--panel2); color: var(--text); font: inherit;
+    }
+    .login-card button, .btn {
+      border: none; border-radius: 10px; padding: .7rem 1rem;
+      background: var(--accent); color: #fff; font-weight: 600;
+      font: inherit; cursor: pointer; width: 100%;
+    }
+    .login-card button:hover, .btn:hover { filter: brightness(1.08); }
+    .btn.ghost {
+      background: transparent; border: 1px solid var(--border); color: var(--muted); width: auto;
+    }
+    .err { color: var(--danger); font-size: .85rem; margin-top: .5rem; min-height: 1.2em; }
+
+    /* App shell */
+    #app-view { min-height: 100vh; display: flex; flex-direction: column; }
+    .top {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; padding: .85rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(14, 21, 32, .92);
+      backdrop-filter: blur(10px);
+      position: sticky; top: 0; z-index: 20;
+    }
+    .brand { display: flex; align-items: center; gap: .7rem; }
+    .logo {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, #3b9eff, #34d399);
+      display: grid; place-items: center; font-weight: 700; font-size: .7rem;
+    }
+    .brand h1 { font-size: 1.05rem; font-weight: 700; }
+    .brand p { font-size: .75rem; color: var(--muted); }
+    .top-actions { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
+    .chip {
+      border: 1px solid var(--border); background: var(--panel);
+      color: var(--muted); font-size: .8rem; padding: .4rem .7rem;
+      border-radius: 999px; cursor: pointer; font-family: inherit;
+    }
+    .chip.active { color: var(--text); border-color: var(--accent); background: var(--accent-dim); }
+    .chip:hover { color: var(--text); }
+
+    .layout {
+      flex: 1; display: grid;
+      grid-template-columns: 260px 1fr 320px;
+      min-height: 0;
+    }
+    @media (max-width: 1100px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar, .right { display: none; }
+      .sidebar.open, .right.open {
+        display: flex; position: fixed; inset: 57px 0 0 0; z-index: 15;
+      }
+    }
+    .sidebar, .right {
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      padding: 1rem;
+      overflow: auto;
+      display: flex; flex-direction: column; gap: .75rem;
+    }
+    .right { border-right: none; border-left: 1px solid var(--border); }
+    .sidebar h2, .right h2 {
+      font-size: .7rem; text-transform: uppercase; letter-spacing: .08em;
+      color: var(--muted); margin-bottom: .25rem;
+    }
+    .agent-btn {
+      text-align: left; border: 1px solid var(--border);
+      background: var(--panel2); color: var(--text);
+      border-radius: 12px; padding: .7rem .8rem; cursor: pointer;
+      font-family: inherit;
+    }
+    .agent-btn:hover, .agent-btn.active {
+      border-color: var(--accent); background: var(--accent-dim);
+    }
+    .agent-btn strong { display: block; font-size: .92rem; }
+    .agent-btn span { font-size: .75rem; color: var(--muted); }
+
+    .main {
+      display: flex; flex-direction: column; min-height: 0;
+      background: linear-gradient(180deg, #0a1018 0%, var(--bg) 40%);
+    }
+    .tabs {
+      display: flex; gap: .35rem; padding: .75rem 1rem 0;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .tab {
+      border: none; background: transparent; color: var(--muted);
+      padding: .55rem .9rem; border-radius: 10px 10px 0 0;
+      cursor: pointer; font: inherit; font-weight: 600; font-size: .9rem;
+    }
+    .tab.active { color: var(--text); background: var(--panel); border: 1px solid var(--border); border-bottom-color: var(--panel); }
+    .panel { display: none; flex: 1; min-height: 0; flex-direction: column; }
+    .panel.active { display: flex; }
+
+    /* Chat */
+    .chat-log {
+      flex: 1; overflow: auto; padding: 1.25rem;
+      display: flex; flex-direction: column; gap: .85rem;
+    }
+    .msg {
+      max-width: min(720px, 95%);
+      padding: .85rem 1rem; border-radius: 14px;
+      line-height: 1.5; font-size: .95rem;
+      white-space: pre-wrap; word-break: break-word;
+    }
+    .msg.user {
+      align-self: flex-end;
+      background: #1a2740; border: 1px solid #2a3f5c;
+    }
+    .msg.agent {
+      align-self: flex-start;
+      background: #0f1a14; border: 1px solid #1f3a2e;
+    }
+    .msg .who {
+      font-size: .72rem; color: var(--muted); margin-bottom: .35rem;
+      font-family: "JetBrains Mono", monospace;
+    }
+    .composer {
+      border-top: 1px solid var(--border);
+      padding: .85rem 1rem 1.1rem;
+      display: flex; gap: .6rem; align-items: flex-end;
+      background: var(--panel);
+    }
+    .composer textarea {
+      flex: 1; min-height: 48px; max-height: 140px;
+      resize: vertical; border-radius: 12px;
+      border: 1px solid var(--border); background: var(--panel2);
+      color: var(--text); padding: .7rem .85rem; font: inherit;
+    }
+    .composer button { width: auto; padding: .75rem 1.1rem; }
+
+    /* Tables / cards */
+    .scroll { flex: 1; overflow: auto; padding: 1rem; }
+    .kpis {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: .75rem; margin-bottom: 1rem;
+    }
+    .kpi {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1rem;
+    }
+    .kpi .n { font-size: 1.6rem; font-weight: 700; letter-spacing: -.03em; }
+    .kpi .l { color: var(--muted); font-size: .8rem; margin-top: .2rem; }
+    .priority {
+      background: linear-gradient(90deg, #2a1f0a, var(--panel));
+      border: 1px solid #5a4520; border-radius: var(--radius);
+      padding: .85rem 1rem; margin-bottom: 1rem; font-size: .9rem;
+    }
+    .priority strong { color: var(--amber); }
+    table {
+      width: 100%; border-collapse: collapse; font-size: .85rem;
+      background: var(--panel); border-radius: var(--radius);
+      overflow: hidden; border: 1px solid var(--border);
+    }
+    th, td {
+      text-align: left; padding: .55rem .65rem;
+      border-bottom: 1px solid var(--border); vertical-align: top;
+    }
+    th {
+      color: var(--muted); font-size: .72rem; text-transform: uppercase;
+      letter-spacing: .04em; background: var(--panel2);
+    }
+    tr:hover td { background: rgba(255,255,255,.02); }
+    .mono { font-family: "JetBrains Mono", monospace; font-size: .8rem; }
+    .muted { color: var(--muted); font-size: .85rem; }
+    .service-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: .75rem;
+    }
+    .service-card {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 12px; padding: .9rem; cursor: pointer;
+    }
+    .service-card:hover { border-color: var(--accent); }
+    .service-card h3 { font-size: .95rem; margin-bottom: .35rem; }
+    .service-card p { font-size: .8rem; color: var(--muted); }
+    .hint {
+      margin-top: 1rem; padding: .85rem 1rem;
+      border-radius: 12px; border: 1px dashed var(--border);
+      color: var(--muted); font-size: .85rem; line-height: 1.45;
+    }
+  </style>
+</head>
+<body>
+  <!-- LOGIN -->
+  <div id="login-view">
+    <div class="login-card">
+      <div class="logo" style="margin-bottom:1rem">EA</div>
+      <h1>Escon Agentes</h1>
+      <p>Dashboard multiagente — Soluções Contábeis</p>
+      <label>Usuário</label>
+      <input id="login-user" autocomplete="username" value="admin" />
+      <label>Senha</label>
+      <input id="login-pass" type="password" autocomplete="current-password" />
+      <button type="button" id="login-btn">Entrar</button>
+      <div class="err" id="login-err"></div>
+      <p class="muted" style="margin-top:1rem">Configure ADMIN_PASSWORD no Vercel.</p>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div id="app-view" class="hidden">
+    <header class="top">
+      <div class="brand">
+        <div class="logo">EA</div>
+        <div>
+          <h1>Escon Agentes Contábeis</h1>
+          <p id="top-sub">Carregando…</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <select id="model-select" class="chip" style="appearance:auto;padding:.4rem .6rem">
+          <option value="">modelo padrão</option>
+          <option value="deepseek/deepseek-chat">deepseek</option>
+          <option value="moonshotai/kimi-k2">kimi</option>
+          <option value="openai/gpt-4o-mini">gpt</option>
+          <option value="x-ai/grok-4">grok</option>
+          <option value="google/gemini-2.5-flash">gemini</option>
+          <option value="anthropic/claude-sonnet-4">claude</option>
+        </select>
+        <button class="chip" type="button" id="btn-agents-m">Agentes</button>
+        <button class="chip" type="button" id="btn-logout">Sair</button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" id="sidebar">
+        <h2>Agentes</h2>
+        <div id="agent-list"></div>
+      </aside>
+
+      <main class="main">
+        <div class="tabs">
+          <button class="tab active" data-tab="chat" type="button">Chat</button>
+          <button class="tab" data-tab="overview" type="button">Visão geral</button>
+          <button class="tab" data-tab="clients" type="button">Clientes</button>
+          <button class="tab" data-tab="services" type="button">Serviços</button>
+        </div>
+
+        <section class="panel active" id="tab-chat">
+          <div class="chat-log" id="chat-log"></div>
+          <div class="composer">
+            <textarea id="chat-input" placeholder="Converse com o agente… (Enter envia, Shift+Enter quebra linha)"></textarea>
+            <button class="btn" type="button" id="chat-send">Enviar</button>
+          </div>
+        </section>
+
+        <section class="panel" id="tab-overview">
+          <div class="scroll">
+            <div class="priority" id="priority-box">Prioridade #1: Contmatic</div>
+            <div class="kpis" id="kpis"></div>
+            <p class="muted" id="overview-note"></p>
+          </div>
+        </section>
+
+        <section class="panel" id="tab-clients">
+          <div class="scroll">
+            <input id="client-filter" placeholder="Filtrar por nome ou CNPJ…" style="width:100%;margin-bottom:.75rem;padding:.65rem .8rem;border-radius:10px;border:1px solid var(--border);background:var(--panel2);color:var(--text);font:inherit" />
+            <table>
+              <thead><tr><th>ID</th><th>Nome</th><th>CNPJ</th><th>Regime</th><th>UF</th></tr></thead>
+              <tbody id="clients-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel" id="tab-services">
+          <div class="scroll">
+            <p class="muted" style="margin-bottom:1rem">Peça ao agente pelo chat, ou clique para pré-preencher a mensagem.</p>
+            <div class="service-grid" id="services"></div>
+            <div class="hint">
+              <strong style="color:var(--text)">Contmatic / sync Radar no PC ou VPS:</strong><br />
+              <span class="mono">python -m escon_agentes contmatic -c {cnpj}</span><br />
+              <span class="mono">python -m escon_agentes sync-drive -c {cnpj} --via minio</span><br />
+              <span class="mono">python -m escon_agentes dashboard</span> → API completa em localhost:8787
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <aside class="right" id="right">
+        <h2>Agente ativo</h2>
+        <div id="active-agent-card" class="service-card"></div>
+        <h2>Atalhos</h2>
+        <button class="agent-btn" type="button" data-prompt="Liste os passos do fechamento mensal Contmatic">Fechamento Contmatic</button>
+        <button class="agent-btn" type="button" data-prompt="Explique CBS/IBS para empresa de serviços no Simples">Reforma Tributária</button>
+        <button class="agent-btn" type="button" data-prompt="Como cobrar extratos pendentes dos clientes?">Cobrar extratos</button>
+        <button class="agent-btn" type="button" data-prompt="Quais agentes devo acionar para conciliação e XMLs?">Orquestrar Max</button>
+        <p class="muted" style="margin-top:auto">Escon Soluções Contábeis · OpenRouter</p>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    const TOKEN_KEY = "escon_agentes_token";
+    const state = {
+      token: localStorage.getItem(TOKEN_KEY) || "",
+      agent: "max",
+      agents: [],
+      clients: [],
+      history: [],
+    };
+
+    async function api(path, opts = {}) {
+      const headers = Object.assign({ "Content-Type": "application/json" }, opts.headers || {});
+      if (state.token) headers.Authorization = "Bearer " + state.token;
+      const r = await fetch(path, Object.assign({}, opts, { headers }));
+      const data = await r.json().catch(() => ({}));
+      if (r.status === 401) {
+        logout(false);
+        throw new Error(data.error || "Sessão expirada");
+      }
+      if (!r.ok) throw new Error(data.error || r.statusText);
+      return data;
+    }
+
+    function showApp(on) {
+      document.getElementById("login-view").classList.toggle("hidden", on);
+      document.getElementById("app-view").classList.toggle("hidden", !on);
+    }
+
+    function logout(reload = true) {
+      state.token = "";
+      localStorage.removeItem(TOKEN_KEY);
+      if (reload) location.reload();
+      else showApp(false);
+    }
+
+    async function doLogin() {
+      const err = document.getElementById("login-err");
+      err.textContent = "";
+      try {
+        const data = await api("/api/login", {
+          method: "POST",
+          body: JSON.stringify({
+            username: document.getElementById("login-user").value.trim(),
+            password: document.getElementById("login-pass").value,
+          }),
+        });
+        state.token = data.token;
+        localStorage.setItem(TOKEN_KEY, data.token);
+        await bootApp();
+      } catch (e) {
+        err.textContent = e.message;
+      }
+    }
+
+    function setAgent(id) {
+      state.agent = id;
+      document.querySelectorAll(".agent-btn[data-agent]").forEach((b) => {
+        b.classList.toggle("active", b.dataset.agent === id);
+      });
+      const a = state.agents.find((x) => x.id === id) || { name: id, role: "" };
+      document.getElementById("active-agent-card").innerHTML =
+        `<h3>${a.name}</h3><p>${a.role || ""}</p>`;
+      document.getElementById("top-sub").textContent = `Falando com ${a.name}`;
+    }
+
+    function addMsg(role, who, text) {
+      const log = document.getElementById("chat-log");
+      const div = document.createElement("div");
+      div.className = "msg " + role;
+      div.innerHTML = `<div class="who">${who}</div>${escapeHtml(text)}`;
+      log.appendChild(div);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function escapeHtml(s) {
+      return String(s)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    async function sendChat(text) {
+      const input = document.getElementById("chat-input");
+      const msg = (text || input.value || "").trim();
+      if (!msg) return;
+      input.value = "";
+      addMsg("user", "Você", msg);
+      state.history.push({ role: "user", content: msg });
+      const agentMeta = state.agents.find((a) => a.id === state.agent) || { name: "Agente" };
+      addMsg("agent", agentMeta.name + "…", "Pensando…");
+      const pending = document.getElementById("chat-log").lastChild;
+      try {
+        const model = document.getElementById("model-select").value || undefined;
+        const data = await api("/api/chat", {
+          method: "POST",
+          body: JSON.stringify({
+            message: msg,
+            agent: state.agent,
+            model,
+            history: state.history.slice(0, -1),
+          }),
+        });
+        pending.querySelector(".who").textContent = data.agent_name || agentMeta.name;
+        pending.lastChild
+          ? (pending.innerHTML = `<div class="who">${escapeHtml(data.agent_name || agentMeta.name)}</div>${escapeHtml(data.reply)}`)
+          : null;
+        pending.innerHTML = `<div class="who">${escapeHtml(data.agent_name || agentMeta.name)}</div>${escapeHtml(data.reply)}`;
+        state.history.push({ role: "assistant", content: data.reply });
+      } catch (e) {
+        pending.innerHTML = `<div class="who">Erro</div>${escapeHtml(e.message)}`;
+      }
+    }
+
+    async function bootApp() {
+      showApp(true);
+      const [agentsRes, overview, clientsRes] = await Promise.all([
+        api("/api/agents"),
+        api("/api/overview"),
+        api("/api/clients"),
+      ]);
+      state.agents = agentsRes.agents || [];
+      state.clients = clientsRes.clients || [];
+
+      const list = document.getElementById("agent-list");
+      list.innerHTML = state.agents
+        .map(
+          (a) =>
+            `<button type="button" class="agent-btn" data-agent="${a.id}">
+              <strong>${a.name}</strong><span>${a.role}</span>
+            </button>`
+        )
+        .join("");
+      list.querySelectorAll("[data-agent]").forEach((b) =>
+        b.addEventListener("click", () => setAgent(b.dataset.agent))
+      );
+      setAgent(state.agent);
+
+      document.getElementById("priority-box").innerHTML =
+        `Prioridade #1: <strong>${overview.priority || "Contmatic"}</strong>`;
+      document.getElementById("kpis").innerHTML = [
+        ["Agentes", overview.agents_total],
+        ["Clientes", overview.clients],
+        ["LLM", overview.llm],
+        ["Modelo", (overview.model || "").split("/").pop()],
+      ]
+        .map(
+          ([l, n]) =>
+            `<div class="kpi"><div class="n">${n}</div><div class="l">${l}</div></div>`
+        )
+        .join("");
+      document.getElementById("overview-note").textContent = overview.backend_note || "";
+
+      renderClients();
+      document.getElementById("services").innerHTML = [
+        ["contmatic", "Lançamentos Contmatic", "Gerar Excel de importação"],
+        ["xmls", "XMLs fiscais", "Organizar NF-e / NFS-e"],
+        ["conciliar", "Conciliação", "Cruzar OFX com lançamentos"],
+        ["extratos", "Cobrar extratos", "Mensagens Greg"],
+        ["reforma", "Reforma Tributária", "Lucy explica CBS/IBS"],
+        ["sync", "Sync Radar → inbox", "Baixar documentos"],
+      ]
+        .map(
+          ([id, t, d]) =>
+            `<div class="service-card" data-service="${id}"><h3>${t}</h3><p>${d}</p></div>`
+        )
+        .join("");
+      document.querySelectorAll("[data-service]").forEach((el) => {
+        el.addEventListener("click", () => {
+          const map = {
+            contmatic: "Como gero lançamentos Contmatic de um cliente com a pasta sincronizada?",
+            xmls: "Xavier, o que fazer com os XMLs do mês no Contmatic?",
+            conciliar: "John, como conduzir a conciliação bancária?",
+            extratos: "Greg, modele cobrança de extratos pendentes.",
+            reforma: "Lucy, impacto da Reforma para serviços no Simples.",
+            sync: "Max, qual o fluxo sync-drive MinIO e depois Contmatic?",
+          };
+          document.querySelector('.tab[data-tab="chat"]').click();
+          sendChat(map[el.dataset.service]);
+        });
+      });
+
+      if (!document.getElementById("chat-log").children.length) {
+        addMsg(
+          "agent",
+          "Max",
+          "Olá! Sou o Max. Escolha um agente na lateral e peça: fechamento Contmatic, XMLs, conciliação, Reforma Tributária ou status da carteira."
+        );
+      }
+    }
+
+    function renderClients() {
+      const q = (document.getElementById("client-filter").value || "").toLowerCase();
+      const rows = state.clients.filter(
+        (c) =>
+          !q ||
+          (c.nome || "").toLowerCase().includes(q) ||
+          (c.cnpj || "").includes(q) ||
+          (c.id || "").includes(q)
+      );
+      document.getElementById("clients-body").innerHTML = rows
+        .slice(0, 200)
+        .map(
+          (c) =>
+            `<tr>
+              <td class="mono">${c.id}</td>
+              <td>${escapeHtml(c.nome || "")}</td>
+              <td class="mono">${c.cnpj || ""}</td>
+              <td>${c.regime || ""}</td>
+              <td>${c.uf || ""}</td>
+            </tr>`
+        )
+        .join("");
+    }
+
+    // Tabs
+    document.querySelectorAll(".tab").forEach((t) => {
+      t.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach((x) => x.classList.remove("active"));
+        document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+        t.classList.add("active");
+        document.getElementById("tab-" + t.dataset.tab).classList.add("active");
+      });
+    });
+
+    document.getElementById("login-btn").addEventListener("click", doLogin);
+    document.getElementById("login-pass").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") doLogin();
+    });
+    document.getElementById("btn-logout").addEventListener("click", () => logout());
+    document.getElementById("chat-send").addEventListener("click", () => sendChat());
+    document.getElementById("chat-input").addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendChat();
+      }
+    });
+    document.getElementById("client-filter").addEventListener("input", renderClients);
+    document.querySelectorAll("[data-prompt]").forEach((b) => {
+      b.addEventListener("click", () => {
+        document.querySelector('.tab[data-tab="chat"]').click();
+        sendChat(b.dataset.prompt);
+      });
+    });
+    document.getElementById("btn-agents-m").addEventListener("click", () => {
+      document.getElementById("sidebar").classList.toggle("open");
+    });
+
+    // boot
+    if (state.token) {
+      bootApp().catch((e) => {
+        console.error(e);
+        logout(false);
+      });
+    } else {
+      showApp(false);
+    }
+  </script>
+</body>
+</html>

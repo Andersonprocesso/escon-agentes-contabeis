@@ -1,0 +1,21 @@
+{
+  "id": "46040860000150",
+  "name": "L C REINALDO SILVA FARMACIA LTDA",
+  "cnpj": "46.040.860/0001-50",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12988161417"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "82f7e9e4-d180-401e-8b2a-3454171856bf",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "L C REINALDO SILVA FARMACIA LTDA",
+  "source": "radar"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "34928980000109",
+  "name": "CTX SERVICOS LTDA",
+  "cnpj": "34.928.980/0001-09",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12996125554"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "cfcdced4-3754-48fd-88d7-1be87fafdccd",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "CTX SERVICOS LTDA",
+  "source": "radar"
+}

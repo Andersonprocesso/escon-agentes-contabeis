@@ -1,0 +1,21 @@
+{
+  "id": "39452045000132",
+  "name": "39.452.045 TANIA CARLA MUNIZ SILVA",
+  "cnpj": "39.452.045/0001-32",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12981299773"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "4b067c6f-a253-4a6d-9469-ed48fcd03417",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "39.452.045 TANIA CARLA MUNIZ SILVA",
+  "source": "radar"
+}

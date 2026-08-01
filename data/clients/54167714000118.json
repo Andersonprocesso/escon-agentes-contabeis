@@ -1,0 +1,21 @@
+{
+  "id": "54167714000118",
+  "name": "EDUARDO RIBEIRO MARTINES REPARAÇÃO E MANUTENÇÃO LTDA",
+  "cnpj": "54.167.714/0001-18",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12997561396"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "c27008c7-9239-4190-976c-32fc7fe5c574",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "EDUARDO RIBEIRO MARTINES REPARACAO E MANUTENCAO LTDA",
+  "source": "radar"
+}

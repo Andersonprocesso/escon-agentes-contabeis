@@ -1,0 +1,21 @@
+{
+  "id": "34454481000127",
+  "name": "EDSON ROBERTO SALES DOS SANTOS",
+  "cnpj": "34.454.481/0001-27",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12988077252"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "66dca204-653c-4d07-a51d-1978da44bd6f",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "EDSON ROBERTO SALES DOS SANTOS",
+  "source": "radar"
+}

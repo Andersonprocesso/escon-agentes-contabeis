@@ -1,0 +1,21 @@
+{
+  "id": "07603336000198",
+  "name": "ALUMAX MATERIAIS DE CONSTRUCAO LTDA",
+  "cnpj": "07.603.336/0001-98",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12988306222"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "4113b9d2-165b-4a84-9432-2d7c4c42dfe1",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "ALUMAX MATERIAIS DE CONSTRUCAO LTDA",
+  "source": "radar"
+}

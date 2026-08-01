@@ -1,0 +1,21 @@
+{
+  "id": "29410864000163",
+  "name": "29.410.864 MARIO KAWATA",
+  "cnpj": "29.410.864/0001-63",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12992054377"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "35d33dec-1aa0-47f0-b4da-e8bf8b1de7dd",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "29.410.864 MARIO KAWATA",
+  "source": "radar"
+}

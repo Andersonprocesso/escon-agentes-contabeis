@@ -1,0 +1,21 @@
+{
+  "id": "23343420000176",
+  "name": "COMPASSO ASSESSORIA E SERVICOS LTDA",
+  "cnpj": "23.343.420/0001-76",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12996125554"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "dd55a39b-5cd1-4c62-bba5-a254c0fc8cbe",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "COMPASSO ASSESSORIA E SERVICOS LTDA",
+  "source": "radar"
+}

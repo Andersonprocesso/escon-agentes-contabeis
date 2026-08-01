@@ -1,0 +1,21 @@
+{
+  "id": "24563612000150",
+  "name": "YONEDA & OHARA JOGOS ELETRONICOS LTDA",
+  "cnpj": "24.563.612/0001-50",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12988272376"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "0b583820-b6fd-4632-9449-81cc0cf3d2f3",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "YONEDA OHARA JOGOS ELETRONICOS LTDA",
+  "source": "radar"
+}

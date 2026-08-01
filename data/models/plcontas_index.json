@@ -1,0 +1,3634 @@
+{
+  "total": 281,
+  "source": "PlContas.TXT (Contmatic / Escon_Lancamento)",
+  "by_code": {
+    "1111101": {
+      "reduzida": 1111101,
+      "analitica": "1.1.1.01.001.00001",
+      "descricao": "Caixa Geral",
+      "grupo": "1"
+    },
+    "1111102": {
+      "reduzida": 1111102,
+      "analitica": "1.1.1.01.001.00002",
+      "descricao": "Fundo fixo de caixa",
+      "grupo": "1"
+    },
+    "1112201": {
+      "reduzida": 1112201,
+      "analitica": "1.1.1.02.002.00001",
+      "descricao": "Itau",
+      "grupo": "1"
+    },
+    "1112202": {
+      "reduzida": 1112202,
+      "analitica": "1.1.1.02.002.00002",
+      "descricao": "Bradesco",
+      "grupo": "1"
+    },
+    "1112203": {
+      "reduzida": 1112203,
+      "analitica": "1.1.1.02.002.00003",
+      "descricao": "Caixa Economica Federal",
+      "grupo": "1"
+    },
+    "1112204": {
+      "reduzida": 1112204,
+      "analitica": "1.1.1.02.002.00004",
+      "descricao": "Inter",
+      "grupo": "1"
+    },
+    "1112205": {
+      "reduzida": 1112205,
+      "analitica": "1.1.1.02.002.00005",
+      "descricao": "Banco Brasil",
+      "grupo": "1"
+    },
+    "1112206": {
+      "reduzida": 1112206,
+      "analitica": "1.1.1.02.002.00006",
+      "descricao": "Santander",
+      "grupo": "1"
+    },
+    "1112207": {
+      "reduzida": 1112207,
+      "analitica": "1.1.1.02.002.00007",
+      "descricao": "Sicoob",
+      "grupo": "1"
+    },
+    "1112208": {
+      "reduzida": 1112208,
+      "analitica": "1.1.1.02.002.00008",
+      "descricao": "Mercado Pago",
+      "grupo": "1"
+    },
+    "1112209": {
+      "reduzida": 1112209,
+      "analitica": "1.1.1.02.002.00009",
+      "descricao": "Sicredi",
+      "grupo": "1"
+    },
+    "1112210": {
+      "reduzida": 1112210,
+      "analitica": "1.1.1.02.002.00010",
+      "descricao": "PagSeguro",
+      "grupo": "1"
+    },
+    "1112301": {
+      "reduzida": 1112301,
+      "analitica": "1.1.1.02.003.00001",
+      "descricao": "Itau - Aplicação",
+      "grupo": "1"
+    },
+    "1112302": {
+      "reduzida": 1112302,
+      "analitica": "1.1.1.02.003.00002",
+      "descricao": "Bradesco - Aplicação",
+      "grupo": "1"
+    },
+    "1112303": {
+      "reduzida": 1112303,
+      "analitica": "1.1.1.02.003.00003",
+      "descricao": "Caixa Economica Federal - Aplicação",
+      "grupo": "1"
+    },
+    "1112304": {
+      "reduzida": 1112304,
+      "analitica": "1.1.1.02.003.00004",
+      "descricao": "Inter- Aplicação",
+      "grupo": "1"
+    },
+    "1112305": {
+      "reduzida": 1112305,
+      "analitica": "1.1.1.02.003.00005",
+      "descricao": "Banco Brasil - Aplicação",
+      "grupo": "1"
+    },
+    "1112306": {
+      "reduzida": 1112306,
+      "analitica": "1.1.1.02.003.00006",
+      "descricao": "Santander - Aplicação",
+      "grupo": "1"
+    },
+    "1112307": {
+      "reduzida": 1112307,
+      "analitica": "1.1.1.02.003.00007",
+      "descricao": "Sicoob - Aplicação",
+      "grupo": "1"
+    },
+    "1112308": {
+      "reduzida": 1112308,
+      "analitica": "1.1.1.02.003.00008",
+      "descricao": "Mercado Pago - Aplicação",
+      "grupo": "1"
+    },
+    "1112309": {
+      "reduzida": 1112309,
+      "analitica": "1.1.1.02.003.00009",
+      "descricao": "Sicredi - Aplicação",
+      "grupo": "1"
+    },
+    "1112310": {
+      "reduzida": 1112310,
+      "analitica": "1.1.1.02.003.00010",
+      "descricao": "Sicoob - Aplicação Conta Capital",
+      "grupo": "1"
+    },
+    "1112311": {
+      "reduzida": 1112311,
+      "analitica": "1.1.1.02.003.00011",
+      "descricao": "PagSeguro - Aplicação",
+      "grupo": "1"
+    },
+    "1121101": {
+      "reduzida": 1121101,
+      "analitica": "1.1.2.01.001.00001",
+      "descricao": "Duplicatas a receber",
+      "grupo": "1"
+    },
+    "1121102": {
+      "reduzida": 1121102,
+      "analitica": "1.1.2.01.001.00002",
+      "descricao": "Clientes Diversos",
+      "grupo": "1"
+    },
+    "1121103": {
+      "reduzida": 1121103,
+      "analitica": "1.1.2.01.001.00003",
+      "descricao": "ICATU SEGUROS S/A",
+      "grupo": "1"
+    },
+    "1121105": {
+      "reduzida": 1121105,
+      "analitica": "1.1.2.01.001.00005",
+      "descricao": "OMINT SEGUROS S/A",
+      "grupo": "1"
+    },
+    "1121106": {
+      "reduzida": 1121106,
+      "analitica": "1.1.2.01.001.00006",
+      "descricao": "UNIMED SEGURADORA S.A.",
+      "grupo": "1"
+    },
+    "1121107": {
+      "reduzida": 1121107,
+      "analitica": "1.1.2.01.001.00007",
+      "descricao": "TOKIO MARINE SEGURADORA S.A",
+      "grupo": "1"
+    },
+    "1121111": {
+      "reduzida": 1121111,
+      "analitica": "1.1.2.01.001.00011",
+      "descricao": "AZUL COMPANHIA DE SEGUROS",
+      "grupo": "1"
+    },
+    "1121112": {
+      "reduzida": 1121112,
+      "analitica": "1.1.2.01.001.00012",
+      "descricao": "PORTO SEGURO - SEGURO SAUDE S.A",
+      "grupo": "1"
+    },
+    "1121115": {
+      "reduzida": 1121115,
+      "analitica": "1.1.2.01.001.00015",
+      "descricao": "ASSOCIACAO SAO FRANCISCO VIDA",
+      "grupo": "1"
+    },
+    "1121201": {
+      "reduzida": 1121201,
+      "analitica": "1.1.2.01.002.00001",
+      "descricao": "( - ) Duplicatas descontadas",
+      "grupo": "1"
+    },
+    "1131201": {
+      "reduzida": 1131201,
+      "analitica": "1.1.3.01.002.00001",
+      "descricao": "Titulos a receber",
+      "grupo": "1"
+    },
+    "1131202": {
+      "reduzida": 1131202,
+      "analitica": "1.1.3.01.002.00002",
+      "descricao": "Valor a Receber Curto Prazo",
+      "grupo": "1"
+    },
+    "1131203": {
+      "reduzida": 1131203,
+      "analitica": "1.1.3.01.002.00003",
+      "descricao": "Juros a receber - Curto Prazo",
+      "grupo": "1"
+    },
+    "1131204": {
+      "reduzida": 1131204,
+      "analitica": "1.1.3.01.002.00004",
+      "descricao": "Juros a apropriar Longo Prazo",
+      "grupo": "1"
+    },
+    "1131205": {
+      "reduzida": 1131205,
+      "analitica": "1.1.3.01.002.00005",
+      "descricao": "Emprestimo a Terceiros a Receber",
+      "grupo": "1"
+    },
+    "1131206": {
+      "reduzida": 1131206,
+      "analitica": "1.1.3.01.002.00006",
+      "descricao": "Titulos de Capitalização Banco Itau",
+      "grupo": "1"
+    },
+    "1131207": {
+      "reduzida": 1131207,
+      "analitica": "1.1.3.01.002.00007",
+      "descricao": "Titulos de Capitalização Banco Bradesco",
+      "grupo": "1"
+    },
+    "1131208": {
+      "reduzida": 1131208,
+      "analitica": "1.1.3.01.002.00008",
+      "descricao": "Titulos de Capitalização Banco Sicoob",
+      "grupo": "1"
+    },
+    "1131209": {
+      "reduzida": 1131209,
+      "analitica": "1.1.3.01.002.00009",
+      "descricao": "Titulos de Capitalização Banco Brasil",
+      "grupo": "1"
+    },
+    "1131301": {
+      "reduzida": 1131301,
+      "analitica": "1.1.3.01.003.00001",
+      "descricao": "Cheques a Sacar",
+      "grupo": "1"
+    },
+    "1131302": {
+      "reduzida": 1131302,
+      "analitica": "1.1.3.01.003.00002",
+      "descricao": "Cheques Devolvidos a Cobrar",
+      "grupo": "1"
+    },
+    "1131501": {
+      "reduzida": 1131501,
+      "analitica": "1.1.3.01.005.00001",
+      "descricao": "Importacoes em andamento",
+      "grupo": "1"
+    },
+    "1131601": {
+      "reduzida": 1131601,
+      "analitica": "1.1.3.01.006.00001",
+      "descricao": "Adiantamentos a fornecedores",
+      "grupo": "1"
+    },
+    "1131602": {
+      "reduzida": 1131602,
+      "analitica": "1.1.3.01.006.00002",
+      "descricao": "Adiantamentos de Comissão",
+      "grupo": "1"
+    },
+    "1131603": {
+      "reduzida": 1131603,
+      "analitica": "1.1.3.01.006.00003",
+      "descricao": "Adiantamento de Importações",
+      "grupo": "1"
+    },
+    "1131701": {
+      "reduzida": 1131701,
+      "analitica": "1.1.3.01.007.00001",
+      "descricao": "Adiantamentos de Salarios",
+      "grupo": "1"
+    },
+    "1131702": {
+      "reduzida": 1131702,
+      "analitica": "1.1.3.01.007.00002",
+      "descricao": "Adiantamentos de 13º salario",
+      "grupo": "1"
+    },
+    "1131703": {
+      "reduzida": 1131703,
+      "analitica": "1.1.3.01.007.00003",
+      "descricao": "Adiantamentos de Ferias",
+      "grupo": "1"
+    },
+    "1131704": {
+      "reduzida": 1131704,
+      "analitica": "1.1.3.01.007.00004",
+      "descricao": "Adiantamentos para Rescisões",
+      "grupo": "1"
+    },
+    "1131705": {
+      "reduzida": 1131705,
+      "analitica": "1.1.3.01.007.00005",
+      "descricao": "Adiantamentos para Viagens",
+      "grupo": "1"
+    },
+    "1131801": {
+      "reduzida": 1131801,
+      "analitica": "1.1.3.01.008.00001",
+      "descricao": "Emprestimos a Funcionarios",
+      "grupo": "1"
+    },
+    "1131901": {
+      "reduzida": 1131901,
+      "analitica": "1.1.3.01.009.00001",
+      "descricao": "IPI a recuperar",
+      "grupo": "1"
+    },
+    "1131902": {
+      "reduzida": 1131902,
+      "analitica": "1.1.3.01.009.00002",
+      "descricao": "ICMS a recuperar",
+      "grupo": "1"
+    },
+    "1131903": {
+      "reduzida": 1131903,
+      "analitica": "1.1.3.01.009.00003",
+      "descricao": "IR Retido na fonte",
+      "grupo": "1"
+    },
+    "1131904": {
+      "reduzida": 1131904,
+      "analitica": "1.1.3.01.009.00004",
+      "descricao": "IR pago por estimativa",
+      "grupo": "1"
+    },
+    "1131905": {
+      "reduzida": 1131905,
+      "analitica": "1.1.3.01.009.00005",
+      "descricao": "CSSL paga por estimativa",
+      "grupo": "1"
+    },
+    "1131906": {
+      "reduzida": 1131906,
+      "analitica": "1.1.3.01.009.00006",
+      "descricao": "Tributos pago a maior ou indevidamente",
+      "grupo": "1"
+    },
+    "1131907": {
+      "reduzida": 1131907,
+      "analitica": "1.1.3.01.009.00007",
+      "descricao": "CSSL retida na fonte a compensar",
+      "grupo": "1"
+    },
+    "1131908": {
+      "reduzida": 1131908,
+      "analitica": "1.1.3.01.009.00008",
+      "descricao": "COFINS retida na fonte a compensar",
+      "grupo": "1"
+    },
+    "1131909": {
+      "reduzida": 1131909,
+      "analitica": "1.1.3.01.009.00009",
+      "descricao": "PIS-PASEP Retido na fonte a compensar",
+      "grupo": "1"
+    },
+    "1131910": {
+      "reduzida": 1131910,
+      "analitica": "1.1.3.01.009.00010",
+      "descricao": "INSS retido na fonte a compensar",
+      "grupo": "1"
+    },
+    "1131911": {
+      "reduzida": 1131911,
+      "analitica": "1.1.3.01.009.00011",
+      "descricao": "Bonus de adimplencia fiscal a compensar",
+      "grupo": "1"
+    },
+    "1131912": {
+      "reduzida": 1131912,
+      "analitica": "1.1.3.01.009.00012",
+      "descricao": "Cofins a recuperar",
+      "grupo": "1"
+    },
+    "1131913": {
+      "reduzida": 1131913,
+      "analitica": "1.1.3.01.009.00013",
+      "descricao": "PIS-PASEP a recuperar",
+      "grupo": "1"
+    },
+    "1131914": {
+      "reduzida": 1131914,
+      "analitica": "1.1.3.01.009.00014",
+      "descricao": "Cofins a recuperar - credito presumido",
+      "grupo": "1"
+    },
+    "1131915": {
+      "reduzida": 1131915,
+      "analitica": "1.1.3.01.009.00015",
+      "descricao": "PIS-PASEP a recuperar credito presumido",
+      "grupo": "1"
+    },
+    "1131916": {
+      "reduzida": 1131916,
+      "analitica": "1.1.3.01.009.00016",
+      "descricao": "INSS a Recuperar",
+      "grupo": "1"
+    },
+    "1131917": {
+      "reduzida": 1131917,
+      "analitica": "1.1.3.01.009.00017",
+      "descricao": "Outros impostos a Recuperar",
+      "grupo": "1"
+    },
+    "1131101": {
+      "reduzida": 1131101,
+      "analitica": "1.1.3.01.010.00001",
+      "descricao": "Juros s/ o capital proprio a receber",
+      "grupo": "1"
+    },
+    "1141401": {
+      "reduzida": 1141401,
+      "analitica": "1.1.4.01.004.00001",
+      "descricao": "Valor nominal",
+      "grupo": "1"
+    },
+    "1141402": {
+      "reduzida": 1141402,
+      "analitica": "1.1.4.01.004.00002",
+      "descricao": "( - ) Desagio a apropriar",
+      "grupo": "1"
+    },
+    "1151101": {
+      "reduzida": 1151101,
+      "analitica": "1.1.5.01.001.00001",
+      "descricao": "Mercadorias para revenda",
+      "grupo": "1"
+    },
+    "1151102": {
+      "reduzida": 1151102,
+      "analitica": "1.1.5.01.001.00002",
+      "descricao": "Materias - primas",
+      "grupo": "1"
+    },
+    "1151103": {
+      "reduzida": 1151103,
+      "analitica": "1.1.5.01.001.00003",
+      "descricao": "Material de acondicionamento",
+      "grupo": "1"
+    },
+    "1151104": {
+      "reduzida": 1151104,
+      "analitica": "1.1.5.01.001.00004",
+      "descricao": "Outros materiais de consumo industrial",
+      "grupo": "1"
+    },
+    "1151105": {
+      "reduzida": 1151105,
+      "analitica": "1.1.5.01.001.00005",
+      "descricao": "Produtos acabados",
+      "grupo": "1"
+    },
+    "1151106": {
+      "reduzida": 1151106,
+      "analitica": "1.1.5.01.001.00006",
+      "descricao": "Produtos em elaboracao",
+      "grupo": "1"
+    },
+    "1151107": {
+      "reduzida": 1151107,
+      "analitica": "1.1.5.01.001.00007",
+      "descricao": "Mercadorias de Consumo",
+      "grupo": "1"
+    },
+    "1151108": {
+      "reduzida": 1151108,
+      "analitica": "1.1.5.01.001.00008",
+      "descricao": "Material de Embalagem",
+      "grupo": "1"
+    },
+    "1151109": {
+      "reduzida": 1151109,
+      "analitica": "1.1.5.01.001.00009",
+      "descricao": "Estoques Destinados a Doação",
+      "grupo": "1"
+    },
+    "1151201": {
+      "reduzida": 1151201,
+      "analitica": "1.1.5.01.002.00001",
+      "descricao": "Almoxarifado em manutencao",
+      "grupo": "1"
+    },
+    "1151202": {
+      "reduzida": 1151202,
+      "analitica": "1.1.5.01.002.00002",
+      "descricao": "Almoxarifado administrativo",
+      "grupo": "1"
+    },
+    "1151301": {
+      "reduzida": 1151301,
+      "analitica": "1.1.5.01.003.00001",
+      "descricao": "Ajuste ao valor de mercado",
+      "grupo": "1"
+    },
+    "1161101": {
+      "reduzida": 1161101,
+      "analitica": "1.1.6.01.001.00001",
+      "descricao": "Premios de seguro a apropriar",
+      "grupo": "1"
+    },
+    "1161102": {
+      "reduzida": 1161102,
+      "analitica": "1.1.6.01.001.00002",
+      "descricao": "Assinaturas e anuidades",
+      "grupo": "1"
+    },
+    "1161201": {
+      "reduzida": 1161201,
+      "analitica": "1.1.6.01.002.00001",
+      "descricao": "Premios de seguros a apropriar",
+      "grupo": "1"
+    },
+    "1161202": {
+      "reduzida": 1161202,
+      "analitica": "1.1.6.01.002.00002",
+      "descricao": "Assinaturas e anuidades",
+      "grupo": "1"
+    },
+    "1211101": {
+      "reduzida": 1211101,
+      "analitica": "1.2.1.01.001.00001",
+      "descricao": "DUPLICATAS A RECEBER",
+      "grupo": "1"
+    },
+    "1211201": {
+      "reduzida": 1211201,
+      "analitica": "1.2.1.01.002.00001",
+      "descricao": "( - ) DUPLICATAS DESCONTADAS",
+      "grupo": "1"
+    },
+    "1212101": {
+      "reduzida": 1212101,
+      "analitica": "1.2.1.02.001.00001",
+      "descricao": "TITULOS A RECEBER",
+      "grupo": "1"
+    },
+    "1212102": {
+      "reduzida": 1212102,
+      "analitica": "1.2.1.02.001.00002",
+      "descricao": "Valores a Receber Longo Prazo",
+      "grupo": "1"
+    },
+    "1212103": {
+      "reduzida": 1212103,
+      "analitica": "1.2.1.02.001.00003",
+      "descricao": "Juros a Receber Longo Prazo",
+      "grupo": "1"
+    },
+    "1212104": {
+      "reduzida": 1212104,
+      "analitica": "1.2.1.02.001.00004",
+      "descricao": "Juros a apropriar Longo Prazo",
+      "grupo": "1"
+    },
+    "1212201": {
+      "reduzida": 1212201,
+      "analitica": "1.2.1.02.002.00001",
+      "descricao": "BANCOS CONTA VINCULADA",
+      "grupo": "1"
+    },
+    "1212701": {
+      "reduzida": 1212701,
+      "analitica": "1.2.1.02.007.00001",
+      "descricao": "Obrigacoes da eletrobras",
+      "grupo": "1"
+    },
+    "1212702": {
+      "reduzida": 1212702,
+      "analitica": "1.2.1.02.007.00002",
+      "descricao": "Creditos da eletrobras",
+      "grupo": "1"
+    },
+    "1212703": {
+      "reduzida": 1212703,
+      "analitica": "1.2.1.02.007.00003",
+      "descricao": "Emprestimo compul. s/ comb. e veiculos",
+      "grupo": "1"
+    },
+    "1212704": {
+      "reduzida": 1212704,
+      "analitica": "1.2.1.02.007.00004",
+      "descricao": "( - ) Provisao para perdas",
+      "grupo": "1"
+    },
+    "1212901": {
+      "reduzida": 1212901,
+      "analitica": "1.2.1.02.009.00001",
+      "descricao": "Finor",
+      "grupo": "1"
+    },
+    "1212902": {
+      "reduzida": 1212902,
+      "analitica": "1.2.1.02.009.00002",
+      "descricao": "Finam",
+      "grupo": "1"
+    },
+    "1221101": {
+      "reduzida": 1221101,
+      "analitica": "1.2.2.01.001.00001",
+      "descricao": "Controlada \"A\" - Valor patrimonial\"",
+      "grupo": "1"
+    },
+    "1221102": {
+      "reduzida": 1221102,
+      "analitica": "1.2.2.01.001.00002",
+      "descricao": "Controlada \"A\" - Agio na aquisicao\"",
+      "grupo": "1"
+    },
+    "1221103": {
+      "reduzida": 1221103,
+      "analitica": "1.2.2.01.001.00003",
+      "descricao": "(-) Controlada \"A\" Amort. Acum. agio",
+      "grupo": "1"
+    },
+    "1221104": {
+      "reduzida": 1221104,
+      "analitica": "1.2.2.01.001.00004",
+      "descricao": "(-)Controlada \"A\" Desagio na aquisicao",
+      "grupo": "1"
+    },
+    "1221105": {
+      "reduzida": 1221105,
+      "analitica": "1.2.2.01.001.00005",
+      "descricao": "Controlada \"A\" Amort. acum. desagio",
+      "grupo": "1"
+    },
+    "1221401": {
+      "reduzida": 1221401,
+      "analitica": "1.2.2.01.004.00001",
+      "descricao": "Finor",
+      "grupo": "1"
+    },
+    "1221402": {
+      "reduzida": 1221402,
+      "analitica": "1.2.2.01.004.00002",
+      "descricao": "Finam",
+      "grupo": "1"
+    },
+    "1221601": {
+      "reduzida": 1221601,
+      "analitica": "1.2.2.01.006.00001",
+      "descricao": "Obrigacoes da Eletrobras",
+      "grupo": "1"
+    },
+    "1221602": {
+      "reduzida": 1221602,
+      "analitica": "1.2.2.01.006.00002",
+      "descricao": "Creditos da Eletrobras",
+      "grupo": "1"
+    },
+    "1221603": {
+      "reduzida": 1221603,
+      "analitica": "1.2.2.01.006.00003",
+      "descricao": "Emprestimo compulsorio s/ comb. e veic.",
+      "grupo": "1"
+    },
+    "1221604": {
+      "reduzida": 1221604,
+      "analitica": "1.2.2.01.006.00004",
+      "descricao": "Objetos de arte",
+      "grupo": "1"
+    },
+    "1221605": {
+      "reduzida": 1221605,
+      "analitica": "1.2.2.01.006.00005",
+      "descricao": "Caucoes permanentes",
+      "grupo": "1"
+    },
+    "1221703": {
+      "reduzida": 1221703,
+      "analitica": "1.2.2.01.007.00003",
+      "descricao": "(-) Outras participacoes societarias",
+      "grupo": "1"
+    },
+    "1221705": {
+      "reduzida": 1221705,
+      "analitica": "1.2.2.01.007.00005",
+      "descricao": "(-) Imoveis nao destinado ao uso",
+      "grupo": "1"
+    },
+    "1221706": {
+      "reduzida": 1221706,
+      "analitica": "1.2.2.01.007.00006",
+      "descricao": "(-) Outros investimentos permanentes",
+      "grupo": "1"
+    },
+    "1231101": {
+      "reduzida": 1231101,
+      "analitica": "1.2.3.01.001.00001",
+      "descricao": "Terrenos",
+      "grupo": "1"
+    },
+    "1231102": {
+      "reduzida": 1231102,
+      "analitica": "1.2.3.01.001.00002",
+      "descricao": "Edificios",
+      "grupo": "1"
+    },
+    "1231103": {
+      "reduzida": 1231103,
+      "analitica": "1.2.3.01.001.00003",
+      "descricao": "Construcoes",
+      "grupo": "1"
+    },
+    "1231201": {
+      "reduzida": 1231201,
+      "analitica": "1.2.3.01.002.00001",
+      "descricao": "(-) Depreciacao de Terrenos",
+      "grupo": "1"
+    },
+    "1231202": {
+      "reduzida": 1231202,
+      "analitica": "1.2.3.01.002.00002",
+      "descricao": "(-) Depreciacao de edificios",
+      "grupo": "1"
+    },
+    "1232101": {
+      "reduzida": 1232101,
+      "analitica": "1.2.3.02.001.00001",
+      "descricao": "Móveis e utensílios",
+      "grupo": "1"
+    },
+    "1232102": {
+      "reduzida": 1232102,
+      "analitica": "1.2.3.02.001.00002",
+      "descricao": "Equipamento de Tecnologia e Informatica",
+      "grupo": "1"
+    },
+    "1232103": {
+      "reduzida": 1232103,
+      "analitica": "1.2.3.02.001.00003",
+      "descricao": "Veiculos",
+      "grupo": "1"
+    },
+    "1232104": {
+      "reduzida": 1232104,
+      "analitica": "1.2.3.02.001.00004",
+      "descricao": "Maquinas e equipamentos",
+      "grupo": "1"
+    },
+    "1232105": {
+      "reduzida": 1232105,
+      "analitica": "1.2.3.02.001.00005",
+      "descricao": "Instalações",
+      "grupo": "1"
+    },
+    "1232106": {
+      "reduzida": 1232106,
+      "analitica": "1.2.3.02.001.00006",
+      "descricao": "Ferramentas",
+      "grupo": "1"
+    },
+    "1232107": {
+      "reduzida": 1232107,
+      "analitica": "1.2.3.02.001.00007",
+      "descricao": "Recursos Naturais",
+      "grupo": "1"
+    },
+    "1232201": {
+      "reduzida": 1232201,
+      "analitica": "1.2.3.02.002.00001",
+      "descricao": "(-) Depr.Acum.de moveis e utensilios",
+      "grupo": "1"
+    },
+    "1232202": {
+      "reduzida": 1232202,
+      "analitica": "1.2.3.02.002.00002",
+      "descricao": "(-) Depr.Acum.equip.Tecnologia Inform.",
+      "grupo": "1"
+    },
+    "1232203": {
+      "reduzida": 1232203,
+      "analitica": "1.2.3.02.002.00003",
+      "descricao": "(-) Depr. Acumuladas de veiculos",
+      "grupo": "1"
+    },
+    "1232204": {
+      "reduzida": 1232204,
+      "analitica": "1.2.3.02.002.00004",
+      "descricao": "(-) Depr. Acumuladas Maq e Equiptos",
+      "grupo": "1"
+    },
+    "1232205": {
+      "reduzida": 1232205,
+      "analitica": "1.2.3.02.002.00005",
+      "descricao": "(-) Depr. Acumuladas Instalações",
+      "grupo": "1"
+    },
+    "1232206": {
+      "reduzida": 1232206,
+      "analitica": "1.2.3.02.002.00006",
+      "descricao": "(-) Depr. Acumuladas de Ferramentas",
+      "grupo": "1"
+    },
+    "1233101": {
+      "reduzida": 1233101,
+      "analitica": "1.2.3.03.001.00001",
+      "descricao": "Terrenos",
+      "grupo": "1"
+    },
+    "1233102": {
+      "reduzida": 1233102,
+      "analitica": "1.2.3.03.001.00002",
+      "descricao": "Edificios",
+      "grupo": "1"
+    },
+    "1233103": {
+      "reduzida": 1233103,
+      "analitica": "1.2.3.03.001.00003",
+      "descricao": "Construcoes",
+      "grupo": "1"
+    },
+    "1233104": {
+      "reduzida": 1233104,
+      "analitica": "1.2.3.03.001.00004",
+      "descricao": "Moveis e utensilios",
+      "grupo": "1"
+    },
+    "1233105": {
+      "reduzida": 1233105,
+      "analitica": "1.2.3.03.001.00005",
+      "descricao": "Equipamento de Tecnologia e Informatica",
+      "grupo": "1"
+    },
+    "1233106": {
+      "reduzida": 1233106,
+      "analitica": "1.2.3.03.001.00006",
+      "descricao": "Veiculos",
+      "grupo": "1"
+    },
+    "1233107": {
+      "reduzida": 1233107,
+      "analitica": "1.2.3.03.001.00007",
+      "descricao": "Maquinas e equipamentos",
+      "grupo": "1"
+    },
+    "1233108": {
+      "reduzida": 1233108,
+      "analitica": "1.2.3.03.001.00008",
+      "descricao": "Instalações",
+      "grupo": "1"
+    },
+    "1233109": {
+      "reduzida": 1233109,
+      "analitica": "1.2.3.03.001.00009",
+      "descricao": "Ferramentas",
+      "grupo": "1"
+    },
+    "1233201": {
+      "reduzida": 1233201,
+      "analitica": "1.2.3.03.002.00001",
+      "descricao": "Terrenos",
+      "grupo": "1"
+    },
+    "1233202": {
+      "reduzida": 1233202,
+      "analitica": "1.2.3.03.002.00002",
+      "descricao": "Edificios",
+      "grupo": "1"
+    },
+    "1233203": {
+      "reduzida": 1233203,
+      "analitica": "1.2.3.03.002.00003",
+      "descricao": "Construcoes",
+      "grupo": "1"
+    },
+    "1233204": {
+      "reduzida": 1233204,
+      "analitica": "1.2.3.03.002.00004",
+      "descricao": "Moveis e utensilios",
+      "grupo": "1"
+    },
+    "1233205": {
+      "reduzida": 1233205,
+      "analitica": "1.2.3.03.002.00005",
+      "descricao": "Equipamento de Tecnologia e Informatica",
+      "grupo": "1"
+    },
+    "1233206": {
+      "reduzida": 1233206,
+      "analitica": "1.2.3.03.002.00006",
+      "descricao": "Veiculos",
+      "grupo": "1"
+    },
+    "1233207": {
+      "reduzida": 1233207,
+      "analitica": "1.2.3.03.002.00007",
+      "descricao": "Maquinas e equipamentos",
+      "grupo": "1"
+    },
+    "1233208": {
+      "reduzida": 1233208,
+      "analitica": "1.2.3.03.002.00008",
+      "descricao": "Instalações",
+      "grupo": "1"
+    },
+    "1233209": {
+      "reduzida": 1233209,
+      "analitica": "1.2.3.03.002.00009",
+      "descricao": "Ferramentas",
+      "grupo": "1"
+    },
+    "1241101": {
+      "reduzida": 1241101,
+      "analitica": "1.2.4.01.001.00001",
+      "descricao": "Marcas, direitos e Patentes",
+      "grupo": "1"
+    },
+    "1241201": {
+      "reduzida": 1241201,
+      "analitica": "1.2.4.01.002.00001",
+      "descricao": "(-)Amort. dep.marcas-direitos e patente",
+      "grupo": "1"
+    },
+    "1911201": {
+      "reduzida": 1911201,
+      "analitica": "1.9.1.01.002.00001",
+      "descricao": "Titulos Avalizados",
+      "grupo": "1"
+    },
+    "1911202": {
+      "reduzida": 1911202,
+      "analitica": "1.9.1.01.002.00002",
+      "descricao": "Titulos Endossados",
+      "grupo": "1"
+    },
+    "1911203": {
+      "reduzida": 1911203,
+      "analitica": "1.9.1.01.002.00003",
+      "descricao": "Imoveis Hipotecados",
+      "grupo": "1"
+    },
+    "1911301": {
+      "reduzida": 1911301,
+      "analitica": "1.9.1.01.003.00001",
+      "descricao": "Materiais remetidos p/ Industrializacao",
+      "grupo": "1"
+    },
+    "1911302": {
+      "reduzida": 1911302,
+      "analitica": "1.9.1.01.003.00002",
+      "descricao": "Materiais remetidos p/ Conserto",
+      "grupo": "1"
+    },
+    "1911303": {
+      "reduzida": 1911303,
+      "analitica": "1.9.1.01.003.00003",
+      "descricao": "Mercadorias Emprestadas",
+      "grupo": "1"
+    },
+    "1921101": {
+      "reduzida": 1921101,
+      "analitica": "1.9.2.01.001.00001",
+      "descricao": "Contratos de Seguros",
+      "grupo": "1"
+    },
+    "1921201": {
+      "reduzida": 1921201,
+      "analitica": "1.9.2.01.002.00001",
+      "descricao": "Avais concedidos",
+      "grupo": "1"
+    },
+    "1921202": {
+      "reduzida": 1921202,
+      "analitica": "1.9.2.01.002.00002",
+      "descricao": "Endossos de Titulos",
+      "grupo": "1"
+    },
+    "1921203": {
+      "reduzida": 1921203,
+      "analitica": "1.9.2.01.002.00003",
+      "descricao": "Hipotecas de Imoveis",
+      "grupo": "1"
+    },
+    "1921301": {
+      "reduzida": 1921301,
+      "analitica": "1.9.2.01.003.00001",
+      "descricao": "Remessas para Industrializacao",
+      "grupo": "1"
+    },
+    "1921302": {
+      "reduzida": 1921302,
+      "analitica": "1.9.2.01.003.00002",
+      "descricao": "Remessas para Concerto",
+      "grupo": "1"
+    },
+    "1921304": {
+      "reduzida": 1921304,
+      "analitica": "1.9.2.01.003.00004",
+      "descricao": "Remessas de mercadorias p/ Demonstracao",
+      "grupo": "1"
+    },
+    "1921305": {
+      "reduzida": 1921305,
+      "analitica": "1.9.2.01.003.00005",
+      "descricao": "Remessas de bens em Comodato",
+      "grupo": "1"
+    },
+    "1921401": {
+      "reduzida": 1921401,
+      "analitica": "1.9.2.01.004.00001",
+      "descricao": "Materiais recebidos p/ Industrializacao",
+      "grupo": "1"
+    },
+    "1921402": {
+      "reduzida": 1921402,
+      "analitica": "1.9.2.01.004.00002",
+      "descricao": "Materiais recebidos p/ Concerto",
+      "grupo": "1"
+    },
+    "1921403": {
+      "reduzida": 1921403,
+      "analitica": "1.9.2.01.004.00003",
+      "descricao": "Mercadorias Emprestadas",
+      "grupo": "1"
+    },
+    "1921404": {
+      "reduzida": 1921404,
+      "analitica": "1.9.2.01.004.00004",
+      "descricao": "Mercadorias recebidas p/ Demonstracao",
+      "grupo": "1"
+    },
+    "1921405": {
+      "reduzida": 1921405,
+      "analitica": "1.9.2.01.004.00005",
+      "descricao": "Bens recebidos em Comodato",
+      "grupo": "1"
+    },
+    "1931101": {
+      "reduzida": 1931101,
+      "analitica": "1.9.3.01.001.00001",
+      "descricao": "Conta Baixa",
+      "grupo": "1"
+    },
+    "2111001": {
+      "reduzida": 2111001,
+      "analitica": "2.1.1.01.000.00001",
+      "descricao": "Emprestimo de Socio",
+      "grupo": "2"
+    },
+    "2111002": {
+      "reduzida": 2111002,
+      "analitica": "2.1.1.01.000.00002",
+      "descricao": "Caixa Economica Federal",
+      "grupo": "2"
+    },
+    "2111003": {
+      "reduzida": 2111003,
+      "analitica": "2.1.1.01.000.00003",
+      "descricao": "Banco Santander",
+      "grupo": "2"
+    },
+    "2111004": {
+      "reduzida": 2111004,
+      "analitica": "2.1.1.01.000.00004",
+      "descricao": "Banco Itau",
+      "grupo": "2"
+    },
+    "2111005": {
+      "reduzida": 2111005,
+      "analitica": "2.1.1.01.000.00005",
+      "descricao": "Juros a Pagar de Emprestimos",
+      "grupo": "2"
+    },
+    "2111501": {
+      "reduzida": 2111501,
+      "analitica": "2.1.1.01.005.00001",
+      "descricao": "Titulos a Pagar",
+      "grupo": "2"
+    },
+    "2111502": {
+      "reduzida": 2111502,
+      "analitica": "2.1.1.01.005.00002",
+      "descricao": "Consorcio",
+      "grupo": "2"
+    },
+    "2121101": {
+      "reduzida": 2121101,
+      "analitica": "2.1.2.01.001.00001",
+      "descricao": "Fornecedores Nacionais",
+      "grupo": "2"
+    },
+    "2121102": {
+      "reduzida": 2121102,
+      "analitica": "2.1.2.01.001.00002",
+      "descricao": "Fornecedores Diversos",
+      "grupo": "2"
+    },
+    "2121103": {
+      "reduzida": 2121103,
+      "analitica": "2.1.2.01.001.00003",
+      "descricao": "Carrefour Comercio e Industria Ltda",
+      "grupo": "2"
+    },
+    "2121104": {
+      "reduzida": 2121104,
+      "analitica": "2.1.2.01.001.00004",
+      "descricao": "Kalunga Comercio Industria Grafica Ltda",
+      "grupo": "2"
+    },
+    "2121105": {
+      "reduzida": 2121105,
+      "analitica": "2.1.2.01.001.00005",
+      "descricao": "Havan SA",
+      "grupo": "2"
+    },
+    "2121106": {
+      "reduzida": 2121106,
+      "analitica": "2.1.2.01.001.00006",
+      "descricao": "CHAVEIRO DO VALE COMERCIAL LTDA",
+      "grupo": "2"
+    },
+    "2121107": {
+      "reduzida": 2121107,
+      "analitica": "2.1.2.01.001.00007",
+      "descricao": "ESTOQUE DO LOJISTA COM.ATAC DE MAT LTDA",
+      "grupo": "2"
+    },
+    "2121109": {
+      "reduzida": 2121109,
+      "analitica": "2.1.2.01.001.00009",
+      "descricao": "H DISTRIBUIDORA LTDA",
+      "grupo": "2"
+    },
+    "2121111": {
+      "reduzida": 2121111,
+      "analitica": "2.1.2.01.001.00011",
+      "descricao": "CARBONPECAS LTDA",
+      "grupo": "2"
+    },
+    "2121112": {
+      "reduzida": 2121112,
+      "analitica": "2.1.2.01.001.00012",
+      "descricao": "DISTRIBUIDORA PREMIUM LTDA.",
+      "grupo": "2"
+    },
+    "2121113": {
+      "reduzida": 2121113,
+      "analitica": "2.1.2.01.001.00013",
+      "descricao": "ARCOM S/A",
+      "grupo": "2"
+    },
+    "2121116": {
+      "reduzida": 2121116,
+      "analitica": "2.1.2.01.001.00016",
+      "descricao": "MARTINS COM SERV DISTR SA",
+      "grupo": "2"
+    },
+    "2121118": {
+      "reduzida": 2121118,
+      "analitica": "2.1.2.01.001.00018",
+      "descricao": "GLAUBER ATACADISTA",
+      "grupo": "2"
+    },
+    "2121119": {
+      "reduzida": 2121119,
+      "analitica": "2.1.2.01.001.00019",
+      "descricao": "VAREJAO TINTAS LTDA",
+      "grupo": "2"
+    },
+    "2121121": {
+      "reduzida": 2121121,
+      "analitica": "2.1.2.01.001.00021",
+      "descricao": "AIR LIQUIDE BRASIL LTDA",
+      "grupo": "2"
+    },
+    "2121122": {
+      "reduzida": 2121122,
+      "analitica": "2.1.2.01.001.00022",
+      "descricao": "GASLIVE IMP E EXP. DE PROD. MEDICOS",
+      "grupo": "2"
+    },
+    "2121123": {
+      "reduzida": 2121123,
+      "analitica": "2.1.2.01.001.00023",
+      "descricao": "WHITE MARTINS GASES INDUSTRIAIS",
+      "grupo": "2"
+    },
+    "2121125": {
+      "reduzida": 2121125,
+      "analitica": "2.1.2.01.001.00025",
+      "descricao": "LOCMED HOSPITALAR LTDA",
+      "grupo": "2"
+    },
+    "2121126": {
+      "reduzida": 2121126,
+      "analitica": "2.1.2.01.001.00026",
+      "descricao": "REVAL ATACADO DE PAPELARIA LTDA",
+      "grupo": "2"
+    },
+    "2121127": {
+      "reduzida": 2121127,
+      "analitica": "2.1.2.01.001.00027",
+      "descricao": "TRAVAGIN & TRAVAGIN LTDA",
+      "grupo": "2"
+    },
+    "2121128": {
+      "reduzida": 2121128,
+      "analitica": "2.1.2.01.001.00028",
+      "descricao": "KAKO ATACADO EIRELI",
+      "grupo": "2"
+    },
+    "2121129": {
+      "reduzida": 2121129,
+      "analitica": "2.1.2.01.001.00029",
+      "descricao": "CRENATA SORVETERIA EIRELI",
+      "grupo": "2"
+    },
+    "2121130": {
+      "reduzida": 2121130,
+      "analitica": "2.1.2.01.001.00030",
+      "descricao": "ATACADAO S.A.",
+      "grupo": "2"
+    },
+    "2121201": {
+      "reduzida": 2121201,
+      "analitica": "2.1.2.01.002.00001",
+      "descricao": "Fornecedores Estrangeiros",
+      "grupo": "2"
+    },
+    "2121202": {
+      "reduzida": 2121202,
+      "analitica": "2.1.2.01.002.00002",
+      "descricao": "Fornecedores Diversos",
+      "grupo": "2"
+    },
+    "2131101": {
+      "reduzida": 2131101,
+      "analitica": "2.1.3.01.001.00001",
+      "descricao": "IPI a recolher",
+      "grupo": "2"
+    },
+    "2131102": {
+      "reduzida": 2131102,
+      "analitica": "2.1.3.01.001.00002",
+      "descricao": "ICMS a recolher",
+      "grupo": "2"
+    },
+    "2131103": {
+      "reduzida": 2131103,
+      "analitica": "2.1.3.01.001.00003",
+      "descricao": "ISS a recolher",
+      "grupo": "2"
+    },
+    "2131104": {
+      "reduzida": 2131104,
+      "analitica": "2.1.3.01.001.00004",
+      "descricao": "Provisao p/ imposto de renda",
+      "grupo": "2"
+    },
+    "2131105": {
+      "reduzida": 2131105,
+      "analitica": "2.1.3.01.001.00005",
+      "descricao": "Provisao contribuicao social s/ o lucro",
+      "grupo": "2"
+    },
+    "2131108": {
+      "reduzida": 2131108,
+      "analitica": "2.1.3.01.001.00008",
+      "descricao": "Imposto de renda na fonte a recolher",
+      "grupo": "2"
+    },
+    "2131109": {
+      "reduzida": 2131109,
+      "analitica": "2.1.3.01.001.00009",
+      "descricao": "PIS-PASEP a recolher",
+      "grupo": "2"
+    },
+    "2131110": {
+      "reduzida": 2131110,
+      "analitica": "2.1.3.01.001.00010",
+      "descricao": "Cofins a recolher",
+      "grupo": "2"
+    },
+    "2131111": {
+      "reduzida": 2131111,
+      "analitica": "2.1.3.01.001.00011",
+      "descricao": "Provisao para IOF",
+      "grupo": "2"
+    },
+    "2131113": {
+      "reduzida": 2131113,
+      "analitica": "2.1.3.01.001.00013",
+      "descricao": "ISS retido na fonte a recolher",
+      "grupo": "2"
+    },
+    "2131115": {
+      "reduzida": 2131115,
+      "analitica": "2.1.3.01.001.00015",
+      "descricao": "Simples Nacional a recolher",
+      "grupo": "2"
+    },
+    "2131116": {
+      "reduzida": 2131116,
+      "analitica": "2.1.3.01.001.00016",
+      "descricao": "Imposto Sindical a recolher",
+      "grupo": "2"
+    },
+    "2131117": {
+      "reduzida": 2131117,
+      "analitica": "2.1.3.01.001.00017",
+      "descricao": "IRRF a Recolher",
+      "grupo": "2"
+    },
+    "2131118": {
+      "reduzida": 2131118,
+      "analitica": "2.1.3.01.001.00018",
+      "descricao": "Parcelamento do INSS a Recolher",
+      "grupo": "2"
+    },
+    "2131119": {
+      "reduzida": 2131119,
+      "analitica": "2.1.3.01.001.00019",
+      "descricao": "Parcelamento Simples Nacional",
+      "grupo": "2"
+    },
+    "5141102": {
+      "reduzida": 5141102,
+      "analitica": "2.1.3.01.001.00020",
+      "descricao": "Parcelamento PGFN",
+      "grupo": "2"
+    },
+    "2141101": {
+      "reduzida": 2141101,
+      "analitica": "2.1.4.01.001.00001",
+      "descricao": "Salarios e ordenados a pagar",
+      "grupo": "2"
+    },
+    "2141102": {
+      "reduzida": 2141102,
+      "analitica": "2.1.4.01.001.00002",
+      "descricao": "Pro - labore a pagar",
+      "grupo": "2"
+    },
+    "2141103": {
+      "reduzida": 2141103,
+      "analitica": "2.1.4.01.001.00003",
+      "descricao": "Gratificacoes a pagar",
+      "grupo": "2"
+    },
+    "2141104": {
+      "reduzida": 2141104,
+      "analitica": "2.1.4.01.001.00004",
+      "descricao": "Ferias a pagar",
+      "grupo": "2"
+    },
+    "2141105": {
+      "reduzida": 2141105,
+      "analitica": "2.1.4.01.001.00005",
+      "descricao": "13º Salario a pagar",
+      "grupo": "2"
+    },
+    "2141106": {
+      "reduzida": 2141106,
+      "analitica": "2.1.4.01.001.00006",
+      "descricao": "Rescisão a pagar",
+      "grupo": "2"
+    },
+    "2141107": {
+      "reduzida": 2141107,
+      "analitica": "2.1.4.01.001.00007",
+      "descricao": "Pensão Alimenticia a Repassar",
+      "grupo": "2"
+    },
+    "2141201": {
+      "reduzida": 2141201,
+      "analitica": "2.1.4.01.002.00001",
+      "descricao": "INSS a recolher",
+      "grupo": "2"
+    },
+    "2141202": {
+      "reduzida": 2141202,
+      "analitica": "2.1.4.01.002.00002",
+      "descricao": "FGTS a recolher",
+      "grupo": "2"
+    },
+    "2141203": {
+      "reduzida": 2141203,
+      "analitica": "2.1.4.01.002.00003",
+      "descricao": "Contribuição Sindical a Recolher",
+      "grupo": "2"
+    },
+    "2141204": {
+      "reduzida": 2141204,
+      "analitica": "2.1.4.01.002.00004",
+      "descricao": "Contribuição Confederativa a Recolher",
+      "grupo": "2"
+    },
+    "2141205": {
+      "reduzida": 2141205,
+      "analitica": "2.1.4.01.002.00005",
+      "descricao": "FGTS Rescisorio a Recolher",
+      "grupo": "2"
+    },
+    "2141301": {
+      "reduzida": 2141301,
+      "analitica": "2.1.4.01.003.00001",
+      "descricao": "Provisao para ferias",
+      "grupo": "2"
+    },
+    "2141302": {
+      "reduzida": 2141302,
+      "analitica": "2.1.4.01.003.00002",
+      "descricao": "Provisao para 13§ Salario",
+      "grupo": "2"
+    },
+    "2141303": {
+      "reduzida": 2141303,
+      "analitica": "2.1.4.01.003.00003",
+      "descricao": "INSS s/ provisao para ferias",
+      "grupo": "2"
+    },
+    "2141304": {
+      "reduzida": 2141304,
+      "analitica": "2.1.4.01.003.00004",
+      "descricao": "INSS s/ provisao para 13§",
+      "grupo": "2"
+    },
+    "2141305": {
+      "reduzida": 2141305,
+      "analitica": "2.1.4.01.003.00005",
+      "descricao": "FGTS s/ provisao para ferias",
+      "grupo": "2"
+    },
+    "2141306": {
+      "reduzida": 2141306,
+      "analitica": "2.1.4.01.003.00006",
+      "descricao": "FGTS s/ provisao para 13§",
+      "grupo": "2"
+    },
+    "2151101": {
+      "reduzida": 2151101,
+      "analitica": "2.1.5.01.001.00001",
+      "descricao": "Adiantamentos de Clientes Diversos",
+      "grupo": "2"
+    },
+    "2151201": {
+      "reduzida": 2151201,
+      "analitica": "2.1.5.01.002.00001",
+      "descricao": "Cotas de Consorcio a Pagar- Curto prazo",
+      "grupo": "2"
+    },
+    "2151202": {
+      "reduzida": 2151202,
+      "analitica": "2.1.5.01.002.00002",
+      "descricao": "Alugueis a pagar",
+      "grupo": "2"
+    },
+    "2151203": {
+      "reduzida": 2151203,
+      "analitica": "2.1.5.01.002.00003",
+      "descricao": "Cartão de Credito a pagar",
+      "grupo": "2"
+    },
+    "2151204": {
+      "reduzida": 2151204,
+      "analitica": "2.1.5.01.002.00004",
+      "descricao": "Fretes a pagar",
+      "grupo": "2"
+    },
+    "2151205": {
+      "reduzida": 2151205,
+      "analitica": "2.1.5.01.002.00005",
+      "descricao": "Honorarios Contabeis a pagar",
+      "grupo": "2"
+    },
+    "2151206": {
+      "reduzida": 2151206,
+      "analitica": "2.1.5.01.002.00006",
+      "descricao": "Juros a pagar",
+      "grupo": "2"
+    },
+    "2151207": {
+      "reduzida": 2151207,
+      "analitica": "2.1.5.01.002.00007",
+      "descricao": "Seguros a pagar",
+      "grupo": "2"
+    },
+    "2151301": {
+      "reduzida": 2151301,
+      "analitica": "2.1.5.01.003.00001",
+      "descricao": "Energia Eletrica a pagar",
+      "grupo": "2"
+    },
+    "2151302": {
+      "reduzida": 2151302,
+      "analitica": "2.1.5.01.003.00002",
+      "descricao": "Agua e Esgoto a pagar",
+      "grupo": "2"
+    },
+    "2151303": {
+      "reduzida": 2151303,
+      "analitica": "2.1.5.01.003.00003",
+      "descricao": "Telefone a pagar",
+      "grupo": "2"
+    },
+    "2151304": {
+      "reduzida": 2151304,
+      "analitica": "2.1.5.01.003.00004",
+      "descricao": "Internet a pagar",
+      "grupo": "2"
+    },
+    "2151601": {
+      "reduzida": 2151601,
+      "analitica": "2.1.5.01.006.00001",
+      "descricao": "Dividendos propostos",
+      "grupo": "2"
+    },
+    "2151602": {
+      "reduzida": 2151602,
+      "analitica": "2.1.5.01.006.00002",
+      "descricao": "Dividendos a pagar",
+      "grupo": "2"
+    },
+    "2151603": {
+      "reduzida": 2151603,
+      "analitica": "2.1.5.01.006.00003",
+      "descricao": "Lucros a Distribuir",
+      "grupo": "2"
+    },
+    "2151701": {
+      "reduzida": 2151701,
+      "analitica": "2.1.5.01.007.00001",
+      "descricao": "Participacoes prop. a administradores",
+      "grupo": "2"
+    },
+    "2151702": {
+      "reduzida": 2151702,
+      "analitica": "2.1.5.01.007.00002",
+      "descricao": "Participacoes propostas a empregados",
+      "grupo": "2"
+    },
+    "2151703": {
+      "reduzida": 2151703,
+      "analitica": "2.1.5.01.007.00003",
+      "descricao": "Participacoes a pagar",
+      "grupo": "2"
+    },
+    "2151801": {
+      "reduzida": 2151801,
+      "analitica": "2.1.5.01.008.00001",
+      "descricao": "Juros s/ capital proprio a pagar",
+      "grupo": "2"
+    },
+    "2213101": {
+      "reduzida": 2213101,
+      "analitica": "2.2.1.03.001.00001",
+      "descricao": "Provisao p/ IR s/ lucros diferidos",
+      "grupo": "2"
+    },
+    "2214101": {
+      "reduzida": 2214101,
+      "analitica": "2.2.1.04.001.00001",
+      "descricao": "Cotas Consorcio a Pagar-Longo Prazo",
+      "grupo": "2"
+    },
+    "2311101": {
+      "reduzida": 2311101,
+      "analitica": "2.3.1.01.001.00001",
+      "descricao": "Capital social",
+      "grupo": "2"
+    },
+    "2312101": {
+      "reduzida": 2312101,
+      "analitica": "2.3.1.02.001.00001",
+      "descricao": "( - ) Capital a Integralizar",
+      "grupo": "2"
+    },
+    "2321102": {
+      "reduzida": 2321102,
+      "analitica": "2.3.2.01.001.00002",
+      "descricao": "Agio na emissao de acoes",
+      "grupo": "2"
+    },
+    "2321103": {
+      "reduzida": 2321103,
+      "analitica": "2.3.2.01.001.00003",
+      "descricao": "Doacoes e subvencoes p/ investimentos",
+      "grupo": "2"
+    },
+    "2331101": {
+      "reduzida": 2331101,
+      "analitica": "2.3.3.01.001.00001",
+      "descricao": "Reavaliacao de ativos proprios",
+      "grupo": "2"
+    },
+    "2331102": {
+      "reduzida": 2331102,
+      "analitica": "2.3.3.01.001.00002",
+      "descricao": "Reavaliacao de ativos de coligadas",
+      "grupo": "2"
+    },
+    "2341101": {
+      "reduzida": 2341101,
+      "analitica": "2.3.4.01.001.00001",
+      "descricao": "Reserva legal",
+      "grupo": "2"
+    },
+    "2341102": {
+      "reduzida": 2341102,
+      "analitica": "2.3.4.01.001.00002",
+      "descricao": "Reserva estatutaria",
+      "grupo": "2"
+    },
+    "2341103": {
+      "reduzida": 2341103,
+      "analitica": "2.3.4.01.001.00003",
+      "descricao": "Reserva para contingencias",
+      "grupo": "2"
+    },
+    "2341104": {
+      "reduzida": 2341104,
+      "analitica": "2.3.4.01.001.00004",
+      "descricao": "Reserva de lucros a realizar",
+      "grupo": "2"
+    },
+    "2341105": {
+      "reduzida": 2341105,
+      "analitica": "2.3.4.01.001.00005",
+      "descricao": "Reserva especial",
+      "grupo": "2"
+    },
+    "2341106": {
+      "reduzida": 2341106,
+      "analitica": "2.3.4.01.001.00006",
+      "descricao": "Lucros Acumulados",
+      "grupo": "2"
+    },
+    "2351101": {
+      "reduzida": 2351101,
+      "analitica": "2.3.5.01.001.00001",
+      "descricao": "( - ) Acoes em tesouraria",
+      "grupo": "2"
+    },
+    "2361101": {
+      "reduzida": 2361101,
+      "analitica": "2.3.6.01.001.00001",
+      "descricao": "( - ) Prejuizos acumulados",
+      "grupo": "2"
+    },
+    "2371101": {
+      "reduzida": 2371101,
+      "analitica": "2.3.7.01.001.00001",
+      "descricao": "Lucro do Exercício",
+      "grupo": "2"
+    },
+    "2371102": {
+      "reduzida": 2371102,
+      "analitica": "2.3.7.01.001.00002",
+      "descricao": "Prejuízo do Exercicio",
+      "grupo": "2"
+    },
+    "2911101": {
+      "reduzida": 2911101,
+      "analitica": "2.9.1.01.001.00001",
+      "descricao": "Conta de Zeramento",
+      "grupo": "2"
+    },
+    "5131102": {
+      "reduzida": 5131102,
+      "analitica": "5.1.3.01.001.00002",
+      "descricao": "Compra de Mercadoria",
+      "grupo": "5"
+    }
+  },
+  "by_descricao": {
+    "caixa geral": 1111101,
+    "fundo fixo de caixa": 1111102,
+    "itau": 1112201,
+    "bradesco": 1112202,
+    "caixa economica federal": 1112203,
+    "inter": 1112204,
+    "banco brasil": 1112205,
+    "santander": 1112206,
+    "sicoob": 1112207,
+    "mercado pago": 1112208,
+    "sicredi": 1112209,
+    "pagseguro": 1112210,
+    "itau - aplicação": 1112301,
+    "bradesco - aplicação": 1112302,
+    "caixa economica federal - aplicação": 1112303,
+    "inter- aplicação": 1112304,
+    "banco brasil - aplicação": 1112305,
+    "santander - aplicação": 1112306,
+    "sicoob - aplicação": 1112307,
+    "mercado pago - aplicação": 1112308,
+    "sicredi - aplicação": 1112309,
+    "sicoob - aplicação conta capital": 1112310,
+    "pagseguro - aplicação": 1112311,
+    "duplicatas a receber": 1121101,
+    "clientes diversos": 1121102,
+    "icatu seguros s/a": 1121103,
+    "omint seguros s/a": 1121105,
+    "unimed seguradora s.a.": 1121106,
+    "tokio marine seguradora s.a": 1121107,
+    "azul companhia de seguros": 1121111,
+    "porto seguro - seguro saude s.a": 1121112,
+    "associacao sao francisco vida": 1121115,
+    "( - ) duplicatas descontadas": 1121201,
+    "titulos a receber": 1131201,
+    "valor a receber curto prazo": 1131202,
+    "juros a receber - curto prazo": 1131203,
+    "juros a apropriar longo prazo": 1131204,
+    "emprestimo a terceiros a receber": 1131205,
+    "titulos de capitalização banco itau": 1131206,
+    "titulos de capitalização banco bradesco": 1131207,
+    "titulos de capitalização banco sicoob": 1131208,
+    "titulos de capitalização banco brasil": 1131209,
+    "cheques a sacar": 1131301,
+    "cheques devolvidos a cobrar": 1131302,
+    "importacoes em andamento": 1131501,
+    "adiantamentos a fornecedores": 1131601,
+    "adiantamentos de comissão": 1131602,
+    "adiantamento de importações": 1131603,
+    "adiantamentos de salarios": 1131701,
+    "adiantamentos de 13º salario": 1131702,
+    "adiantamentos de ferias": 1131703,
+    "adiantamentos para rescisões": 1131704,
+    "adiantamentos para viagens": 1131705,
+    "emprestimos a funcionarios": 1131801,
+    "ipi a recuperar": 1131901,
+    "icms a recuperar": 1131902,
+    "ir retido na fonte": 1131903,
+    "ir pago por estimativa": 1131904,
+    "cssl paga por estimativa": 1131905,
+    "tributos pago a maior ou indevidamente": 1131906,
+    "cssl retida na fonte a compensar": 1131907,
+    "cofins retida na fonte a compensar": 1131908,
+    "pis-pasep retido na fonte a compensar": 1131909,
+    "inss retido na fonte a compensar": 1131910,
+    "bonus de adimplencia fiscal a compensar": 1131911,
+    "cofins a recuperar": 1131912,
+    "pis-pasep a recuperar": 1131913,
+    "cofins a recuperar - credito presumido": 1131914,
+    "pis-pasep a recuperar credito presumido": 1131915,
+    "inss a recuperar": 1131916,
+    "outros impostos a recuperar": 1131917,
+    "juros s/ o capital proprio a receber": 1131101,
+    "valor nominal": 1141401,
+    "( - ) desagio a apropriar": 1141402,
+    "mercadorias para revenda": 1151101,
+    "materias - primas": 1151102,
+    "material de acondicionamento": 1151103,
+    "outros materiais de consumo industrial": 1151104,
+    "produtos acabados": 1151105,
+    "produtos em elaboracao": 1151106,
+    "mercadorias de consumo": 1151107,
+    "material de embalagem": 1151108,
+    "estoques destinados a doação": 1151109,
+    "almoxarifado em manutencao": 1151201,
+    "almoxarifado administrativo": 1151202,
+    "ajuste ao valor de mercado": 1151301,
+    "premios de seguro a apropriar": 1161101,
+    "assinaturas e anuidades": 1161102,
+    "premios de seguros a apropriar": 1161201,
+    "valores a receber longo prazo": 1212102,
+    "juros a receber longo prazo": 1212103,
+    "bancos conta vinculada": 1212201,
+    "obrigacoes da eletrobras": 1212701,
+    "creditos da eletrobras": 1212702,
+    "emprestimo compul. s/ comb. e veiculos": 1212703,
+    "( - ) provisao para perdas": 1212704,
+    "finor": 1212901,
+    "finam": 1212902,
+    "controlada \"a\" - valor patrimonial\"": 1221101,
+    "controlada \"a\" - agio na aquisicao\"": 1221102,
+    "(-) controlada \"a\" amort. acum. agio": 1221103,
+    "(-)controlada \"a\" desagio na aquisicao": 1221104,
+    "controlada \"a\" amort. acum. desagio": 1221105,
+    "emprestimo compulsorio s/ comb. e veic.": 1221603,
+    "objetos de arte": 1221604,
+    "caucoes permanentes": 1221605,
+    "(-) outras participacoes societarias": 1221703,
+    "(-) imoveis nao destinado ao uso": 1221705,
+    "(-) outros investimentos permanentes": 1221706,
+    "terrenos": 1231101,
+    "edificios": 1231102,
+    "construcoes": 1231103,
+    "(-) depreciacao de terrenos": 1231201,
+    "(-) depreciacao de edificios": 1231202,
+    "móveis e utensílios": 1232101,
+    "equipamento de tecnologia e informatica": 1232102,
+    "veiculos": 1232103,
+    "maquinas e equipamentos": 1232104,
+    "instalações": 1232105,
+    "ferramentas": 1232106,
+    "recursos naturais": 1232107,
+    "(-) depr.acum.de moveis e utensilios": 1232201,
+    "(-) depr.acum.equip.tecnologia inform.": 1232202,
+    "(-) depr. acumuladas de veiculos": 1232203,
+    "(-) depr. acumuladas maq e equiptos": 1232204,
+    "(-) depr. acumuladas instalações": 1232205,
+    "(-) depr. acumuladas de ferramentas": 1232206,
+    "moveis e utensilios": 1233104,
+    "marcas, direitos e patentes": 1241101,
+    "(-)amort. dep.marcas-direitos e patente": 1241201,
+    "titulos avalizados": 1911201,
+    "titulos endossados": 1911202,
+    "imoveis hipotecados": 1911203,
+    "materiais remetidos p/ industrializacao": 1911301,
+    "materiais remetidos p/ conserto": 1911302,
+    "mercadorias emprestadas": 1911303,
+    "contratos de seguros": 1921101,
+    "avais concedidos": 1921201,
+    "endossos de titulos": 1921202,
+    "hipotecas de imoveis": 1921203,
+    "remessas para industrializacao": 1921301,
+    "remessas para concerto": 1921302,
+    "remessas de mercadorias p/ demonstracao": 1921304,
+    "remessas de bens em comodato": 1921305,
+    "materiais recebidos p/ industrializacao": 1921401,
+    "materiais recebidos p/ concerto": 1921402,
+    "mercadorias recebidas p/ demonstracao": 1921404,
+    "bens recebidos em comodato": 1921405,
+    "conta baixa": 1931101,
+    "emprestimo de socio": 2111001,
+    "banco santander": 2111003,
+    "banco itau": 2111004,
+    "juros a pagar de emprestimos": 2111005,
+    "titulos a pagar": 2111501,
+    "consorcio": 2111502,
+    "fornecedores nacionais": 2121101,
+    "fornecedores diversos": 2121102,
+    "carrefour comercio e industria ltda": 2121103,
+    "kalunga comercio industria grafica ltda": 2121104,
+    "havan sa": 2121105,
+    "chaveiro do vale comercial ltda": 2121106,
+    "estoque do lojista com.atac de mat ltda": 2121107,
+    "h distribuidora ltda": 2121109,
+    "carbonpecas ltda": 2121111,
+    "distribuidora premium ltda.": 2121112,
+    "arcom s/a": 2121113,
+    "martins com serv distr sa": 2121116,
+    "glauber atacadista": 2121118,
+    "varejao tintas ltda": 2121119,
+    "air liquide brasil ltda": 2121121,
+    "gaslive imp e exp. de prod. medicos": 2121122,
+    "white martins gases industriais": 2121123,
+    "locmed hospitalar ltda": 2121125,
+    "reval atacado de papelaria ltda": 2121126,
+    "travagin & travagin ltda": 2121127,
+    "kako atacado eireli": 2121128,
+    "crenata sorveteria eireli": 2121129,
+    "atacadao s.a.": 2121130,
+    "fornecedores estrangeiros": 2121201,
+    "ipi a recolher": 2131101,
+    "icms a recolher": 2131102,
+    "iss a recolher": 2131103,
+    "provisao p/ imposto de renda": 2131104,
+    "provisao contribuicao social s/ o lucro": 2131105,
+    "imposto de renda na fonte a recolher": 2131108,
+    "pis-pasep a recolher": 2131109,
+    "cofins a recolher": 2131110,
+    "provisao para iof": 2131111,
+    "iss retido na fonte a recolher": 2131113,
+    "simples nacional a recolher": 2131115,
+    "imposto sindical a recolher": 2131116,
+    "irrf a recolher": 2131117,
+    "parcelamento do inss a recolher": 2131118,
+    "parcelamento simples nacional": 2131119,
+    "parcelamento pgfn": 5141102,
+    "salarios e ordenados a pagar": 2141101,
+    "pro - labore a pagar": 2141102,
+    "gratificacoes a pagar": 2141103,
+    "ferias a pagar": 2141104,
+    "13º salario a pagar": 2141105,
+    "rescisão a pagar": 2141106,
+    "pensão alimenticia a repassar": 2141107,
+    "inss a recolher": 2141201,
+    "fgts a recolher": 2141202,
+    "contribuição sindical a recolher": 2141203,
+    "contribuição confederativa a recolher": 2141204,
+    "fgts rescisorio a recolher": 2141205,
+    "provisao para ferias": 2141301,
+    "provisao para 13§ salario": 2141302,
+    "inss s/ provisao para ferias": 2141303,
+    "inss s/ provisao para 13§": 2141304,
+    "fgts s/ provisao para ferias": 2141305,
+    "fgts s/ provisao para 13§": 2141306,
+    "adiantamentos de clientes diversos": 2151101,
+    "cotas de consorcio a pagar- curto prazo": 2151201,
+    "alugueis a pagar": 2151202,
+    "cartão de credito a pagar": 2151203,
+    "fretes a pagar": 2151204,
+    "honorarios contabeis a pagar": 2151205,
+    "juros a pagar": 2151206,
+    "seguros a pagar": 2151207,
+    "energia eletrica a pagar": 2151301,
+    "agua e esgoto a pagar": 2151302,
+    "telefone a pagar": 2151303,
+    "internet a pagar": 2151304,
+    "dividendos propostos": 2151601,
+    "dividendos a pagar": 2151602,
+    "lucros a distribuir": 2151603,
+    "participacoes prop. a administradores": 2151701,
+    "participacoes propostas a empregados": 2151702,
+    "participacoes a pagar": 2151703,
+    "juros s/ capital proprio a pagar": 2151801,
+    "provisao p/ ir s/ lucros diferidos": 2213101,
+    "cotas consorcio a pagar-longo prazo": 2214101,
+    "capital social": 2311101,
+    "( - ) capital a integralizar": 2312101,
+    "agio na emissao de acoes": 2321102,
+    "doacoes e subvencoes p/ investimentos": 2321103,
+    "reavaliacao de ativos proprios": 2331101,
+    "reavaliacao de ativos de coligadas": 2331102,
+    "reserva legal": 2341101,
+    "reserva estatutaria": 2341102,
+    "reserva para contingencias": 2341103,
+    "reserva de lucros a realizar": 2341104,
+    "reserva especial": 2341105,
+    "lucros acumulados": 2341106,
+    "( - ) acoes em tesouraria": 2351101,
+    "( - ) prejuizos acumulados": 2361101,
+    "lucro do exercício": 2371101,
+    "prejuízo do exercicio": 2371102,
+    "conta de zeramento": 2911101,
+    "compra de mercadoria": 5131102
+  },
+  "contas": [
+    {
+      "reduzida": 1111101,
+      "analitica": "1.1.1.01.001.00001",
+      "descricao": "Caixa Geral",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1111102,
+      "analitica": "1.1.1.01.001.00002",
+      "descricao": "Fundo fixo de caixa",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1112201,
+      "analitica": "1.1.1.02.002.00001",
+      "descricao": "Itau",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1112202,
+      "analitica": "1.1.1.02.002.00002",
+      "descricao": "Bradesco",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1112203,
+      "analitica": "1.1.1.02.002.00003",
+      "descricao": "Caixa Economica Federal",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1112204,
+      "analitica": "1.1.1.02.002.00004",
+      "descricao": "Inter",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1112205,
+      "analitica": "1.1.1.02.002.00005",
+      "descricao": "Banco Brasil",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1112206,
+      "analitica": "1.1.1.02.002.00006",
+      "descricao": "Santander",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1112207,
+      "analitica": "1.1.1.02.002.00007",
+      "descricao": "Sicoob",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1112208,
+      "analitica": "1.1.1.02.002.00008",
+      "descricao": "Mercado Pago",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1112209,
+      "analitica": "1.1.1.02.002.00009",
+      "descricao": "Sicredi",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1112210,
+      "analitica": "1.1.1.02.002.00010",
+      "descricao": "PagSeguro",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1112301,
+      "analitica": "1.1.1.02.003.00001",
+      "descricao": "Itau - Aplicação",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1112302,
+      "analitica": "1.1.1.02.003.00002",
+      "descricao": "Bradesco - Aplicação",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1112303,
+      "analitica": "1.1.1.02.003.00003",
+      "descricao": "Caixa Economica Federal - Aplicação",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1112304,
+      "analitica": "1.1.1.02.003.00004",
+      "descricao": "Inter- Aplicação",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1112305,
+      "analitica": "1.1.1.02.003.00005",
+      "descricao": "Banco Brasil - Aplicação",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1112306,
+      "analitica": "1.1.1.02.003.00006",
+      "descricao": "Santander - Aplicação",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1112307,
+      "analitica": "1.1.1.02.003.00007",
+      "descricao": "Sicoob - Aplicação",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1112308,
+      "analitica": "1.1.1.02.003.00008",
+      "descricao": "Mercado Pago - Aplicação",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1112309,
+      "analitica": "1.1.1.02.003.00009",
+      "descricao": "Sicredi - Aplicação",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1112310,
+      "analitica": "1.1.1.02.003.00010",
+      "descricao": "Sicoob - Aplicação Conta Capital",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1112311,
+      "analitica": "1.1.1.02.003.00011",
+      "descricao": "PagSeguro - Aplicação",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1121101,
+      "analitica": "1.1.2.01.001.00001",
+      "descricao": "Duplicatas a receber",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1121102,
+      "analitica": "1.1.2.01.001.00002",
+      "descricao": "Clientes Diversos",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1121103,
+      "analitica": "1.1.2.01.001.00003",
+      "descricao": "ICATU SEGUROS S/A",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1121105,
+      "analitica": "1.1.2.01.001.00005",
+      "descricao": "OMINT SEGUROS S/A",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1121106,
+      "analitica": "1.1.2.01.001.00006",
+      "descricao": "UNIMED SEGURADORA S.A.",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1121107,
+      "analitica": "1.1.2.01.001.00007",
+      "descricao": "TOKIO MARINE SEGURADORA S.A",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1121111,
+      "analitica": "1.1.2.01.001.00011",
+      "descricao": "AZUL COMPANHIA DE SEGUROS",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1121112,
+      "analitica": "1.1.2.01.001.00012",
+      "descricao": "PORTO SEGURO - SEGURO SAUDE S.A",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1121115,
+      "analitica": "1.1.2.01.001.00015",
+      "descricao": "ASSOCIACAO SAO FRANCISCO VIDA",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1121201,
+      "analitica": "1.1.2.01.002.00001",
+      "descricao": "( - ) Duplicatas descontadas",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131201,
+      "analitica": "1.1.3.01.002.00001",
+      "descricao": "Titulos a receber",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131202,
+      "analitica": "1.1.3.01.002.00002",
+      "descricao": "Valor a Receber Curto Prazo",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131203,
+      "analitica": "1.1.3.01.002.00003",
+      "descricao": "Juros a receber - Curto Prazo",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131204,
+      "analitica": "1.1.3.01.002.00004",
+      "descricao": "Juros a apropriar Longo Prazo",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131205,
+      "analitica": "1.1.3.01.002.00005",
+      "descricao": "Emprestimo a Terceiros a Receber",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131206,
+      "analitica": "1.1.3.01.002.00006",
+      "descricao": "Titulos de Capitalização Banco Itau",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131207,
+      "analitica": "1.1.3.01.002.00007",
+      "descricao": "Titulos de Capitalização Banco Bradesco",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131208,
+      "analitica": "1.1.3.01.002.00008",
+      "descricao": "Titulos de Capitalização Banco Sicoob",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131209,
+      "analitica": "1.1.3.01.002.00009",
+      "descricao": "Titulos de Capitalização Banco Brasil",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131301,
+      "analitica": "1.1.3.01.003.00001",
+      "descricao": "Cheques a Sacar",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131302,
+      "analitica": "1.1.3.01.003.00002",
+      "descricao": "Cheques Devolvidos a Cobrar",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131501,
+      "analitica": "1.1.3.01.005.00001",
+      "descricao": "Importacoes em andamento",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131601,
+      "analitica": "1.1.3.01.006.00001",
+      "descricao": "Adiantamentos a fornecedores",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131602,
+      "analitica": "1.1.3.01.006.00002",
+      "descricao": "Adiantamentos de Comissão",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131603,
+      "analitica": "1.1.3.01.006.00003",
+      "descricao": "Adiantamento de Importações",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131701,
+      "analitica": "1.1.3.01.007.00001",
+      "descricao": "Adiantamentos de Salarios",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131702,
+      "analitica": "1.1.3.01.007.00002",
+      "descricao": "Adiantamentos de 13º salario",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131703,
+      "analitica": "1.1.3.01.007.00003",
+      "descricao": "Adiantamentos de Ferias",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131704,
+      "analitica": "1.1.3.01.007.00004",
+      "descricao": "Adiantamentos para Rescisões",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131705,
+      "analitica": "1.1.3.01.007.00005",
+      "descricao": "Adiantamentos para Viagens",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131801,
+      "analitica": "1.1.3.01.008.00001",
+      "descricao": "Emprestimos a Funcionarios",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131901,
+      "analitica": "1.1.3.01.009.00001",
+      "descricao": "IPI a recuperar",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131902,
+      "analitica": "1.1.3.01.009.00002",
+      "descricao": "ICMS a recuperar",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131903,
+      "analitica": "1.1.3.01.009.00003",
+      "descricao": "IR Retido na fonte",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131904,
+      "analitica": "1.1.3.01.009.00004",
+      "descricao": "IR pago por estimativa",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131905,
+      "analitica": "1.1.3.01.009.00005",
+      "descricao": "CSSL paga por estimativa",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131906,
+      "analitica": "1.1.3.01.009.00006",
+      "descricao": "Tributos pago a maior ou indevidamente",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131907,
+      "analitica": "1.1.3.01.009.00007",
+      "descricao": "CSSL retida na fonte a compensar",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131908,
+      "analitica": "1.1.3.01.009.00008",
+      "descricao": "COFINS retida na fonte a compensar",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131909,
+      "analitica": "1.1.3.01.009.00009",
+      "descricao": "PIS-PASEP Retido na fonte a compensar",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131910,
+      "analitica": "1.1.3.01.009.00010",
+      "descricao": "INSS retido na fonte a compensar",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131911,
+      "analitica": "1.1.3.01.009.00011",
+      "descricao": "Bonus de adimplencia fiscal a compensar",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131912,
+      "analitica": "1.1.3.01.009.00012",
+      "descricao": "Cofins a recuperar",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131913,
+      "analitica": "1.1.3.01.009.00013",
+      "descricao": "PIS-PASEP a recuperar",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131914,
+      "analitica": "1.1.3.01.009.00014",
+      "descricao": "Cofins a recuperar - credito presumido",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131915,
+      "analitica": "1.1.3.01.009.00015",
+      "descricao": "PIS-PASEP a recuperar credito presumido",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131916,
+      "analitica": "1.1.3.01.009.00016",
+      "descricao": "INSS a Recuperar",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131917,
+      "analitica": "1.1.3.01.009.00017",
+      "descricao": "Outros impostos a Recuperar",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1131101,
+      "analitica": "1.1.3.01.010.00001",
+      "descricao": "Juros s/ o capital proprio a receber",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1141401,
+      "analitica": "1.1.4.01.004.00001",
+      "descricao": "Valor nominal",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1141402,
+      "analitica": "1.1.4.01.004.00002",
+      "descricao": "( - ) Desagio a apropriar",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1151101,
+      "analitica": "1.1.5.01.001.00001",
+      "descricao": "Mercadorias para revenda",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1151102,
+      "analitica": "1.1.5.01.001.00002",
+      "descricao": "Materias - primas",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1151103,
+      "analitica": "1.1.5.01.001.00003",
+      "descricao": "Material de acondicionamento",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1151104,
+      "analitica": "1.1.5.01.001.00004",
+      "descricao": "Outros materiais de consumo industrial",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1151105,
+      "analitica": "1.1.5.01.001.00005",
+      "descricao": "Produtos acabados",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1151106,
+      "analitica": "1.1.5.01.001.00006",
+      "descricao": "Produtos em elaboracao",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1151107,
+      "analitica": "1.1.5.01.001.00007",
+      "descricao": "Mercadorias de Consumo",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1151108,
+      "analitica": "1.1.5.01.001.00008",
+      "descricao": "Material de Embalagem",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1151109,
+      "analitica": "1.1.5.01.001.00009",
+      "descricao": "Estoques Destinados a Doação",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1151201,
+      "analitica": "1.1.5.01.002.00001",
+      "descricao": "Almoxarifado em manutencao",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1151202,
+      "analitica": "1.1.5.01.002.00002",
+      "descricao": "Almoxarifado administrativo",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1151301,
+      "analitica": "1.1.5.01.003.00001",
+      "descricao": "Ajuste ao valor de mercado",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1161101,
+      "analitica": "1.1.6.01.001.00001",
+      "descricao": "Premios de seguro a apropriar",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1161102,
+      "analitica": "1.1.6.01.001.00002",
+      "descricao": "Assinaturas e anuidades",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1161201,
+      "analitica": "1.1.6.01.002.00001",
+      "descricao": "Premios de seguros a apropriar",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1161202,
+      "analitica": "1.1.6.01.002.00002",
+      "descricao": "Assinaturas e anuidades",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1211101,
+      "analitica": "1.2.1.01.001.00001",
+      "descricao": "DUPLICATAS A RECEBER",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1211201,
+      "analitica": "1.2.1.01.002.00001",
+      "descricao": "( - ) DUPLICATAS DESCONTADAS",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1212101,
+      "analitica": "1.2.1.02.001.00001",
+      "descricao": "TITULOS A RECEBER",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1212102,
+      "analitica": "1.2.1.02.001.00002",
+      "descricao": "Valores a Receber Longo Prazo",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1212103,
+      "analitica": "1.2.1.02.001.00003",
+      "descricao": "Juros a Receber Longo Prazo",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1212104,
+      "analitica": "1.2.1.02.001.00004",
+      "descricao": "Juros a apropriar Longo Prazo",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1212201,
+      "analitica": "1.2.1.02.002.00001",
+      "descricao": "BANCOS CONTA VINCULADA",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1212701,
+      "analitica": "1.2.1.02.007.00001",
+      "descricao": "Obrigacoes da eletrobras",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1212702,
+      "analitica": "1.2.1.02.007.00002",
+      "descricao": "Creditos da eletrobras",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1212703,
+      "analitica": "1.2.1.02.007.00003",
+      "descricao": "Emprestimo compul. s/ comb. e veiculos",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1212704,
+      "analitica": "1.2.1.02.007.00004",
+      "descricao": "( - ) Provisao para perdas",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1212901,
+      "analitica": "1.2.1.02.009.00001",
+      "descricao": "Finor",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1212902,
+      "analitica": "1.2.1.02.009.00002",
+      "descricao": "Finam",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1221101,
+      "analitica": "1.2.2.01.001.00001",
+      "descricao": "Controlada \"A\" - Valor patrimonial\"",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1221102,
+      "analitica": "1.2.2.01.001.00002",
+      "descricao": "Controlada \"A\" - Agio na aquisicao\"",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1221103,
+      "analitica": "1.2.2.01.001.00003",
+      "descricao": "(-) Controlada \"A\" Amort. Acum. agio",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1221104,
+      "analitica": "1.2.2.01.001.00004",
+      "descricao": "(-)Controlada \"A\" Desagio na aquisicao",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1221105,
+      "analitica": "1.2.2.01.001.00005",
+      "descricao": "Controlada \"A\" Amort. acum. desagio",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1221401,
+      "analitica": "1.2.2.01.004.00001",
+      "descricao": "Finor",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1221402,
+      "analitica": "1.2.2.01.004.00002",
+      "descricao": "Finam",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1221601,
+      "analitica": "1.2.2.01.006.00001",
+      "descricao": "Obrigacoes da Eletrobras",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1221602,
+      "analitica": "1.2.2.01.006.00002",
+      "descricao": "Creditos da Eletrobras",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1221603,
+      "analitica": "1.2.2.01.006.00003",
+      "descricao": "Emprestimo compulsorio s/ comb. e veic.",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1221604,
+      "analitica": "1.2.2.01.006.00004",
+      "descricao": "Objetos de arte",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1221605,
+      "analitica": "1.2.2.01.006.00005",
+      "descricao": "Caucoes permanentes",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1221703,
+      "analitica": "1.2.2.01.007.00003",
+      "descricao": "(-) Outras participacoes societarias",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1221705,
+      "analitica": "1.2.2.01.007.00005",
+      "descricao": "(-) Imoveis nao destinado ao uso",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1221706,
+      "analitica": "1.2.2.01.007.00006",
+      "descricao": "(-) Outros investimentos permanentes",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1231101,
+      "analitica": "1.2.3.01.001.00001",
+      "descricao": "Terrenos",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1231102,
+      "analitica": "1.2.3.01.001.00002",
+      "descricao": "Edificios",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1231103,
+      "analitica": "1.2.3.01.001.00003",
+      "descricao": "Construcoes",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1231201,
+      "analitica": "1.2.3.01.002.00001",
+      "descricao": "(-) Depreciacao de Terrenos",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1231202,
+      "analitica": "1.2.3.01.002.00002",
+      "descricao": "(-) Depreciacao de edificios",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1232101,
+      "analitica": "1.2.3.02.001.00001",
+      "descricao": "Móveis e utensílios",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1232102,
+      "analitica": "1.2.3.02.001.00002",
+      "descricao": "Equipamento de Tecnologia e Informatica",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1232103,
+      "analitica": "1.2.3.02.001.00003",
+      "descricao": "Veiculos",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1232104,
+      "analitica": "1.2.3.02.001.00004",
+      "descricao": "Maquinas e equipamentos",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1232105,
+      "analitica": "1.2.3.02.001.00005",
+      "descricao": "Instalações",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1232106,
+      "analitica": "1.2.3.02.001.00006",
+      "descricao": "Ferramentas",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1232107,
+      "analitica": "1.2.3.02.001.00007",
+      "descricao": "Recursos Naturais",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1232201,
+      "analitica": "1.2.3.02.002.00001",
+      "descricao": "(-) Depr.Acum.de moveis e utensilios",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1232202,
+      "analitica": "1.2.3.02.002.00002",
+      "descricao": "(-) Depr.Acum.equip.Tecnologia Inform.",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1232203,
+      "analitica": "1.2.3.02.002.00003",
+      "descricao": "(-) Depr. Acumuladas de veiculos",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1232204,
+      "analitica": "1.2.3.02.002.00004",
+      "descricao": "(-) Depr. Acumuladas Maq e Equiptos",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1232205,
+      "analitica": "1.2.3.02.002.00005",
+      "descricao": "(-) Depr. Acumuladas Instalações",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1232206,
+      "analitica": "1.2.3.02.002.00006",
+      "descricao": "(-) Depr. Acumuladas de Ferramentas",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1233101,
+      "analitica": "1.2.3.03.001.00001",
+      "descricao": "Terrenos",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1233102,
+      "analitica": "1.2.3.03.001.00002",
+      "descricao": "Edificios",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1233103,
+      "analitica": "1.2.3.03.001.00003",
+      "descricao": "Construcoes",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1233104,
+      "analitica": "1.2.3.03.001.00004",
+      "descricao": "Moveis e utensilios",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1233105,
+      "analitica": "1.2.3.03.001.00005",
+      "descricao": "Equipamento de Tecnologia e Informatica",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1233106,
+      "analitica": "1.2.3.03.001.00006",
+      "descricao": "Veiculos",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1233107,
+      "analitica": "1.2.3.03.001.00007",
+      "descricao": "Maquinas e equipamentos",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1233108,
+      "analitica": "1.2.3.03.001.00008",
+      "descricao": "Instalações",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1233109,
+      "analitica": "1.2.3.03.001.00009",
+      "descricao": "Ferramentas",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1233201,
+      "analitica": "1.2.3.03.002.00001",
+      "descricao": "Terrenos",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1233202,
+      "analitica": "1.2.3.03.002.00002",
+      "descricao": "Edificios",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1233203,
+      "analitica": "1.2.3.03.002.00003",
+      "descricao": "Construcoes",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1233204,
+      "analitica": "1.2.3.03.002.00004",
+      "descricao": "Moveis e utensilios",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1233205,
+      "analitica": "1.2.3.03.002.00005",
+      "descricao": "Equipamento de Tecnologia e Informatica",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1233206,
+      "analitica": "1.2.3.03.002.00006",
+      "descricao": "Veiculos",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1233207,
+      "analitica": "1.2.3.03.002.00007",
+      "descricao": "Maquinas e equipamentos",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1233208,
+      "analitica": "1.2.3.03.002.00008",
+      "descricao": "Instalações",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1233209,
+      "analitica": "1.2.3.03.002.00009",
+      "descricao": "Ferramentas",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1241101,
+      "analitica": "1.2.4.01.001.00001",
+      "descricao": "Marcas, direitos e Patentes",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1241201,
+      "analitica": "1.2.4.01.002.00001",
+      "descricao": "(-)Amort. dep.marcas-direitos e patente",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1911201,
+      "analitica": "1.9.1.01.002.00001",
+      "descricao": "Titulos Avalizados",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1911202,
+      "analitica": "1.9.1.01.002.00002",
+      "descricao": "Titulos Endossados",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1911203,
+      "analitica": "1.9.1.01.002.00003",
+      "descricao": "Imoveis Hipotecados",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1911301,
+      "analitica": "1.9.1.01.003.00001",
+      "descricao": "Materiais remetidos p/ Industrializacao",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1911302,
+      "analitica": "1.9.1.01.003.00002",
+      "descricao": "Materiais remetidos p/ Conserto",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1911303,
+      "analitica": "1.9.1.01.003.00003",
+      "descricao": "Mercadorias Emprestadas",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1921101,
+      "analitica": "1.9.2.01.001.00001",
+      "descricao": "Contratos de Seguros",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1921201,
+      "analitica": "1.9.2.01.002.00001",
+      "descricao": "Avais concedidos",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1921202,
+      "analitica": "1.9.2.01.002.00002",
+      "descricao": "Endossos de Titulos",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1921203,
+      "analitica": "1.9.2.01.002.00003",
+      "descricao": "Hipotecas de Imoveis",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1921301,
+      "analitica": "1.9.2.01.003.00001",
+      "descricao": "Remessas para Industrializacao",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1921302,
+      "analitica": "1.9.2.01.003.00002",
+      "descricao": "Remessas para Concerto",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1921304,
+      "analitica": "1.9.2.01.003.00004",
+      "descricao": "Remessas de mercadorias p/ Demonstracao",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1921305,
+      "analitica": "1.9.2.01.003.00005",
+      "descricao": "Remessas de bens em Comodato",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1921401,
+      "analitica": "1.9.2.01.004.00001",
+      "descricao": "Materiais recebidos p/ Industrializacao",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1921402,
+      "analitica": "1.9.2.01.004.00002",
+      "descricao": "Materiais recebidos p/ Concerto",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1921403,
+      "analitica": "1.9.2.01.004.00003",
+      "descricao": "Mercadorias Emprestadas",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1921404,
+      "analitica": "1.9.2.01.004.00004",
+      "descricao": "Mercadorias recebidas p/ Demonstracao",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1921405,
+      "analitica": "1.9.2.01.004.00005",
+      "descricao": "Bens recebidos em Comodato",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1931101,
+      "analitica": "1.9.3.01.001.00001",
+      "descricao": "Conta Baixa",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 2111001,
+      "analitica": "2.1.1.01.000.00001",
+      "descricao": "Emprestimo de Socio",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2111002,
+      "analitica": "2.1.1.01.000.00002",
+      "descricao": "Caixa Economica Federal",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2111003,
+      "analitica": "2.1.1.01.000.00003",
+      "descricao": "Banco Santander",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2111004,
+      "analitica": "2.1.1.01.000.00004",
+      "descricao": "Banco Itau",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2111005,
+      "analitica": "2.1.1.01.000.00005",
+      "descricao": "Juros a Pagar de Emprestimos",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2111501,
+      "analitica": "2.1.1.01.005.00001",
+      "descricao": "Titulos a Pagar",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2111502,
+      "analitica": "2.1.1.01.005.00002",
+      "descricao": "Consorcio",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2121101,
+      "analitica": "2.1.2.01.001.00001",
+      "descricao": "Fornecedores Nacionais",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2121102,
+      "analitica": "2.1.2.01.001.00002",
+      "descricao": "Fornecedores Diversos",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2121103,
+      "analitica": "2.1.2.01.001.00003",
+      "descricao": "Carrefour Comercio e Industria Ltda",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2121104,
+      "analitica": "2.1.2.01.001.00004",
+      "descricao": "Kalunga Comercio Industria Grafica Ltda",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2121105,
+      "analitica": "2.1.2.01.001.00005",
+      "descricao": "Havan SA",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2121106,
+      "analitica": "2.1.2.01.001.00006",
+      "descricao": "CHAVEIRO DO VALE COMERCIAL LTDA",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2121107,
+      "analitica": "2.1.2.01.001.00007",
+      "descricao": "ESTOQUE DO LOJISTA COM.ATAC DE MAT LTDA",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2121109,
+      "analitica": "2.1.2.01.001.00009",
+      "descricao": "H DISTRIBUIDORA LTDA",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2121111,
+      "analitica": "2.1.2.01.001.00011",
+      "descricao": "CARBONPECAS LTDA",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2121112,
+      "analitica": "2.1.2.01.001.00012",
+      "descricao": "DISTRIBUIDORA PREMIUM LTDA.",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2121113,
+      "analitica": "2.1.2.01.001.00013",
+      "descricao": "ARCOM S/A",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2121116,
+      "analitica": "2.1.2.01.001.00016",
+      "descricao": "MARTINS COM SERV DISTR SA",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2121118,
+      "analitica": "2.1.2.01.001.00018",
+      "descricao": "GLAUBER ATACADISTA",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2121119,
+      "analitica": "2.1.2.01.001.00019",
+      "descricao": "VAREJAO TINTAS LTDA",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2121121,
+      "analitica": "2.1.2.01.001.00021",
+      "descricao": "AIR LIQUIDE BRASIL LTDA",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2121122,
+      "analitica": "2.1.2.01.001.00022",
+      "descricao": "GASLIVE IMP E EXP. DE PROD. MEDICOS",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2121123,
+      "analitica": "2.1.2.01.001.00023",
+      "descricao": "WHITE MARTINS GASES INDUSTRIAIS",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2121125,
+      "analitica": "2.1.2.01.001.00025",
+      "descricao": "LOCMED HOSPITALAR LTDA",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2121126,
+      "analitica": "2.1.2.01.001.00026",
+      "descricao": "REVAL ATACADO DE PAPELARIA LTDA",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2121127,
+      "analitica": "2.1.2.01.001.00027",
+      "descricao": "TRAVAGIN & TRAVAGIN LTDA",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2121128,
+      "analitica": "2.1.2.01.001.00028",
+      "descricao": "KAKO ATACADO EIRELI",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2121129,
+      "analitica": "2.1.2.01.001.00029",
+      "descricao": "CRENATA SORVETERIA EIRELI",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2121130,
+      "analitica": "2.1.2.01.001.00030",
+      "descricao": "ATACADAO S.A.",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2121201,
+      "analitica": "2.1.2.01.002.00001",
+      "descricao": "Fornecedores Estrangeiros",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2121202,
+      "analitica": "2.1.2.01.002.00002",
+      "descricao": "Fornecedores Diversos",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2131101,
+      "analitica": "2.1.3.01.001.00001",
+      "descricao": "IPI a recolher",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2131102,
+      "analitica": "2.1.3.01.001.00002",
+      "descricao": "ICMS a recolher",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2131103,
+      "analitica": "2.1.3.01.001.00003",
+      "descricao": "ISS a recolher",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2131104,
+      "analitica": "2.1.3.01.001.00004",
+      "descricao": "Provisao p/ imposto de renda",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2131105,
+      "analitica": "2.1.3.01.001.00005",
+      "descricao": "Provisao contribuicao social s/ o lucro",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2131108,
+      "analitica": "2.1.3.01.001.00008",
+      "descricao": "Imposto de renda na fonte a recolher",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2131109,
+      "analitica": "2.1.3.01.001.00009",
+      "descricao": "PIS-PASEP a recolher",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2131110,
+      "analitica": "2.1.3.01.001.00010",
+      "descricao": "Cofins a recolher",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2131111,
+      "analitica": "2.1.3.01.001.00011",
+      "descricao": "Provisao para IOF",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2131113,
+      "analitica": "2.1.3.01.001.00013",
+      "descricao": "ISS retido na fonte a recolher",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2131115,
+      "analitica": "2.1.3.01.001.00015",
+      "descricao": "Simples Nacional a recolher",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2131116,
+      "analitica": "2.1.3.01.001.00016",
+      "descricao": "Imposto Sindical a recolher",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2131117,
+      "analitica": "2.1.3.01.001.00017",
+      "descricao": "IRRF a Recolher",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2131118,
+      "analitica": "2.1.3.01.001.00018",
+      "descricao": "Parcelamento do INSS a Recolher",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2131119,
+      "analitica": "2.1.3.01.001.00019",
+      "descricao": "Parcelamento Simples Nacional",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 5141102,
+      "analitica": "2.1.3.01.001.00020",
+      "descricao": "Parcelamento PGFN",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2141101,
+      "analitica": "2.1.4.01.001.00001",
+      "descricao": "Salarios e ordenados a pagar",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2141102,
+      "analitica": "2.1.4.01.001.00002",
+      "descricao": "Pro - labore a pagar",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2141103,
+      "analitica": "2.1.4.01.001.00003",
+      "descricao": "Gratificacoes a pagar",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2141104,
+      "analitica": "2.1.4.01.001.00004",
+      "descricao": "Ferias a pagar",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2141105,
+      "analitica": "2.1.4.01.001.00005",
+      "descricao": "13º Salario a pagar",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2141106,
+      "analitica": "2.1.4.01.001.00006",
+      "descricao": "Rescisão a pagar",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2141107,
+      "analitica": "2.1.4.01.001.00007",
+      "descricao": "Pensão Alimenticia a Repassar",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2141201,
+      "analitica": "2.1.4.01.002.00001",
+      "descricao": "INSS a recolher",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2141202,
+      "analitica": "2.1.4.01.002.00002",
+      "descricao": "FGTS a recolher",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2141203,
+      "analitica": "2.1.4.01.002.00003",
+      "descricao": "Contribuição Sindical a Recolher",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2141204,
+      "analitica": "2.1.4.01.002.00004",
+      "descricao": "Contribuição Confederativa a Recolher",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2141205,
+      "analitica": "2.1.4.01.002.00005",
+      "descricao": "FGTS Rescisorio a Recolher",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2141301,
+      "analitica": "2.1.4.01.003.00001",
+      "descricao": "Provisao para ferias",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2141302,
+      "analitica": "2.1.4.01.003.00002",
+      "descricao": "Provisao para 13§ Salario",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2141303,
+      "analitica": "2.1.4.01.003.00003",
+      "descricao": "INSS s/ provisao para ferias",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2141304,
+      "analitica": "2.1.4.01.003.00004",
+      "descricao": "INSS s/ provisao para 13§",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2141305,
+      "analitica": "2.1.4.01.003.00005",
+      "descricao": "FGTS s/ provisao para ferias",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2141306,
+      "analitica": "2.1.4.01.003.00006",
+      "descricao": "FGTS s/ provisao para 13§",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2151101,
+      "analitica": "2.1.5.01.001.00001",
+      "descricao": "Adiantamentos de Clientes Diversos",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2151201,
+      "analitica": "2.1.5.01.002.00001",
+      "descricao": "Cotas de Consorcio a Pagar- Curto prazo",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2151202,
+      "analitica": "2.1.5.01.002.00002",
+      "descricao": "Alugueis a pagar",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2151203,
+      "analitica": "2.1.5.01.002.00003",
+      "descricao": "Cartão de Credito a pagar",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2151204,
+      "analitica": "2.1.5.01.002.00004",
+      "descricao": "Fretes a pagar",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2151205,
+      "analitica": "2.1.5.01.002.00005",
+      "descricao": "Honorarios Contabeis a pagar",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2151206,
+      "analitica": "2.1.5.01.002.00006",
+      "descricao": "Juros a pagar",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2151207,
+      "analitica": "2.1.5.01.002.00007",
+      "descricao": "Seguros a pagar",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2151301,
+      "analitica": "2.1.5.01.003.00001",
+      "descricao": "Energia Eletrica a pagar",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2151302,
+      "analitica": "2.1.5.01.003.00002",
+      "descricao": "Agua e Esgoto a pagar",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2151303,
+      "analitica": "2.1.5.01.003.00003",
+      "descricao": "Telefone a pagar",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2151304,
+      "analitica": "2.1.5.01.003.00004",
+      "descricao": "Internet a pagar",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2151601,
+      "analitica": "2.1.5.01.006.00001",
+      "descricao": "Dividendos propostos",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2151602,
+      "analitica": "2.1.5.01.006.00002",
+      "descricao": "Dividendos a pagar",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2151603,
+      "analitica": "2.1.5.01.006.00003",
+      "descricao": "Lucros a Distribuir",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2151701,
+      "analitica": "2.1.5.01.007.00001",
+      "descricao": "Participacoes prop. a administradores",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2151702,
+      "analitica": "2.1.5.01.007.00002",
+      "descricao": "Participacoes propostas a empregados",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2151703,
+      "analitica": "2.1.5.01.007.00003",
+      "descricao": "Participacoes a pagar",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2151801,
+      "analitica": "2.1.5.01.008.00001",
+      "descricao": "Juros s/ capital proprio a pagar",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2213101,
+      "analitica": "2.2.1.03.001.00001",
+      "descricao": "Provisao p/ IR s/ lucros diferidos",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2214101,
+      "analitica": "2.2.1.04.001.00001",
+      "descricao": "Cotas Consorcio a Pagar-Longo Prazo",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2311101,
+      "analitica": "2.3.1.01.001.00001",
+      "descricao": "Capital social",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2312101,
+      "analitica": "2.3.1.02.001.00001",
+      "descricao": "( - ) Capital a Integralizar",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2321102,
+      "analitica": "2.3.2.01.001.00002",
+      "descricao": "Agio na emissao de acoes",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2321103,
+      "analitica": "2.3.2.01.001.00003",
+      "descricao": "Doacoes e subvencoes p/ investimentos",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2331101,
+      "analitica": "2.3.3.01.001.00001",
+      "descricao": "Reavaliacao de ativos proprios",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2331102,
+      "analitica": "2.3.3.01.001.00002",
+      "descricao": "Reavaliacao de ativos de coligadas",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2341101,
+      "analitica": "2.3.4.01.001.00001",
+      "descricao": "Reserva legal",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2341102,
+      "analitica": "2.3.4.01.001.00002",
+      "descricao": "Reserva estatutaria",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2341103,
+      "analitica": "2.3.4.01.001.00003",
+      "descricao": "Reserva para contingencias",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2341104,
+      "analitica": "2.3.4.01.001.00004",
+      "descricao": "Reserva de lucros a realizar",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2341105,
+      "analitica": "2.3.4.01.001.00005",
+      "descricao": "Reserva especial",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2341106,
+      "analitica": "2.3.4.01.001.00006",
+      "descricao": "Lucros Acumulados",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2351101,
+      "analitica": "2.3.5.01.001.00001",
+      "descricao": "( - ) Acoes em tesouraria",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2361101,
+      "analitica": "2.3.6.01.001.00001",
+      "descricao": "( - ) Prejuizos acumulados",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2371101,
+      "analitica": "2.3.7.01.001.00001",
+      "descricao": "Lucro do Exercício",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2371102,
+      "analitica": "2.3.7.01.001.00002",
+      "descricao": "Prejuízo do Exercicio",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2911101,
+      "analitica": "2.9.1.01.001.00001",
+      "descricao": "Conta de Zeramento",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 5131102,
+      "analitica": "5.1.3.01.001.00002",
+      "descricao": "Compra de Mercadoria",
+      "grupo": "5"
+    }
+  ]
+}

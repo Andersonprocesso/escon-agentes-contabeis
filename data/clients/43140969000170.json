@@ -1,0 +1,21 @@
+{
+  "id": "43140969000170",
+  "name": "FLAVIO DOS SANTOS 14462385802",
+  "cnpj": "43.140.969/0001-70",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12997758572"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "3c7ddd2c-217d-44b7-8dc4-9e6d48d4e9be",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "FLAVIO DOS SANTOS 14462385802",
+  "source": "radar"
+}

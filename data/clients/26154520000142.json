@@ -1,0 +1,21 @@
+{
+  "id": "26154520000142",
+  "name": "SANTIAGO MINIMERCADO LTDA",
+  "cnpj": "26.154.520/0001-42",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12981225369"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "1be7461c-a33f-461d-84db-497ac3695a7b",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "SANTIAGO MINIMERCADO LTDA",
+  "source": "radar"
+}

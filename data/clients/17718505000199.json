@@ -1,0 +1,21 @@
+{
+  "id": "17718505000199",
+  "name": "J.L. BARBOSA TRANSPORTE DE CARGAS LTDA",
+  "cnpj": "17.718.505/0001-99",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12997651356"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "234f2a43-696c-489a-9384-be62bb203faf",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "J.L. BARBOSA TRANSPORTE DE CARGAS LTDA",
+  "source": "radar"
+}

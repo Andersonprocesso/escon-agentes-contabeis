@@ -1,0 +1,21 @@
+{
+  "id": "08910102000156",
+  "name": "MR DE SOUZA OLIVEIRA TREINAMENTO LTDA",
+  "cnpj": "08.910.102/0001-56",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12982579592"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "2fc9c5cc-3050-49ac-a443-edbd33a16a3c",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "MR DE SOUZA OLIVEIRA TREINAMENTO LTDA",
+  "source": "radar"
+}

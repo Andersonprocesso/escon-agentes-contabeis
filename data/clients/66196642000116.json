@@ -1,0 +1,21 @@
+{
+  "id": "66196642000116",
+  "name": "FARMA SANJA SETVILLE DROGARIA LTDA",
+  "cnpj": "66.196.642/0001-16",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "whatsapp": "12988161417"
+  },
+  "tags": [
+    "radar",
+    "simples_nacional"
+  ],
+  "radar_id": "4b93d1f6-2005-4719-bbaa-741e430d0c2e",
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": true,
+  "monitoramento_ativo": true,
+  "drive_folder_hint": "FARMA SANJA SETVILLE DROGARIA LTDA",
+  "source": "radar"
+}
