@@ -280,22 +280,30 @@
 
     <div class="layout">
       <aside class="sidebar" id="sidebar">
-        <h2>Agentes</h2>
+        <h2>Canal do chat</h2>
+        <div id="channel-max"></div>
+        <h2 style="margin-top:.5rem">Equipe (Max aciona)</h2>
+        <p class="muted" style="font-size:.72rem;margin-bottom:.35rem">
+          Clique para ver o papel. O chat continua com <strong style="color:var(--text)">Max</strong>, que repassa à equipe.
+        </p>
         <div id="agent-list"></div>
       </aside>
 
       <main class="main">
         <div class="tabs">
-          <button class="tab active" data-tab="chat" type="button">Chat</button>
+          <button class="tab active" data-tab="chat" type="button">Chat com Max</button>
           <button class="tab" data-tab="overview" type="button">Visão geral</button>
           <button class="tab" data-tab="clients" type="button">Clientes</button>
           <button class="tab" data-tab="services" type="button">Serviços</button>
         </div>
 
         <section class="panel active" id="tab-chat">
+          <div id="chat-banner" class="priority" style="margin:.75rem 1rem 0;border-color:#1e4a7a;background:linear-gradient(90deg,#0a1a2e,var(--panel))">
+            Você fala com <strong style="color:var(--accent)">Max</strong> (gerente). Ele orquestra Xavier, Bill, John, Greg…
+          </div>
           <div class="chat-log" id="chat-log"></div>
           <div class="composer">
-            <textarea id="chat-input" placeholder="Converse com o agente… (Enter envia, Shift+Enter quebra linha)"></textarea>
+            <textarea id="chat-input" placeholder="Fale com o Max… (Enter envia, Shift+Enter quebra linha)"></textarea>
             <button class="btn" type="button" id="chat-send">Enviar</button>
           </div>
         </section>
@@ -333,13 +341,14 @@
       </main>
 
       <aside class="right" id="right">
-        <h2>Agente ativo</h2>
-        <div id="active-agent-card" class="service-card"></div>
-        <h2>Atalhos</h2>
-        <button class="agent-btn" type="button" data-prompt="Liste os passos do fechamento mensal Contmatic">Fechamento Contmatic</button>
-        <button class="agent-btn" type="button" data-prompt="Explique CBS/IBS para empresa de serviços no Simples">Reforma Tributária</button>
-        <button class="agent-btn" type="button" data-prompt="Como cobrar extratos pendentes dos clientes?">Cobrar extratos</button>
-        <button class="agent-btn" type="button" data-prompt="Quais agentes devo acionar para conciliação e XMLs?">Orquestrar Max</button>
+        <h2>Com quem você fala</h2>
+        <div id="active-agent-card" class="service-card" style="cursor:default"></div>
+        <div id="focus-agent-card" class="service-card hidden" style="cursor:default;margin-top:.5rem;border-color:#3d5a40"></div>
+        <h2>Atalhos para o Max</h2>
+        <button class="agent-btn" type="button" data-prompt="Max, liste os passos do fechamento mensal Contmatic e diga quem da equipe cuida de cada etapa.">Fechamento Contmatic</button>
+        <button class="agent-btn" type="button" data-prompt="Max, peça à Lucy um resumo de CBS/IBS para empresa de serviços no Simples e me reporte.">Reforma Tributária</button>
+        <button class="agent-btn" type="button" data-prompt="Max, acione o Greg: como cobrar extratos pendentes? Me entregue as mensagens prontas.">Cobrar extratos</button>
+        <button class="agent-btn" type="button" data-prompt="Max, para conciliação e XMLs, quem acionar e em que ordem?">Orquestrar equipe</button>
         <p class="muted" style="margin-top:auto">Escon Soluções Contábeis · OpenRouter</p>
       </aside>
     </div>
@@ -349,10 +358,14 @@
     const TOKEN_KEY = "escon_agentes_token";
     const state = {
       token: localStorage.getItem(TOKEN_KEY) || "",
-      agent: "max",
+      /** Sempre Max no chat — gerente único do canal */
+      chatAgent: "max",
+      /** Especialista em foco na lateral (só info / pedido ao Max) */
+      focusAgent: "max",
       agents: [],
       clients: [],
       history: [],
+      directMode: false, // avançado: falar direto com especialista
     };
 
     async function api(path, opts = {}) {
@@ -410,15 +423,106 @@
       }
     }
 
-    function setAgent(id) {
-      state.agent = id;
-      document.querySelectorAll(".agent-btn[data-agent]").forEach((b) => {
-        b.classList.toggle("active", b.dataset.agent === id);
-      });
-      const a = state.agents.find((x) => x.id === id) || { name: id, role: "" };
+    function agentById(id) {
+      return state.agents.find((x) => x.id === id) || { id, name: id, role: "" };
+    }
+
+    function refreshChannelUI() {
+      const max = agentById("max");
       document.getElementById("active-agent-card").innerHTML =
-        `<h3>${a.name}</h3><p>${a.role || ""}</p>`;
-      document.getElementById("top-sub").textContent = `Falando com ${a.name}`;
+        `<h3>Max · canal do chat</h3>
+         <p>${max.role || "Gerente de Agentes"}</p>
+         <p class="muted" style="margin-top:.4rem;font-size:.75rem">
+           Todas as mensagens vão para o Max. Ele repassa à equipe e reporta.
+         </p>`;
+
+      document.querySelectorAll(".agent-btn[data-agent]").forEach((b) => {
+        const isMax = b.dataset.agent === "max";
+        const focused = b.dataset.agent === state.focusAgent;
+        b.classList.toggle("active", isMax || focused);
+        if (isMax) b.classList.add("active");
+      });
+
+      const focusEl = document.getElementById("focus-agent-card");
+      if (state.focusAgent && state.focusAgent !== "max") {
+        const a = agentById(state.focusAgent);
+        focusEl.classList.remove("hidden");
+        focusEl.innerHTML =
+          `<h3>Especialista em foco: ${escapeHtml(a.name)}</h3>
+           <p>${escapeHtml(a.role || "")}</p>
+           <p class="muted" style="margin-top:.45rem;font-size:.75rem">
+             O chat <strong style="color:var(--text)">não</strong> muda de canal.
+             Use o botão abaixo para o Max acionar ${escapeHtml(a.name)}.
+           </p>
+           <button type="button" class="btn" id="btn-ask-max-about" style="margin-top:.65rem;width:100%">
+             Pedir ao Max sobre ${escapeHtml(a.name)}
+           </button>
+           <button type="button" class="btn ghost" id="btn-direct" style="margin-top:.4rem;width:100%;font-size:.8rem">
+             Avançado: falar direto com ${escapeHtml(a.name)}
+           </button>`;
+        document.getElementById("btn-ask-max-about").onclick = () => {
+          document.querySelector('.tab[data-tab="chat"]').click();
+          sendChat(
+            `Max, acione o especialista ${a.name} (${a.role}). ` +
+              `Explique o que ele faria agora na operação Contmatic/Radar e me entregue o plano e próximos passos.`
+          );
+        };
+        document.getElementById("btn-direct").onclick = () => {
+          if (
+            !confirm(
+              `Falar DIRETO com ${a.name}?\n\nO normal é só o Max. Direto é modo avançado.`
+            )
+          )
+            return;
+          state.directMode = true;
+          state.chatAgent = a.id;
+          state.focusAgent = a.id;
+          document.getElementById("top-sub").textContent =
+            `Modo direto: ${a.name} (avançado)`;
+          document.getElementById("chat-banner").innerHTML =
+            `Modo avançado: falando <strong style="color:var(--amber)">direto com ${escapeHtml(a.name)}</strong>. ` +
+            `<a href="#" id="back-to-max" style="color:var(--accent)">Voltar ao Max</a>`;
+          document.getElementById("back-to-max").onclick = (e) => {
+            e.preventDefault();
+            resetToMaxChannel();
+          };
+          addMsg(
+            "agent",
+            "Sistema",
+            `Canal alterado para ${a.name}. Para voltar ao Max, use o link no banner.`
+          );
+        };
+      } else {
+        focusEl.classList.add("hidden");
+        focusEl.innerHTML = "";
+      }
+
+      if (!state.directMode) {
+        document.getElementById("top-sub").textContent =
+          "Canal: Max (gerente) · equipe à esquerda";
+        document.getElementById("chat-banner").innerHTML =
+          `Você fala com <strong style="color:var(--accent)">Max</strong> (gerente). ` +
+          `Clique na equipe à esquerda só para ver o papel — Max aciona e reporta.`;
+      }
+    }
+
+    function resetToMaxChannel() {
+      state.directMode = false;
+      state.chatAgent = "max";
+      state.focusAgent = "max";
+      refreshChannelUI();
+      addMsg("agent", "Sistema", "Canal restaurado: Max (gerente).");
+    }
+
+    function setFocusAgent(id) {
+      state.focusAgent = id || "max";
+      if (id === "max") {
+        resetToMaxChannel();
+        return;
+      }
+      // não muda o canal do chat (permanece Max, salvo modo direto)
+      if (!state.directMode) state.chatAgent = "max";
+      refreshChannelUI();
     }
 
     function addMsg(role, who, text) {
@@ -452,20 +556,27 @@
       const histBefore = state.history.slice();
       state.history.push({ role: "user", content: msg });
 
-      const agentMeta = state.agents.find((a) => a.id === state.agent) || {
-        name: "Agente",
-        id: state.agent,
-      };
+      const channelId = state.directMode ? state.chatAgent : "max";
+      const agentMeta = agentById(channelId);
       addMsg("agent", agentMeta.name + "…", "Pensando…");
       const pending = document.getElementById("chat-log").lastChild;
 
       try {
         const model = document.getElementById("model-select").value || undefined;
+        // Sempre Max no modo normal; inclui especialista em foco como contexto
+        let messageToSend = msg;
+        if (!state.directMode && state.focusAgent && state.focusAgent !== "max") {
+          const f = agentById(state.focusAgent);
+          messageToSend =
+            `[Contexto: o usuário está olhando o especialista ${f.name} (${f.role}). ` +
+            `Você é Max e deve orquestrar/reportar como gerente, podendo "consultar" esse especialista na resposta.]\n\n` +
+            msg;
+        }
         const data = await api("/api/chat", {
           method: "POST",
           body: JSON.stringify({
-            message: msg,
-            agent: state.agent || "max",
+            message: messageToSend,
+            agent: channelId || "max",
             model: model || undefined,
             history: histBefore.slice(-10),
           }),
@@ -475,9 +586,10 @@
         pending.innerHTML =
           `<div class="who">${escapeHtml(name)}</div>` + escapeHtml(reply);
         state.history.push({ role: "assistant", content: reply });
-        if (data.model) {
-          document.getElementById("top-sub").textContent =
-            `Falando com ${name} · ${data.model}`;
+        if (!state.directMode) {
+          document.getElementById("top-sub").textContent = data.model
+            ? `Canal: Max · ${data.model}`
+            : "Canal: Max (gerente)";
         }
       } catch (e) {
         pending.innerHTML =
@@ -504,8 +616,17 @@
       state.agents = agentsRes.agents || [];
       state.clients = clientsRes.clients || [];
 
+      const max = agentById("max");
+      document.getElementById("channel-max").innerHTML =
+        `<button type="button" class="agent-btn active" data-agent="max" id="btn-channel-max">
+          <strong>★ ${max.name || "Max"}</strong>
+          <span>${max.role || "Gerente — canal do chat"}</span>
+        </button>`;
+      document.getElementById("btn-channel-max").onclick = () => setFocusAgent("max");
+
       const list = document.getElementById("agent-list");
-      list.innerHTML = state.agents
+      const team = state.agents.filter((a) => a.id !== "max");
+      list.innerHTML = team
         .map(
           (a) =>
             `<button type="button" class="agent-btn" data-agent="${a.id}">
@@ -514,9 +635,12 @@
         )
         .join("");
       list.querySelectorAll("[data-agent]").forEach((b) =>
-        b.addEventListener("click", () => setAgent(b.dataset.agent))
+        b.addEventListener("click", () => setFocusAgent(b.dataset.agent))
       );
-      setAgent(state.agent);
+      state.chatAgent = "max";
+      state.focusAgent = "max";
+      state.directMode = false;
+      refreshChannelUI();
 
       document.getElementById("priority-box").innerHTML =
         `Prioridade #1: <strong>${overview.priority || "Contmatic"}</strong>`;
@@ -564,14 +688,16 @@
 
       if (!document.getElementById("chat-log").children.length) {
         const chatHint = overview.chat_ready
-          ? "Chat online. Escolha um agente e envie uma mensagem."
+          ? "Chat online comigo (Max)."
           : "⚠ Chat offline: configure OPENROUTER_API_KEY no Vercel e faça Redeploy.";
         addMsg(
           "agent",
           "Max",
           "Olá! Sou o Max, gerente dos agentes Escon.\n\n" +
             chatHint +
-            "\n\nPeça por exemplo: fechamento Contmatic, XMLs, conciliação, Reforma Tributária ou status da carteira."
+            "\n\nVocê conversa só comigo. A lista à esquerda é a equipe (Xavier, Bill, John…). " +
+            "Clique num especialista para ver o que ele faz e pedir que eu o acione — eu reporto o resultado.\n\n" +
+            "Exemplos: fechamento Contmatic, XMLs, conciliação, Reforma Tributária, cobrar extratos."
         );
       }
     }
