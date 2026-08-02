@@ -13,6 +13,16 @@ from rich.markdown import Markdown
 from rich.panel import Panel
 from rich.table import Table
 
+# O console do Windows abre em cp1252 e derruba o comando ao imprimir "→", "⏸"
+# ou qualquer caractere fora dessa tabela. Forçar UTF-8 evita perder uma
+# execução inteira por causa de um símbolo no relatório.
+for _stream in (sys.stdout, sys.stderr):
+    if getattr(_stream, "encoding", "") and _stream.encoding.lower().replace("-", "") != "utf8":
+        try:
+            _stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, OSError):
+            pass
+
 ROOT = Path(__file__).resolve().parents[2]
 SRC = ROOT / "src"
 if str(SRC) not in sys.path:
@@ -617,6 +627,89 @@ def raquel_recheck_cmd(
                 str(len(r.get("attachments", [])) or ("sim" if r.get("has_attachments") else "—")),
             )
         console.print(t)
+
+
+@app.command("anexos-para-drive")
+def anexos_para_drive_cmd(
+    cliente: Optional[str] = typer.Option(None, "--cliente", "-c", help="Só este cliente"),
+    enviar: bool = typer.Option(False, "--enviar", help="Entrega de verdade ao Radar"),
+) -> None:
+    """Entrega os anexos baixados pela Rachel ao pipeline do Radar, que espelha
+    no Google Drive (Empresa/Departamento/Ano/Mês) na hora seguinte."""
+    from escon_agentes.tools import radar_ingest as ri
+    from escon_agentes.tools.clients import get_client
+
+    s = get_settings()
+    raiz = s.outbox / "email_attachments"
+    if not raiz.exists():
+        console.print("[yellow]Nenhum anexo baixado ainda (rode raquel-emails).[/yellow]")
+        return
+
+    total_enviados = 0
+    plano_geral: list[dict] = []
+    for pasta_cliente in sorted(raiz.iterdir()):
+        if not pasta_cliente.is_dir() or (cliente and pasta_cliente.name != cliente):
+            continue
+        c = get_client(s.clients_dir, pasta_cliente.name)
+        if not c:
+            console.print(f"[yellow]Cliente {pasta_cliente.name} não está no cadastro — pulando.[/yellow]")
+            continue
+        for pasta_mes in sorted(p for p in pasta_cliente.rglob("*") if p.is_dir()):
+            arquivos = [a for a in sorted(pasta_mes.iterdir()) if a.is_file()]
+            if not arquivos:
+                continue
+            # pasta é .../{ano}/{MM-AAAA}
+            mm_aaaa = pasta_mes.name
+            competencia = f"{mm_aaaa[3:]}-{mm_aaaa[:2]}" if "-" in mm_aaaa else ""
+            plano_geral += ri.planejar(
+                arquivos,
+                empresa_nome=c.name,
+                radar_id=c.radar_id or "",
+                cnpj_cliente=c.cnpj or c.id,
+                competencia=competencia,
+            )
+
+    if not plano_geral:
+        console.print("[yellow]Nada a enviar.[/yellow]")
+        return
+
+    t = Table(title=f"Anexos → Radar → Drive ({len(plano_geral)})")
+    for col in ("arquivo", "departamento", "por quê", "destino no Drive"):
+        t.add_column(col)
+    for it in plano_geral:
+        t.add_row(
+            it["nome"][:30],
+            it["departamento"] or "[red]—[/red]",
+            (it["motivo"] or "")[:34],
+            (it["storage_key_previsto"] or it["bloqueio"] or "")[:44],
+        )
+    console.print(t)
+
+    bloqueados = [i for i in plano_geral if not i["pronto"]]
+    if bloqueados:
+        console.print(
+            f"[yellow]{len(bloqueados)} arquivo(s) não classificados — ficam parados "
+            f"para triagem humana (não vou chutar a pasta).[/yellow]"
+        )
+
+    if not enviar:
+        console.print("\n[dim]Simulação — nada foi enviado. Use --enviar.[/dim]")
+        return
+
+    for it in plano_geral:
+        if not it["pronto"]:
+            continue
+        try:
+            r = ri.enviar(it)
+            total_enviados += 1
+            console.print(f"[green]enviado[/green] {it['nome'][:40]} → {r['storage_key']}")
+        except Exception as e:  # noqa: BLE001
+            console.print(f"[red]falhou[/red] {it['nome'][:40]}: {e}")
+
+    console.print(
+        f"\n[green]{total_enviados} documento(s) entregues ao Radar.[/green] "
+        f"O espelhamento para o Drive roda de hora em hora (minuto 20)."
+    )
 
 
 @app.command("certificados")
