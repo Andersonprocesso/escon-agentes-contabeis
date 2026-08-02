@@ -588,6 +588,37 @@ def cadastro_novo_cmd(
         console.print(f"[yellow]{result.human_prompt}[/yellow]")
 
 
+@app.command("raquel-recheck")
+def raquel_recheck_cmd(
+    aplicar: bool = typer.Option(False, "--aplicar", help="Reprocessa de verdade"),
+) -> None:
+    """Rachel: reavalia e-mails marcados como 'não-cliente' depois que o cadastro
+    mudou (ex.: após o Pedro sincronizar o Acessórias)."""
+    from escon_agentes.tools.graph_mail import MailboxUnavailable
+    from escon_agentes.workflows.email_recheck import run_email_recheck
+
+    s = get_settings()
+    try:
+        result = run_email_recheck(s, aplicar=aplicar)
+    except MailboxUnavailable as e:
+        console.print(f"[red]{e}[/red]")
+        raise typer.Exit(1) from e
+
+    console.print(f"[green]{result['summary']}[/green]")
+    if result["reclassificados"]:
+        t = Table(title="E-mails que passaram a ser de cliente")
+        for col in ("remetente", "assunto", "cliente", "anexos"):
+            t.add_column(col)
+        for r in result["reclassificados"]:
+            t.add_row(
+                r["from"][:30],
+                (r.get("subject") or "")[:32],
+                (r.get("client_name") or r.get("client_id") or "")[:26],
+                str(len(r.get("attachments", [])) or ("sim" if r.get("has_attachments") else "—")),
+            )
+        console.print(t)
+
+
 @app.command("certificados")
 def certificados_cmd() -> None:
     """Fernando Batista: verifica certificados digitais A1 no Radar e prepara

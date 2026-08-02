@@ -177,10 +177,33 @@ def create_draft_reply(token: str, settings: Settings, message_id: str, body_tex
 
 
 def flag_message(token: str, settings: Settings, message_id: str) -> None:
+    _set_flag(token, settings, message_id, "flagged")
+
+
+def unflag_message(token: str, settings: Settings, message_id: str) -> None:
+    """Tira a estrela — usado quando um e-mail marcado como 'não-cliente' passa a
+    ser reconhecido como cliente (ex.: depois que o Pedro sincroniza o cadastro)."""
+    _set_flag(token, settings, message_id, "notFlagged")
+
+
+def _set_flag(token: str, settings: Settings, message_id: str, status: str) -> None:
     url = f"{_mailbox_base(settings)}/messages/{message_id}"
     with httpx.Client(timeout=30) as client:
-        r = client.patch(
-            url, headers=_headers(token), json={"flag": {"flagStatus": "flagged"}}
-        )
+        r = client.patch(url, headers=_headers(token), json={"flag": {"flagStatus": status}})
     if r.status_code not in (200, 201):
-        raise MailboxUnavailable(f"Falha ao marcar e-mail: {r.status_code} {r.text[:300]}")
+        raise MailboxUnavailable(f"Falha ao marcar e-mail ({status}): {r.status_code} {r.text[:300]}")
+
+
+def find_by_internet_id(token: str, settings: Settings, internet_message_id: str) -> dict | None:
+    """Localiza a mensagem pelo Message-ID do cabeçalho (o que guardamos no estado)."""
+    safe = internet_message_id.replace("'", "''")
+    params = {
+        "$filter": f"internetMessageId eq '{safe}'",
+        "$select": "id,subject,from,receivedDateTime,hasAttachments,internetMessageId",
+    }
+    with httpx.Client(timeout=30) as client:
+        r = client.get(f"{_mailbox_base(settings)}/messages", headers=_headers(token), params=params)
+    if r.status_code != 200:
+        return None
+    vals = r.json().get("value", [])
+    return vals[0] if vals else None

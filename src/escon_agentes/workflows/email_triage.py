@@ -36,6 +36,29 @@ def _safe_filename(name: str) -> str:
     return re.sub(r"[\\/:*?\"<>|]", "_", name or "arquivo")[:180]
 
 
+def pasta_mes(d: datetime) -> str:
+    """'07-2026' — mesma convenção que o Radar já usa no Drive
+    (`{Empresa}/{Departamento}/{Ano}/{MM-AAAA}/`). Inventar outro formato
+    deixaria as pastas do mesmo cliente inconsistentes entre si.
+    """
+    return f"{d.month:02d}-{d.year}"
+
+
+# Imagens embutidas na assinatura do e-mail (image001.png, logos) não são
+# documento do cliente e não devem ir para o Drive.
+RE_IMAGEM_INLINE = re.compile(r"^image\d{3,}\.(png|jpg|jpeg|gif)$", re.IGNORECASE)
+TAMANHO_MINIMO_ANEXO = 20 * 1024  # 20 KB
+
+
+def anexo_relevante(nome: str, conteudo: bytes) -> bool:
+    if RE_IMAGEM_INLINE.match(Path(nome).name):
+        return False
+    ext = Path(nome).suffix.lower()
+    if ext in {".png", ".jpg", ".jpeg", ".gif", ".bmp"} and len(conteudo) < TAMANHO_MINIMO_ANEXO:
+        return False
+    return True
+
+
 def _load_state(path: Path) -> dict[str, str]:
     if not path.exists():
         return {}
@@ -114,9 +137,13 @@ def run_email_triage(
             saved_files: list[str] = []
             if has_attachments:
                 ano = received.strftime("%Y")
-                mes = received.strftime("%m-%B")
+                mes = pasta_mes(received)
                 dest_dir = staging_root / client.id / ano / mes
-                attachments = mail.get_attachments(token, settings, graph_id)
+                attachments = [
+                    (n, c)
+                    for n, c in mail.get_attachments(token, settings, graph_id)
+                    if anexo_relevante(n, c)
+                ]
                 if attachments:
                     dest_dir.mkdir(parents=True, exist_ok=True)
                     for filename, content in attachments:
@@ -126,7 +153,7 @@ def run_email_triage(
                         attachments_staged += 1
             else:
                 ano = received.strftime("%Y")
-                mes = received.strftime("%m-%B")
+                mes = pasta_mes(received)
 
             body_text = mail.get_body_text(token, settings, graph_id)
             text_blob = f"{subject}\n{body_text}"
