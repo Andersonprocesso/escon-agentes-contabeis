@@ -73,8 +73,9 @@ def _unwrap_list(payload: Any) -> list[dict[str, Any]]:
             inner = payload.get(key)
             if isinstance(inner, list):
                 return [x for x in inner if isinstance(x, dict)]
-        # objeto único
-        if any(k in payload for k in ("cnpj", "CNPJ", "nome", "Nome")):
+        # objeto único — GET /companies/{cnpj} devolve o registro direto, com as
+        # chaves reais da API (Identificador/Razao/ID), não as da documentação.
+        if any(k in payload for k in ("Identificador", "Razao", "ID", "cnpj", "CNPJ", "nome", "Nome")):
             return [payload]
     return []
 

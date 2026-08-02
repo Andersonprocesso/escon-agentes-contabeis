@@ -549,6 +549,45 @@ def cadastro_sync_cmd(
         console.print(f"[yellow]{result.human_prompt}[/yellow]")
 
 
+@app.command("cadastro-novo")
+def cadastro_novo_cmd(
+    origem: str = typer.Argument(..., help="PDF/TXT do cartão CNPJ, contrato social… ou uma pasta"),
+    criar: bool = typer.Option(False, "--criar", help="Cadastra de verdade no Acessórias"),
+    sem_llm: bool = typer.Option(False, "--sem-llm", help="Só regex, nunca chama o modelo"),
+) -> None:
+    """Pedro Henrique: lê documentos, extrai os campos e monta o cadastro.
+    Sem --criar é só simulação; nada é enviado ao Acessórias."""
+    from escon_agentes.agents.pedro import PedroAgent
+
+    s = get_settings()
+    agent = PedroAgent(settings=s)
+    result = agent.cadastrar_de_documentos(
+        Path(origem), criar=criar, usar_llm=not sem_llm
+    )
+    if not result.success:
+        console.print(f"[red]{result.summary}[/red]")
+        raise typer.Exit(1)
+
+    console.print(f"[green]{result.summary}[/green]")
+    campos = result.data["campos"]
+    origens = result.data["origem_campos"]
+    if campos:
+        t = Table(title="Campos extraídos")
+        for col in ("campo", "valor", "de onde veio"):
+            t.add_column(col)
+        for k, v in campos.items():
+            t.add_row(k, str(v)[:46], origens.get(k, "-"))
+        console.print(t)
+
+    if result.data["faltando_obrigatorios"]:
+        console.print(
+            f"[red]Sem estes campos não dá para cadastrar: "
+            f"{', '.join(result.data['faltando_obrigatorios'])}[/red]"
+        )
+    if result.needs_human:
+        console.print(f"[yellow]{result.human_prompt}[/yellow]")
+
+
 @app.command("certificados")
 def certificados_cmd() -> None:
     """Fernando Batista: verifica certificados digitais A1 no Radar e prepara
