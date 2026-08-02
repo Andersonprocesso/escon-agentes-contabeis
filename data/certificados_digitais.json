@@ -1,0 +1,590 @@
+[
+  {
+    "radar_id": "445a7bc1-5968-445a-bf98-0204ecd4623c",
+    "razao_social": "APOLO EDUCACIONAL E SERVICOS LTDA",
+    "cnpj_cpf": "59257064000115",
+    "valido_ate": "2026-03-21",
+    "fingerprint": "6d87d37cf3ee41649da7f72bc37f8ba7457267665a85fc9064dfb41bd34e02f2"
+  },
+  {
+    "radar_id": "82f7e9e4-d180-401e-8b2a-3454171856bf",
+    "razao_social": "L C REINALDO SILVA FARMACIA LTDA",
+    "cnpj_cpf": "46040860000150",
+    "valido_ate": "2026-06-05",
+    "fingerprint": "78eb37dc4691f6c789a1c2372be968951d4d0d504a21e5e18326b7d207e0546e"
+  },
+  {
+    "radar_id": "df3f5fa4-a145-42db-aaf0-31f3bd9ece12",
+    "razao_social": "ANA GABRIELA RAMOS DE CAMPOS REPRESENTACOES",
+    "cnpj_cpf": "61056491000187",
+    "valido_ate": "2026-07-02",
+    "fingerprint": "30333ef4ec69241c007806bb149b546e34195599071aa99f5fd6b740de5544fe"
+  },
+  {
+    "radar_id": "e0c99b16-044f-4693-b7b1-7023bfed7cbd",
+    "razao_social": "ROCHA E REINALDO SILVA PERFUMARIA E COSMETICOS LTDA",
+    "cnpj_cpf": "60964555000185",
+    "valido_ate": "2026-07-31",
+    "fingerprint": "03cab128e23fb72981cfd200626c5d4066d8d10f3493fd45dddf3dda8bdda81d"
+  },
+  {
+    "radar_id": "bac49d87-e464-4864-910e-5ddc5d5efe4e",
+    "razao_social": "MARIA IVANI DE JESUS DROGARIA",
+    "cnpj_cpf": "21854833000190",
+    "valido_ate": "2026-08-28",
+    "fingerprint": "5248dcaebcaaa7cc515b8e914c4333041bd13d44014267043db399e2ac1f8a6b"
+  },
+  {
+    "radar_id": "e3223563-b970-4560-aa21-8a63225a2f53",
+    "razao_social": "LUIZ REINALDO DA SILVA DROGARIA",
+    "cnpj_cpf": "41167257000110",
+    "valido_ate": "2026-08-28",
+    "fingerprint": "4ca14239befe3c57c13faf5154e6917162c540c07c2c63b0a400b50ff4b67036"
+  },
+  {
+    "radar_id": "32e34dce-e3d5-4f70-af78-2b4a7b70d0e3",
+    "razao_social": "MARSAN FABRICACAO DE ESQUADRIAS DE ALUMINIO LTDA",
+    "cnpj_cpf": "64935174000129",
+    "valido_ate": "2026-09-02",
+    "fingerprint": "36f9cdf6f80ba94b2d7c026a7f4f5cbd96de7f6193de22a095966575dde4aafd"
+  },
+  {
+    "radar_id": "25fa2e42-2ef4-40ef-bd88-5bef28b9d4d9",
+    "razao_social": "FARIA E MATOS COMERCIO DE EQUIPAMENTOS MEDICOS LTDA",
+    "cnpj_cpf": "13181386000127",
+    "valido_ate": "2026-09-18",
+    "fingerprint": "3fe185289ce3ff4ed144f373fc996f2b72ce754426b2d4a2913ea83f3bc38646"
+  },
+  {
+    "radar_id": "4b867080-071a-462e-8b8d-b48802d5c658",
+    "razao_social": "JULIANO DIAS CARVALHO FERRAGENS",
+    "cnpj_cpf": "34316047000180",
+    "valido_ate": "2026-09-22",
+    "fingerprint": "7f153e5db341a5331c12602cabdd1ff62b3c5835f54d670e54b9370d0a638eff"
+  },
+  {
+    "radar_id": "c90e695c-b8f9-47f8-9958-ecee91e6583b",
+    "razao_social": "CASA PADUA COMERCIAL LTDA",
+    "cnpj_cpf": "05026121000126",
+    "valido_ate": "2026-09-25",
+    "fingerprint": "eff85d8b9e706519b5e6f0a950b6b031e5f9761062b1f2785882019e35494b1c"
+  },
+  {
+    "radar_id": "9219d611-e65c-4663-89bf-adb2ee50439f",
+    "razao_social": "MARTINS SANTOS PIZZARIA E HAMBURGUERIA LTDA",
+    "cnpj_cpf": "62214634000102",
+    "valido_ate": "2026-09-25",
+    "fingerprint": "e5259b2abf3fbd2faaf1be20854f2648cfdb76f221fa18775a3c054ded5fdfb7"
+  },
+  {
+    "radar_id": "1cb49d05-f84a-4261-be14-7e4409eebf23",
+    "razao_social": "RIBEIRO & ROCHA COMERCIO DE VIDROS LTDA",
+    "cnpj_cpf": "39145168000120",
+    "valido_ate": "2026-09-29",
+    "fingerprint": "a08999afe4f3edf604226d32c7450255bb447cc71286bb14fdef2c663f54207d"
+  },
+  {
+    "radar_id": "8ae23e58-3dda-4113-8564-cdcf5309e991",
+    "razao_social": "ALFATORRE MONTAGENS E INSTALACOES LTDA",
+    "cnpj_cpf": "18286014000189",
+    "valido_ate": "2026-10-01",
+    "fingerprint": "608b6af933f07ad7d09e1f42053d83d28c4769cfd5d554ea5a5cb9fdaba92aaa"
+  },
+  {
+    "radar_id": "1be7461c-a33f-461d-84db-497ac3695a7b",
+    "razao_social": "SANTIAGO MINIMERCADO LTDA",
+    "cnpj_cpf": "26154520000142",
+    "valido_ate": "2026-10-02",
+    "fingerprint": "5936fe5b3d44f2265b1de79cce62e1dd8b51e86e9f2d9347f7b791c3732075bf"
+  },
+  {
+    "radar_id": "4d781cd4-ea36-4f4f-b4d0-b90cb4064ae0",
+    "razao_social": "ARAL QUEIMADOS SOLUCOES E SERVIÇOS LTDA",
+    "cnpj_cpf": "62391868000117",
+    "valido_ate": "2026-10-10",
+    "fingerprint": "60fbf2c8681f915a52a66b0ce3370611024827c087142db7bf7a3ca53ba71f55"
+  },
+  {
+    "radar_id": "36011175-13ff-477f-9a65-ebeff3c3642b",
+    "razao_social": "ELIANA DAS GRACAS DIAS CARVALHO",
+    "cnpj_cpf": "34766165000190",
+    "valido_ate": "2026-10-10",
+    "fingerprint": "9a3a15686f0e6520cc4e3a06f978d7b85af939cb3ab3a6f42772e57b3022121a"
+  },
+  {
+    "radar_id": "ec2f9bae-b0f2-41b4-9e09-503b866e0b24",
+    "razao_social": "ARAL SOLUCOES ITATIAIA LTDA",
+    "cnpj_cpf": "62975524000155",
+    "valido_ate": "2026-10-13",
+    "fingerprint": "f9ebe7007cc17e2c0c1828fd1e542b2dbb72513ec14c8583c61aad60c47fa409"
+  },
+  {
+    "radar_id": "e198fd0f-0d00-417c-8b39-01363a76ccc7",
+    "razao_social": "ANDRADE DE MORAES SOLUCOES E SERVIÇOS LTDA",
+    "cnpj_cpf": "62320328000142",
+    "valido_ate": "2026-10-13",
+    "fingerprint": "705faebf6e545fc2dc717dd6dfac9d6841bf1305c22edb84b058628f39aa601c"
+  },
+  {
+    "radar_id": "4113b9d2-165b-4a84-9432-2d7c4c42dfe1",
+    "razao_social": "ALUMAX MATERIAIS DE CONSTRUCAO LTDA",
+    "cnpj_cpf": "07603336000198",
+    "valido_ate": "2026-10-15",
+    "fingerprint": "5ebb0d0b621d3cdfa5c12113c2ece1ddcb5905ad25d32487a02a38e236becc9e"
+  },
+  {
+    "radar_id": "249bb718-e185-4faf-ba2f-beb1eb2c84c3",
+    "razao_social": "SOLEX FERRAGENS E CONSTRUCOES LTDA",
+    "cnpj_cpf": "10790362000187",
+    "valido_ate": "2026-10-17",
+    "fingerprint": "a0b393100801238c33bff9fd2ad97d23776b27e69d758b05525d551566d85e63"
+  },
+  {
+    "radar_id": "21490820-5758-435c-be19-382fe8cda226",
+    "razao_social": "M.A. HOTEL LTDA",
+    "cnpj_cpf": "23313543000164",
+    "valido_ate": "2026-10-20",
+    "fingerprint": "270881ffaa14c3f78a3ee74946ba1b29d05f55bdb9032dda9e3f76236cb76795"
+  },
+  {
+    "radar_id": "0ed32ee2-9a2f-422f-a851-e3793e2ce4ec",
+    "razao_social": "FARIA RESTAURANTE, LANCHONETE E MERCEARIA LTDA",
+    "cnpj_cpf": "52536911000131",
+    "valido_ate": "2026-10-22",
+    "fingerprint": "9e3a89eaedf8e442f86309cba9c3b927b8ede9372bca571f459338625990f24d"
+  },
+  {
+    "radar_id": "66dca204-653c-4d07-a51d-1978da44bd6f",
+    "razao_social": "EDSON ROBERTO SALES DOS SANTOS",
+    "cnpj_cpf": "34454481000127",
+    "valido_ate": "2026-10-29",
+    "fingerprint": "0d3d2a90fa6860b9d2da5314276cda4e60127dcb3772824aa1d2c652678e9956"
+  },
+  {
+    "radar_id": "0b583820-b6fd-4632-9449-81cc0cf3d2f3",
+    "razao_social": "YONEDA & OHARA JOGOS ELETRONICOS LTDA",
+    "cnpj_cpf": "24563612000150",
+    "valido_ate": "2026-11-14",
+    "fingerprint": "5525890d9b08d097f80240f987981cfd535c45932d05772efd31245ab1286c24"
+  },
+  {
+    "radar_id": "12b7d44e-f8e2-402b-9f49-1823e347b773",
+    "razao_social": "JORGE PAULO RODRIGUES ARAUJO ACABAMENTO",
+    "cnpj_cpf": "37747220000193",
+    "valido_ate": "2026-11-14",
+    "fingerprint": "6adaa2f364ddf6ba487e6793df63fbcfb266c511920ef08c0ab0507dfa821568"
+  },
+  {
+    "radar_id": "c85b0e73-50f0-4f05-90d8-f381b058fc97",
+    "razao_social": "TANGE YONEDA & YONEDA OHARA JOGOS ELETRONICOS LTDA",
+    "cnpj_cpf": "39779255000130",
+    "valido_ate": "2026-11-21",
+    "fingerprint": "e9e5f057c51608096a2631dcd03efabdb6f6034b8213a8caf4e58d1980fc3cfe"
+  },
+  {
+    "radar_id": "fdeb0b9f-8226-4e4b-a0ff-886af013ab22",
+    "razao_social": "JONAS CARVALHO SOCIEDADE INDIVIDUAL DE ADVOCACIA",
+    "cnpj_cpf": "30557890000106",
+    "valido_ate": "2026-11-25",
+    "fingerprint": "0f3b4ccfe9e07819a51e3ae50aec78b739022a83ba6a33f9b60a54305eb274b8"
+  },
+  {
+    "radar_id": "1ef6ab17-28ca-4278-8ea8-5d0a91d2e307",
+    "razao_social": "FERNANDES FARIA E TOLEDO CABELOS LTDA",
+    "cnpj_cpf": "27136383000186",
+    "valido_ate": "2026-11-26",
+    "fingerprint": "964a69fa61142176abcd07ba0acdf06ae9f0b5ed4182d1b40974c960edfd502b"
+  },
+  {
+    "radar_id": "470a9882-15e7-44ed-bd83-d652cc7f7cb2",
+    "razao_social": "M.A. MONTAGENS LTDA",
+    "cnpj_cpf": "14785936000180",
+    "valido_ate": "2026-11-28",
+    "fingerprint": "c5044352cfc2168f071187657488f19086e08d671a60c5bdcc5a9fd25e2a61bb"
+  },
+  {
+    "radar_id": "6f765b55-bcbb-4dd9-bb9c-3d838f8532f1",
+    "razao_social": "Escon Solucoes Contabeis",
+    "cnpj_cpf": "25369270000103",
+    "valido_ate": "2026-12-02",
+    "fingerprint": "10e0596af9dfa2dec80bbd01a7ba13470eab564f5ac45d1918fc0283a0e51e59"
+  },
+  {
+    "radar_id": "973afe5d-ad5e-4c47-a2c8-7feca1931052",
+    "razao_social": "DIAS DE PAULA ESCRITORIO DE APOIO ADMINISTRATIVO LTDA",
+    "cnpj_cpf": "09377184000188",
+    "valido_ate": "2026-12-10",
+    "fingerprint": "24c9c8afe11488519e08fd1990112229a2f5ddd8545ac981629eda629a66f6aa"
+  },
+  {
+    "radar_id": "6262d141-1061-4b32-a215-d84b8b874c96",
+    "razao_social": "LUANA CRISTINA DA SILVA SORVETERIA",
+    "cnpj_cpf": "17003634000109",
+    "valido_ate": "2027-01-09",
+    "fingerprint": "9d0255a82458a1d83b0b3c7c6fd285fcc45a818dcd68069feb3352dc1ff44d26"
+  },
+  {
+    "radar_id": "a901e49b-ac06-4169-80d6-269de1794032",
+    "razao_social": "MAURA HELENA DOS SANTOS 09859141819",
+    "cnpj_cpf": "42279160000161",
+    "valido_ate": "2027-01-13",
+    "fingerprint": "1a7a121efc3db286e091ff57b9a08296c54e9ef107e81fd7e7fe29c4ea7ebfbd"
+  },
+  {
+    "radar_id": "3c7ddd2c-217d-44b7-8dc4-9e6d48d4e9be",
+    "razao_social": "FLAVIO DOS SANTOS 14462385802",
+    "cnpj_cpf": "43140969000170",
+    "valido_ate": "2027-01-13",
+    "fingerprint": "3661f64c4501c2d050ca27209933ef6dbfd55c57b07f90a29a4c34ffc10a33b0"
+  },
+  {
+    "radar_id": "b60b4dff-261d-44c9-8e46-23ff494ca9f7",
+    "razao_social": "ALLAN CARLOS TREGNAGO 38855922823",
+    "cnpj_cpf": "30102736000131",
+    "valido_ate": "2027-01-15",
+    "fingerprint": "a2b3055395da637f8e5b99609d42f73707c9e774f8ca67abb58245f844f40936"
+  },
+  {
+    "radar_id": "043ba4f8-73f8-448e-b495-a7ff2615557e",
+    "razao_social": "GOULART ARQUITETURA, OBRAS E ACABAMENTO LTDA",
+    "cnpj_cpf": "22493414000132",
+    "valido_ate": "2027-01-17",
+    "fingerprint": "406b48d4f6872a82e79fecc93c51ff893d05ad585d4a42f9a263c8934fdfab9f"
+  },
+  {
+    "radar_id": "0eecd29a-444e-4155-bfa7-7e0d70b10de0",
+    "razao_social": "NASCIMENTO DE ARAUJO AGENCIA DE VIAGENS LTDA",
+    "cnpj_cpf": "11123711000170",
+    "valido_ate": "2027-01-20",
+    "fingerprint": "b11902f6963bfabba9a8a50f2837cc3f1ea20172c922429178c5ee4fb87cd62e"
+  },
+  {
+    "radar_id": "e948c134-28e5-4eee-87ab-fa71db159a54",
+    "razao_social": "SCHULZ SERVICOS DE MANUTENCOES E REFORMAS LTDA",
+    "cnpj_cpf": "58915540000185",
+    "valido_ate": "2027-01-20",
+    "fingerprint": "c4f3a73e56504f0d9938064c1fdd56a696a2a61d1009feecd4db450bba4bb596"
+  },
+  {
+    "radar_id": "c27008c7-9239-4190-976c-32fc7fe5c574",
+    "razao_social": "EDUARDO RIBEIRO MARTINES REPARAÇÃO E MANUTENÇÃO LTDA",
+    "cnpj_cpf": "54167714000118",
+    "valido_ate": "2027-01-21",
+    "fingerprint": "72481b6f9be53171d7c657165325f8f5a38341603c836b86cb2213ee5931cd46"
+  },
+  {
+    "radar_id": "d1d691ee-3a0d-4bd4-ad22-17f4e4eee737",
+    "razao_social": "MARLI DA SILVA CIRILO 22307237828",
+    "cnpj_cpf": "29182502000162",
+    "valido_ate": "2027-01-23",
+    "fingerprint": "bff9d8da448a2e51cc115606ec437b78cc0ba31015859c2555b8acef47fe15b9"
+  },
+  {
+    "radar_id": "4c11fbd3-c026-4bc9-98a6-9917e8ace5e5",
+    "razao_social": "GUILHERME DE ALMEIDA ROVETTA 35259340841",
+    "cnpj_cpf": "35154641000185",
+    "valido_ate": "2027-01-26",
+    "fingerprint": "fefee847111c9933657b623d6d1cb78105a24dbab5ed07e15a1ac5860d9284f4"
+  },
+  {
+    "radar_id": "4b067c6f-a253-4a6d-9469-ed48fcd03417",
+    "razao_social": "39.452.045 TANIA CARLA MUNIZ SILVA",
+    "cnpj_cpf": "39452045000132",
+    "valido_ate": "2027-01-29",
+    "fingerprint": "7ac0cb5f92209e88deda3d944f6d234fcc96702fe42f9599f2839c6f7311f70b"
+  },
+  {
+    "radar_id": "35d33dec-1aa0-47f0-b4da-e8bf8b1de7dd",
+    "razao_social": "29.410.864 MARIO KAWATA",
+    "cnpj_cpf": "29410864000163",
+    "valido_ate": "2027-02-02",
+    "fingerprint": "856409b16a4fed9920d03faf3e3dc95b0b23962191f4e4385691bb40efce4921"
+  },
+  {
+    "radar_id": "79c819cd-3fa8-46a7-bb32-3b4e82f11c0c",
+    "razao_social": "58.360.130 SERGIO FERNANDES DA SILVA",
+    "cnpj_cpf": "58360130000115",
+    "valido_ate": "2027-02-04",
+    "fingerprint": "1cf25ba73ba7b2f18ad6b5e12acfa8942334762f29f79fe4068ec6440f2602bf"
+  },
+  {
+    "radar_id": "9adb0c88-dccf-44f6-aace-82a8e9889fbf",
+    "razao_social": "SOARES E DE PAULA PRODUTOS PARA FESTAS LTDA",
+    "cnpj_cpf": "35599073000126",
+    "valido_ate": "2027-02-23",
+    "fingerprint": "85c9e715661704df1e208bd6851af6d0b3505e5fb47ba3e45b4723f8311f1374"
+  },
+  {
+    "radar_id": "c20952e0-3792-4396-b89e-9cf79ab1dd34",
+    "razao_social": "52.201.387 EDMAR DA SILVA PEREIRA",
+    "cnpj_cpf": "52201387000148",
+    "valido_ate": "2027-02-23",
+    "fingerprint": "02a115e6ad091a9e4109bbf9bf98b84959dc5eeb5f89c8536ec942b5711b232e"
+  },
+  {
+    "radar_id": "98e08a25-0081-4e9a-9114-2ab4ab4d1550",
+    "razao_social": "RICARDO FAGUNDES DO NASCIMENTO TRANSPORTES",
+    "cnpj_cpf": "13404722000153",
+    "valido_ate": "2027-02-24",
+    "fingerprint": "a5b66ce05e4018d58bb5c9a64658dd463d7bd5e0eab237ffff9b96ea636c527f"
+  },
+  {
+    "radar_id": "821b9c88-1cae-4591-8e88-5626ca6c8c14",
+    "razao_social": "R. FAGUNDES MATERIAIS DE CONSTRUCAO LTDA",
+    "cnpj_cpf": "45100511000113",
+    "valido_ate": "2027-02-24",
+    "fingerprint": "a5b66ce05e4018d58bb5c9a64658dd463d7bd5e0eab237ffff9b96ea636c527f"
+  },
+  {
+    "radar_id": "3c698238-17ee-4d76-b7d3-e17b1291a36b",
+    "razao_social": "SANTOS E SOARES MATERIAIS DE CONSTRUCAO LTDA",
+    "cnpj_cpf": "53875211000134",
+    "valido_ate": "2027-02-24",
+    "fingerprint": "bb973fc584a0207607ea5e479d9133b3845fe9b090d4b8de5226a573ff7c701d"
+  },
+  {
+    "radar_id": "4fc72749-f33b-4db9-b89a-70f569ca99ef",
+    "razao_social": "FARIA PERES E TOLEDO SALAO DE BELEZA LTDA",
+    "cnpj_cpf": "59069616000161",
+    "valido_ate": "2027-02-26",
+    "fingerprint": "3c5d9f8cfb96306f007882168ad3c453feecab5e1ccbf7bf9034965e671017f6"
+  },
+  {
+    "radar_id": "05f99995-cafe-4c84-ae00-68618dc777e2",
+    "razao_social": "SJ ARTE E CABELO LTDA",
+    "cnpj_cpf": "14158978000190",
+    "valido_ate": "2027-02-26",
+    "fingerprint": "033cae2bb75f852eaf7f59304eb7bfc22885b491dabf8e2ae1cde509fe18496c"
+  },
+  {
+    "radar_id": "d8fbf0fe-bd68-40b1-a7ef-bd3ffb1e3f97",
+    "razao_social": "ADALGISA DA SILVA QUEIROZ 02331389861",
+    "cnpj_cpf": "42679395000140",
+    "valido_ate": "2027-02-27",
+    "fingerprint": "64ebfc0140cb0827033c0367241d87c6d239a3a870e8ef4688b326f5bb4674fa"
+  },
+  {
+    "radar_id": "499587e5-8540-448a-ab59-6470199699ed",
+    "razao_social": "PAULO EDUARDO SANTOS LANCHONETE",
+    "cnpj_cpf": "09476106000130",
+    "valido_ate": "2027-02-27",
+    "fingerprint": "be0c6a36b6cd2cd4412185ac2540b95ebc898d1f227ced8949bfe0a974e4c748"
+  },
+  {
+    "radar_id": "ab02b16a-ff82-4d31-9e34-35b982f6976d",
+    "razao_social": "TOBIAS ARANTES DA SILVA 43289333884",
+    "cnpj_cpf": "37986227000168",
+    "valido_ate": "2027-03-05",
+    "fingerprint": "c156e4abcbe464d0ccb9c4a0ab8b7c2d3fe543df502577f99efab40c2adab533"
+  },
+  {
+    "radar_id": "5f40ceb0-60df-4ba1-829b-5847e5731ebe",
+    "razao_social": "KAIROS COMERCIO E SERVICOS DE JARDINAGEM E PAISAGISMO LTDA",
+    "cnpj_cpf": "37347712000191",
+    "valido_ate": "2027-03-06",
+    "fingerprint": "4a3e3eff2751617137f8aff92126ac0aa80d4bd7c02a21d7242d737ec9eb5999"
+  },
+  {
+    "radar_id": "d12aa825-18b1-47c3-b645-04cecfb70b4d",
+    "razao_social": "NUCLEO TERAPEUTICO VIVENCIA LTDA",
+    "cnpj_cpf": "29580079000159",
+    "valido_ate": "2027-03-09",
+    "fingerprint": "4d9952425cd18cfc9bb886ed11eb1436e8d04491a6c2cfedd0d9f49674e6bacc"
+  },
+  {
+    "radar_id": "d92bc006-f157-400b-a23a-0638c45f7845",
+    "razao_social": "SOUSA GOULART OFICINA MECANICA LTDA",
+    "cnpj_cpf": "09054390000157",
+    "valido_ate": "2027-03-20",
+    "fingerprint": "f6836dfd3ed41783d869a24a840c4bc16c377e629a0a55e8907605bc9c3934e0"
+  },
+  {
+    "radar_id": "a2476f61-30ec-461b-8888-172c9037dd8a",
+    "razao_social": "REINALDO E ROCHA PERFUMARIA E COSMETICOS LTDA",
+    "cnpj_cpf": "65225304000100",
+    "valido_ate": "2027-03-23",
+    "fingerprint": "d0712400d71b6979075dbe528b1c5fdcd04b2f26f17983c00770264ad06808ad"
+  },
+  {
+    "radar_id": "1ec693e9-0d69-4b12-a9db-3afaf1028244",
+    "razao_social": "SOUSA & SOUSA COMERCIO DE FERRAMENTAS LTDA",
+    "cnpj_cpf": "09165407000143",
+    "valido_ate": "2027-03-30",
+    "fingerprint": "902bb31205011115264f389051984c295b470ce1fc7a4162e76ae7413dfb0ac9"
+  },
+  {
+    "radar_id": "ba870100-6608-4c63-a62c-dcc5f2a24628",
+    "razao_social": "USIPED CALDERARIA, FERRAMENTARIA, USINAGEM E MONTAGEM LTDA",
+    "cnpj_cpf": "11356356000189",
+    "valido_ate": "2027-03-30",
+    "fingerprint": "bcecb33940af85fa39a9ff391fb974928c82981a14188a2d0059b1133feb33fd"
+  },
+  {
+    "radar_id": "61e55bf1-c84a-4489-8cae-38381c2e136e",
+    "razao_social": "PSICOLOGIA J R C MOURA LTDA",
+    "cnpj_cpf": "32226778000100",
+    "valido_ate": "2027-04-01",
+    "fingerprint": "18731948a84c90e37c87fe09a47bce2f0183969413969adb082b12eafdc91d79"
+  },
+  {
+    "radar_id": "47da8393-0609-4572-972a-533df3ec3843",
+    "razao_social": "REQUENE SCHULZ ENGENHARIA LTDA",
+    "cnpj_cpf": "26163929000125",
+    "valido_ate": "2027-04-06",
+    "fingerprint": "9d30a653ca580df41394291fb787a427bb5ba8e99ad15004ad54a0feefb8a06e"
+  },
+  {
+    "radar_id": "8065bacf-b4c6-410b-a19d-fc87708e75de",
+    "razao_social": "LC & AR DROGABELLA LTDA",
+    "cnpj_cpf": "48360661000154",
+    "valido_ate": "2027-04-14",
+    "fingerprint": "fe4923572167eed7edc57950872a064b77e9cc42e8071a85c50d49cefd8b53b7"
+  },
+  {
+    "radar_id": "11cfb113-4ead-4c60-9602-0b8d99f06dac",
+    "razao_social": "FARMA SANJA DROGARIA LTDA",
+    "cnpj_cpf": "53425437000133",
+    "valido_ate": "2027-04-14",
+    "fingerprint": "3f67ead05526856fd19704692a9b937b5027ad1a261645192fb22738e56aca23"
+  },
+  {
+    "radar_id": "a26846e7-601c-4fcb-b99c-edfb630c0e1a",
+    "razao_social": "SOUZA SANTOS OBRAS DE ALVENARIA LTDA",
+    "cnpj_cpf": "66037648000140",
+    "valido_ate": "2027-04-29",
+    "fingerprint": "dc476b835a6dfca68b1dc63243a7f888151f5cd613157826f7d94fbe29c85dda"
+  },
+  {
+    "radar_id": "14a2177b-bbc7-4b58-b726-ff5c8510f092",
+    "razao_social": "46.273.818 MAGNA REGINA DE SOUZA OLIVEIRA",
+    "cnpj_cpf": "46273818000189",
+    "valido_ate": "2027-05-05",
+    "fingerprint": "905d4adc96d1ab5396bad9f7b5c246b85346924da46c414676b7d1d4cda56449"
+  },
+  {
+    "radar_id": "4b93d1f6-2005-4719-bbaa-741e430d0c2e",
+    "razao_social": "FARMA SANJA SETVILLE DROGARIA LTDA",
+    "cnpj_cpf": "66196642000116",
+    "valido_ate": "2027-05-05",
+    "fingerprint": "b4f8057cb224def04fb8b6fc8f69ce68be8426cde4a1165e3d94cccb7d41cf7c"
+  },
+  {
+    "radar_id": "a93dce23-9f81-4945-a806-d0b0a3a8bfb4",
+    "razao_social": "SIMONE THAMY YONEDA 40131833820",
+    "cnpj_cpf": "48821036000162",
+    "valido_ate": "2027-05-07",
+    "fingerprint": "f8cbb58fcdcf91a555ea942b0910cbe838c31f334bb9619ebd209bc403ed4d48"
+  },
+  {
+    "radar_id": "f8c1ad64-0f3e-4db6-8d25-1cd3ec251b50",
+    "razao_social": "LUCAS BERNARDES 38033296801",
+    "cnpj_cpf": "27726492000153",
+    "valido_ate": "2027-05-12",
+    "fingerprint": "7252f7d5f871b399cbeb50c8563716e8f9dfe39262f529c87b35951e964fc10d"
+  },
+  {
+    "radar_id": "615be2f9-0f47-415c-8d6c-9fe55cb95482",
+    "razao_social": "ERIC KENZO WAKASUGI 47008496818",
+    "cnpj_cpf": "33141246000132",
+    "valido_ate": "2027-05-20",
+    "fingerprint": "9ec673edd8e4092945e8b1459af46486898630ad6042aa7b498936f3687df31e"
+  },
+  {
+    "radar_id": "53b0201d-866d-4803-9b97-e5707d6fcc20",
+    "razao_social": "41.797.393 Mauricio Ferreira de Moura",
+    "cnpj_cpf": "41797393000193",
+    "valido_ate": "2027-05-26",
+    "fingerprint": "ed09a07ba7e2aff84a85ce2e95d6ed9fb4c4b2bcfcc43930b3f02f8c26ab4c4b"
+  },
+  {
+    "radar_id": "341b950f-7228-4597-8189-daf2209962b1",
+    "razao_social": "ARAL SOLUCOES E SERVICOS LTDA",
+    "cnpj_cpf": "37350724000175",
+    "valido_ate": "2027-05-29",
+    "fingerprint": "d75ad00b10a63e46a8927b02919199d92dcce0a127d35c785fcb1a5d10f0353c"
+  },
+  {
+    "radar_id": "cfcdced4-3754-48fd-88d7-1be87fafdccd",
+    "razao_social": "CTX SERVICOS LTDA",
+    "cnpj_cpf": "34928980000109",
+    "valido_ate": "2027-05-29",
+    "fingerprint": "cff3ab6157fa02955ce5d4da371b75521934f2a91acc4e5630278723b1e58e16"
+  },
+  {
+    "radar_id": "dd55a39b-5cd1-4c62-bba5-a254c0fc8cbe",
+    "razao_social": "COMPASSO ASSESSORIA E SERVICOS LTDA",
+    "cnpj_cpf": "23343420000176",
+    "valido_ate": "2027-05-29",
+    "fingerprint": "2a9b6e036d74c5f59fdb1f5ec6f85184e75e31345b50d272f3111936927b5345"
+  },
+  {
+    "radar_id": "3e1caeb3-36ef-493a-ba94-d7958d17cae4",
+    "razao_social": "COMPASSO SERVICOS ADMINISTRATIVOS LTDA",
+    "cnpj_cpf": "32620352000136",
+    "valido_ate": "2027-05-29",
+    "fingerprint": "3361edb94dc0e3b01c48283fbf10ee86f984f3a526c2ba79f2fd240291f5ca98"
+  },
+  {
+    "radar_id": "d4316025-6567-46c3-bb88-721592f66d89",
+    "razao_social": "CARLOS EDUARDO MACEDO 26533919881",
+    "cnpj_cpf": "29077304000139",
+    "valido_ate": "2027-06-11",
+    "fingerprint": "90e5706d559cf9f88ba293f04b49f0e0a6b2536de44a1f0118660c60dd078f2e"
+  },
+  {
+    "radar_id": "d8c5c084-3070-4bc7-94b4-0b927d7afec4",
+    "razao_social": "BONFIM ACADEMIA DE MUSCULACAO LTDA",
+    "cnpj_cpf": "54702538000177",
+    "valido_ate": "2027-06-16",
+    "fingerprint": "b6d7fe6cac0228e951f603980d0749030d6df0f884a1840b3bd62f0f96b0f3e7"
+  },
+  {
+    "radar_id": "234f2a43-696c-489a-9384-be62bb203faf",
+    "razao_social": "J.L. BARBOSA TRANSPORTE DE CARGAS LTDA",
+    "cnpj_cpf": "17718505000199",
+    "valido_ate": "2027-07-02",
+    "fingerprint": "2d514903d53051a38733157df5a39979181c40f2219ef0c30d853af3b0e0228c"
+  },
+  {
+    "radar_id": "146083e6-9ef2-4bff-9ec2-c170c65e4cfc",
+    "razao_social": "MARSON & DANTAS MANUTENCAO EM T. I . LTDA",
+    "cnpj_cpf": "09502266000107",
+    "valido_ate": "2027-07-06",
+    "fingerprint": "b3da622f50431fca142aa060c55d7eb0b38ff3383d12aa0e5aacdd3fc2b2c0e1"
+  },
+  {
+    "radar_id": "1d2f8f8a-fd84-4453-a5ab-aa10ce92cd7e",
+    "razao_social": "ARAUJO CAMPOS OBRAS DE ALVENARIA LTDA",
+    "cnpj_cpf": "60932709000157",
+    "valido_ate": "2027-07-06",
+    "fingerprint": "47439cab493da06e215464a28e3bd6f5817f45694d3a2ddb1e96c50113f22bb6"
+  },
+  {
+    "radar_id": "237b3487-93e5-4666-a258-f0eff00c78fb",
+    "razao_social": "MI FERREIRA BEBIDAS LTDA",
+    "cnpj_cpf": "42836060000199",
+    "valido_ate": "2027-07-13",
+    "fingerprint": "495f45b8205f379a03a339e106a710732ae2d7413cd3559c35148e90a1063364"
+  },
+  {
+    "radar_id": "2fc9c5cc-3050-49ac-a443-edbd33a16a3c",
+    "razao_social": "MR DE SOUZA OLIVEIRA TREINAMENTO LTDA",
+    "cnpj_cpf": "08910102000156",
+    "valido_ate": "2027-07-17",
+    "fingerprint": "7bc8a471f16df1c978cd26ddd775fae6635851174ce567b5b65cdc12eebee675"
+  },
+  {
+    "radar_id": "836151f8-1430-4162-a8b9-24f198502328",
+    "razao_social": "FARMA SANJA JACAREI DROGARIA LTDA",
+    "cnpj_cpf": "67874427000190",
+    "valido_ate": "2027-07-22",
+    "fingerprint": "1ddb7b7109cf8a93eaf942e62eab3eeedd22a476bf1323f7a1f098741e5e911e"
+  },
+  {
+    "radar_id": "452e574c-28b3-4277-a67d-48d42204f9c1",
+    "razao_social": "FERREIRA BARBOSA LOCACAO DE ANDAIMES LTDA",
+    "cnpj_cpf": "14795919000123",
+    "valido_ate": "2027-07-30",
+    "fingerprint": "078ed4f73b46bfac7ca9371aab5de671ed15a47a37069f9292db94f9168e2397"
+  }
+]

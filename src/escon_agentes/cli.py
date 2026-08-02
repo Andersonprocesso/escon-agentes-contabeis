@@ -478,6 +478,74 @@ def pipeline(
     )
 
 
+@app.command("certificados")
+def certificados_cmd() -> None:
+    """Fernando Batista: verifica certificados digitais A1 no Radar e prepara
+    ofertas de renovação (vencidos + a vencer em 15 dias). Nunca envia sozinho."""
+    from escon_agentes.agents.fernando import FernandoAgent
+    from escon_agentes.schema import AgentId, AgentTask
+
+    s = get_settings()
+    agent = FernandoAgent(settings=s)
+    task = AgentTask(agent=AgentId.FERNANDO, title="Checar certificados digitais")
+    result = agent.run(task)
+
+    color = "green" if result.success else "red"
+    console.print(f"[{color}]{result.summary}[/{color}]")
+    alerts = result.data.get("alerts", [])
+    if alerts:
+        table = Table(title=f"Certificados A1 — atenção ({len(alerts)})")
+        for col in ("empresa", "validade", "status", "dias", "cliente_local", "telefone", "email"):
+            table.add_column(col)
+        for a in alerts:
+            table.add_row(
+                (a.get("razao_social") or "")[:32],
+                a.get("valido_ate") or "",
+                a.get("reason"),
+                str(a.get("dias")),
+                a.get("client_id") or "[dim]não achado[/dim]",
+                a.get("telefone") or "",
+                a.get("email") or "",
+            )
+        console.print(table)
+    if result.needs_human:
+        console.print(f"\n[yellow]Aguardando humano: {result.human_prompt}[/yellow]")
+        console.print(f"[dim]Ofertas prontas em: {result.artifacts}[/dim]")
+
+
+@app.command("raquel-emails")
+def raquel_emails_cmd(
+    dias: int = typer.Option(30, "--dias", help="Janela de dias para trás (default 30)"),
+    apenas_nao_lidos: bool = typer.Option(
+        False, "--apenas-nao-lidos", help="Só e-mails ainda não lidos"
+    ),
+    limite: int = typer.Option(100, "--limite", help="Máx. e-mails por execução"),
+) -> None:
+    """Rachel: lê contato@escondigital.com.br, rascunha resposta (sem enviar),
+    separa anexos de clientes por Empresa/Ano/Mês e reporta e-mails de não-clientes."""
+    from escon_agentes.tools.graph_mail import MailboxUnavailable
+    from escon_agentes.workflows.email_triage import run_email_triage
+
+    s = get_settings()
+    try:
+        result = run_email_triage(s, since_days=dias, unseen_only=apenas_nao_lidos, limit=limite)
+    except MailboxUnavailable as e:
+        console.print(f"[red]{e}[/red]")
+        raise typer.Exit(1) from e
+
+    console.print_json(json.dumps(result, ensure_ascii=False, indent=2, default=str))
+    console.print(f"\n[green]{result.get('summary')}[/green]")
+    if result.get("attachments_staged"):
+        console.print(
+            f"[cyan]Anexos prontos em:[/cyan] {result.get('attachments_staging_root')} "
+            f"(faltando ir para o Drive Radar Escon)"
+        )
+    if result.get("non_clients"):
+        console.print(f"[yellow]{len(result['non_clients'])} e-mail(s) de não-clientes — revise:[/yellow]")
+        for n in result["non_clients"][:20]:
+            console.print(f"  • {n['from']} — {n['subject']}")
+
+
 @app.command()
 def dashboard(
     host: Optional[str] = typer.Option(None, "--host"),

@@ -22,6 +22,7 @@ ROUTING_KEYWORDS: list[tuple[AgentId, list[str]]] = [
     (AgentId.KAREN, ["notícia", "noticia", "briefing", "mudança legal", "mudanca legal"]),
     (AgentId.PAUL, ["dre", "fluxo de caixa", "indicador", "rentabilidade", "financeiro", "margem"]),
     (AgentId.CESAR, ["certidão", "certidao", "cnd", "e-cac", "ecac", "regularidade"]),
+    (AgentId.FERNANDO, ["certificado digital", "certificado a1", "certificado", "renovação de certificado", "renovacao de certificado"]),
 ]
 
 
@@ -33,7 +34,7 @@ class MaxAgent(BaseAgent):
 Você coordena a operação multiagente do escritório contábil.
 Sua função é entender a demanda, escolher os agentes certos e resumir o andamento.
 Nunca execute lançamentos finais sem flag de revisão humana.
-Agentes disponíveis: Bella, Rachel, Greg, John, Bill, Anne, Lucy, Karen, Paul, Cesar, Xavier.
+Agentes disponíveis: Bella, Rachel, Greg, John, Bill, Anne, Lucy, Karen, Paul, Cesar, Xavier, Fernando.
 """
 
     def run(self, task: AgentTask) -> AgentResult:

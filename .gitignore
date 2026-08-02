@@ -1,5 +1,6 @@
 .env
 .env.local
+.msal_cache/
 .venv/
 venv/
 __pycache__/

@@ -39,6 +39,7 @@ class AgentId(str, Enum):
     PAUL = "paul"
     CESAR = "cesar"
     XAVIER = "xavier"
+    FERNANDO = "fernando"
 
 
 class Message(BaseModel):

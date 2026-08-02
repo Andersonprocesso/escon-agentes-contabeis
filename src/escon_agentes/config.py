@@ -70,6 +70,19 @@ class Settings(BaseSettings):
     # Pasta local do Google Drive for Desktop (raiz "Radar Escon")
     google_drive_radar_root: str = ""
 
+    # Rachel — caixa de e-mail (Microsoft 365 via IMAP) — mantido como fallback
+    outlook_imap_host: str = "outlook.office365.com"
+    outlook_imap_port: int = 993
+    outlook_imap_user: str = ""
+    outlook_imap_password: str = ""
+    outlook_lookback_days: int = 30
+
+    # Rachel — caixa de e-mail via Microsoft Graph (OAuth device code, respeita MFA)
+    ms_graph_client_id: str = ""
+    ms_graph_tenant_id: str = ""
+    ms_graph_mailbox: str = ""  # contato@escondigital.com.br
+    ms_graph_token_cache: str = ".msal_cache/rachel_token_cache.json"
+
     @property
     def data_dir(self) -> Path:
         p = Path(self.escon_data_dir)

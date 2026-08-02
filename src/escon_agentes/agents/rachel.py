@@ -9,6 +9,37 @@ from escon_agentes.agents.base import BaseAgent
 from escon_agentes.schema import AgentId, AgentResult, AgentTask
 
 
+def classify_priority(text: str) -> str:
+    low = text.lower()
+    if any(k in low for k in ("urgente", "prazo hoje", "bloqueio", "fiscalização", "intima")):
+        return "critical"
+    if any(k in low for k in ("vencimento", "extrato", "certidão", "das", "darf")):
+        return "high"
+    return "medium"
+
+
+def classify_category(text: str) -> str:
+    low = text.lower()
+    if "extrato" in low:
+        return "documentos_bancarios"
+    if any(k in low for k in ("nota", "xml", "nf")):
+        return "documentos_fiscais"
+    if any(k in low for k in ("boleto", "honor")):
+        return "financeiro"
+    if any(k in low for k in ("dúvida", "duvida", "como", "reforma")):
+        return "duvidas"
+    return "geral"
+
+
+def default_draft_body(subject: str, office_name: str) -> str:
+    return (
+        f"Prezado(a),\n\n"
+        f"Agradecemos o contato com a {office_name}. "
+        f"Recebemos sua mensagem e daremos andamento.\n\n"
+        f"Atenciosamente,\nEquipe {office_name}"
+    )
+
+
 class RachelAgent(BaseAgent):
     id = AgentId.RACHEL
     name = "Rachel"
@@ -24,12 +55,8 @@ Mantenha tom profissional e peça aprovação humana antes de enviar.
         priority = self._priority(subject + "\n" + body)
         category = self._category(subject + "\n" + body)
 
-        draft = (
-            f"Assunto: Re: {subject}\n\n"
-            f"Prezado(a),\n\n"
-            f"Agradecemos o contato com a {self.settings.escon_office_name}. "
-            f"Recebemos sua mensagem e daremos andamento.\n\n"
-            f"Atenciosamente,\nEquipe {self.settings.escon_office_name}"
+        draft = f"Assunto: Re: {subject}\n\n" + default_draft_body(
+            subject, self.settings.escon_office_name
         )
 
         if self.llm.available:
@@ -59,21 +86,7 @@ Mantenha tom profissional e peça aprovação humana antes de enviar.
         )
 
     def _priority(self, text: str) -> str:
-        low = text.lower()
-        if any(k in low for k in ("urgente", "prazo hoje", "bloqueio", "fiscalização", "intima")):
-            return "critical"
-        if any(k in low for k in ("vencimento", "extrato", "certidão", "das", "darf")):
-            return "high"
-        return "medium"
+        return classify_priority(text)
 
     def _category(self, text: str) -> str:
-        low = text.lower()
-        if "extrato" in low:
-            return "documentos_bancarios"
-        if any(k in low for k in ("nota", "xml", "nf")):
-            return "documentos_fiscais"
-        if any(k in low for k in ("boleto", "honor")):
-            return "financeiro"
-        if any(k in low for k in ("dúvida", "duvida", "como", "reforma")):
-            return "duvidas"
-        return "geral"
+        return classify_category(text)
