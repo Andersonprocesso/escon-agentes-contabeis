@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12988077252"
+    "whatsapp": "12988077252",
+    "telefone": "12988077252",
+    "email": "sallesbrazilimoveis@gmail.com"
   },
+  "telefone": "12988077252",
+  "email": "sallesbrazilimoveis@gmail.com",
   "tags": [
     "radar",
     "simples_nacional"

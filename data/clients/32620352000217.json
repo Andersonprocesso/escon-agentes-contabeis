@@ -1,0 +1,24 @@
+{
+  "id": "32620352000217",
+  "name": "COMPASSO SERVICOS ADMINISTRATIVOS LTDA",
+  "cnpj": "32.620.352/0002-17",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "telefone": "12981004747",
+    "whatsapp": "12981004747",
+    "email": "tiago.lobo@compassosa.com.br"
+  },
+  "telefone": "12981004747",
+  "email": "tiago.lobo@compassosa.com.br",
+  "tags": [
+    "acessorias"
+  ],
+  "radar_id": null,
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": null,
+  "monitoramento_ativo": null,
+  "drive_folder_hint": "COMPASSO SERVICOS ADMINISTRATIVOS LTDA",
+  "source": "acessorias"
+}

@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12997797400"
+    "whatsapp": "12997797400",
+    "telefone": "12997797400",
+    "email": "reis.lais@hotmail.com"
   },
+  "telefone": "12997797400",
+  "email": "reis.lais@hotmail.com",
   "tags": [
     "radar",
     "simples_nacional"

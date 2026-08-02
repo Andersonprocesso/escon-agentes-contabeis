@@ -2,11 +2,15 @@
   "id": "46273818000189",
   "name": "46.273.818 MAGNA REGINA DE SOUZA OLIVEIRA",
   "cnpj": "46.273.818/0001-89",
-  "regime": "simples_nacional",
+  "regime": "mei",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12991282025"
+    "whatsapp": "12991282025",
+    "telefone": "12991282025",
+    "email": "docesforminhas@bol.com.br"
   },
+  "telefone": "12991282025",
+  "email": "docesforminhas@bol.com.br",
   "tags": [
     "radar",
     "simples_nacional"

@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12982579592"
+    "whatsapp": "12982579592",
+    "telefone": "12982579592",
+    "email": "contato.totalseg@hotmail.com"
   },
+  "telefone": "12982579592",
+  "email": "contato.totalseg@hotmail.com",
   "tags": [
     "radar",
     "simples_nacional"

@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "1239075522"
+    "whatsapp": "1239075522",
+    "telefone": "1239075522",
+    "email": "revallereparacoes@gmail.com"
   },
+  "telefone": "1239075522",
+  "email": "revallereparacoes@gmail.com",
   "tags": [
     "radar",
     "simples_nacional"

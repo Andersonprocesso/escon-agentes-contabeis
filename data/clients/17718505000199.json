@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12997651356"
+    "whatsapp": "12997651356",
+    "telefone": "12997651356",
+    "email": "joaoluiz.transportes@gmail.com"
   },
+  "telefone": "12997651356",
+  "email": "joaoluiz.transportes@gmail.com",
   "tags": [
     "radar",
     "simples_nacional"

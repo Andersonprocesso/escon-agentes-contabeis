@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12997335363"
+    "whatsapp": "12997335363",
+    "telefone": "12997335363",
+    "email": "gjbusiped@gmail.com"
   },
+  "telefone": "12997335363",
+  "email": "gjbusiped@gmail.com",
   "tags": [
     "radar",
     "simples_nacional"

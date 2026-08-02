@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12997247053"
+    "whatsapp": "12997247053",
+    "telefone": "12997247053",
+    "email": "sonofisio.mf@gmail.com"
   },
+  "telefone": "12997247053",
+  "email": "sonofisio.mf@gmail.com",
   "tags": [
     "radar",
     "simples_nacional"

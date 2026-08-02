@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12997054321"
+    "whatsapp": "12997054321",
+    "telefone": "12997054321",
+    "email": "marceldearruda@yahoo.com.br"
   },
+  "telefone": "12997054321",
+  "email": "marceldearruda@yahoo.com.br",
   "tags": [
     "radar",
     "simples_nacional"

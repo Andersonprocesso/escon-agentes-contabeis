@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12981176865"
+    "whatsapp": "12981176865",
+    "telefone": "12981176865",
+    "email": "vendas@valeclimatizacao.com.br"
   },
+  "telefone": "12981176865",
+  "email": "vendas@valeclimatizacao.com.br",
   "tags": [
     "radar",
     "simples_nacional"

@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12992054377"
+    "whatsapp": "12992054377",
+    "telefone": "12992054377",
+    "email": "energiapositiva@energiapositiva.net.br"
   },
+  "telefone": "12992054377",
+  "email": "energiapositiva@energiapositiva.net.br",
   "tags": [
     "radar",
     "simples_nacional"

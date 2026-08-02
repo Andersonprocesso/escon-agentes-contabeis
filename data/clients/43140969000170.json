@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12997758572"
+    "whatsapp": "12997758572",
+    "telefone": "12997758572",
+    "email": "flaviodossantosvam@gmail.com"
   },
+  "telefone": "12997758572",
+  "email": "flaviodossantosvam@gmail.com",
   "tags": [
     "radar",
     "simples_nacional"

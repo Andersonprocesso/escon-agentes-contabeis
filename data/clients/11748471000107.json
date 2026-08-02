@@ -1,0 +1,24 @@
+{
+  "id": "11748471000107",
+  "name": "LEAL COMERCIO DE COSMETICOS LTDA",
+  "cnpj": "11.748.471/0001-07",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "telefone": "5512996698857",
+    "whatsapp": "5512996698857",
+    "email": "lealcosmeticos@hotmail.com"
+  },
+  "telefone": "5512996698857",
+  "email": "lealcosmeticos@hotmail.com",
+  "tags": [
+    "acessorias"
+  ],
+  "radar_id": null,
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": null,
+  "monitoramento_ativo": null,
+  "drive_folder_hint": "LEAL COMERCIO DE COSMETICOS LTDA",
+  "source": "acessorias"
+}

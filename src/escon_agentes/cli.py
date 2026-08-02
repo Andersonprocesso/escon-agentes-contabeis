@@ -478,6 +478,77 @@ def pipeline(
     )
 
 
+@app.command("cadastro-sync")
+def cadastro_sync_cmd(
+    aplicar: bool = typer.Option(False, "--aplicar", help="Grava de verdade (sem isso é só simulação)"),
+    confirmar_alteracoes: bool = typer.Option(
+        False, "--confirmar-alteracoes", help="Autoriza alterar cadastros já existentes"
+    ),
+    cache: bool = typer.Option(False, "--cache", help="Usa o snapshot local, sem chamar a API"),
+    detalhes: int = typer.Option(15, "--detalhes", help="Quantas divergências listar"),
+) -> None:
+    """Pedro Henrique: compara o Sistema Acessórias (fonte de verdade) com o
+    cadastro local dos agentes. Cria novas empresas; alterar exige confirmação."""
+    from escon_agentes.agents.pedro import PedroAgent
+    from escon_agentes.schema import AgentId, AgentTask
+
+    s = get_settings()
+    agent = PedroAgent(settings=s)
+    task = AgentTask(
+        agent=AgentId.PEDRO,
+        title="Sincronizar cadastro com Acessórias",
+        input={"apply": aplicar, "allow_updates": confirmar_alteracoes, "use_cache": cache},
+    )
+    result = agent.run(task)
+    if not result.success:
+        console.print(f"[red]{result.summary}[/red]")
+        raise typer.Exit(1)
+
+    console.print(f"[green]{result.summary}[/green]")
+    plan = result.data["plan"]
+
+    if plan["to_create"]:
+        t = Table(title=f"Novas no Acessórias, ausentes no cadastro local ({len(plan['to_create'])})")
+        for col in ("cnpj", "nome", "regime", "email"):
+            t.add_column(col)
+        for c in plan["to_create"][:detalhes]:
+            src = c["source"]
+            t.add_row(c["cnpj"], (src["nome"] or "")[:34], src["regime"] or "", src["email"] or "")
+        console.print(t)
+
+    if plan["to_update"]:
+        t = Table(title=f"Divergências — precisam da sua confirmação ({len(plan['to_update'])})")
+        for col in ("nome", "campo", "de", "para"):
+            t.add_column(col)
+        shown = 0
+        for u in plan["to_update"]:
+            for campo, ch in u["diffs"].items():
+                if shown >= detalhes:
+                    break
+                t.add_row(
+                    (u["nome"] or "")[:28],
+                    campo,
+                    str(ch["de"] or "—")[:26],
+                    str(ch["para"] or "—")[:26],
+                )
+                shown += 1
+            if shown >= detalhes:
+                break
+        console.print(t)
+
+    if plan["only_in_local"]:
+        console.print(
+            f"[yellow]{len(plan['only_in_local'])} empresa(s) existem só no cadastro local "
+            f"(não estão no Acessórias) — nada será excluído:[/yellow]"
+        )
+        for o in plan["only_in_local"][:10]:
+            console.print(f"  • {o['nome']} ({o['cnpj']})")
+
+    console.print(f"\n[dim]Plano completo: {result.artifacts[0]}[/dim]")
+    if result.needs_human:
+        console.print(f"[yellow]{result.human_prompt}[/yellow]")
+
+
 @app.command("certificados")
 def certificados_cmd() -> None:
     """Fernando Batista: verifica certificados digitais A1 no Radar e prepara

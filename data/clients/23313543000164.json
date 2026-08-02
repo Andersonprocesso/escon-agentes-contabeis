@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12997828318"
+    "whatsapp": "12997828318",
+    "telefone": "12997828318",
+    "email": "anacabrahao@gmail.com"
   },
+  "telefone": "12997828318",
+  "email": "anacabrahao@gmail.com",
   "tags": [
     "radar",
     "simples_nacional"

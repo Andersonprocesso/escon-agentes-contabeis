@@ -1,0 +1,24 @@
+{
+  "id": "16616315000106",
+  "name": "COMERCIO DE CESTA BASICA SAO LUCAS LTDA",
+  "cnpj": "16.616.315/0001-06",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "telefone": "5511934696720",
+    "whatsapp": "5511934696720",
+    "email": "cestabasicasaolucas77@gmail.com"
+  },
+  "telefone": "5511934696720",
+  "email": "cestabasicasaolucas77@gmail.com",
+  "tags": [
+    "acessorias"
+  ],
+  "radar_id": null,
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": null,
+  "monitoramento_ativo": null,
+  "drive_folder_hint": "COMERCIO DE CESTA BASICA SAO LUCAS LTDA",
+  "source": "acessorias"
+}

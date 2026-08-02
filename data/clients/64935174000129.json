@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12988491776"
+    "whatsapp": "12988491776",
+    "telefone": "12988491776",
+    "email": "marsan.2@hotmail.com"
   },
+  "telefone": "12988491776",
+  "email": "marsan.2@hotmail.com",
   "tags": [
     "radar",
     "simples_nacional"

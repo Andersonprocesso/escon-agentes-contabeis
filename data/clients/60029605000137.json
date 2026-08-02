@@ -1,0 +1,24 @@
+{
+  "id": "60029605000137",
+  "name": "OLIVEIRA ALVES SERVICOS DE ENFERMAGEM LTDA",
+  "cnpj": "60.029.605/0001-37",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "telefone": "12982721965",
+    "whatsapp": "12982721965",
+    "email": "marielly.alves82@gmail.com"
+  },
+  "telefone": "12982721965",
+  "email": "marielly.alves82@gmail.com",
+  "tags": [
+    "acessorias"
+  ],
+  "radar_id": null,
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": null,
+  "monitoramento_ativo": null,
+  "drive_folder_hint": "OLIVEIRA ALVES SERVICOS DE ENFERMAGEM LTDA",
+  "source": "acessorias"
+}

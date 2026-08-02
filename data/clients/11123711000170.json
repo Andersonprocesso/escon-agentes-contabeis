@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12991827048"
+    "whatsapp": "12991827048",
+    "telefone": "12991827048",
+    "email": "klinger@klctur.com.br"
   },
+  "telefone": "12991827048",
+  "email": "klinger@klctur.com.br",
   "tags": [
     "radar",
     "simples_nacional"

@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12992598501"
+    "whatsapp": "12992598501",
+    "telefone": "12992598501",
+    "email": "mercadinho4@outlook.com"
   },
+  "telefone": "12992598501",
+  "email": "mercadinho4@outlook.com",
   "tags": [
     "radar",
     "simples_nacional"

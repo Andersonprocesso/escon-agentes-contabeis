@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12981525461"
+    "whatsapp": "12981525461",
+    "telefone": "12981525461",
+    "email": "ekenzow@hotmail.com"
   },
+  "telefone": "12981525461",
+  "email": "ekenzow@hotmail.com",
   "tags": [
     "radar",
     "simples_nacional"

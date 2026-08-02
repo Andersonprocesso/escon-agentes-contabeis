@@ -5,14 +5,18 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12982985505"
+    "whatsapp": "12982985505",
+    "telefone": "12982985505",
+    "email": "soft.devolution@gmail.com"
   },
+  "telefone": "12982985505",
+  "email": "soft.devolution@gmail.com",
   "tags": [
     "radar",
     "simples_nacional"
   ],
   "radar_id": "ab02b16a-ff82-4d31-9e34-35b982f6976d",
-  "uf": "SP",
+  "uf": "MG",
   "tipo_pessoa": "J",
   "procuracao_ok": true,
   "monitoramento_ativo": true,

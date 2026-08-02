@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12991918713"
+    "whatsapp": "12991918713",
+    "telefone": "12991918713",
+    "email": "sergio.mira01@gmail.com"
   },
+  "telefone": "12991918713",
+  "email": "sergio.mira01@gmail.com",
   "tags": [
     "radar",
     "simples_nacional"

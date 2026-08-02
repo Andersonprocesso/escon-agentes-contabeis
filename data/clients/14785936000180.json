@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12988616169"
+    "whatsapp": "12988616169",
+    "telefone": "12988616169",
+    "email": "adc.la@hotmail.com"
   },
+  "telefone": "12988616169",
+  "email": "adc.la@hotmail.com",
   "tags": [
     "radar",
     "simples_nacional"

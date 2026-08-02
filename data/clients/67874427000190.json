@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12988161417"
+    "whatsapp": "12988161417",
+    "telefone": "12988161417",
+    "email": "cesarsjc_farmacia@hotmail.com"
   },
+  "telefone": "12988161417",
+  "email": "cesarsjc_farmacia@hotmail.com",
   "tags": [
     "radar",
     "simples_nacional"

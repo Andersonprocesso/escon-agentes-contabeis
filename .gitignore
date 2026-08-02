@@ -1,6 +1,9 @@
 .env
 .env.local
 .msal_cache/
+# caches regeneráveis do Pedro (dump bruto do Acessórias + plano de sync)
+data/acessorias_snapshot.json
+data/cadastro_sync_plan.json
 .venv/
 venv/
 __pycache__/

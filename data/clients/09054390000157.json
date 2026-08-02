@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12974026441"
+    "whatsapp": "12974026441",
+    "telefone": "12974026441",
+    "email": "oficina.financeiro.elvis@gmail.com"
   },
+  "telefone": "12974026441",
+  "email": "oficina.financeiro.elvis@gmail.com",
   "tags": [
     "radar",
     "simples_nacional"

@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12997935341"
+    "whatsapp": "12997935341",
+    "telefone": "12997935341",
+    "email": "maurahelenadossantos@gmail.com"
   },
+  "telefone": "12997935341",
+  "email": "maurahelenadossantos@gmail.com",
   "tags": [
     "radar",
     "simples_nacional"

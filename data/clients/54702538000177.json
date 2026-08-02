@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12974039102"
+    "whatsapp": "12974039102",
+    "telefone": "12974039102",
+    "email": "academiaespacofitness_sjc@hotmail.com"
   },
+  "telefone": "12974039102",
+  "email": "academiaespacofitness_sjc@hotmail.com",
   "tags": [
     "radar",
     "simples_nacional"

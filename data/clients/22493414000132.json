@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12991154355"
+    "whatsapp": "12991154355",
+    "telefone": "12991154355",
+    "email": "arquitetoedinaldo@gmail.com"
   },
+  "telefone": "12991154355",
+  "email": "arquitetoedinaldo@gmail.com",
   "tags": [
     "radar",
     "simples_nacional"

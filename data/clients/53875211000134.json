@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12987091491"
+    "whatsapp": "12987091491",
+    "telefone": "12987091491",
+    "email": "edcasadeposito@gmail.com"
   },
+  "telefone": "12987091491",
+  "email": "edcasadeposito@gmail.com",
   "tags": [
     "radar",
     "simples_nacional"

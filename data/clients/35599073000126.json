@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12996222711"
+    "whatsapp": "12996222711",
+    "telefone": "12996222711",
+    "email": "priscila.paulasoares@yahoo.com.br"
   },
+  "telefone": "12996222711",
+  "email": "priscila.paulasoares@yahoo.com.br",
   "tags": [
     "radar",
     "simples_nacional"

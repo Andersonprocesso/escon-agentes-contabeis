@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "5512983076613"
+    "whatsapp": "5512983076613",
+    "telefone": "5512983076613",
+    "email": "maufffus@gmail.com"
   },
+  "telefone": "5512983076613",
+  "email": "maufffus@gmail.com",
   "tags": [
     "radar",
     "simples_nacional"

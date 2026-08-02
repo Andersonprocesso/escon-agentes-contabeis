@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12981605593"
+    "whatsapp": "12981605593",
+    "telefone": "12981605593",
+    "email": "jrcdemoura@hotmail.com"
   },
+  "telefone": "12981605593",
+  "email": "jrcdemoura@hotmail.com",
   "tags": [
     "radar",
     "simples_nacional"

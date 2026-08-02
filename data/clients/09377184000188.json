@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12974035169"
+    "whatsapp": "12974035169",
+    "telefone": "12974035169",
+    "email": "anderson@escondigital.com.br"
   },
+  "telefone": "12974035169",
+  "email": "anderson@escondigital.com.br",
   "tags": [
     "radar",
     "simples_nacional"

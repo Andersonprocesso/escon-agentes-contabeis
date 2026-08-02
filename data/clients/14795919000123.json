@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12988256199"
+    "whatsapp": "12988256199",
+    "telefone": "12988256199",
+    "email": "d.apoioandaimes@gmail.com"
   },
+  "telefone": "12988256199",
+  "email": "d.apoioandaimes@gmail.com",
   "tags": [
     "radar",
     "simples_nacional"

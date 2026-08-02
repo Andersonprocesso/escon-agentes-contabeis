@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12988095286"
+    "whatsapp": "12988095286",
+    "telefone": "12988095286",
+    "email": "eduardonety@hotmail.com"
   },
+  "telefone": "12988095286",
+  "email": "eduardonety@hotmail.com",
   "tags": [
     "radar",
     "simples_nacional"

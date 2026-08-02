@@ -1,0 +1,24 @@
+{
+  "id": "55484840000169",
+  "name": "ANA CAROLINE DE SOUZA SANTOS STORE",
+  "cnpj": "55.484.840/0001-69",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "telefone": "1296832026",
+    "whatsapp": "1296832026",
+    "email": "lojamariavalentinashoes@gmail.com"
+  },
+  "telefone": "1296832026",
+  "email": "lojamariavalentinashoes@gmail.com",
+  "tags": [
+    "acessorias"
+  ],
+  "radar_id": null,
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": null,
+  "monitoramento_ativo": null,
+  "drive_folder_hint": "ANA CAROLINE DE SOUZA SANTOS STORE",
+  "source": "acessorias"
+}

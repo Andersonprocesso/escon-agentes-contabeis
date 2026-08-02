@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "1239433491"
+    "whatsapp": "1239433491",
+    "telefone": "1239433491",
+    "email": "marcia.cristina@alfatorre.com.br"
   },
+  "telefone": "1239433491",
+  "email": "marcia.cristina@alfatorre.com.br",
   "tags": [
     "radar",
     "simples_nacional"

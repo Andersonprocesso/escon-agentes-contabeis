@@ -83,6 +83,9 @@ class Settings(BaseSettings):
     ms_graph_mailbox: str = ""  # contato@escondigital.com.br
     ms_graph_token_cache: str = ".msal_cache/rachel_token_cache.json"
 
+    # Pedro Henrique — cadastro (Sistema Acessórias)
+    acessorias_token: str = ""
+
     @property
     def data_dir(self) -> Path:
         p = Path(self.escon_data_dir)

@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12991119976"
+    "whatsapp": "12991119976",
+    "telefone": "12991119976",
+    "email": "tdb.sjc@gmail.com"
   },
+  "telefone": "12991119976",
+  "email": "tdb.sjc@gmail.com",
   "tags": [
     "radar",
     "simples_nacional"

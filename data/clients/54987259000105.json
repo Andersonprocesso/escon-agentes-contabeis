@@ -1,0 +1,24 @@
+{
+  "id": "54987259000105",
+  "name": "PSM LAVANDERIA EXPRESS LTDA",
+  "cnpj": "54.987.259/0001-05",
+  "regime": "simples_nacional",
+  "banco_principal": "itau",
+  "contatos": {
+    "telefone": "5512996698857",
+    "whatsapp": "5512996698857",
+    "email": "paola.patricia@uol.com.br"
+  },
+  "telefone": "5512996698857",
+  "email": "paola.patricia@uol.com.br",
+  "tags": [
+    "acessorias"
+  ],
+  "radar_id": null,
+  "uf": "SP",
+  "tipo_pessoa": "J",
+  "procuracao_ok": null,
+  "monitoramento_ativo": null,
+  "drive_folder_hint": "PSM LAVANDERIA EXPRESS LTDA",
+  "source": "acessorias"
+}

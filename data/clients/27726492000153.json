@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12988310412"
+    "whatsapp": "12988310412",
+    "telefone": "12988310412",
+    "email": "gaiolasfenix@outlook.com"
   },
+  "telefone": "12988310412",
+  "email": "gaiolasfenix@outlook.com",
   "tags": [
     "radar",
     "simples_nacional"

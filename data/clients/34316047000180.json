@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12982671217"
+    "whatsapp": "12982671217",
+    "telefone": "12982671217",
+    "email": "ferragensfix@gmail.com"
   },
+  "telefone": "12982671217",
+  "email": "ferragensfix@gmail.com",
   "tags": [
     "radar",
     "simples_nacional"

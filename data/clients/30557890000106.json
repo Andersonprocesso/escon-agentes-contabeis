@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12982788000"
+    "whatsapp": "12982788000",
+    "telefone": "12982788000",
+    "email": "jonas@gomescarvalho.adv.br"
   },
+  "telefone": "12982788000",
+  "email": "jonas@gomescarvalho.adv.br",
   "tags": [
     "radar",
     "simples_nacional"

@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "11964287119"
+    "whatsapp": "11964287119",
+    "telefone": "11964287119",
+    "email": "jp84araujo@gmail.com"
   },
+  "telefone": "11964287119",
+  "email": "jp84araujo@gmail.com",
   "tags": [
     "radar",
     "simples_nacional"

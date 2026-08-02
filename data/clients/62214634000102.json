@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12991879921"
+    "whatsapp": "12991879921",
+    "telefone": "12991879921",
+    "email": "contato.cariocafood@gmail.com"
   },
+  "telefone": "12991879921",
+  "email": "contato.cariocafood@gmail.com",
   "tags": [
     "radar",
     "simples_nacional"

@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12996125554"
+    "whatsapp": "12996125554",
+    "telefone": "12996125554",
+    "email": "clayton.froes@compassosa.com.br"
   },
+  "telefone": "12996125554",
+  "email": "clayton.froes@compassosa.com.br",
   "tags": [
     "radar",
     "simples_nacional"

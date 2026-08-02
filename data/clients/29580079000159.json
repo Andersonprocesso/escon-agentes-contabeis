@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12997198913"
+    "whatsapp": "12997198913",
+    "telefone": "12997198913",
+    "email": "juremamalves@gmail.com"
   },
+  "telefone": "12997198913",
+  "email": "juremamalves@gmail.com",
   "tags": [
     "radar",
     "simples_nacional"

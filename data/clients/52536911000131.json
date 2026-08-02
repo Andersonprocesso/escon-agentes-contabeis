@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12997785005"
+    "whatsapp": "12997785005",
+    "telefone": "12997785005",
+    "email": "ricardoffaria1981@gmail.com"
   },
+  "telefone": "12997785005",
+  "email": "ricardoffaria1981@gmail.com",
   "tags": [
     "radar",
     "simples_nacional"

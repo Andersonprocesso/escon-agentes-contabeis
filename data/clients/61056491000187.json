@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12982912005"
+    "whatsapp": "12982912005",
+    "telefone": "12982912005",
+    "email": "agrcampos@outlook.com"
   },
+  "telefone": "12982912005",
+  "email": "agrcampos@outlook.com",
   "tags": [
     "radar",
     "simples_nacional"

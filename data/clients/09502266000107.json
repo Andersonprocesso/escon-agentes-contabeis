@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12974012164"
+    "whatsapp": "12974012164",
+    "telefone": "12974012164",
+    "email": "financeiro@tidovale.com.br"
   },
+  "telefone": "12974012164",
+  "email": "financeiro@tidovale.com.br",
   "tags": [
     "radar",
     "simples_nacional"

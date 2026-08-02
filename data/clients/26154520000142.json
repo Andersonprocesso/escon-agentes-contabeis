@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12981225369"
+    "whatsapp": "12981225369",
+    "telefone": "12981225369",
+    "email": "adeilson.santiago@gmail.com"
   },
+  "telefone": "12981225369",
+  "email": "adeilson.santiago@gmail.com",
   "tags": [
     "radar",
     "simples_nacional"

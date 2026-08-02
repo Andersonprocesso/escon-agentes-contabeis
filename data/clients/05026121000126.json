@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12988998264"
+    "whatsapp": "12988998264",
+    "telefone": "12988998264",
+    "email": "casapaduacomercial@hotmail.com"
   },
+  "telefone": "12988998264",
+  "email": "casapaduacomercial@hotmail.com",
   "tags": [
     "radar",
     "simples_nacional"

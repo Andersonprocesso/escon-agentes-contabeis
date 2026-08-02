@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12996864607"
+    "whatsapp": "12996864607",
+    "telefone": "12996864607",
+    "email": "casadovidrojc@gmail.com"
   },
+  "telefone": "12996864607",
+  "email": "casadovidrojc@gmail.com",
   "tags": [
     "radar",
     "simples_nacional"

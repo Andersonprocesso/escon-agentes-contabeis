@@ -5,8 +5,12 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12981535028"
+    "whatsapp": "12981535028",
+    "telefone": "12981535028",
+    "email": "helmomatic@hotmail.com"
   },
+  "telefone": "12981535028",
+  "email": "helmomatic@hotmail.com",
   "tags": [
     "radar",
     "simples_nacional"
