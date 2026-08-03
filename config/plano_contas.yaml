@@ -3,7 +3,10 @@
 #   C:\Users\ander\.claude\skills\user\contabilizador\contabilizador.py
 # Códigos usados no Excel de importação (colunas Débito / Crédito).
 
-versao: "2026-08-01"
+versao: "2026-08-03"
+# CORRIGIDO em 03/08/2026: 22 contas apontavam para conta errada ou inexistente
+# (simples_nacional caia em "IPI a recolher", desp_salarios em "IPI").
+# Conferido contra PlContas.TXT completo e contra o uso real no Razao Analitico.
 sistema: contmatic
 escritorio: Escon Soluções Contábeis
 
@@ -23,33 +26,33 @@ contas:
   inss_retido_fonte: 1131910
 
   # Passivo
-  fornecedores: 2111101
-  simples_nacional: 2131101
-  inss_pagar: 2131201
-  fgts_pagar: 2131202
+  fornecedores: 2121101  # Fornecedores Nacionais (era 2111101, inexistente)
+  simples_nacional: 2131115  # Simples Nacional a recolher (era 2131101 = IPI a recolher!)
+  inss_pagar: 2141201  # INSS a recolher (era 2131201, inexistente)
+  fgts_pagar: 2141202  # FGTS a recolher (era 2131202, inexistente)
   salarios_pagar: 2141101
-  prolabore_pagar: 2141202
+  prolabore_pagar: 2141102  # Pro-labore a pagar (era 2141202 = FGTS a recolher!)
 
   # Resultado
   receita_produtos: 4111103
   receita_servicos: 4111201
-  desp_prolabore: 4121101
-  desp_inss_prolabore: 4121201
-  desp_salarios: 4121301
-  desp_fgts: 4121401
-  desp_simples: 4121501
-  desp_aluguel: 4122101
-  desp_energia: 4122201
-  desp_agua: 4122202
-  desp_telefone: 4122301
-  desp_honorario: 4122401
-  desp_material_escr: 4122501
-  desp_combustivel: 4122601
-  desp_manutencao: 4122701
-  desp_publicidade: 4122801
-  desp_vale_transp: 4122901
-  desp_alimentacao: 4123001
-  desp_depreciacao: 4123101
+  desp_prolabore: 3212102  # Pro-labore (era 4121101, inexistente)
+  desp_inss_prolabore: 2141201  # INSS a recolher — no razao a contrapartida e balanco
+  desp_salarios: 3221101  # Salarios e ordenados (era 4121301 = IPI!)
+  desp_fgts: 3221107  # FGTS (era 4121401, inexistente)
+  desp_simples: 4121205  # ( - ) S/ Prestacao de Servicos (era 4121501, inexistente)
+  desp_aluguel: 3221201  # Alugueis de imoveis (era 4122101, inexistente)
+  desp_energia: 3221401  # Energia eletrica (era 4122201, inexistente)
+  desp_agua: 3221402  # Agua e esgoto (era 4122202, inexistente)
+  desp_telefone: 3221403  # Telefone e Internet (era 4122301, inexistente)
+  desp_honorario: 3111303  # Servicos de terceiros (era 4122401, inexistente)
+  desp_material_escr: 3221406  # Material de escritorio (era 4122501, inexistente)
+  desp_combustivel: 3111301  # Combustiveis e lubrificantes (era 4122601, inexistente)
+  desp_manutencao: 3212602  # Manutencao e reparos (era 4122701, inexistente)
+  desp_publicidade: 3212301  # Propaganda e publicidade (era 4122801, inexistente)
+  desp_vale_transp: 3221117  # Transporte de Empregados (era 4122901, inexistente)
+  desp_alimentacao: 3221113  # Alimentacao do Trabalhador (era 4123001, inexistente)
+  desp_depreciacao: 3221410  # Depreciacoes e amortizacoes (era 4123101, inexistente)
 
 bancos:
   itau: banco_itau

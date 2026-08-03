@@ -1,5 +1,5 @@
 {
-  "total": 281,
+  "total": 477,
   "source": "PlContas.TXT (Contmatic / Escon_Lancamento)",
   "by_code": {
     "1111101": {
@@ -74,6 +74,24 @@
       "descricao": "PagSeguro",
       "grupo": "1"
     },
+    "1112211": {
+      "reduzida": 1112211,
+      "analitica": "1.1.1.02.002.00011",
+      "descricao": "Nubank",
+      "grupo": "1"
+    },
+    "1112212": {
+      "reduzida": 1112212,
+      "analitica": "1.1.1.02.002.00012",
+      "descricao": "C6Bank",
+      "grupo": "1"
+    },
+    "5150910": {
+      "reduzida": 5150910,
+      "analitica": "1.1.1.02.002.00014",
+      "descricao": "Banco Itau unibanco",
+      "grupo": "1"
+    },
     "1112301": {
       "reduzida": 1112301,
       "analitica": "1.1.1.02.003.00001",
@@ -140,6 +158,18 @@
       "descricao": "PagSeguro - Aplicação",
       "grupo": "1"
     },
+    "1112312": {
+      "reduzida": 1112312,
+      "analitica": "1.1.1.02.003.00012",
+      "descricao": "Nubank - Aplicação",
+      "grupo": "1"
+    },
+    "5150908": {
+      "reduzida": 5150908,
+      "analitica": "1.1.1.02.003.00013",
+      "descricao": "Aplicação Itau",
+      "grupo": "1"
+    },
     "1121101": {
       "reduzida": 1121101,
       "analitica": "1.1.2.01.001.00001",
@@ -192,6 +222,24 @@
       "reduzida": 1121115,
       "analitica": "1.1.2.01.001.00015",
       "descricao": "ASSOCIACAO SAO FRANCISCO VIDA",
+      "grupo": "1"
+    },
+    "1121116": {
+      "reduzida": 1121116,
+      "analitica": "1.1.2.01.001.00016",
+      "descricao": "VEEK TECNOLOGIA S.A.",
+      "grupo": "1"
+    },
+    "1121117": {
+      "reduzida": 1121117,
+      "analitica": "1.1.2.01.001.00017",
+      "descricao": "COMPANHIA EXCELSIOR DE SEGUROS",
+      "grupo": "1"
+    },
+    "1121118": {
+      "reduzida": 1121118,
+      "analitica": "1.1.2.01.001.00018",
+      "descricao": "valores a reclassificar",
       "grupo": "1"
     },
     "1121201": {
@@ -318,6 +366,12 @@
       "reduzida": 1131705,
       "analitica": "1.1.3.01.007.00005",
       "descricao": "Adiantamentos para Viagens",
+      "grupo": "1"
+    },
+    "5150909": {
+      "reduzida": 5150909,
+      "analitica": "1.1.3.01.007.00006",
+      "descricao": "Adiantamento a Sócios",
       "grupo": "1"
     },
     "1131801": {
@@ -740,6 +794,12 @@
       "descricao": "(-) Depreciacao de edificios",
       "grupo": "1"
     },
+    "1231203": {
+      "reduzida": 1231203,
+      "analitica": "1.2.3.01.002.00003",
+      "descricao": "(-) Depreciação de veiculos",
+      "grupo": "1"
+    },
     "1232101": {
       "reduzida": 1232101,
       "analitica": "1.2.3.02.001.00001",
@@ -1088,6 +1148,24 @@
       "descricao": "Juros a Pagar de Emprestimos",
       "grupo": "2"
     },
+    "2111006": {
+      "reduzida": 2111006,
+      "analitica": "2.1.1.01.000.00006",
+      "descricao": "Emprestimo bancario",
+      "grupo": "2"
+    },
+    "2111007": {
+      "reduzida": 2111007,
+      "analitica": "2.1.1.01.000.00007",
+      "descricao": "Emprestimo terceiros",
+      "grupo": "2"
+    },
+    "2111008": {
+      "reduzida": 2111008,
+      "analitica": "2.1.1.01.000.00008",
+      "descricao": "Emprestimos Consignados a Repassar",
+      "grupo": "2"
+    },
     "2111501": {
       "reduzida": 2111501,
       "analitica": "2.1.1.01.005.00001",
@@ -1098,6 +1176,12 @@
       "reduzida": 2111502,
       "analitica": "2.1.1.01.005.00002",
       "descricao": "Consorcio",
+      "grupo": "2"
+    },
+    "2111503": {
+      "reduzida": 2111503,
+      "analitica": "2.1.1.01.005.00003",
+      "descricao": "Creditos por retituição dos socios",
       "grupo": "2"
     },
     "2121101": {
@@ -1340,10 +1424,16 @@
       "descricao": "Parcelamento Simples Nacional",
       "grupo": "2"
     },
-    "5141102": {
-      "reduzida": 5141102,
+    "5150905": {
+      "reduzida": 5150905,
       "analitica": "2.1.3.01.001.00020",
-      "descricao": "Parcelamento PGFN",
+      "descricao": "CPRB a Recolher",
+      "grupo": "2"
+    },
+    "5150907": {
+      "reduzida": 5150907,
+      "analitica": "2.1.3.01.001.00021",
+      "descricao": "Parcelamento Divida Ativa",
       "grupo": "2"
     },
     "2141101": {
@@ -1418,6 +1508,18 @@
       "descricao": "FGTS Rescisorio a Recolher",
       "grupo": "2"
     },
+    "3041205": {
+      "reduzida": 3041205,
+      "analitica": "2.1.4.01.002.00006",
+      "descricao": "Contribuicao Assistencial a Recolher",
+      "grupo": "2"
+    },
+    "5122501": {
+      "reduzida": 5122501,
+      "analitica": "2.1.4.01.002.00007",
+      "descricao": "CPRB a Recolher",
+      "grupo": "2"
+    },
     "2141301": {
       "reduzida": 2141301,
       "analitica": "2.1.4.01.003.00001",
@@ -1452,6 +1554,12 @@
       "reduzida": 2141306,
       "analitica": "2.1.4.01.003.00006",
       "descricao": "FGTS s/ provisao para 13§",
+      "grupo": "2"
+    },
+    "2141307": {
+      "reduzida": 2141307,
+      "analitica": "2.1.4.01.003.00007",
+      "descricao": "Provisão de Emprestimos Consignados",
       "grupo": "2"
     },
     "2151101": {
@@ -1682,10 +1790,1078 @@
       "descricao": "Conta de Zeramento",
       "grupo": "2"
     },
+    "3111101": {
+      "reduzida": 3111101,
+      "analitica": "3.1.1.01.001.00001",
+      "descricao": "MATERIA - PRIMA",
+      "grupo": "3"
+    },
+    "3111201": {
+      "reduzida": 3111201,
+      "analitica": "3.1.1.01.002.00001",
+      "descricao": "Salarios e ordenados",
+      "grupo": "3"
+    },
+    "3111202": {
+      "reduzida": 3111202,
+      "analitica": "3.1.1.01.002.00002",
+      "descricao": "Pro - labore",
+      "grupo": "3"
+    },
+    "3111203": {
+      "reduzida": 3111203,
+      "analitica": "3.1.1.01.002.00003",
+      "descricao": "Premios e gratificacoes",
+      "grupo": "3"
+    },
+    "3111204": {
+      "reduzida": 3111204,
+      "analitica": "3.1.1.01.002.00004",
+      "descricao": "13º Salario",
+      "grupo": "3"
+    },
+    "3111205": {
+      "reduzida": 3111205,
+      "analitica": "3.1.1.01.002.00005",
+      "descricao": "Ferias",
+      "grupo": "3"
+    },
+    "3111206": {
+      "reduzida": 3111206,
+      "analitica": "3.1.1.01.002.00006",
+      "descricao": "INSS",
+      "grupo": "3"
+    },
+    "3111207": {
+      "reduzida": 3111207,
+      "analitica": "3.1.1.01.002.00007",
+      "descricao": "FGTS",
+      "grupo": "3"
+    },
+    "3111208": {
+      "reduzida": 3111208,
+      "analitica": "3.1.1.01.002.00008",
+      "descricao": "Indenizacoes e aviso previo",
+      "grupo": "3"
+    },
+    "3111209": {
+      "reduzida": 3111209,
+      "analitica": "3.1.1.01.002.00009",
+      "descricao": "Assistencia medica e social",
+      "grupo": "3"
+    },
+    "3111301": {
+      "reduzida": 3111301,
+      "analitica": "3.1.1.01.003.00001",
+      "descricao": "Combustiveis e lubrificantes",
+      "grupo": "3"
+    },
+    "3111302": {
+      "reduzida": 3111302,
+      "analitica": "3.1.1.01.003.00002",
+      "descricao": "Energia eletrica",
+      "grupo": "3"
+    },
+    "3111303": {
+      "reduzida": 3111303,
+      "analitica": "3.1.1.01.003.00003",
+      "descricao": "Servicos de terceiros",
+      "grupo": "3"
+    },
+    "3113101": {
+      "reduzida": 3113101,
+      "analitica": "3.1.1.03.001.00001",
+      "descricao": "MAO-DE-OBRA DIRETA",
+      "grupo": "3"
+    },
+    "3113102": {
+      "reduzida": 3113102,
+      "analitica": "3.1.1.03.001.00002",
+      "descricao": "GASTOS GERAIS",
+      "grupo": "3"
+    },
+    "5150906": {
+      "reduzida": 5150906,
+      "analitica": "3.1.1.04.002.00001",
+      "descricao": "Materiais de consumo indireto",
+      "grupo": "3"
+    },
+    "3212101": {
+      "reduzida": 3212101,
+      "analitica": "3.2.1.02.001.00001",
+      "descricao": "Salarios e ordenados",
+      "grupo": "3"
+    },
+    "3212102": {
+      "reduzida": 3212102,
+      "analitica": "3.2.1.02.001.00002",
+      "descricao": "Pro-labore",
+      "grupo": "3"
+    },
+    "3212103": {
+      "reduzida": 3212103,
+      "analitica": "3.2.1.02.001.00003",
+      "descricao": "Premios e gratificacoes",
+      "grupo": "3"
+    },
+    "3212104": {
+      "reduzida": 3212104,
+      "analitica": "3.2.1.02.001.00004",
+      "descricao": "13§ Salario",
+      "grupo": "3"
+    },
+    "3212105": {
+      "reduzida": 3212105,
+      "analitica": "3.2.1.02.001.00005",
+      "descricao": "Ferias",
+      "grupo": "3"
+    },
+    "3212106": {
+      "reduzida": 3212106,
+      "analitica": "3.2.1.02.001.00006",
+      "descricao": "INSS",
+      "grupo": "3"
+    },
+    "3212107": {
+      "reduzida": 3212107,
+      "analitica": "3.2.1.02.001.00007",
+      "descricao": "FGTS",
+      "grupo": "3"
+    },
+    "3212108": {
+      "reduzida": 3212108,
+      "analitica": "3.2.1.02.001.00008",
+      "descricao": "Indenizacoes e aviso previo",
+      "grupo": "3"
+    },
+    "3212109": {
+      "reduzida": 3212109,
+      "analitica": "3.2.1.02.001.00009",
+      "descricao": "Assistencia medica",
+      "grupo": "3"
+    },
+    "5141103": {
+      "reduzida": 5141103,
+      "analitica": "3.2.1.02.001.00010",
+      "descricao": "Contribuição Previdenciária s a Receita",
+      "grupo": "3"
+    },
+    "3212201": {
+      "reduzida": 3212201,
+      "analitica": "3.2.1.02.002.00001",
+      "descricao": "Comissoes",
+      "grupo": "3"
+    },
+    "3212301": {
+      "reduzida": 3212301,
+      "analitica": "3.2.1.02.003.00001",
+      "descricao": "Propaganda e publicidade",
+      "grupo": "3"
+    },
+    "3212302": {
+      "reduzida": 3212302,
+      "analitica": "3.2.1.02.003.00002",
+      "descricao": "Amostras gratis",
+      "grupo": "3"
+    },
+    "3212401": {
+      "reduzida": 3212401,
+      "analitica": "3.2.1.02.004.00001",
+      "descricao": "Fretes e carretos",
+      "grupo": "3"
+    },
+    "3212402": {
+      "reduzida": 3212402,
+      "analitica": "3.2.1.02.004.00002",
+      "descricao": "Manutencao de veiculos",
+      "grupo": "3"
+    },
+    "3212501": {
+      "reduzida": 3212501,
+      "analitica": "3.2.1.02.005.00001",
+      "descricao": "Viagens terrestres",
+      "grupo": "3"
+    },
+    "3212502": {
+      "reduzida": 3212502,
+      "analitica": "3.2.1.02.005.00002",
+      "descricao": "Viagens aereas",
+      "grupo": "3"
+    },
+    "3212503": {
+      "reduzida": 3212503,
+      "analitica": "3.2.1.02.005.00003",
+      "descricao": "Hospedagem",
+      "grupo": "3"
+    },
+    "3212504": {
+      "reduzida": 3212504,
+      "analitica": "3.2.1.02.005.00004",
+      "descricao": "Refeicoes",
+      "grupo": "3"
+    },
+    "3212601": {
+      "reduzida": 3212601,
+      "analitica": "3.2.1.02.006.00001",
+      "descricao": "Alugueis",
+      "grupo": "3"
+    },
+    "3212602": {
+      "reduzida": 3212602,
+      "analitica": "3.2.1.02.006.00002",
+      "descricao": "Manutencao e reparos",
+      "grupo": "3"
+    },
+    "3212603": {
+      "reduzida": 3212603,
+      "analitica": "3.2.1.02.006.00003",
+      "descricao": "Telefone",
+      "grupo": "3"
+    },
+    "3212604": {
+      "reduzida": 3212604,
+      "analitica": "3.2.1.02.006.00004",
+      "descricao": "Despesas postais e telegraficas",
+      "grupo": "3"
+    },
+    "3212605": {
+      "reduzida": 3212605,
+      "analitica": "3.2.1.02.006.00005",
+      "descricao": "Depreciacoes e amortizacoes",
+      "grupo": "3"
+    },
+    "3212606": {
+      "reduzida": 3212606,
+      "analitica": "3.2.1.02.006.00006",
+      "descricao": "Servicos prestados por terceiros",
+      "grupo": "3"
+    },
+    "3212607": {
+      "reduzida": 3212607,
+      "analitica": "3.2.1.02.006.00007",
+      "descricao": "Seguros",
+      "grupo": "3"
+    },
+    "3212608": {
+      "reduzida": 3212608,
+      "analitica": "3.2.1.02.006.00008",
+      "descricao": "Energia Eletrica",
+      "grupo": "3"
+    },
+    "3212609": {
+      "reduzida": 3212609,
+      "analitica": "3.2.1.02.006.00009",
+      "descricao": "Agua e Esgoto",
+      "grupo": "3"
+    },
+    "3212610": {
+      "reduzida": 3212610,
+      "analitica": "3.2.1.02.006.00010",
+      "descricao": "Xerox e Fotocopias",
+      "grupo": "3"
+    },
+    "3212701": {
+      "reduzida": 3212701,
+      "analitica": "3.2.1.02.007.00001",
+      "descricao": "Creditos vencidos e nao liquidados",
+      "grupo": "3"
+    },
+    "3212702": {
+      "reduzida": 3212702,
+      "analitica": "3.2.1.02.007.00002",
+      "descricao": "Perdas por Roubos",
+      "grupo": "3"
+    },
+    "3221101": {
+      "reduzida": 3221101,
+      "analitica": "3.2.2.01.001.00001",
+      "descricao": "Salarios e ordenados",
+      "grupo": "3"
+    },
+    "3221102": {
+      "reduzida": 3221102,
+      "analitica": "3.2.2.01.001.00002",
+      "descricao": "Pro - labore",
+      "grupo": "3"
+    },
+    "3221103": {
+      "reduzida": 3221103,
+      "analitica": "3.2.2.01.001.00003",
+      "descricao": "Premios e gratificacoes",
+      "grupo": "3"
+    },
+    "3221104": {
+      "reduzida": 3221104,
+      "analitica": "3.2.2.01.001.00004",
+      "descricao": "13º Salario",
+      "grupo": "3"
+    },
+    "3221105": {
+      "reduzida": 3221105,
+      "analitica": "3.2.2.01.001.00005",
+      "descricao": "Ferias",
+      "grupo": "3"
+    },
+    "3221106": {
+      "reduzida": 3221106,
+      "analitica": "3.2.2.01.001.00006",
+      "descricao": "INSS",
+      "grupo": "3"
+    },
+    "3221107": {
+      "reduzida": 3221107,
+      "analitica": "3.2.2.01.001.00007",
+      "descricao": "FGTS",
+      "grupo": "3"
+    },
+    "3221108": {
+      "reduzida": 3221108,
+      "analitica": "3.2.2.01.001.00008",
+      "descricao": "Indenizacoes e aviso previo",
+      "grupo": "3"
+    },
+    "3221109": {
+      "reduzida": 3221109,
+      "analitica": "3.2.2.01.001.00009",
+      "descricao": "Assistencia medica e social",
+      "grupo": "3"
+    },
+    "3221110": {
+      "reduzida": 3221110,
+      "analitica": "3.2.2.01.001.00010",
+      "descricao": "Uniformes",
+      "grupo": "3"
+    },
+    "3221111": {
+      "reduzida": 3221111,
+      "analitica": "3.2.2.01.001.00011",
+      "descricao": "Seguros de Empregados",
+      "grupo": "3"
+    },
+    "3221112": {
+      "reduzida": 3221112,
+      "analitica": "3.2.2.01.001.00012",
+      "descricao": "Indenizações e Aviso Previo",
+      "grupo": "3"
+    },
+    "3221113": {
+      "reduzida": 3221113,
+      "analitica": "3.2.2.01.001.00013",
+      "descricao": "Alimentação do Trabalhador",
+      "grupo": "3"
+    },
+    "3221114": {
+      "reduzida": 3221114,
+      "analitica": "3.2.2.01.001.00014",
+      "descricao": "Seguro de Vida em grupo",
+      "grupo": "3"
+    },
+    "3221115": {
+      "reduzida": 3221115,
+      "analitica": "3.2.2.01.001.00015",
+      "descricao": "Bolsa Auxilio- Estagio",
+      "grupo": "3"
+    },
+    "3221116": {
+      "reduzida": 3221116,
+      "analitica": "3.2.2.01.001.00016",
+      "descricao": "Autônomos",
+      "grupo": "3"
+    },
+    "3221117": {
+      "reduzida": 3221117,
+      "analitica": "3.2.2.01.001.00017",
+      "descricao": "Transporte de Empregados",
+      "grupo": "3"
+    },
+    "3221118": {
+      "reduzida": 3221118,
+      "analitica": "3.2.2.01.001.00018",
+      "descricao": "Treinamento",
+      "grupo": "3"
+    },
+    "3221119": {
+      "reduzida": 3221119,
+      "analitica": "3.2.2.01.001.00019",
+      "descricao": "Rescisão",
+      "grupo": "3"
+    },
+    "3221120": {
+      "reduzida": 3221120,
+      "analitica": "3.2.2.01.001.00020",
+      "descricao": "Assistencia Odontologica",
+      "grupo": "3"
+    },
+    "3221201": {
+      "reduzida": 3221201,
+      "analitica": "3.2.2.01.002.00001",
+      "descricao": "Alugueis de imoveis",
+      "grupo": "3"
+    },
+    "3221202": {
+      "reduzida": 3221202,
+      "analitica": "3.2.2.01.002.00002",
+      "descricao": "Alugueis de maquinas e equipamentos",
+      "grupo": "3"
+    },
+    "3221203": {
+      "reduzida": 3221203,
+      "analitica": "3.2.2.01.002.00003",
+      "descricao": "Arrendamento de imoveis",
+      "grupo": "3"
+    },
+    "3221204": {
+      "reduzida": 3221204,
+      "analitica": "3.2.2.01.002.00004",
+      "descricao": "Arrendamento mercantil ( leasing )",
+      "grupo": "3"
+    },
+    "3221205": {
+      "reduzida": 3221205,
+      "analitica": "3.2.2.01.002.00005",
+      "descricao": "Alugueis de Veiculos",
+      "grupo": "3"
+    },
+    "3221301": {
+      "reduzida": 3221301,
+      "analitica": "3.2.2.01.003.00001",
+      "descricao": "PIS-PASEP",
+      "grupo": "3"
+    },
+    "3221302": {
+      "reduzida": 3221302,
+      "analitica": "3.2.2.01.003.00002",
+      "descricao": "COFINS",
+      "grupo": "3"
+    },
+    "3221303": {
+      "reduzida": 3221303,
+      "analitica": "3.2.2.01.003.00003",
+      "descricao": "IPTU",
+      "grupo": "3"
+    },
+    "3221304": {
+      "reduzida": 3221304,
+      "analitica": "3.2.2.01.003.00004",
+      "descricao": "IPVA",
+      "grupo": "3"
+    },
+    "3221305": {
+      "reduzida": 3221305,
+      "analitica": "3.2.2.01.003.00005",
+      "descricao": "Taxas diversas",
+      "grupo": "3"
+    },
+    "3221306": {
+      "reduzida": 3221306,
+      "analitica": "3.2.2.01.003.00006",
+      "descricao": "CPMF",
+      "grupo": "3"
+    },
+    "3221307": {
+      "reduzida": 3221307,
+      "analitica": "3.2.2.01.003.00007",
+      "descricao": "Multas de mora",
+      "grupo": "3"
+    },
+    "3221308": {
+      "reduzida": 3221308,
+      "analitica": "3.2.2.01.003.00008",
+      "descricao": "Imposto de Renda",
+      "grupo": "3"
+    },
+    "3221309": {
+      "reduzida": 3221309,
+      "analitica": "3.2.2.01.003.00009",
+      "descricao": "Contribuição Social",
+      "grupo": "3"
+    },
+    "3221401": {
+      "reduzida": 3221401,
+      "analitica": "3.2.2.01.004.00001",
+      "descricao": "Energia eletrica",
+      "grupo": "3"
+    },
+    "3221402": {
+      "reduzida": 3221402,
+      "analitica": "3.2.2.01.004.00002",
+      "descricao": "Agua e esgoto",
+      "grupo": "3"
+    },
+    "3221403": {
+      "reduzida": 3221403,
+      "analitica": "3.2.2.01.004.00003",
+      "descricao": "Telefone e Internet",
+      "grupo": "3"
+    },
+    "3221404": {
+      "reduzida": 3221404,
+      "analitica": "3.2.2.01.004.00004",
+      "descricao": "Despesas postais e telegraficas",
+      "grupo": "3"
+    },
+    "3221405": {
+      "reduzida": 3221405,
+      "analitica": "3.2.2.01.004.00005",
+      "descricao": "Seguros",
+      "grupo": "3"
+    },
+    "3221406": {
+      "reduzida": 3221406,
+      "analitica": "3.2.2.01.004.00006",
+      "descricao": "Material de escritorio",
+      "grupo": "3"
+    },
+    "3221407": {
+      "reduzida": 3221407,
+      "analitica": "3.2.2.01.004.00007",
+      "descricao": "Material de higiene e limpeza",
+      "grupo": "3"
+    },
+    "3221408": {
+      "reduzida": 3221408,
+      "analitica": "3.2.2.01.004.00008",
+      "descricao": "Assistencia contabil",
+      "grupo": "3"
+    },
+    "3221409": {
+      "reduzida": 3221409,
+      "analitica": "3.2.2.01.004.00009",
+      "descricao": "Servicos prestados por terceiros",
+      "grupo": "3"
+    },
+    "3221410": {
+      "reduzida": 3221410,
+      "analitica": "3.2.2.01.004.00010",
+      "descricao": "Depreciacoes e amortizacoes",
+      "grupo": "3"
+    },
+    "3221411": {
+      "reduzida": 3221411,
+      "analitica": "3.2.2.01.004.00011",
+      "descricao": "Reproducoes",
+      "grupo": "3"
+    },
+    "3221412": {
+      "reduzida": 3221412,
+      "analitica": "3.2.2.01.004.00012",
+      "descricao": "Despesas legais e judiciais",
+      "grupo": "3"
+    },
+    "3221413": {
+      "reduzida": 3221413,
+      "analitica": "3.2.2.01.004.00013",
+      "descricao": "Livros, jornais e revistas",
+      "grupo": "3"
+    },
+    "3221414": {
+      "reduzida": 3221414,
+      "analitica": "3.2.2.01.004.00014",
+      "descricao": "Manutenção Veiculos",
+      "grupo": "3"
+    },
+    "3221415": {
+      "reduzida": 3221415,
+      "analitica": "3.2.2.01.004.00015",
+      "descricao": "Limpeza e Conservação",
+      "grupo": "3"
+    },
+    "3221416": {
+      "reduzida": 3221416,
+      "analitica": "3.2.2.01.004.00016",
+      "descricao": "Segurança e Vigilancia",
+      "grupo": "3"
+    },
+    "3221417": {
+      "reduzida": 3221417,
+      "analitica": "3.2.2.01.004.00017",
+      "descricao": "Fretes e Carretos",
+      "grupo": "3"
+    },
+    "3221418": {
+      "reduzida": 3221418,
+      "analitica": "3.2.2.01.004.00018",
+      "descricao": "Cursos e Treinamentos",
+      "grupo": "3"
+    },
+    "3221419": {
+      "reduzida": 3221419,
+      "analitica": "3.2.2.01.004.00019",
+      "descricao": "Material de Escritorio",
+      "grupo": "3"
+    },
+    "3221420": {
+      "reduzida": 3221420,
+      "analitica": "3.2.2.01.004.00020",
+      "descricao": "Estacionamentos e Conduções",
+      "grupo": "3"
+    },
+    "3221421": {
+      "reduzida": 3221421,
+      "analitica": "3.2.2.01.004.00021",
+      "descricao": "Lanches, Refeições e Copa",
+      "grupo": "3"
+    },
+    "3221422": {
+      "reduzida": 3221422,
+      "analitica": "3.2.2.01.004.00022",
+      "descricao": "Manutenção de Sistemas",
+      "grupo": "3"
+    },
+    "3221423": {
+      "reduzida": 3221423,
+      "analitica": "3.2.2.01.004.00023",
+      "descricao": "Despesas com Veiculos",
+      "grupo": "3"
+    },
+    "3221424": {
+      "reduzida": 3221424,
+      "analitica": "3.2.2.01.004.00024",
+      "descricao": "Combustiveis e lubrificantes",
+      "grupo": "3"
+    },
+    "3221425": {
+      "reduzida": 3221425,
+      "analitica": "3.2.2.01.004.00025",
+      "descricao": "Cartão de Credito",
+      "grupo": "3"
+    },
+    "3221426": {
+      "reduzida": 3221426,
+      "analitica": "3.2.2.01.004.00026",
+      "descricao": "Material de Embalagem e limpeza",
+      "grupo": "3"
+    },
+    "3221427": {
+      "reduzida": 3221427,
+      "analitica": "3.2.2.01.004.00027",
+      "descricao": "Assistencia Financeira",
+      "grupo": "3"
+    },
+    "3221428": {
+      "reduzida": 3221428,
+      "analitica": "3.2.2.01.004.00028",
+      "descricao": "Brindes",
+      "grupo": "3"
+    },
+    "3221429": {
+      "reduzida": 3221429,
+      "analitica": "3.2.2.01.004.00029",
+      "descricao": "Material para manutenção e reparos",
+      "grupo": "3"
+    },
+    "3231101": {
+      "reduzida": 3231101,
+      "analitica": "3.2.3.01.001.00001",
+      "descricao": "Juros passivos",
+      "grupo": "3"
+    },
+    "3231102": {
+      "reduzida": 3231102,
+      "analitica": "3.2.3.01.001.00002",
+      "descricao": "Variacoes monetarias passivas",
+      "grupo": "3"
+    },
+    "3231103": {
+      "reduzida": 3231103,
+      "analitica": "3.2.3.01.001.00003",
+      "descricao": "Variacoes cambiais passivas",
+      "grupo": "3"
+    },
+    "3231104": {
+      "reduzida": 3231104,
+      "analitica": "3.2.3.01.001.00004",
+      "descricao": "Descontos concedidos",
+      "grupo": "3"
+    },
+    "3231105": {
+      "reduzida": 3231105,
+      "analitica": "3.2.3.01.001.00005",
+      "descricao": "Juros de mora",
+      "grupo": "3"
+    },
+    "3231106": {
+      "reduzida": 3231106,
+      "analitica": "3.2.3.01.001.00006",
+      "descricao": "Juros s/ capital proprio",
+      "grupo": "3"
+    },
+    "3231107": {
+      "reduzida": 3231107,
+      "analitica": "3.2.3.01.001.00007",
+      "descricao": "Juros e comissoes bancarias",
+      "grupo": "3"
+    },
+    "3231108": {
+      "reduzida": 3231108,
+      "analitica": "3.2.3.01.001.00008",
+      "descricao": "Juros s/ emprestimos e financiamentos",
+      "grupo": "3"
+    },
+    "3231109": {
+      "reduzida": 3231109,
+      "analitica": "3.2.3.01.001.00009",
+      "descricao": "Despesas Bancarias Diversas",
+      "grupo": "3"
+    },
+    "3231110": {
+      "reduzida": 3231110,
+      "analitica": "3.2.3.01.001.00010",
+      "descricao": "Juros Pagos ou Incorridos",
+      "grupo": "3"
+    },
+    "3231111": {
+      "reduzida": 3231111,
+      "analitica": "3.2.3.01.001.00011",
+      "descricao": "Correção Monetaria",
+      "grupo": "3"
+    },
+    "3231201": {
+      "reduzida": 3231201,
+      "analitica": "3.2.3.01.002.00001",
+      "descricao": "Provisao p/ perdas e ajustes de ativos",
+      "grupo": "3"
+    },
+    "3231202": {
+      "reduzida": 3231202,
+      "analitica": "3.2.3.01.002.00002",
+      "descricao": "Equivalencia patrimonial",
+      "grupo": "3"
+    },
+    "3231203": {
+      "reduzida": 3231203,
+      "analitica": "3.2.3.01.002.00003",
+      "descricao": "Amortizacao de agio",
+      "grupo": "3"
+    },
+    "3231204": {
+      "reduzida": 3231204,
+      "analitica": "3.2.3.01.002.00004",
+      "descricao": "Doacoes e Dizimos",
+      "grupo": "3"
+    },
+    "3311101": {
+      "reduzida": 3311101,
+      "analitica": "3.3.1.01.001.00001",
+      "descricao": "Perdas na alien. part. coligadas",
+      "grupo": "3"
+    },
+    "3311201": {
+      "reduzida": 3311201,
+      "analitica": "3.3.1.01.002.00001",
+      "descricao": "Perdas na alienacao de imoveis",
+      "grupo": "3"
+    },
+    "3311202": {
+      "reduzida": 3311202,
+      "analitica": "3.3.1.01.002.00002",
+      "descricao": "Perdas na alienacao de moveis e utens.",
+      "grupo": "3"
+    },
+    "3311204": {
+      "reduzida": 3311204,
+      "analitica": "3.3.1.01.002.00004",
+      "descricao": "Perdas na alienacao de veiculos",
+      "grupo": "3"
+    },
+    "3311301": {
+      "reduzida": 3311301,
+      "analitica": "3.3.1.01.003.00001",
+      "descricao": "Perdas em sinistro c/ imobilizado",
+      "grupo": "3"
+    },
+    "3311401": {
+      "reduzida": 3311401,
+      "analitica": "3.3.1.01.004.00001",
+      "descricao": "Baixas de investimentos permanentes",
+      "grupo": "3"
+    },
+    "3311402": {
+      "reduzida": 3311402,
+      "analitica": "3.3.1.01.004.00002",
+      "descricao": "Baixas de imobilizado",
+      "grupo": "3"
+    },
+    "3311403": {
+      "reduzida": 3311403,
+      "analitica": "3.3.1.01.004.00003",
+      "descricao": "Baixas de ativo diferido",
+      "grupo": "3"
+    },
+    "3311501": {
+      "reduzida": 3311501,
+      "analitica": "3.3.1.01.005.00001",
+      "descricao": "Controladas e coligadas - equiv. patrim",
+      "grupo": "3"
+    },
+    "3311503": {
+      "reduzida": 3311503,
+      "analitica": "3.3.1.01.005.00003",
+      "descricao": "Outras participacoes societarias",
+      "grupo": "3"
+    },
+    "3311601": {
+      "reduzida": 3311601,
+      "analitica": "3.3.1.01.006.00001",
+      "descricao": "Perdas por falta no inventario",
+      "grupo": "3"
+    },
+    "4111101": {
+      "reduzida": 4111101,
+      "analitica": "4.1.1.01.001.00001",
+      "descricao": "Venda de prod. no mercado interno",
+      "grupo": "4"
+    },
+    "4111102": {
+      "reduzida": 4111102,
+      "analitica": "4.1.1.01.001.00002",
+      "descricao": "Venda de prod. no mercado externo",
+      "grupo": "4"
+    },
+    "4111103": {
+      "reduzida": 4111103,
+      "analitica": "4.1.1.01.001.00003",
+      "descricao": "Venda de mercadorias no mercado interno",
+      "grupo": "4"
+    },
+    "4111104": {
+      "reduzida": 4111104,
+      "analitica": "4.1.1.01.001.00004",
+      "descricao": "Venda de mercadorias no mercado externo",
+      "grupo": "4"
+    },
+    "4111201": {
+      "reduzida": 4111201,
+      "analitica": "4.1.1.01.002.00001",
+      "descricao": "Servicos prestados - mercado interno",
+      "grupo": "4"
+    },
+    "4111202": {
+      "reduzida": 4111202,
+      "analitica": "4.1.1.01.002.00002",
+      "descricao": "Servicos prestados - mercado externo",
+      "grupo": "4"
+    },
+    "4121201": {
+      "reduzida": 4121201,
+      "analitica": "4.1.2.01.002.00001",
+      "descricao": "( - ) S/ venda de prod. mercado interno",
+      "grupo": "4"
+    },
+    "4121202": {
+      "reduzida": 4121202,
+      "analitica": "4.1.2.01.002.00002",
+      "descricao": "( - ) S/ venda de prod. mercado externo",
+      "grupo": "4"
+    },
+    "4121203": {
+      "reduzida": 4121203,
+      "analitica": "4.1.2.01.002.00003",
+      "descricao": "( - ) S/ venda mercadorias mercado int",
+      "grupo": "4"
+    },
+    "4121204": {
+      "reduzida": 4121204,
+      "analitica": "4.1.2.01.002.00004",
+      "descricao": "( - ) S/ venda mercadorias mercado ext",
+      "grupo": "4"
+    },
+    "4121205": {
+      "reduzida": 4121205,
+      "analitica": "4.1.2.01.002.00005",
+      "descricao": "( - ) S/ Prestação de Serviços",
+      "grupo": "4"
+    },
+    "4121301": {
+      "reduzida": 4121301,
+      "analitica": "4.1.2.01.003.00001",
+      "descricao": "IPI",
+      "grupo": "4"
+    },
+    "4121302": {
+      "reduzida": 4121302,
+      "analitica": "4.1.2.01.003.00002",
+      "descricao": "ICMS",
+      "grupo": "4"
+    },
+    "4121303": {
+      "reduzida": 4121303,
+      "analitica": "4.1.2.01.003.00003",
+      "descricao": "ISS",
+      "grupo": "4"
+    },
+    "4121304": {
+      "reduzida": 4121304,
+      "analitica": "4.1.2.01.003.00004",
+      "descricao": "COFINS",
+      "grupo": "4"
+    },
+    "4121305": {
+      "reduzida": 4121305,
+      "analitica": "4.1.2.01.003.00005",
+      "descricao": "PIS-PASEP",
+      "grupo": "4"
+    },
+    "4121306": {
+      "reduzida": 4121306,
+      "analitica": "4.1.2.01.003.00006",
+      "descricao": "SIMPLES NACIONAL",
+      "grupo": "4"
+    },
+    "4131001": {
+      "reduzida": 4131001,
+      "analitica": "4.1.3.01.000.00001",
+      "descricao": "Receitas Aplicações financeiras",
+      "grupo": "4"
+    },
+    "4131002": {
+      "reduzida": 4131002,
+      "analitica": "4.1.3.01.000.00002",
+      "descricao": "Outras Receitas",
+      "grupo": "4"
+    },
+    "4131101": {
+      "reduzida": 4131101,
+      "analitica": "4.1.3.01.001.00001",
+      "descricao": "Juros de aplicacoes financeiras",
+      "grupo": "4"
+    },
+    "4131102": {
+      "reduzida": 4131102,
+      "analitica": "4.1.3.01.001.00002",
+      "descricao": "Juros ativos",
+      "grupo": "4"
+    },
+    "4131103": {
+      "reduzida": 4131103,
+      "analitica": "4.1.3.01.001.00003",
+      "descricao": "Descontos financeiros obtidos",
+      "grupo": "4"
+    },
+    "4131104": {
+      "reduzida": 4131104,
+      "analitica": "4.1.3.01.001.00004",
+      "descricao": "Juros s/ o capital proprio",
+      "grupo": "4"
+    },
+    "4131201": {
+      "reduzida": 4131201,
+      "analitica": "4.1.3.01.002.00001",
+      "descricao": "Variacoes monetarias ativas",
+      "grupo": "4"
+    },
+    "4131202": {
+      "reduzida": 4131202,
+      "analitica": "4.1.3.01.002.00002",
+      "descricao": "Variacoes cambiais ativas",
+      "grupo": "4"
+    },
+    "4141201": {
+      "reduzida": 4141201,
+      "analitica": "4.1.4.01.002.00001",
+      "descricao": "Reversao Provisao de Creditos Duvidosos",
+      "grupo": "4"
+    },
+    "4151101": {
+      "reduzida": 4151101,
+      "analitica": "4.1.5.01.001.00001",
+      "descricao": "Alugueis e arrendamentos",
+      "grupo": "4"
+    },
+    "4151102": {
+      "reduzida": 4151102,
+      "analitica": "4.1.5.01.001.00002",
+      "descricao": "Vendas Acessorias",
+      "grupo": "4"
+    },
+    "4151103": {
+      "reduzida": 4151103,
+      "analitica": "4.1.5.01.001.00003",
+      "descricao": "Receita de equivalencia patrimonial",
+      "grupo": "4"
+    },
+    "4151104": {
+      "reduzida": 4151104,
+      "analitica": "4.1.5.01.001.00004",
+      "descricao": "Dividendos e lucros recebidos",
+      "grupo": "4"
+    },
+    "4151105": {
+      "reduzida": 4151105,
+      "analitica": "4.1.5.01.001.00005",
+      "descricao": "Amortizacao de desagio",
+      "grupo": "4"
+    },
+    "4151106": {
+      "reduzida": 4151106,
+      "analitica": "4.1.5.01.001.00006",
+      "descricao": "Outras Receitas não Operacionais",
+      "grupo": "4"
+    },
+    "4151107": {
+      "reduzida": 4151107,
+      "analitica": "4.1.5.01.001.00007",
+      "descricao": "Outras Receitas Operacionais",
+      "grupo": "4"
+    },
+    "4211101": {
+      "reduzida": 4211101,
+      "analitica": "4.2.1.01.001.00001",
+      "descricao": "Lucros alien. particip. em coligadas",
+      "grupo": "4"
+    },
+    "4211201": {
+      "reduzida": 4211201,
+      "analitica": "4.2.1.01.002.00001",
+      "descricao": "Lucros na alienacao de imoveis",
+      "grupo": "4"
+    },
+    "4211202": {
+      "reduzida": 4211202,
+      "analitica": "4.2.1.01.002.00002",
+      "descricao": "Lucros na alienacao moveis e utensilios",
+      "grupo": "4"
+    },
+    "4211204": {
+      "reduzida": 4211204,
+      "analitica": "4.2.1.01.002.00004",
+      "descricao": "Lucros na alienacao de veiculos",
+      "grupo": "4"
+    },
+    "4211301": {
+      "reduzida": 4211301,
+      "analitica": "4.2.1.01.003.00001",
+      "descricao": "Sinistros com imobilizado",
+      "grupo": "4"
+    },
+    "5111101": {
+      "reduzida": 5111101,
+      "analitica": "5.1.1.01.001.00001",
+      "descricao": "Custo dos Produtos Vendidos",
+      "grupo": "5"
+    },
+    "5121101": {
+      "reduzida": 5121101,
+      "analitica": "5.1.2.01.001.00001",
+      "descricao": "Custo dos Servicos Prestados",
+      "grupo": "5"
+    },
+    "5131101": {
+      "reduzida": 5131101,
+      "analitica": "5.1.3.01.001.00001",
+      "descricao": "Custo das Mercadorias Vendidas",
+      "grupo": "5"
+    },
     "5131102": {
       "reduzida": 5131102,
       "analitica": "5.1.3.01.001.00002",
       "descricao": "Compra de Mercadoria",
+      "grupo": "5"
+    },
+    "5141101": {
+      "reduzida": 5141101,
+      "analitica": "5.1.4.01.001.00001",
+      "descricao": "Ganhos/Perdas na Alienacao Imobilizado",
       "grupo": "5"
     }
   },
@@ -1702,6 +2878,9 @@
     "mercado pago": 1112208,
     "sicredi": 1112209,
     "pagseguro": 1112210,
+    "nubank": 1112211,
+    "c6bank": 1112212,
+    "banco itau unibanco": 5150910,
     "itau - aplicação": 1112301,
     "bradesco - aplicação": 1112302,
     "caixa economica federal - aplicação": 1112303,
@@ -1713,6 +2892,8 @@
     "sicredi - aplicação": 1112309,
     "sicoob - aplicação conta capital": 1112310,
     "pagseguro - aplicação": 1112311,
+    "nubank - aplicação": 1112312,
+    "aplicação itau": 5150908,
     "duplicatas a receber": 1121101,
     "clientes diversos": 1121102,
     "icatu seguros s/a": 1121103,
@@ -1722,6 +2903,9 @@
     "azul companhia de seguros": 1121111,
     "porto seguro - seguro saude s.a": 1121112,
     "associacao sao francisco vida": 1121115,
+    "veek tecnologia s.a.": 1121116,
+    "companhia excelsior de seguros": 1121117,
+    "valores a reclassificar": 1121118,
     "( - ) duplicatas descontadas": 1121201,
     "titulos a receber": 1131201,
     "valor a receber curto prazo": 1131202,
@@ -1743,6 +2927,7 @@
     "adiantamentos de ferias": 1131703,
     "adiantamentos para rescisões": 1131704,
     "adiantamentos para viagens": 1131705,
+    "adiantamento a sócios": 5150909,
     "emprestimos a funcionarios": 1131801,
     "ipi a recuperar": 1131901,
     "icms a recuperar": 1131902,
@@ -1804,6 +2989,7 @@
     "construcoes": 1231103,
     "(-) depreciacao de terrenos": 1231201,
     "(-) depreciacao de edificios": 1231202,
+    "(-) depreciação de veiculos": 1231203,
     "móveis e utensílios": 1232101,
     "equipamento de tecnologia e informatica": 1232102,
     "veiculos": 1232103,
@@ -1843,8 +3029,12 @@
     "banco santander": 2111003,
     "banco itau": 2111004,
     "juros a pagar de emprestimos": 2111005,
+    "emprestimo bancario": 2111006,
+    "emprestimo terceiros": 2111007,
+    "emprestimos consignados a repassar": 2111008,
     "titulos a pagar": 2111501,
     "consorcio": 2111502,
+    "creditos por retituição dos socios": 2111503,
     "fornecedores nacionais": 2121101,
     "fornecedores diversos": 2121102,
     "carrefour comercio e industria ltda": 2121103,
@@ -1884,7 +3074,8 @@
     "irrf a recolher": 2131117,
     "parcelamento do inss a recolher": 2131118,
     "parcelamento simples nacional": 2131119,
-    "parcelamento pgfn": 5141102,
+    "cprb a recolher": 5150905,
+    "parcelamento divida ativa": 5150907,
     "salarios e ordenados a pagar": 2141101,
     "pro - labore a pagar": 2141102,
     "gratificacoes a pagar": 2141103,
@@ -1897,12 +3088,14 @@
     "contribuição sindical a recolher": 2141203,
     "contribuição confederativa a recolher": 2141204,
     "fgts rescisorio a recolher": 2141205,
+    "contribuicao assistencial a recolher": 3041205,
     "provisao para ferias": 2141301,
     "provisao para 13§ salario": 2141302,
     "inss s/ provisao para ferias": 2141303,
     "inss s/ provisao para 13§": 2141304,
     "fgts s/ provisao para ferias": 2141305,
     "fgts s/ provisao para 13§": 2141306,
+    "provisão de emprestimos consignados": 2141307,
     "adiantamentos de clientes diversos": 2151101,
     "cotas de consorcio a pagar- curto prazo": 2151201,
     "alugueis a pagar": 2151202,
@@ -1941,7 +3134,158 @@
     "lucro do exercício": 2371101,
     "prejuízo do exercicio": 2371102,
     "conta de zeramento": 2911101,
-    "compra de mercadoria": 5131102
+    "materia - prima": 3111101,
+    "salarios e ordenados": 3111201,
+    "pro - labore": 3111202,
+    "premios e gratificacoes": 3111203,
+    "13º salario": 3111204,
+    "ferias": 3111205,
+    "inss": 3111206,
+    "fgts": 3111207,
+    "indenizacoes e aviso previo": 3111208,
+    "assistencia medica e social": 3111209,
+    "combustiveis e lubrificantes": 3111301,
+    "energia eletrica": 3111302,
+    "servicos de terceiros": 3111303,
+    "mao-de-obra direta": 3113101,
+    "gastos gerais": 3113102,
+    "materiais de consumo indireto": 5150906,
+    "pro-labore": 3212102,
+    "13§ salario": 3212104,
+    "assistencia medica": 3212109,
+    "contribuição previdenciária s a receita": 5141103,
+    "comissoes": 3212201,
+    "propaganda e publicidade": 3212301,
+    "amostras gratis": 3212302,
+    "fretes e carretos": 3212401,
+    "manutencao de veiculos": 3212402,
+    "viagens terrestres": 3212501,
+    "viagens aereas": 3212502,
+    "hospedagem": 3212503,
+    "refeicoes": 3212504,
+    "alugueis": 3212601,
+    "manutencao e reparos": 3212602,
+    "telefone": 3212603,
+    "despesas postais e telegraficas": 3212604,
+    "depreciacoes e amortizacoes": 3212605,
+    "servicos prestados por terceiros": 3212606,
+    "seguros": 3212607,
+    "agua e esgoto": 3212609,
+    "xerox e fotocopias": 3212610,
+    "creditos vencidos e nao liquidados": 3212701,
+    "perdas por roubos": 3212702,
+    "uniformes": 3221110,
+    "seguros de empregados": 3221111,
+    "indenizações e aviso previo": 3221112,
+    "alimentação do trabalhador": 3221113,
+    "seguro de vida em grupo": 3221114,
+    "bolsa auxilio- estagio": 3221115,
+    "autônomos": 3221116,
+    "transporte de empregados": 3221117,
+    "treinamento": 3221118,
+    "rescisão": 3221119,
+    "assistencia odontologica": 3221120,
+    "alugueis de imoveis": 3221201,
+    "alugueis de maquinas e equipamentos": 3221202,
+    "arrendamento de imoveis": 3221203,
+    "arrendamento mercantil ( leasing )": 3221204,
+    "alugueis de veiculos": 3221205,
+    "pis-pasep": 3221301,
+    "cofins": 3221302,
+    "iptu": 3221303,
+    "ipva": 3221304,
+    "taxas diversas": 3221305,
+    "cpmf": 3221306,
+    "multas de mora": 3221307,
+    "imposto de renda": 3221308,
+    "contribuição social": 3221309,
+    "telefone e internet": 3221403,
+    "material de escritorio": 3221406,
+    "material de higiene e limpeza": 3221407,
+    "assistencia contabil": 3221408,
+    "reproducoes": 3221411,
+    "despesas legais e judiciais": 3221412,
+    "livros, jornais e revistas": 3221413,
+    "manutenção veiculos": 3221414,
+    "limpeza e conservação": 3221415,
+    "segurança e vigilancia": 3221416,
+    "cursos e treinamentos": 3221418,
+    "estacionamentos e conduções": 3221420,
+    "lanches, refeições e copa": 3221421,
+    "manutenção de sistemas": 3221422,
+    "despesas com veiculos": 3221423,
+    "cartão de credito": 3221425,
+    "material de embalagem e limpeza": 3221426,
+    "assistencia financeira": 3221427,
+    "brindes": 3221428,
+    "material para manutenção e reparos": 3221429,
+    "juros passivos": 3231101,
+    "variacoes monetarias passivas": 3231102,
+    "variacoes cambiais passivas": 3231103,
+    "descontos concedidos": 3231104,
+    "juros de mora": 3231105,
+    "juros s/ capital proprio": 3231106,
+    "juros e comissoes bancarias": 3231107,
+    "juros s/ emprestimos e financiamentos": 3231108,
+    "despesas bancarias diversas": 3231109,
+    "juros pagos ou incorridos": 3231110,
+    "correção monetaria": 3231111,
+    "provisao p/ perdas e ajustes de ativos": 3231201,
+    "equivalencia patrimonial": 3231202,
+    "amortizacao de agio": 3231203,
+    "doacoes e dizimos": 3231204,
+    "perdas na alien. part. coligadas": 3311101,
+    "perdas na alienacao de imoveis": 3311201,
+    "perdas na alienacao de moveis e utens.": 3311202,
+    "perdas na alienacao de veiculos": 3311204,
+    "perdas em sinistro c/ imobilizado": 3311301,
+    "baixas de investimentos permanentes": 3311401,
+    "baixas de imobilizado": 3311402,
+    "baixas de ativo diferido": 3311403,
+    "controladas e coligadas - equiv. patrim": 3311501,
+    "outras participacoes societarias": 3311503,
+    "perdas por falta no inventario": 3311601,
+    "venda de prod. no mercado interno": 4111101,
+    "venda de prod. no mercado externo": 4111102,
+    "venda de mercadorias no mercado interno": 4111103,
+    "venda de mercadorias no mercado externo": 4111104,
+    "servicos prestados - mercado interno": 4111201,
+    "servicos prestados - mercado externo": 4111202,
+    "( - ) s/ venda de prod. mercado interno": 4121201,
+    "( - ) s/ venda de prod. mercado externo": 4121202,
+    "( - ) s/ venda mercadorias mercado int": 4121203,
+    "( - ) s/ venda mercadorias mercado ext": 4121204,
+    "( - ) s/ prestação de serviços": 4121205,
+    "ipi": 4121301,
+    "icms": 4121302,
+    "iss": 4121303,
+    "simples nacional": 4121306,
+    "receitas aplicações financeiras": 4131001,
+    "outras receitas": 4131002,
+    "juros de aplicacoes financeiras": 4131101,
+    "juros ativos": 4131102,
+    "descontos financeiros obtidos": 4131103,
+    "juros s/ o capital proprio": 4131104,
+    "variacoes monetarias ativas": 4131201,
+    "variacoes cambiais ativas": 4131202,
+    "reversao provisao de creditos duvidosos": 4141201,
+    "alugueis e arrendamentos": 4151101,
+    "vendas acessorias": 4151102,
+    "receita de equivalencia patrimonial": 4151103,
+    "dividendos e lucros recebidos": 4151104,
+    "amortizacao de desagio": 4151105,
+    "outras receitas não operacionais": 4151106,
+    "outras receitas operacionais": 4151107,
+    "lucros alien. particip. em coligadas": 4211101,
+    "lucros na alienacao de imoveis": 4211201,
+    "lucros na alienacao moveis e utensilios": 4211202,
+    "lucros na alienacao de veiculos": 4211204,
+    "sinistros com imobilizado": 4211301,
+    "custo dos produtos vendidos": 5111101,
+    "custo dos servicos prestados": 5121101,
+    "custo das mercadorias vendidas": 5131101,
+    "compra de mercadoria": 5131102,
+    "ganhos/perdas na alienacao imobilizado": 5141101
   },
   "contas": [
     {
@@ -2017,6 +3361,24 @@
       "grupo": "1"
     },
     {
+      "reduzida": 1112211,
+      "analitica": "1.1.1.02.002.00011",
+      "descricao": "Nubank",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1112212,
+      "analitica": "1.1.1.02.002.00012",
+      "descricao": "C6Bank",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 5150910,
+      "analitica": "1.1.1.02.002.00014",
+      "descricao": "Banco Itau unibanco",
+      "grupo": "1"
+    },
+    {
       "reduzida": 1112301,
       "analitica": "1.1.1.02.003.00001",
       "descricao": "Itau - Aplicação",
@@ -2083,6 +3445,18 @@
       "grupo": "1"
     },
     {
+      "reduzida": 1112312,
+      "analitica": "1.1.1.02.003.00012",
+      "descricao": "Nubank - Aplicação",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 5150908,
+      "analitica": "1.1.1.02.003.00013",
+      "descricao": "Aplicação Itau",
+      "grupo": "1"
+    },
+    {
       "reduzida": 1121101,
       "analitica": "1.1.2.01.001.00001",
       "descricao": "Duplicatas a receber",
@@ -2134,6 +3508,24 @@
       "reduzida": 1121115,
       "analitica": "1.1.2.01.001.00015",
       "descricao": "ASSOCIACAO SAO FRANCISCO VIDA",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1121116,
+      "analitica": "1.1.2.01.001.00016",
+      "descricao": "VEEK TECNOLOGIA S.A.",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1121117,
+      "analitica": "1.1.2.01.001.00017",
+      "descricao": "COMPANHIA EXCELSIOR DE SEGUROS",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 1121118,
+      "analitica": "1.1.2.01.001.00018",
+      "descricao": "valores a reclassificar",
       "grupo": "1"
     },
     {
@@ -2260,6 +3652,12 @@
       "reduzida": 1131705,
       "analitica": "1.1.3.01.007.00005",
       "descricao": "Adiantamentos para Viagens",
+      "grupo": "1"
+    },
+    {
+      "reduzida": 5150909,
+      "analitica": "1.1.3.01.007.00006",
+      "descricao": "Adiantamento a Sócios",
       "grupo": "1"
     },
     {
@@ -2683,6 +4081,12 @@
       "grupo": "1"
     },
     {
+      "reduzida": 1231203,
+      "analitica": "1.2.3.01.002.00003",
+      "descricao": "(-) Depreciação de veiculos",
+      "grupo": "1"
+    },
+    {
       "reduzida": 1232101,
       "analitica": "1.2.3.02.001.00001",
       "descricao": "Móveis e utensílios",
@@ -3031,6 +4435,24 @@
       "grupo": "2"
     },
     {
+      "reduzida": 2111006,
+      "analitica": "2.1.1.01.000.00006",
+      "descricao": "Emprestimo bancario",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2111007,
+      "analitica": "2.1.1.01.000.00007",
+      "descricao": "Emprestimo terceiros",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2111008,
+      "analitica": "2.1.1.01.000.00008",
+      "descricao": "Emprestimos Consignados a Repassar",
+      "grupo": "2"
+    },
+    {
       "reduzida": 2111501,
       "analitica": "2.1.1.01.005.00001",
       "descricao": "Titulos a Pagar",
@@ -3040,6 +4462,12 @@
       "reduzida": 2111502,
       "analitica": "2.1.1.01.005.00002",
       "descricao": "Consorcio",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2111503,
+      "analitica": "2.1.1.01.005.00003",
+      "descricao": "Creditos por retituição dos socios",
       "grupo": "2"
     },
     {
@@ -3283,9 +4711,15 @@
       "grupo": "2"
     },
     {
-      "reduzida": 5141102,
+      "reduzida": 5150905,
       "analitica": "2.1.3.01.001.00020",
-      "descricao": "Parcelamento PGFN",
+      "descricao": "CPRB a Recolher",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 5150907,
+      "analitica": "2.1.3.01.001.00021",
+      "descricao": "Parcelamento Divida Ativa",
       "grupo": "2"
     },
     {
@@ -3361,6 +4795,18 @@
       "grupo": "2"
     },
     {
+      "reduzida": 3041205,
+      "analitica": "2.1.4.01.002.00006",
+      "descricao": "Contribuicao Assistencial a Recolher",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 5122501,
+      "analitica": "2.1.4.01.002.00007",
+      "descricao": "CPRB a Recolher",
+      "grupo": "2"
+    },
+    {
       "reduzida": 2141301,
       "analitica": "2.1.4.01.003.00001",
       "descricao": "Provisao para ferias",
@@ -3394,6 +4840,12 @@
       "reduzida": 2141306,
       "analitica": "2.1.4.01.003.00006",
       "descricao": "FGTS s/ provisao para 13§",
+      "grupo": "2"
+    },
+    {
+      "reduzida": 2141307,
+      "analitica": "2.1.4.01.003.00007",
+      "descricao": "Provisão de Emprestimos Consignados",
       "grupo": "2"
     },
     {
@@ -3625,9 +5077,1077 @@
       "grupo": "2"
     },
     {
+      "reduzida": 3111101,
+      "analitica": "3.1.1.01.001.00001",
+      "descricao": "MATERIA - PRIMA",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3111201,
+      "analitica": "3.1.1.01.002.00001",
+      "descricao": "Salarios e ordenados",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3111202,
+      "analitica": "3.1.1.01.002.00002",
+      "descricao": "Pro - labore",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3111203,
+      "analitica": "3.1.1.01.002.00003",
+      "descricao": "Premios e gratificacoes",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3111204,
+      "analitica": "3.1.1.01.002.00004",
+      "descricao": "13º Salario",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3111205,
+      "analitica": "3.1.1.01.002.00005",
+      "descricao": "Ferias",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3111206,
+      "analitica": "3.1.1.01.002.00006",
+      "descricao": "INSS",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3111207,
+      "analitica": "3.1.1.01.002.00007",
+      "descricao": "FGTS",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3111208,
+      "analitica": "3.1.1.01.002.00008",
+      "descricao": "Indenizacoes e aviso previo",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3111209,
+      "analitica": "3.1.1.01.002.00009",
+      "descricao": "Assistencia medica e social",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3111301,
+      "analitica": "3.1.1.01.003.00001",
+      "descricao": "Combustiveis e lubrificantes",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3111302,
+      "analitica": "3.1.1.01.003.00002",
+      "descricao": "Energia eletrica",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3111303,
+      "analitica": "3.1.1.01.003.00003",
+      "descricao": "Servicos de terceiros",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3113101,
+      "analitica": "3.1.1.03.001.00001",
+      "descricao": "MAO-DE-OBRA DIRETA",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3113102,
+      "analitica": "3.1.1.03.001.00002",
+      "descricao": "GASTOS GERAIS",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 5150906,
+      "analitica": "3.1.1.04.002.00001",
+      "descricao": "Materiais de consumo indireto",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212101,
+      "analitica": "3.2.1.02.001.00001",
+      "descricao": "Salarios e ordenados",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212102,
+      "analitica": "3.2.1.02.001.00002",
+      "descricao": "Pro-labore",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212103,
+      "analitica": "3.2.1.02.001.00003",
+      "descricao": "Premios e gratificacoes",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212104,
+      "analitica": "3.2.1.02.001.00004",
+      "descricao": "13§ Salario",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212105,
+      "analitica": "3.2.1.02.001.00005",
+      "descricao": "Ferias",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212106,
+      "analitica": "3.2.1.02.001.00006",
+      "descricao": "INSS",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212107,
+      "analitica": "3.2.1.02.001.00007",
+      "descricao": "FGTS",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212108,
+      "analitica": "3.2.1.02.001.00008",
+      "descricao": "Indenizacoes e aviso previo",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212109,
+      "analitica": "3.2.1.02.001.00009",
+      "descricao": "Assistencia medica",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 5141103,
+      "analitica": "3.2.1.02.001.00010",
+      "descricao": "Contribuição Previdenciária s a Receita",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212201,
+      "analitica": "3.2.1.02.002.00001",
+      "descricao": "Comissoes",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212301,
+      "analitica": "3.2.1.02.003.00001",
+      "descricao": "Propaganda e publicidade",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212302,
+      "analitica": "3.2.1.02.003.00002",
+      "descricao": "Amostras gratis",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212401,
+      "analitica": "3.2.1.02.004.00001",
+      "descricao": "Fretes e carretos",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212402,
+      "analitica": "3.2.1.02.004.00002",
+      "descricao": "Manutencao de veiculos",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212501,
+      "analitica": "3.2.1.02.005.00001",
+      "descricao": "Viagens terrestres",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212502,
+      "analitica": "3.2.1.02.005.00002",
+      "descricao": "Viagens aereas",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212503,
+      "analitica": "3.2.1.02.005.00003",
+      "descricao": "Hospedagem",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212504,
+      "analitica": "3.2.1.02.005.00004",
+      "descricao": "Refeicoes",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212601,
+      "analitica": "3.2.1.02.006.00001",
+      "descricao": "Alugueis",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212602,
+      "analitica": "3.2.1.02.006.00002",
+      "descricao": "Manutencao e reparos",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212603,
+      "analitica": "3.2.1.02.006.00003",
+      "descricao": "Telefone",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212604,
+      "analitica": "3.2.1.02.006.00004",
+      "descricao": "Despesas postais e telegraficas",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212605,
+      "analitica": "3.2.1.02.006.00005",
+      "descricao": "Depreciacoes e amortizacoes",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212606,
+      "analitica": "3.2.1.02.006.00006",
+      "descricao": "Servicos prestados por terceiros",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212607,
+      "analitica": "3.2.1.02.006.00007",
+      "descricao": "Seguros",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212608,
+      "analitica": "3.2.1.02.006.00008",
+      "descricao": "Energia Eletrica",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212609,
+      "analitica": "3.2.1.02.006.00009",
+      "descricao": "Agua e Esgoto",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212610,
+      "analitica": "3.2.1.02.006.00010",
+      "descricao": "Xerox e Fotocopias",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212701,
+      "analitica": "3.2.1.02.007.00001",
+      "descricao": "Creditos vencidos e nao liquidados",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3212702,
+      "analitica": "3.2.1.02.007.00002",
+      "descricao": "Perdas por Roubos",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221101,
+      "analitica": "3.2.2.01.001.00001",
+      "descricao": "Salarios e ordenados",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221102,
+      "analitica": "3.2.2.01.001.00002",
+      "descricao": "Pro - labore",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221103,
+      "analitica": "3.2.2.01.001.00003",
+      "descricao": "Premios e gratificacoes",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221104,
+      "analitica": "3.2.2.01.001.00004",
+      "descricao": "13º Salario",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221105,
+      "analitica": "3.2.2.01.001.00005",
+      "descricao": "Ferias",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221106,
+      "analitica": "3.2.2.01.001.00006",
+      "descricao": "INSS",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221107,
+      "analitica": "3.2.2.01.001.00007",
+      "descricao": "FGTS",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221108,
+      "analitica": "3.2.2.01.001.00008",
+      "descricao": "Indenizacoes e aviso previo",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221109,
+      "analitica": "3.2.2.01.001.00009",
+      "descricao": "Assistencia medica e social",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221110,
+      "analitica": "3.2.2.01.001.00010",
+      "descricao": "Uniformes",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221111,
+      "analitica": "3.2.2.01.001.00011",
+      "descricao": "Seguros de Empregados",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221112,
+      "analitica": "3.2.2.01.001.00012",
+      "descricao": "Indenizações e Aviso Previo",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221113,
+      "analitica": "3.2.2.01.001.00013",
+      "descricao": "Alimentação do Trabalhador",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221114,
+      "analitica": "3.2.2.01.001.00014",
+      "descricao": "Seguro de Vida em grupo",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221115,
+      "analitica": "3.2.2.01.001.00015",
+      "descricao": "Bolsa Auxilio- Estagio",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221116,
+      "analitica": "3.2.2.01.001.00016",
+      "descricao": "Autônomos",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221117,
+      "analitica": "3.2.2.01.001.00017",
+      "descricao": "Transporte de Empregados",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221118,
+      "analitica": "3.2.2.01.001.00018",
+      "descricao": "Treinamento",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221119,
+      "analitica": "3.2.2.01.001.00019",
+      "descricao": "Rescisão",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221120,
+      "analitica": "3.2.2.01.001.00020",
+      "descricao": "Assistencia Odontologica",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221201,
+      "analitica": "3.2.2.01.002.00001",
+      "descricao": "Alugueis de imoveis",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221202,
+      "analitica": "3.2.2.01.002.00002",
+      "descricao": "Alugueis de maquinas e equipamentos",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221203,
+      "analitica": "3.2.2.01.002.00003",
+      "descricao": "Arrendamento de imoveis",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221204,
+      "analitica": "3.2.2.01.002.00004",
+      "descricao": "Arrendamento mercantil ( leasing )",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221205,
+      "analitica": "3.2.2.01.002.00005",
+      "descricao": "Alugueis de Veiculos",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221301,
+      "analitica": "3.2.2.01.003.00001",
+      "descricao": "PIS-PASEP",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221302,
+      "analitica": "3.2.2.01.003.00002",
+      "descricao": "COFINS",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221303,
+      "analitica": "3.2.2.01.003.00003",
+      "descricao": "IPTU",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221304,
+      "analitica": "3.2.2.01.003.00004",
+      "descricao": "IPVA",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221305,
+      "analitica": "3.2.2.01.003.00005",
+      "descricao": "Taxas diversas",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221306,
+      "analitica": "3.2.2.01.003.00006",
+      "descricao": "CPMF",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221307,
+      "analitica": "3.2.2.01.003.00007",
+      "descricao": "Multas de mora",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221308,
+      "analitica": "3.2.2.01.003.00008",
+      "descricao": "Imposto de Renda",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221309,
+      "analitica": "3.2.2.01.003.00009",
+      "descricao": "Contribuição Social",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221401,
+      "analitica": "3.2.2.01.004.00001",
+      "descricao": "Energia eletrica",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221402,
+      "analitica": "3.2.2.01.004.00002",
+      "descricao": "Agua e esgoto",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221403,
+      "analitica": "3.2.2.01.004.00003",
+      "descricao": "Telefone e Internet",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221404,
+      "analitica": "3.2.2.01.004.00004",
+      "descricao": "Despesas postais e telegraficas",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221405,
+      "analitica": "3.2.2.01.004.00005",
+      "descricao": "Seguros",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221406,
+      "analitica": "3.2.2.01.004.00006",
+      "descricao": "Material de escritorio",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221407,
+      "analitica": "3.2.2.01.004.00007",
+      "descricao": "Material de higiene e limpeza",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221408,
+      "analitica": "3.2.2.01.004.00008",
+      "descricao": "Assistencia contabil",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221409,
+      "analitica": "3.2.2.01.004.00009",
+      "descricao": "Servicos prestados por terceiros",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221410,
+      "analitica": "3.2.2.01.004.00010",
+      "descricao": "Depreciacoes e amortizacoes",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221411,
+      "analitica": "3.2.2.01.004.00011",
+      "descricao": "Reproducoes",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221412,
+      "analitica": "3.2.2.01.004.00012",
+      "descricao": "Despesas legais e judiciais",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221413,
+      "analitica": "3.2.2.01.004.00013",
+      "descricao": "Livros, jornais e revistas",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221414,
+      "analitica": "3.2.2.01.004.00014",
+      "descricao": "Manutenção Veiculos",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221415,
+      "analitica": "3.2.2.01.004.00015",
+      "descricao": "Limpeza e Conservação",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221416,
+      "analitica": "3.2.2.01.004.00016",
+      "descricao": "Segurança e Vigilancia",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221417,
+      "analitica": "3.2.2.01.004.00017",
+      "descricao": "Fretes e Carretos",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221418,
+      "analitica": "3.2.2.01.004.00018",
+      "descricao": "Cursos e Treinamentos",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221419,
+      "analitica": "3.2.2.01.004.00019",
+      "descricao": "Material de Escritorio",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221420,
+      "analitica": "3.2.2.01.004.00020",
+      "descricao": "Estacionamentos e Conduções",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221421,
+      "analitica": "3.2.2.01.004.00021",
+      "descricao": "Lanches, Refeições e Copa",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221422,
+      "analitica": "3.2.2.01.004.00022",
+      "descricao": "Manutenção de Sistemas",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221423,
+      "analitica": "3.2.2.01.004.00023",
+      "descricao": "Despesas com Veiculos",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221424,
+      "analitica": "3.2.2.01.004.00024",
+      "descricao": "Combustiveis e lubrificantes",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221425,
+      "analitica": "3.2.2.01.004.00025",
+      "descricao": "Cartão de Credito",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221426,
+      "analitica": "3.2.2.01.004.00026",
+      "descricao": "Material de Embalagem e limpeza",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221427,
+      "analitica": "3.2.2.01.004.00027",
+      "descricao": "Assistencia Financeira",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221428,
+      "analitica": "3.2.2.01.004.00028",
+      "descricao": "Brindes",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3221429,
+      "analitica": "3.2.2.01.004.00029",
+      "descricao": "Material para manutenção e reparos",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3231101,
+      "analitica": "3.2.3.01.001.00001",
+      "descricao": "Juros passivos",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3231102,
+      "analitica": "3.2.3.01.001.00002",
+      "descricao": "Variacoes monetarias passivas",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3231103,
+      "analitica": "3.2.3.01.001.00003",
+      "descricao": "Variacoes cambiais passivas",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3231104,
+      "analitica": "3.2.3.01.001.00004",
+      "descricao": "Descontos concedidos",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3231105,
+      "analitica": "3.2.3.01.001.00005",
+      "descricao": "Juros de mora",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3231106,
+      "analitica": "3.2.3.01.001.00006",
+      "descricao": "Juros s/ capital proprio",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3231107,
+      "analitica": "3.2.3.01.001.00007",
+      "descricao": "Juros e comissoes bancarias",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3231108,
+      "analitica": "3.2.3.01.001.00008",
+      "descricao": "Juros s/ emprestimos e financiamentos",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3231109,
+      "analitica": "3.2.3.01.001.00009",
+      "descricao": "Despesas Bancarias Diversas",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3231110,
+      "analitica": "3.2.3.01.001.00010",
+      "descricao": "Juros Pagos ou Incorridos",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3231111,
+      "analitica": "3.2.3.01.001.00011",
+      "descricao": "Correção Monetaria",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3231201,
+      "analitica": "3.2.3.01.002.00001",
+      "descricao": "Provisao p/ perdas e ajustes de ativos",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3231202,
+      "analitica": "3.2.3.01.002.00002",
+      "descricao": "Equivalencia patrimonial",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3231203,
+      "analitica": "3.2.3.01.002.00003",
+      "descricao": "Amortizacao de agio",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3231204,
+      "analitica": "3.2.3.01.002.00004",
+      "descricao": "Doacoes e Dizimos",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3311101,
+      "analitica": "3.3.1.01.001.00001",
+      "descricao": "Perdas na alien. part. coligadas",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3311201,
+      "analitica": "3.3.1.01.002.00001",
+      "descricao": "Perdas na alienacao de imoveis",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3311202,
+      "analitica": "3.3.1.01.002.00002",
+      "descricao": "Perdas na alienacao de moveis e utens.",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3311204,
+      "analitica": "3.3.1.01.002.00004",
+      "descricao": "Perdas na alienacao de veiculos",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3311301,
+      "analitica": "3.3.1.01.003.00001",
+      "descricao": "Perdas em sinistro c/ imobilizado",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3311401,
+      "analitica": "3.3.1.01.004.00001",
+      "descricao": "Baixas de investimentos permanentes",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3311402,
+      "analitica": "3.3.1.01.004.00002",
+      "descricao": "Baixas de imobilizado",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3311403,
+      "analitica": "3.3.1.01.004.00003",
+      "descricao": "Baixas de ativo diferido",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3311501,
+      "analitica": "3.3.1.01.005.00001",
+      "descricao": "Controladas e coligadas - equiv. patrim",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3311503,
+      "analitica": "3.3.1.01.005.00003",
+      "descricao": "Outras participacoes societarias",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 3311601,
+      "analitica": "3.3.1.01.006.00001",
+      "descricao": "Perdas por falta no inventario",
+      "grupo": "3"
+    },
+    {
+      "reduzida": 4111101,
+      "analitica": "4.1.1.01.001.00001",
+      "descricao": "Venda de prod. no mercado interno",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4111102,
+      "analitica": "4.1.1.01.001.00002",
+      "descricao": "Venda de prod. no mercado externo",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4111103,
+      "analitica": "4.1.1.01.001.00003",
+      "descricao": "Venda de mercadorias no mercado interno",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4111104,
+      "analitica": "4.1.1.01.001.00004",
+      "descricao": "Venda de mercadorias no mercado externo",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4111201,
+      "analitica": "4.1.1.01.002.00001",
+      "descricao": "Servicos prestados - mercado interno",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4111202,
+      "analitica": "4.1.1.01.002.00002",
+      "descricao": "Servicos prestados - mercado externo",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4121201,
+      "analitica": "4.1.2.01.002.00001",
+      "descricao": "( - ) S/ venda de prod. mercado interno",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4121202,
+      "analitica": "4.1.2.01.002.00002",
+      "descricao": "( - ) S/ venda de prod. mercado externo",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4121203,
+      "analitica": "4.1.2.01.002.00003",
+      "descricao": "( - ) S/ venda mercadorias mercado int",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4121204,
+      "analitica": "4.1.2.01.002.00004",
+      "descricao": "( - ) S/ venda mercadorias mercado ext",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4121205,
+      "analitica": "4.1.2.01.002.00005",
+      "descricao": "( - ) S/ Prestação de Serviços",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4121301,
+      "analitica": "4.1.2.01.003.00001",
+      "descricao": "IPI",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4121302,
+      "analitica": "4.1.2.01.003.00002",
+      "descricao": "ICMS",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4121303,
+      "analitica": "4.1.2.01.003.00003",
+      "descricao": "ISS",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4121304,
+      "analitica": "4.1.2.01.003.00004",
+      "descricao": "COFINS",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4121305,
+      "analitica": "4.1.2.01.003.00005",
+      "descricao": "PIS-PASEP",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4121306,
+      "analitica": "4.1.2.01.003.00006",
+      "descricao": "SIMPLES NACIONAL",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4131001,
+      "analitica": "4.1.3.01.000.00001",
+      "descricao": "Receitas Aplicações financeiras",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4131002,
+      "analitica": "4.1.3.01.000.00002",
+      "descricao": "Outras Receitas",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4131101,
+      "analitica": "4.1.3.01.001.00001",
+      "descricao": "Juros de aplicacoes financeiras",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4131102,
+      "analitica": "4.1.3.01.001.00002",
+      "descricao": "Juros ativos",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4131103,
+      "analitica": "4.1.3.01.001.00003",
+      "descricao": "Descontos financeiros obtidos",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4131104,
+      "analitica": "4.1.3.01.001.00004",
+      "descricao": "Juros s/ o capital proprio",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4131201,
+      "analitica": "4.1.3.01.002.00001",
+      "descricao": "Variacoes monetarias ativas",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4131202,
+      "analitica": "4.1.3.01.002.00002",
+      "descricao": "Variacoes cambiais ativas",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4141201,
+      "analitica": "4.1.4.01.002.00001",
+      "descricao": "Reversao Provisao de Creditos Duvidosos",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4151101,
+      "analitica": "4.1.5.01.001.00001",
+      "descricao": "Alugueis e arrendamentos",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4151102,
+      "analitica": "4.1.5.01.001.00002",
+      "descricao": "Vendas Acessorias",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4151103,
+      "analitica": "4.1.5.01.001.00003",
+      "descricao": "Receita de equivalencia patrimonial",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4151104,
+      "analitica": "4.1.5.01.001.00004",
+      "descricao": "Dividendos e lucros recebidos",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4151105,
+      "analitica": "4.1.5.01.001.00005",
+      "descricao": "Amortizacao de desagio",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4151106,
+      "analitica": "4.1.5.01.001.00006",
+      "descricao": "Outras Receitas não Operacionais",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4151107,
+      "analitica": "4.1.5.01.001.00007",
+      "descricao": "Outras Receitas Operacionais",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4211101,
+      "analitica": "4.2.1.01.001.00001",
+      "descricao": "Lucros alien. particip. em coligadas",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4211201,
+      "analitica": "4.2.1.01.002.00001",
+      "descricao": "Lucros na alienacao de imoveis",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4211202,
+      "analitica": "4.2.1.01.002.00002",
+      "descricao": "Lucros na alienacao moveis e utensilios",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4211204,
+      "analitica": "4.2.1.01.002.00004",
+      "descricao": "Lucros na alienacao de veiculos",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 4211301,
+      "analitica": "4.2.1.01.003.00001",
+      "descricao": "Sinistros com imobilizado",
+      "grupo": "4"
+    },
+    {
+      "reduzida": 5111101,
+      "analitica": "5.1.1.01.001.00001",
+      "descricao": "Custo dos Produtos Vendidos",
+      "grupo": "5"
+    },
+    {
+      "reduzida": 5121101,
+      "analitica": "5.1.2.01.001.00001",
+      "descricao": "Custo dos Servicos Prestados",
+      "grupo": "5"
+    },
+    {
+      "reduzida": 5131101,
+      "analitica": "5.1.3.01.001.00001",
+      "descricao": "Custo das Mercadorias Vendidas",
+      "grupo": "5"
+    },
+    {
       "reduzida": 5131102,
       "analitica": "5.1.3.01.001.00002",
       "descricao": "Compra de Mercadoria",
+      "grupo": "5"
+    },
+    {
+      "reduzida": 5141101,
+      "analitica": "5.1.4.01.001.00001",
+      "descricao": "Ganhos/Perdas na Alienacao Imobilizado",
       "grupo": "5"
     }
   ]

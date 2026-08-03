@@ -12,11 +12,16 @@ from escon_agentes.config import PROJECT_ROOT
 DEFAULT_PLCONTAS = PROJECT_ROOT / "data" / "models" / "PlContas.TXT"
 DEFAULT_CACHE = PROJECT_ROOT / "data" / "models" / "plcontas_index.json"
 
-# Ex.: 1.1.1.01.001.00001   Caixa Geral   1111101   0000...D01
+# Ex. balanço:   1.1.1.01.001.00001   Caixa Geral            1111101    0000...D01
+# Ex. resultado: 3.1.1.01.002.00001   Salarios e ordenados   3111201C   0000...D04
+#
+# As contas de resultado trazem uma letra colada na reduzida (C, A, …). Exigir
+# espaço logo depois fazia o parser descartar TODAS as contas 3xxx e 4xxx em
+# silêncio — o plano parecia ter só Ativo e Passivo.
 _LINE_RE = re.compile(
     r"^(?P<analitica>\d(?:\.\d+){5})\s+"
     r"(?P<descricao>.+?)\s+"
-    r"(?P<reduzida>\d{7})\s+"
+    r"(?P<reduzida>\d{7})(?P<sufixo>[A-Z]?)\s+"
 )
 
 
