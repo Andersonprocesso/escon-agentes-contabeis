@@ -37,7 +37,29 @@ def _norm_text(v: Any) -> str:
     return re.sub(r"\s+", " ", str(v or "")).strip()
 
 
+# O Radar usa um vocabulário curto (simples|presumido|real|mei); o cadastro
+# local usa o longo. Comparar como texto marcaria as 87 empresas como
+# "regime mudou" a cada execução e proporia sobrescrever o Radar à toa.
+REGIME_PARA_RADAR = {
+    "simples_nacional": "simples",
+    "simples": "simples",
+    "mei": "mei",
+    "lucropresumido": "presumido",
+    "presumido": "presumido",
+    "lucroreal": "real",
+    "real": "real",
+}
+
+
+def regime_para_radar(regime: str | None) -> str | None:
+    if not regime:
+        return None
+    return REGIME_PARA_RADAR.get(str(regime).strip().lower())
+
+
 def _same(a: Any, b: Any, *, field: str) -> bool:
+    if field == "regime":
+        return regime_para_radar(a) == regime_para_radar(b)
     if field in ("telefone",):
         return only_digits(str(a or "")) == only_digits(str(b or ""))
     if field == "cnpj":
@@ -133,7 +155,14 @@ def build_radar_plan(
             continue
         existing = by_cnpj.get(cnpj)
         if existing is None:
-            to_create.append({"cnpj": cnpj, "razao_social": src["nome"], "uf": src["uf"]})
+            to_create.append(
+                {
+                    "cnpj": cnpj,
+                    "razao_social": src["nome"],
+                    "uf": src["uf"],
+                    "regime_tributario": regime_para_radar(src["regime"]),
+                }
+            )
             continue
 
         diffs = {}
@@ -144,7 +173,7 @@ def build_radar_plan(
         if src["regime"] and not _same(existing.get("regime_tributario"), src["regime"], field="regime"):
             diffs["regime_tributario"] = {
                 "de": existing.get("regime_tributario"),
-                "para": src["regime"],
+                "para": regime_para_radar(src["regime"]),
             }
         if diffs:
             to_update.append(

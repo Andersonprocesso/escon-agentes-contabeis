@@ -559,6 +559,78 @@ def cadastro_sync_cmd(
         console.print(f"[yellow]{result.human_prompt}[/yellow]")
 
 
+@app.command("cadastro-radar")
+def cadastro_radar_cmd(
+    criar: bool = typer.Option(False, "--criar", help="Cria no Radar as empresas que faltam"),
+    limite: int = typer.Option(0, "--limite", help="Cria no máximo N (0 = todas)"),
+) -> None:
+    """Pedro Henrique: compara o Acessórias com o Radar e cria lá as empresas
+    que faltam. Alterações nunca são aplicadas — só reportadas."""
+    from escon_agentes.tools import acessorias as ac
+    from escon_agentes.tools import cadastro_sync as cs
+    from escon_agentes.tools import radar_ingest as ri
+    from escon_agentes.tools.radar_sync import export_empresas_via_ssh
+
+    s = get_settings()
+    rows = ac.load_snapshot(s.data_dir)
+    if not rows:
+        console.print("[red]Sem snapshot do Acessórias — rode cadastro-sync antes.[/red]")
+        raise typer.Exit(1)
+
+    destino = s.data_dir / "imports" / "radar_empresas.json"
+    console.print("[cyan]Lendo empresas do Radar…[/cyan]")
+    export_empresas_via_ssh(destino)
+    radar_rows = json.loads(destino.read_text(encoding="utf-8"))
+
+    plan = cs.build_radar_plan(rows, radar_rows)
+    console.print(
+        f"Acessórias: {len(rows)} · Radar: {len(radar_rows)} · "
+        f"faltando no Radar: [bold]{len(plan['to_create'])}[/bold] · "
+        f"divergentes: {len(plan['to_update'])} · iguais: {plan['unchanged']}"
+    )
+
+    if plan["to_create"]:
+        t = Table(title=f"Criar no Radar ({len(plan['to_create'])})")
+        for col in ("cnpj", "razão social", "uf", "regime"):
+            t.add_column(col)
+        for c in plan["to_create"][:40]:
+            t.add_row(c["cnpj"], (c["razao_social"] or "")[:38], c.get("uf") or "", c.get("regime_tributario") or "")
+        console.print(t)
+
+    if plan["to_update"]:
+        t2 = Table(title=f"Divergências (NÃO serão aplicadas) ({len(plan['to_update'])})")
+        for col in ("razão social", "campo", "no Radar", "no Acessórias"):
+            t2.add_column(col)
+        for u in plan["to_update"][:20]:
+            for campo, d in u["diffs"].items():
+                t2.add_row((u["razao_social"] or "")[:28], campo, str(d["de"])[:20], str(d["para"])[:20])
+        console.print(t2)
+        console.print("[dim]Alterar cadastro existente exige sua confirmação caso a caso.[/dim]")
+
+    if not criar:
+        console.print("\n[dim]Simulação — nada foi gravado no Radar. Use --criar.[/dim]")
+        return
+
+    alvo = plan["to_create"][:limite] if limite else plan["to_create"]
+    if not alvo:
+        console.print("[green]Nada a criar.[/green]")
+        return
+
+    console.print(f"[cyan]Criando {len(alvo)} empresa(s) no Radar…[/cyan]")
+    r = ri.criar_empresas_no_radar(alvo)
+    console.print(
+        f"[green]{len(r['criadas'])} criada(s)[/green] · "
+        f"{len(r['ignoradas'])} já existiam · "
+        f"{len(r['invalidas'])} recusada(s) pela validação do Radar"
+    )
+    for inv in r["invalidas"][:10]:
+        console.print(f"  [yellow]{inv['cnpj']}[/yellow]: {inv['erro'][:90]}")
+    if r["criadas"]:
+        console.print(
+            "[dim]Rode 'import-radar' para trazer os radar_id novos ao cadastro local.[/dim]"
+        )
+
+
 @app.command("cadastro-novo")
 def cadastro_novo_cmd(
     origem: str = typer.Argument(..., help="PDF/TXT do cartão CNPJ, contrato social… ou uma pasta"),

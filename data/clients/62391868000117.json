@@ -5,8 +5,11 @@
   "regime": "simples_nacional",
   "banco_principal": "itau",
   "contatos": {
-    "whatsapp": "12996125554"
+    "whatsapp": "12996125554",
+    "telefone": "12996125554"
   },
+  "telefone": "12996125554",
+  "email": null,
   "tags": [
     "radar",
     "simples_nacional"

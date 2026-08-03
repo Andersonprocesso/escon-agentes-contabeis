@@ -12,13 +12,15 @@
   "telefone": "553195002631",
   "email": "perimsantos310777@gmail.com",
   "tags": [
+    "radar",
+    "mei",
     "acessorias"
   ],
-  "radar_id": null,
+  "radar_id": "62f948cd-307a-41ee-8eb8-329930a6ccf4",
   "uf": "SP",
   "tipo_pessoa": "J",
-  "procuracao_ok": null,
-  "monitoramento_ativo": null,
+  "procuracao_ok": false,
+  "monitoramento_ativo": true,
   "drive_folder_hint": "ESPERINDEU PEREIRA DOS SANTOS 02829295684",
-  "source": "acessorias"
+  "source": "radar"
 }

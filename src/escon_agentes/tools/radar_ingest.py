@@ -181,3 +181,94 @@ asyncio.run(main())
 
 def competencia_de(data: datetime) -> str:
     return f"{data:%Y-%m}"
+
+
+ESCRITORIO_ID = "734c20df-9355-405e-85cb-b2910f44633a"
+
+
+def criar_empresas_no_radar(
+    empresas: list[dict[str, Any]],
+    *,
+    host: str = DEFAULT_HOST,
+    key: Path = DEFAULT_KEY,
+) -> dict[str, Any]:
+    """Cria empresas no Radar usando o schema `EmpresaCreate` dele.
+
+    Reusar o schema traz de graça a validação de dígito verificador de CNPJ/CPF
+    e os defaults corretos (config_radar, monitoramento_ativo). A checagem de
+    duplicidade repete a do endpoint e ainda há UniqueConstraint no banco.
+    """
+    payload = [
+        {
+            "cnpj_cpf": e["cnpj"],
+            "razao_social": e["razao_social"],
+            "uf": (e.get("uf") or None),
+            "regime_tributario": e.get("regime_tributario"),
+        }
+        for e in empresas
+    ]
+
+    # A lista vai por arquivo, não embutida no script: com algumas dezenas de
+    # empresas o base64 do script estoura o limite de linha de comando do Windows.
+    _enviar_bytes(
+        json.dumps(payload, ensure_ascii=False).encode("utf-8"),
+        "/tmp/escon_empresas.json",
+        host=host,
+        key=key,
+    )
+
+    py = f'''
+import asyncio, json, sys, uuid
+sys.path.insert(0, "/code")
+
+from sqlalchemy import select
+from app.models import Empresa
+from app.schemas.empresa import EmpresaCreate
+from app.workers.db import worker_session
+
+with open("/tmp/escon_empresas.json", encoding="utf-8") as fh:
+    ENTRADA = json.load(fh)
+ESCRITORIO = uuid.UUID({ESCRITORIO_ID!r})
+
+async def main():
+    criadas, ignoradas, invalidas = [], [], []
+    async with worker_session() as db:
+        for item in ENTRADA:
+            try:
+                dados = EmpresaCreate(**item)
+            except Exception as e:
+                invalidas.append({{"cnpj": item["cnpj_cpf"], "erro": str(e)[:160]}})
+                continue
+            existe = await db.scalar(select(Empresa.id).where(
+                Empresa.escritorio_id == ESCRITORIO,
+                Empresa.cnpj_cpf == dados.cnpj_cpf,
+            ))
+            if existe:
+                ignoradas.append(dados.cnpj_cpf)
+                continue
+            emp = Empresa(escritorio_id=ESCRITORIO, **dados.model_dump(exclude={{"certificado"}}))
+            db.add(emp)
+            await db.flush()
+            criadas.append({{"cnpj": dados.cnpj_cpf, "radar_id": str(emp.id),
+                             "razao_social": dados.razao_social}})
+        await db.commit()
+    print("RESULTADO|" + json.dumps(
+        {{"criadas": criadas, "ignoradas": ignoradas, "invalidas": invalidas}}, ensure_ascii=False))
+
+asyncio.run(main())
+'''
+    py_b64 = base64.b64encode(py.encode("utf-8")).decode("ascii")
+    script = (
+        "set -e\n"
+        f"echo {py_b64} | base64 -d > /tmp/escon_empresas.py\n"
+        f"docker cp /tmp/escon_empresas.json {API_CONTAINER}:/tmp/escon_empresas.json\n"
+        f"docker cp /tmp/escon_empresas.py {API_CONTAINER}:/tmp/escon_empresas.py\n"
+        f"docker exec -w /code {API_CONTAINER} python /tmp/escon_empresas.py\n"
+        f"rm -f /tmp/escon_empresas.py /tmp/escon_empresas.json\n"
+        f"docker exec {API_CONTAINER} rm -f /tmp/escon_empresas.py /tmp/escon_empresas.json\n"
+    )
+    saida = _run_remote(script, host=host, user=DEFAULT_USER, key=key, timeout=300)
+    linha = next((l for l in saida.splitlines() if l.startswith("RESULTADO|")), None)
+    if not linha:
+        raise RuntimeError(f"Radar não confirmou a criação: {saida.strip()[-400:]}")
+    return json.loads(linha.split("|", 1)[1])

@@ -12,13 +12,15 @@
   "telefone": "553195002631",
   "email": "ed050986@hotmail.com",
   "tags": [
+    "radar",
+    "mei",
     "acessorias"
   ],
-  "radar_id": null,
+  "radar_id": "158e3892-cbe1-4ee4-a116-d83be6bd7d68",
   "uf": "SP",
   "tipo_pessoa": "J",
-  "procuracao_ok": null,
-  "monitoramento_ativo": null,
+  "procuracao_ok": false,
+  "monitoramento_ativo": true,
   "drive_folder_hint": "EDMAR COSTA SERAFIM 34122252822",
-  "source": "acessorias"
+  "source": "radar"
 }

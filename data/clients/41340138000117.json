@@ -12,13 +12,15 @@
   "telefone": "553195002631",
   "email": "jholsrf@gmail.com",
   "tags": [
+    "radar",
+    "mei",
     "acessorias"
   ],
-  "radar_id": null,
+  "radar_id": "7cfc2441-a047-40aa-a722-0df653c0f555",
   "uf": "SP",
   "tipo_pessoa": "J",
-  "procuracao_ok": null,
-  "monitoramento_ativo": null,
+  "procuracao_ok": false,
+  "monitoramento_ativo": true,
   "drive_folder_hint": "JONATHAN COSTA SERAFIM 37928869870",
-  "source": "acessorias"
+  "source": "radar"
 }
