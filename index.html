@@ -647,6 +647,7 @@
       history: [],
       directMode: false, // avançado: falar direto com especialista
       selectedClientId: null,
+      persistence: "",
       activeTab: "chat",
     };
 
@@ -1000,6 +1001,7 @@
       state.clients = clientsRes.clients || (Array.isArray(clientsRes) ? clientsRes : []);
       const note = document.getElementById("clients-persist-note");
       if (note) {
+        state.persistence = clientsRes.persistence || "";
         note.textContent = clientsRes.persistence
           ? "Persistência: " + clientsRes.persistence
           : "Telefone e e-mail alimentam cobrança de extratos (Greg) e outros contatos.";
@@ -1306,7 +1308,17 @@
 
     async function deleteClient(id) {
       const c = state.clients.find((x) => x.id === id);
-      if (!confirm(`Excluir cliente ${c ? c.nome || c.name : id}?`)) return;
+      const nome = c ? c.nome || c.name : id;
+      // No Vercel a gravação vai para uma área temporária que se apaga a cada
+      // deploy. Sem este aviso, uma limpeza de dezenas de clientes seria
+      // silenciosamente perdida.
+      const temporario = (state.persistence || "").includes("vercel");
+      const aviso = temporario
+        ? `\n\nATENÇÃO: aqui a exclusão é TEMPORÁRIA — volta no próximo deploy.` +
+          `\nPara excluir de vez, use o painel do PC:` +
+          `\n  python -m escon_agentes dashboard`
+        : "";
+      if (!confirm(`Excluir cliente ${nome}?${aviso}`)) return;
       try {
         await api("/api/clients/" + encodeURIComponent(id), { method: "DELETE" });
         if (state.selectedClientId === id) state.selectedClientId = null;
@@ -1324,6 +1336,7 @@
       if (!Array.isArray(state.clients)) state.clients = [];
       const note = document.getElementById("clients-persist-note");
       if (note) {
+        state.persistence = clientsRes.persistence || "";
         note.textContent = clientsRes.persistence
           ? "Persistência: " + clientsRes.persistence
           : "Telefone e e-mail são usados pelo Greg (cobrança de extratos) e contatos dos agentes.";
