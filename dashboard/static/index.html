@@ -362,8 +362,12 @@
       svc.innerHTML = services.map(s =>
         `<option value="${s.id}">${s.label}</option>`).join('');
       const cl = document.getElementById('client');
+      // /api/clients devolve {total, clients} desde que o CRUD foi criado; esta
+      // tela seguia tratando a resposta como lista e quebrava com
+      // "clients.map is not a function". Aceita os dois formatos.
+      const listaClientes = Array.isArray(clients) ? clients : (clients.clients || []);
       cl.innerHTML = `<option value="">— opcional / todos —</option>` +
-        clients.map(c => `<option value="${c.id}">${c.nome} (${c.id})</option>`).join('');
+        listaClientes.map(c => `<option value="${c.id}">${c.nome} (${c.id})</option>`).join('');
       const md = document.getElementById('model');
       const aliases = models.aliases || {};
       md.innerHTML = `<option value="">padrão (${models.default || 'offline'})</option>` +

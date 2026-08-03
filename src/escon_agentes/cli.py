@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Optional
@@ -224,6 +225,71 @@ def delete_client_cmd(
         raise typer.Exit(1)
     delete_client(s.clients_dir, client_id, inbox_root=s.inbox, remove_inbox=False)
     console.print(f"[green]Excluído:[/green] {client_id}")
+
+
+@app.command("excluir-clientes")
+def excluir_clientes_cmd(
+    cnpjs: list[str] = typer.Argument(None, help="CNPJs (com ou sem máscara), separados por espaço"),
+    arquivo: Optional[str] = typer.Option(
+        None, "--arquivo", "-f", help="Arquivo .txt/.csv com um CNPJ por linha"
+    ),
+    confirmar: bool = typer.Option(False, "--confirmar", help="Executa; sem isso é só simulação"),
+) -> None:
+    """Exclui vários clientes de uma vez do cadastro local (permanente).
+
+    Sem --confirmar, apenas mostra o que seria removido.
+    """
+    import re as _re
+
+    from escon_agentes.tools.clients import delete_client, get_client
+
+    s = get_settings()
+    alvos: list[str] = list(cnpjs or [])
+    if arquivo:
+        texto = Path(arquivo).read_text(encoding="utf-8-sig", errors="ignore")
+        alvos += _re.findall(r"\d[\d./-]{10,}", texto)
+    ids = []
+    for a in alvos:
+        d = _re.sub(r"\D", "", a)
+        if d and d not in ids:
+            ids.append(d)
+    if not ids:
+        console.print("[yellow]Informe CNPJs ou --arquivo.[/yellow]")
+        raise typer.Exit(1)
+
+    t = Table(title=f"Exclusão de clientes ({len(ids)})")
+    for col in ("cnpj", "nome", "situação"):
+        t.add_column(col)
+    encontrados = []
+    for cid in ids:
+        c = get_client(s.clients_dir, cid)
+        if c:
+            encontrados.append(c)
+            t.add_row(cid, c.name[:44], "será removido")
+        else:
+            t.add_row(cid, "[dim]—[/dim]", "[yellow]não está no cadastro[/yellow]")
+    console.print(t)
+
+    if not confirmar:
+        console.print(
+            f"\n[dim]Simulação — nada removido. Rode de novo com --confirmar "
+            f"para excluir {len(encontrados)} cliente(s).[/dim]"
+        )
+        return
+
+    removidos = 0
+    for c in encontrados:
+        delete_client(s.clients_dir, c.id, inbox_root=s.inbox, remove_inbox=False)
+        removidos += 1
+    console.print(f"\n[green]{removidos} cliente(s) excluído(s).[/green]")
+    console.print("[dim]Atualizando o painel…[/dim]")
+    import subprocess
+
+    subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "export_clients_snapshot.py")],
+        env={**os.environ, "PYTHONPATH": str(SRC)},
+        check=False,
+    )
 
 
 @app.command("import-radar")
