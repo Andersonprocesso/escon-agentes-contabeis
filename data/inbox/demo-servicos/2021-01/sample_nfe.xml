@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nfeProc xmlns="http://www.portalfiscal.inf.br/nfe" versao="4.00">
+  <NFe>
+    <infNFe Id="NFe35260112345678000190550010000001231234567890" versao="4.00">
+      <ide>
+        <cUF>35</cUF>
+        <natOp>Prestacao de servicos</natOp>
+        <mod>55</mod>
+        <serie>1</serie>
+        <nNF>123</nNF>
+        <dhEmi>2026-07-15T10:00:00-03:00</dhEmi>
+        <tpNF>1</tpNF>
+      </ide>
+      <emit>
+        <CNPJ>12345678000190</CNPJ>
+        <xNome>Demo Servicos LTDA</xNome>
+      </emit>
+      <dest>
+        <CNPJ>11222333000181</CNPJ>
+        <xNome>Cliente Exemplo SA</xNome>
+      </dest>
+      <total>
+        <ICMSTot>
+          <vNF>1500.00</vNF>
+        </ICMSTot>
+      </total>
+    </infNFe>
+  </NFe>
+  <protNFe>
+    <infProt>
+      <chNFe>35260112345678000190550010000001231234567890</chNFe>
+    </infProt>
+  </protNFe>
+</nfeProc>

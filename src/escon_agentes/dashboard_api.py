@@ -32,6 +32,20 @@ from escon_agentes.workflows.contmatic_pipeline import run_contmatic_pipeline
 STATIC_DIR = PROJECT_ROOT / "dashboard" / "static"
 
 
+
+class PastaIn(BaseModel):
+    caminho: str
+
+
+class FechamentoIn(BaseModel):
+    client_id: str
+    competencia: str
+    pasta_local: Optional[str] = None
+    usar_radar: bool = False
+    pasta_onedrive: Optional[str] = None
+    usar_llm: bool = True
+
+
 def create_app() -> FastAPI:
     app = FastAPI(
         title="Escon Agentes — Dashboard",
@@ -259,6 +273,74 @@ def create_app() -> FastAPI:
     @app.post("/api/contmatic/{client_id}")
     def api_contmatic(client_id: str, folder: Optional[str] = None) -> dict[str, Any]:
         return run_contmatic_pipeline(client_id, folder=folder)
+
+    # ---------- Fechamento por competência (contabilidade atrasada) ----------
+
+    @app.post("/api/pastas/inspecionar")
+    def api_inspecionar_pasta(body: PastaIn) -> dict[str, Any]:
+        """Confere a pasta antes de rodar — melhor descobrir agora que o
+        caminho está errado do que no meio do fechamento."""
+        from escon_agentes.workflows import fechamento as fx
+
+        return fx.inspecionar_pasta(body.caminho)
+
+    @app.post("/api/fechamentos")
+    def api_fechamento_executar(body: FechamentoIn) -> dict[str, Any]:
+        from escon_agentes.workflows import fechamento as fx
+
+        s = get_settings()
+        try:
+            return fx.executar(
+                s,
+                client_id=body.client_id,
+                competencia=body.competencia,
+                pasta_local=body.pasta_local,
+                usar_radar=body.usar_radar,
+                pasta_onedrive=body.pasta_onedrive,
+                usar_llm=body.usar_llm,
+            )
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e)) from e
+
+    @app.get("/api/fechamentos")
+    def api_fechamentos() -> list[dict[str, Any]]:
+        from escon_agentes.workflows import fechamento as fx
+
+        itens = fx.listar(get_settings())
+        # a lista não precisa carregar os lançamentos inteiros
+        return [
+            {k: v for k, v in i.items() if k not in ("lancados", "pendentes")}
+            | {
+                "total_lancados": len(i.get("lancados") or []),
+                "total_pendentes": len(i.get("pendentes") or []),
+            }
+            for i in itens
+        ]
+
+    @app.get("/api/fechamentos/{client_id}/{competencia}")
+    def api_fechamento(client_id: str, competencia: str) -> dict[str, Any]:
+        from escon_agentes.workflows import fechamento as fx
+
+        estado = fx.carregar(get_settings(), client_id, competencia)
+        if not estado:
+            raise HTTPException(status_code=404, detail="Fechamento não encontrado")
+        return estado
+
+    @app.get("/api/fechamentos/{client_id}/{competencia}/planilha")
+    def api_fechamento_planilha(client_id: str, competencia: str):
+        from fastapi.responses import FileResponse
+
+        from escon_agentes.workflows import fechamento as fx
+
+        estado = fx.carregar(get_settings(), client_id, competencia) or {}
+        caminho = estado.get("planilha")
+        if not caminho or not Path(caminho).exists():
+            raise HTTPException(status_code=404, detail="Planilha ainda não gerada")
+        return FileResponse(
+            caminho,
+            filename=f"lancamentos_{client_id}_{competencia}.xlsx",
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
 
     return app
 

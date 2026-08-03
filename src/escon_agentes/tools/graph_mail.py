@@ -21,7 +21,9 @@ import msal
 from escon_agentes.config import Settings
 
 GRAPH_BASE = "https://graph.microsoft.com/v1.0"
-SCOPES = ["Mail.Read", "Mail.ReadWrite"]
+SCOPES = ["Mail.Read", "Mail.ReadWrite", "Files.Read.All"]
+# Files.Read.All: le os documentos no OneDrive do escritorio (fechamento por
+# competencia). Precisa estar registrada no app do Azure AD, senao o consent falha.
 
 
 class MailboxUnavailable(RuntimeError):

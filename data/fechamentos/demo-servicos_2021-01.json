@@ -1,0 +1,89 @@
+{
+  "client_id": "demo-servicos",
+  "competencia": "2021-01",
+  "iniciado_em": "2026-08-03T19:27:07",
+  "situacao": "concluido",
+  "etapas": [
+    {
+      "etapa": "pasta do PC",
+      "ok": true,
+      "copiados": 2,
+      "ja_existiam": 2,
+      "destino": "C:\\Users\\ander\\OneDrive\\Desktop\\Projetos\\Agentes Contabeis Escon\\data\\inbox\\demo-servicos\\2021-01"
+    },
+    {
+      "etapa": "documentos reunidos",
+      "ok": true,
+      "total": 2
+    },
+    {
+      "etapa": "lançamentos (Alexandre)",
+      "ok": true,
+      "lancados": 3,
+      "pendentes": 1,
+      "por_regra": 3,
+      "chamadas_llm": 0
+    }
+  ],
+  "resumo": "2 documento(s) lidos · 3 lançamento(s) (3 por regra, 0 pelo modelo) · 1 pendente(s) · 0 chamada(s) de LLM.\nEconomia: 3 de 3 lançamento(s) sem consultar o modelo.\nPendentes aguardam você: C:\\Users\\ander\\OneDrive\\Desktop\\Projetos\\Agentes Contabeis Escon\\data\\outbox\\demo-servicos\\lancamentos_pendentes.json",
+  "lancados": [
+    {
+      "arquivo": "extrato_demo.ofx",
+      "data": "10/07/2026",
+      "valor": 1500.0,
+      "debito": "1112201",
+      "credito": "1121101",
+      "historico": 9,
+      "historico_texto": "Prestação de Serviços",
+      "complemento": "TED CLIENTE EXEMPLO NF 123",
+      "regra": "recebimento_duplicata",
+      "origem": "regra",
+      "observacao": "Recebimento — baixa a duplicata"
+    },
+    {
+      "arquivo": "extrato_demo.ofx",
+      "data": "12/07/2026",
+      "valor": 350.0,
+      "debito": "3221205",
+      "credito": "1112201",
+      "historico": 0,
+      "historico_texto": "",
+      "complemento": "PAGAMENTO ALUGUEL",
+      "regra": "aluguel_veiculo",
+      "origem": "regra",
+      "observacao": ""
+    },
+    {
+      "arquivo": "extrato_demo.ofx",
+      "data": "15/07/2026",
+      "valor": 89.9,
+      "debito": "3212608",
+      "credito": "1112201",
+      "historico": 11,
+      "historico_texto": "Energia Eletrica Mes",
+      "complemento": "ENERGIA ELETRICA",
+      "regra": "energia",
+      "origem": "regra",
+      "observacao": ""
+    }
+  ],
+  "pendentes": [
+    {
+      "arquivo": "sample_nfe.xml",
+      "data": null,
+      "valor": null,
+      "debito": "1112201",
+      "credito": "4111201",
+      "historico": 9,
+      "historico_texto": "Prestação de Serviços",
+      "complemento": "nfe  ",
+      "regra": "servico_a_vista",
+      "origem": "regra",
+      "observacao": "NFS-e recebida na hora — entra direto no banco",
+      "motivo": "faltou data, valor"
+    }
+  ],
+  "planilha": "C:\\Users\\ander\\OneDrive\\Desktop\\Projetos\\Agentes Contabeis Escon\\data\\outbox\\demo-servicos\\lancamentos_2021-01.xlsx",
+  "documentos": 2,
+  "terminado_em": "2026-08-03T19:27:07"
+}

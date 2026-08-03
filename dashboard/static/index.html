@@ -285,6 +285,54 @@
       </div>
     </section>
 
+
+    <section class="card" id="fechamentoCard">
+      <h2>Contabilidade atrasada <span class="muted">por competência</span></h2>
+      <p class="muted" style="margin:.2rem 0 .8rem">
+        Aponte a pasta do PC e/ou puxe do Drive. Cada competência fica separada,
+        e no fim você confere e baixa a planilha do Contmatic.
+      </p>
+      <div class="grid2" style="gap:.8rem">
+        <div>
+          <label>Cliente</label>
+          <select id="fxCliente"></select>
+
+          <label style="margin-top:.6rem">Competência</label>
+          <input id="fxComp" placeholder="jan/21, 01/2021 ou 2021-01" />
+
+          <label style="margin-top:.6rem">Pasta no PC (opcional)</label>
+          <div style="display:flex;gap:.4rem">
+            <input id="fxPasta" placeholder="C:\Users\ander\Documentos\Cliente\jan-21" style="flex:1" />
+            <button class="btn ghost" id="fxVerPasta" type="button">Conferir</button>
+          </div>
+          <p class="muted" id="fxPastaInfo" style="min-height:1.1em;margin:.35rem 0 0"></p>
+
+          <label style="margin-top:.6rem">Pasta no OneDrive (opcional)</label>
+          <input id="fxOneDrive" placeholder="Documentos/Clientes/Alumax/jan-21" />
+
+          <label style="margin-top:.6rem;display:flex;align-items:center;gap:.45rem">
+            <input type="checkbox" id="fxRadar" style="width:auto" />
+            Puxar também do Drive (Radar)
+          </label>
+
+          <button class="btn" id="fxRodar" type="button" style="margin-top:.8rem">
+            Fazer a contabilidade desta competência
+          </button>
+          <p class="muted" id="fxStatus" style="min-height:1.2em;margin-top:.5rem"></p>
+        </div>
+        <div>
+          <h3 style="font-size:.95rem;margin:0 0 .5rem">Andamento</h3>
+          <div id="fxEtapas" class="muted">Nada em andamento.</div>
+          <div id="fxResultado" style="margin-top:.8rem"></div>
+        </div>
+      </div>
+      <div style="margin-top:1rem">
+        <h3 style="font-size:.95rem;margin:0 0 .5rem">Competências já processadas</h3>
+        <table><thead><tr>
+          <th>Cliente</th><th>Competência</th><th>Situação</th><th>Lançados</th><th>Pendentes</th><th></th>
+        </tr></thead><tbody id="fxLista"></tbody></table>
+      </div>
+    </section>
     <section class="grid2">
       <div class="card">
         <h2>Tarefas abertas (Anne)</h2>
@@ -352,12 +400,91 @@
         </div>`).join('');
     }
 
+
+    // ---------- Fechamento por competência ----------
+    async function fxCarregarClientes() {
+      const r = await j('/api/clients');
+      const lista = Array.isArray(r) ? r : (r.clients || []);
+      document.getElementById('fxCliente').innerHTML =
+        lista.map(c => `<option value="${c.id}">${c.nome} (${c.id})</option>`).join('');
+    }
+
+    document.getElementById('fxVerPasta').onclick = async () => {
+      const el = document.getElementById('fxPastaInfo');
+      const caminho = document.getElementById('fxPasta').value.trim();
+      if (!caminho) { el.textContent = 'Informe o caminho da pasta.'; return; }
+      el.textContent = 'conferindo…';
+      const r = await j('/api/pastas/inspecionar', {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ caminho })
+      });
+      el.textContent = r.ok
+        ? `${r.total} documento(s): ${Object.entries(r.por_tipo).map(([k,v]) => v+' '+k).join(', ')}`
+        : r.erro;
+    };
+
+    function fxPintarEtapas(etapas) {
+      document.getElementById('fxEtapas').innerHTML = (etapas || []).map(e => {
+        const detalhe = e.copiados !== undefined ? `${e.copiados} copiado(s)`
+          : e.baixados !== undefined ? `${e.baixados} baixado(s)`
+          : e.lancados !== undefined ? `${e.lancados} lançado(s), ${e.pendentes} pendente(s)`
+          : e.total !== undefined ? `${e.total} arquivo(s)` : '';
+        return `<div style="margin-bottom:.3rem">${e.ok === false ? '✗' : '✓'}
+          <strong>${e.etapa}</strong> <span class="muted">${detalhe} ${e.erro || ''}</span></div>`;
+      }).join('') || 'Nada em andamento.';
+    }
+
+    document.getElementById('fxRodar').onclick = async () => {
+      const st = document.getElementById('fxStatus');
+      const body = {
+        client_id: document.getElementById('fxCliente').value,
+        competencia: document.getElementById('fxComp').value.trim(),
+        pasta_local: document.getElementById('fxPasta').value.trim() || null,
+        pasta_onedrive: document.getElementById('fxOneDrive').value.trim() || null,
+        usar_radar: document.getElementById('fxRadar').checked,
+      };
+      if (!body.competencia) { st.textContent = 'Informe a competência (ex.: jan/21).'; return; }
+      st.textContent = 'processando… pode levar alguns minutos';
+      document.getElementById('fxResultado').innerHTML = '';
+      try {
+        const r = await j('/api/fechamentos', {
+          method: 'POST', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify(body)
+        });
+        fxPintarEtapas(r.etapas);
+        st.textContent = r.resumo || r.situacao;
+        if (r.planilha) {
+          const url = `/api/fechamentos/${r.client_id}/${r.competencia}/planilha`;
+          document.getElementById('fxResultado').innerHTML =
+            `<a class="btn" href="${url}">Baixar planilha do Contmatic</a>
+             <p class="muted" style="margin-top:.5rem">Confira antes de importar.</p>`;
+        }
+        fxListar();
+      } catch (e) {
+        st.textContent = 'Falhou: ' + e.message;
+      }
+    };
+
+    async function fxListar() {
+      const itens = await j('/api/fechamentos');
+      document.getElementById('fxLista').innerHTML = itens.map(i => `
+        <tr>
+          <td>${i.client_id}</td>
+          <td>${i.competencia}</td>
+          <td>${i.situacao}</td>
+          <td>${i.total_lancados}</td>
+          <td>${i.total_pendentes}</td>
+          <td>${i.planilha ? `<a href="/api/fechamentos/${i.client_id}/${i.competencia}/planilha">baixar</a>` : '—'}</td>
+        </tr>`).join('') || '<tr><td colspan="6" class="muted">Nenhuma competência processada.</td></tr>';
+    }
+
     async function loadSelects() {
       const [services, clients, models] = await Promise.all([
         j('/api/services'),
         j('/api/clients'),
         j('/api/models'),
       ]);
+      fxCarregarClientes(); fxListar();
       const svc = document.getElementById('service');
       svc.innerHTML = services.map(s =>
         `<option value="${s.id}">${s.label}</option>`).join('');
