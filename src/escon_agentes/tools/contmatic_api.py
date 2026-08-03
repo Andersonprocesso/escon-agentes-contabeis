@@ -60,7 +60,7 @@ def quem_sou(token: str) -> dict[str, Any]:
 def listar_empresas(token: str, *, ativo: bool | None = None) -> list[dict[str, Any]]:
     """Todas as empresas do escritório — traz `apelido`, que é a chave usada
     nos demais serviços (ex.: Escon = '0001')."""
-    params: dict[str, Any] = {"size": 500}
+    params: dict[str, Any] = {"size": 300}  # 300 e o maximo aceito; acima disso da 422
     if ativo is not None:
         params["ativo"] = ativo
     dados = _get(token, "/v1/empresas", params)
