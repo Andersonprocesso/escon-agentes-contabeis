@@ -9,6 +9,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+# console do Windows abre em cp1252 e quebra ao imprimir "→" no resumo final
+for _s in (sys.stdout, sys.stderr):
+    if getattr(_s, "encoding", "") and _s.encoding.lower().replace("-", "") != "utf8":
+        try:
+            _s.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, OSError):
+            pass
+
 from escon_agentes.config import get_settings  # noqa: E402
 from escon_agentes.tools.clients import as_table, list_clients  # noqa: E402
 

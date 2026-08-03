@@ -1,5 +1,5 @@
 {
-  "total": 87,
+  "total": 109,
   "clients": [
     {
       "id": "05026121000126",
@@ -10,7 +10,7 @@
       "source": "radar",
       "telefone": "12988998264",
       "whatsapp": "12988998264",
-      "email": null,
+      "email": "casapaduacomercial@hotmail.com",
       "banco": "itau"
     },
     {
@@ -22,7 +22,7 @@
       "source": "radar",
       "telefone": "12988306222",
       "whatsapp": "12988306222",
-      "email": "financeiro@alumax.example",
+      "email": "ferragensalumax@protonmail.com",
       "banco": "itau"
     },
     {
@@ -34,7 +34,7 @@
       "source": "radar",
       "telefone": "12982579592",
       "whatsapp": "12982579592",
-      "email": null,
+      "email": "contato.totalseg@hotmail.com",
       "banco": "itau"
     },
     {
@@ -46,7 +46,7 @@
       "source": "radar",
       "telefone": "12974026441",
       "whatsapp": "12974026441",
-      "email": null,
+      "email": "oficina.financeiro.elvis@gmail.com",
       "banco": "itau"
     },
     {
@@ -58,7 +58,7 @@
       "source": "radar",
       "telefone": "12997335363",
       "whatsapp": "12997335363",
-      "email": null,
+      "email": "gjbusiped@gmail.com",
       "banco": "itau"
     },
     {
@@ -70,7 +70,7 @@
       "source": "radar",
       "telefone": "12974035169",
       "whatsapp": "12974035169",
-      "email": null,
+      "email": "anderson@escondigital.com.br",
       "banco": "itau"
     },
     {
@@ -82,7 +82,7 @@
       "source": "radar",
       "telefone": "12988650946",
       "whatsapp": "12988650946",
-      "email": null,
+      "email": "pauloeduardo021@outlook.com",
       "banco": "itau"
     },
     {
@@ -94,7 +94,7 @@
       "source": "radar",
       "telefone": "12974012164",
       "whatsapp": "12974012164",
-      "email": null,
+      "email": "financeiro@tidovale.com.br",
       "banco": "itau"
     },
     {
@@ -106,7 +106,7 @@
       "source": "radar",
       "telefone": "12988108003",
       "whatsapp": "12988108003",
-      "email": null,
+      "email": "interface.celular@gmail.com",
       "banco": "itau"
     },
     {
@@ -118,7 +118,7 @@
       "source": "radar",
       "telefone": "12991827048",
       "whatsapp": "12991827048",
-      "email": null,
+      "email": "klinger@klctur.com.br",
       "banco": "itau"
     },
     {
@@ -130,7 +130,31 @@
       "source": "radar",
       "telefone": "12997335363",
       "whatsapp": "12997335363",
-      "email": null,
+      "email": "gjbusiped@gmail.com",
+      "banco": "itau"
+    },
+    {
+      "id": "11748471000107",
+      "nome": "LEAL COMERCIO DE COSMETICOS LTDA",
+      "cnpj": "11.748.471/0001-07",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar",
+      "telefone": "5512996698857",
+      "whatsapp": "5512996698857",
+      "email": "lealcosmeticos@hotmail.com",
+      "banco": "itau"
+    },
+    {
+      "id": "11972618000130",
+      "nome": "JOAO APARECIDO DA SILVA 37701843604",
+      "cnpj": "11.972.618/0001-30",
+      "regime": "mei",
+      "uf": "SP",
+      "source": "radar",
+      "telefone": "553195002631",
+      "whatsapp": "553195002631",
+      "email": "j.a.sartigosevangelicos@gmail.com",
       "banco": "itau"
     },
     {
@@ -142,7 +166,7 @@
       "source": "radar",
       "telefone": "12997247053",
       "whatsapp": "12997247053",
-      "email": null,
+      "email": "sonofisio.mf@gmail.com",
       "banco": "itau"
     },
     {
@@ -154,7 +178,7 @@
       "source": "radar",
       "telefone": "12997534372",
       "whatsapp": "12997534372",
-      "email": null,
+      "email": "ricardo@rfntransportes.com.br",
       "banco": "itau"
     },
     {
@@ -166,7 +190,7 @@
       "source": "radar",
       "telefone": "12992565136",
       "whatsapp": "12992565136",
-      "email": null,
+      "email": "flavianocmaria@hotmail.com",
       "banco": "itau"
     },
     {
@@ -178,7 +202,7 @@
       "source": "radar",
       "telefone": "12988616169",
       "whatsapp": "12988616169",
-      "email": null,
+      "email": "adc.la@hotmail.com",
       "banco": "itau"
     },
     {
@@ -190,7 +214,31 @@
       "source": "radar",
       "telefone": "12988256199",
       "whatsapp": "12988256199",
-      "email": null,
+      "email": "d.apoioandaimes@gmail.com",
+      "banco": "itau"
+    },
+    {
+      "id": "16616315000106",
+      "nome": "COMERCIO DE CESTA BASICA SAO LUCAS LTDA",
+      "cnpj": "16.616.315/0001-06",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar",
+      "telefone": "5511934696720",
+      "whatsapp": "5511934696720",
+      "email": "cestabasicasaolucas77@gmail.com",
+      "banco": "itau"
+    },
+    {
+      "id": "16668278000171",
+      "nome": "MARGARIDA APARECIDA MENDES 10963754866",
+      "cnpj": "16.668.278/0001-71",
+      "regime": "mei",
+      "uf": "SP",
+      "source": "radar",
+      "telefone": "5511934696720",
+      "whatsapp": "5511934696720",
+      "email": "contato@escondigital.com.br",
       "banco": "itau"
     },
     {
@@ -202,7 +250,7 @@
       "source": "radar",
       "telefone": "12988105976",
       "whatsapp": "12988105976",
-      "email": null,
+      "email": "lujane_2008@hotmail.com",
       "banco": "itau"
     },
     {
@@ -214,7 +262,7 @@
       "source": "radar",
       "telefone": "12997651356",
       "whatsapp": "12997651356",
-      "email": null,
+      "email": "joaoluiz.transportes@gmail.com",
       "banco": "itau"
     },
     {
@@ -226,7 +274,7 @@
       "source": "radar",
       "telefone": "1239433491",
       "whatsapp": "1239433491",
-      "email": null,
+      "email": "marcia.cristina@alfatorre.com.br",
       "banco": "itau"
     },
     {
@@ -238,7 +286,19 @@
       "source": "radar",
       "telefone": "12981176865",
       "whatsapp": "12981176865",
-      "email": null,
+      "email": "vendas@valeclimatizacao.com.br",
+      "banco": "itau"
+    },
+    {
+      "id": "21082315000103",
+      "nome": "MARILENE ALVES MARTINS 16273308870",
+      "cnpj": "21.082.315/0001-03",
+      "regime": "mei",
+      "uf": "SP",
+      "source": "radar",
+      "telefone": "5511934696720",
+      "whatsapp": "5511934696720",
+      "email": "escon.contabil@outlook.com",
       "banco": "itau"
     },
     {
@@ -250,7 +310,7 @@
       "source": "radar",
       "telefone": "12988161417",
       "whatsapp": "12988161417",
-      "email": null,
+      "email": "anapaula.rangel1@outlook.com",
       "banco": "itau"
     },
     {
@@ -262,7 +322,7 @@
       "source": "radar",
       "telefone": "12991154355",
       "whatsapp": "12991154355",
-      "email": null,
+      "email": "arquitetoedinaldo@gmail.com",
       "banco": "itau"
     },
     {
@@ -274,7 +334,19 @@
       "source": "radar",
       "telefone": "12997828318",
       "whatsapp": "12997828318",
-      "email": null,
+      "email": "anacabrahao@gmail.com",
+      "banco": "itau"
+    },
+    {
+      "id": "23335325000120",
+      "nome": "23.335.325 MARCELO DE PAULA VIEIRA",
+      "cnpj": "23.335.325/0001-20",
+      "regime": "mei",
+      "uf": "SP",
+      "source": "radar",
+      "telefone": "5512988628007",
+      "whatsapp": "5512988628007",
+      "email": "watermanpiscinas@gmail.com",
       "banco": "itau"
     },
     {
@@ -286,7 +358,7 @@
       "source": "radar",
       "telefone": "12996125554",
       "whatsapp": "12996125554",
-      "email": null,
+      "email": "clayton.froes@compassosa.com.br",
       "banco": "itau"
     },
     {
@@ -298,7 +370,19 @@
       "source": "radar",
       "telefone": "12988272376",
       "whatsapp": "12988272376",
-      "email": null,
+      "email": "startgames.sjc@gmail.com",
+      "banco": "itau"
+    },
+    {
+      "id": "24901253000102",
+      "nome": "ESPERINDEU PEREIRA DOS SANTOS 02829295684",
+      "cnpj": "24.901.253/0001-02",
+      "regime": "mei",
+      "uf": "SP",
+      "source": "radar",
+      "telefone": "553195002631",
+      "whatsapp": "553195002631",
+      "email": "perimsantos310777@gmail.com",
       "banco": "itau"
     },
     {
@@ -310,7 +394,7 @@
       "source": "radar",
       "telefone": "12974035169",
       "whatsapp": "12974035169",
-      "email": null,
+      "email": "anderson@escondigital.com.br",
       "banco": "itau"
     },
     {
@@ -322,7 +406,7 @@
       "source": "radar",
       "telefone": "12981225369",
       "whatsapp": "12981225369",
-      "email": null,
+      "email": "adeilson.santiago@gmail.com",
       "banco": "itau"
     },
     {
@@ -334,7 +418,7 @@
       "source": "radar",
       "telefone": "12997054321",
       "whatsapp": "12997054321",
-      "email": null,
+      "email": "marceldearruda@yahoo.com.br",
       "banco": "itau"
     },
     {
@@ -346,7 +430,7 @@
       "source": "radar",
       "telefone": "12997785005",
       "whatsapp": "12997785005",
-      "email": null,
+      "email": "dedeia_amaral@hotmail.com",
       "banco": "itau"
     },
     {
@@ -358,7 +442,19 @@
       "source": "radar",
       "telefone": "12988310412",
       "whatsapp": "12988310412",
-      "email": null,
+      "email": "gaiolasfenix@outlook.com",
+      "banco": "itau"
+    },
+    {
+      "id": "28185948000188",
+      "nome": "JULIO CESAR ANDRADE 38168561600",
+      "cnpj": "28.185.948/0001-88",
+      "regime": "mei",
+      "uf": "SP",
+      "source": "radar",
+      "telefone": "5512988121198",
+      "whatsapp": "5512988121198",
+      "email": "jcandrade.2014@gmail.com",
       "banco": "itau"
     },
     {
@@ -370,7 +466,7 @@
       "source": "radar",
       "telefone": "12988095286",
       "whatsapp": "12988095286",
-      "email": null,
+      "email": "eduardonety@hotmail.com",
       "banco": "itau"
     },
     {
@@ -382,7 +478,7 @@
       "source": "radar",
       "telefone": "12992598501",
       "whatsapp": "12992598501",
-      "email": null,
+      "email": "mercadinho4@outlook.com",
       "banco": "itau"
     },
     {
@@ -394,7 +490,7 @@
       "source": "radar",
       "telefone": "12992054377",
       "whatsapp": "12992054377",
-      "email": null,
+      "email": "energiapositiva@energiapositiva.net.br",
       "banco": "itau"
     },
     {
@@ -406,7 +502,7 @@
       "source": "radar",
       "telefone": "12997198913",
       "whatsapp": "12997198913",
-      "email": null,
+      "email": "juremamalves@gmail.com",
       "banco": "itau"
     },
     {
@@ -418,7 +514,7 @@
       "source": "radar",
       "telefone": "12997797400",
       "whatsapp": "12997797400",
-      "email": null,
+      "email": "reis.lais@hotmail.com",
       "banco": "itau"
     },
     {
@@ -430,7 +526,7 @@
       "source": "radar",
       "telefone": "12982788000",
       "whatsapp": "12982788000",
-      "email": null,
+      "email": "jonas@gomescarvalho.adv.br",
       "banco": "itau"
     },
     {
@@ -442,7 +538,7 @@
       "source": "radar",
       "telefone": "12981605593",
       "whatsapp": "12981605593",
-      "email": null,
+      "email": "jrcdemoura@hotmail.com",
       "banco": "itau"
     },
     {
@@ -454,7 +550,31 @@
       "source": "radar",
       "telefone": "12996125554",
       "whatsapp": "12996125554",
-      "email": null,
+      "email": "clayton.froes@compassosa.com.br",
+      "banco": "itau"
+    },
+    {
+      "id": "32620352000217",
+      "nome": "COMPASSO SERVICOS ADMINISTRATIVOS LTDA",
+      "cnpj": "32.620.352/0002-17",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar",
+      "telefone": "12981004747",
+      "whatsapp": "12981004747",
+      "email": "tiago.lobo@compassosa.com.br",
+      "banco": "itau"
+    },
+    {
+      "id": "32620352000640",
+      "nome": "COMPASSO SERVICOS ADMINISTRATIVOS LTDA",
+      "cnpj": "32.620.352/0006-40",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar",
+      "telefone": "1239310778",
+      "whatsapp": "1239310778",
+      "email": "tiago.lobo@compassosa.com.br",
       "banco": "itau"
     },
     {
@@ -466,7 +586,7 @@
       "source": "radar",
       "telefone": "12981525461",
       "whatsapp": "12981525461",
-      "email": null,
+      "email": "ekenzow@hotmail.com",
       "banco": "itau"
     },
     {
@@ -478,7 +598,7 @@
       "source": "radar",
       "telefone": "12982671217",
       "whatsapp": "12982671217",
-      "email": null,
+      "email": "ferragensfix@gmail.com",
       "banco": "itau"
     },
     {
@@ -490,7 +610,7 @@
       "source": "radar",
       "telefone": "12988077252",
       "whatsapp": "12988077252",
-      "email": null,
+      "email": "sallesbrazilimoveis@gmail.com",
       "banco": "itau"
     },
     {
@@ -502,7 +622,7 @@
       "source": "radar",
       "telefone": "12997224530",
       "whatsapp": "12997224530",
-      "email": null,
+      "email": "h.ellenferragens01@gmail.com",
       "banco": "itau"
     },
     {
@@ -514,7 +634,19 @@
       "source": "radar",
       "telefone": "12996125554",
       "whatsapp": "12996125554",
-      "email": null,
+      "email": "clayton.froes@compassosa.com.br",
+      "banco": "itau"
+    },
+    {
+      "id": "35047662000100",
+      "nome": "VANDERLEI SALES 07244166842",
+      "cnpj": "35.047.662/0001-00",
+      "regime": "mei",
+      "uf": "SP",
+      "source": "radar",
+      "telefone": "5512996698857",
+      "whatsapp": "5512996698857",
+      "email": "vanderleisales62@gmail.com",
       "banco": "itau"
     },
     {
@@ -526,7 +658,7 @@
       "source": "radar",
       "telefone": "12982317313",
       "whatsapp": "12982317313",
-      "email": null,
+      "email": "guilherme020213@gmail.com",
       "banco": "itau"
     },
     {
@@ -538,7 +670,19 @@
       "source": "radar",
       "telefone": "12996222711",
       "whatsapp": "12996222711",
-      "email": null,
+      "email": "priscila.paulasoares@yahoo.com.br",
+      "banco": "itau"
+    },
+    {
+      "id": "35622387000100",
+      "nome": "RAFAEL RIBEIRO MARTINES 31123327840",
+      "cnpj": "35.622.387/0001-00",
+      "regime": "mei",
+      "uf": "SP",
+      "source": "radar",
+      "telefone": "5512996698857",
+      "whatsapp": "5512996698857",
+      "email": "martinesrafael82@gmail.com",
       "banco": "itau"
     },
     {
@@ -550,7 +694,7 @@
       "source": "radar",
       "telefone": "12996698857",
       "whatsapp": "12996698857",
-      "email": null,
+      "email": "kairos.jardins@gmail.com",
       "banco": "itau"
     },
     {
@@ -562,7 +706,7 @@
       "source": "radar",
       "telefone": "12996125554",
       "whatsapp": "12996125554",
-      "email": null,
+      "email": "clayton.froes@compassosa.com.br",
       "banco": "itau"
     },
     {
@@ -574,7 +718,7 @@
       "source": "radar",
       "telefone": "11964287119",
       "whatsapp": "11964287119",
-      "email": null,
+      "email": "jp84araujo@gmail.com",
       "banco": "itau"
     },
     {
@@ -586,7 +730,7 @@
       "source": "radar",
       "telefone": "12982985505",
       "whatsapp": "12982985505",
-      "email": null,
+      "email": "soft.devolution@gmail.com",
       "banco": "itau"
     },
     {
@@ -598,7 +742,7 @@
       "source": "radar",
       "telefone": "12996864607",
       "whatsapp": "12996864607",
-      "email": null,
+      "email": "casadovidrojc@gmail.com",
       "banco": "itau"
     },
     {
@@ -610,7 +754,7 @@
       "source": "radar",
       "telefone": "12981299773",
       "whatsapp": "12981299773",
-      "email": null,
+      "email": "j.a.sartigosevangelicos@gmail.com",
       "banco": "itau"
     },
     {
@@ -622,7 +766,19 @@
       "source": "radar",
       "telefone": "12981024669",
       "whatsapp": "12981024669",
-      "email": null,
+      "email": "startgames.sjc@gmail.com",
+      "banco": "itau"
+    },
+    {
+      "id": "40811406000179",
+      "nome": "RAMON SILVA NOGUEIRA VESTUARIOS",
+      "cnpj": "40.811.406/0001-79",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar",
+      "telefone": "5512996698857",
+      "whatsapp": "5512996698857",
+      "email": "moderninhoskidss@gmail.com",
       "banco": "itau"
     },
     {
@@ -634,7 +790,7 @@
       "source": "radar",
       "telefone": "12988161417",
       "whatsapp": "12988161417",
-      "email": null,
+      "email": "anapaula.rangel1@outlook.com",
       "banco": "itau"
     },
     {
@@ -646,7 +802,7 @@
       "source": "radar",
       "telefone": "5512983076613",
       "whatsapp": "5512983076613",
-      "email": null,
+      "email": "maufffus@gmail.com",
       "banco": "itau"
     },
     {
@@ -658,7 +814,7 @@
       "source": "radar",
       "telefone": "12997935341",
       "whatsapp": "12997935341",
-      "email": null,
+      "email": "maurahelenadossantos@gmail.com",
       "banco": "itau"
     },
     {
@@ -670,7 +826,7 @@
       "source": "radar",
       "telefone": "12981535028",
       "whatsapp": "12981535028",
-      "email": null,
+      "email": "helmomatic@hotmail.com",
       "banco": "itau"
     },
     {
@@ -682,7 +838,7 @@
       "source": "radar",
       "telefone": "12991119976",
       "whatsapp": "12991119976",
-      "email": null,
+      "email": "tdb.sjc@gmail.com",
       "banco": "itau"
     },
     {
@@ -694,7 +850,7 @@
       "source": "radar",
       "telefone": "12997758572",
       "whatsapp": "12997758572",
-      "email": null,
+      "email": "flaviodossantosvam@gmail.com",
       "banco": "itau"
     },
     {
@@ -706,7 +862,19 @@
       "source": "radar",
       "telefone": "1239075522",
       "whatsapp": "1239075522",
-      "email": null,
+      "email": "revallereparacoes@gmail.com",
+      "banco": "itau"
+    },
+    {
+      "id": "43827635000170",
+      "nome": "EDMAR COSTA SERAFIM 34122252822",
+      "cnpj": "43.827.635/0001-70",
+      "regime": "mei",
+      "uf": "SP",
+      "source": "radar",
+      "telefone": "553195002631",
+      "whatsapp": "553195002631",
+      "email": "ed050986@hotmail.com",
       "banco": "itau"
     },
     {
@@ -718,7 +886,7 @@
       "source": "radar",
       "telefone": "12997534372",
       "whatsapp": "12997534372",
-      "email": null,
+      "email": "ricardo@rfntransportes.com.br",
       "banco": "itau"
     },
     {
@@ -730,7 +898,7 @@
       "source": "radar",
       "telefone": "12988161417",
       "whatsapp": "12988161417",
-      "email": null,
+      "email": "anapaula.rangel1@outlook.com",
       "banco": "itau"
     },
     {
@@ -742,7 +910,7 @@
       "source": "radar",
       "telefone": "12991282025",
       "whatsapp": "12991282025",
-      "email": null,
+      "email": "docesforminhas@bol.com.br",
       "banco": "itau"
     },
     {
@@ -754,7 +922,7 @@
       "source": "radar",
       "telefone": "12988161417",
       "whatsapp": "12988161417",
-      "email": null,
+      "email": "anapaula.rangel1@outlook.com",
       "banco": "itau"
     },
     {
@@ -766,7 +934,7 @@
       "source": "radar",
       "telefone": "12981024669",
       "whatsapp": "12981024669",
-      "email": null,
+      "email": "startgeek.sjc@gmail.com",
       "banco": "itau"
     },
     {
@@ -778,7 +946,7 @@
       "source": "radar",
       "telefone": "12981264291",
       "whatsapp": "12981264291",
-      "email": null,
+      "email": "edmarpereira17@hotmail.com",
       "banco": "itau"
     },
     {
@@ -790,7 +958,7 @@
       "source": "radar",
       "telefone": "12997785005",
       "whatsapp": "12997785005",
-      "email": null,
+      "email": "ricardoffaria1981@gmail.com",
       "banco": "itau"
     },
     {
@@ -802,7 +970,7 @@
       "source": "radar",
       "telefone": "12988161417",
       "whatsapp": "12988161417",
-      "email": null,
+      "email": "anapaula.rangel1@outlook.com",
       "banco": "itau"
     },
     {
@@ -814,7 +982,31 @@
       "source": "radar",
       "telefone": "12987091491",
       "whatsapp": "12987091491",
-      "email": null,
+      "email": "edcasadeposito@gmail.com",
+      "banco": "itau"
+    },
+    {
+      "id": "53970070000139",
+      "nome": "53.970.070 CAMILA BEATRICE BUENO PAIAO",
+      "cnpj": "53.970.070/0001-39",
+      "regime": "mei",
+      "uf": "SP",
+      "source": "radar",
+      "telefone": "5512988628007",
+      "whatsapp": "5512988628007",
+      "email": "rosepaiaoadv@yahoo.com.br",
+      "banco": "itau"
+    },
+    {
+      "id": "54090952000172",
+      "nome": "54.090.952 EDEMIR APARECIDO DOS SANTOS",
+      "cnpj": "54.090.952/0001-72",
+      "regime": "mei",
+      "uf": "SP",
+      "source": "radar",
+      "telefone": "5512988628007",
+      "whatsapp": "5512988628007",
+      "email": "edemir@poderosasemijoias.com.br",
       "banco": "itau"
     },
     {
@@ -826,7 +1018,7 @@
       "source": "radar",
       "telefone": "12997561396",
       "whatsapp": "12997561396",
-      "email": null,
+      "email": "erm_eduardo@yahoo.com",
       "banco": "itau"
     },
     {
@@ -838,7 +1030,31 @@
       "source": "radar",
       "telefone": "12974039102",
       "whatsapp": "12974039102",
-      "email": null,
+      "email": "academiaespacofitness_sjc@hotmail.com",
+      "banco": "itau"
+    },
+    {
+      "id": "55484840000169",
+      "nome": "ANA CAROLINE DE SOUZA SANTOS STORE",
+      "cnpj": "55.484.840/0001-69",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar",
+      "telefone": "1296832026",
+      "whatsapp": "1296832026",
+      "email": "lojamariavalentinashoes@gmail.com",
+      "banco": "itau"
+    },
+    {
+      "id": "55976869000168",
+      "nome": "55.976.869 FELICIANA CAMELO SOUSA DOS SANTOS",
+      "cnpj": "55.976.869/0001-68",
+      "regime": "mei",
+      "uf": "SP",
+      "source": "radar",
+      "telefone": "5511934696720",
+      "whatsapp": "5511934696720",
+      "email": "feliciana.santos@hotmail.com",
       "banco": "itau"
     },
     {
@@ -850,7 +1066,7 @@
       "source": "radar",
       "telefone": "12991918713",
       "whatsapp": "12991918713",
-      "email": null,
+      "email": "sergio.mira01@gmail.com",
       "banco": "itau"
     },
     {
@@ -862,7 +1078,7 @@
       "source": "radar",
       "telefone": "12997054321",
       "whatsapp": "12997054321",
-      "email": null,
+      "email": "marceldearruda@yahoo.com.br",
       "banco": "itau"
     },
     {
@@ -874,7 +1090,7 @@
       "source": "radar",
       "telefone": "12997785005",
       "whatsapp": "12997785005",
-      "email": null,
+      "email": "dedeia_amaral@hotmail.com",
       "banco": "itau"
     },
     {
@@ -890,6 +1106,18 @@
       "banco": "itau"
     },
     {
+      "id": "60029605000137",
+      "nome": "OLIVEIRA ALVES SERVICOS DE ENFERMAGEM LTDA",
+      "cnpj": "60.029.605/0001-37",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar",
+      "telefone": "12982721965",
+      "whatsapp": "12982721965",
+      "email": "marielly.alves82@gmail.com",
+      "banco": "itau"
+    },
+    {
       "id": "60932709000157",
       "nome": "ARAUJO CAMPOS OBRAS DE ALVENARIA LTDA",
       "cnpj": "60.932.709/0001-57",
@@ -898,7 +1126,7 @@
       "source": "radar",
       "telefone": "11964287119",
       "whatsapp": "11964287119",
-      "email": null,
+      "email": "jp84araujo@gmail.com",
       "banco": "itau"
     },
     {
@@ -910,7 +1138,7 @@
       "source": "radar",
       "telefone": "12988161417",
       "whatsapp": "12988161417",
-      "email": null,
+      "email": "maismulherperfumaria@gmail.com",
       "banco": "itau"
     },
     {
@@ -922,7 +1150,7 @@
       "source": "radar",
       "telefone": "12982912005",
       "whatsapp": "12982912005",
-      "email": null,
+      "email": "agrcampos@outlook.com",
       "banco": "itau"
     },
     {
@@ -934,7 +1162,7 @@
       "source": "radar",
       "telefone": "12991879921",
       "whatsapp": "12991879921",
-      "email": null,
+      "email": "contato.cariocafood@gmail.com",
       "banco": "itau"
     },
     {
@@ -986,6 +1214,30 @@
       "banco": "itau"
     },
     {
+      "id": "64411239000137",
+      "nome": "64.411.239 JACIRA APARECIDA DE LIMA RIBEIRO",
+      "cnpj": "64.411.239/0001-37",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar",
+      "telefone": "1288656731",
+      "whatsapp": "1288656731",
+      "email": "jacira.aparecidasjc@gmail.com",
+      "banco": "itau"
+    },
+    {
+      "id": "64867177000172",
+      "nome": "64.867.177 PAOLA DE FREITAS MACEDO",
+      "cnpj": "64.867.177/0001-72",
+      "regime": "mei",
+      "uf": "SP",
+      "source": "radar",
+      "telefone": "5512981369369",
+      "whatsapp": "5512981369369",
+      "email": "paolafreitascontabil@gmail.com",
+      "banco": "itau"
+    },
+    {
       "id": "64935174000129",
       "nome": "MARSAN FABRICACAO DE ESQUADRIAS DE ALUMINIO LTDA",
       "cnpj": "64.935.174/0001-29",
@@ -994,7 +1246,7 @@
       "source": "radar",
       "telefone": "12988491776",
       "whatsapp": "12988491776",
-      "email": null,
+      "email": "marsan.2@hotmail.com",
       "banco": "itau"
     },
     {
@@ -1006,7 +1258,19 @@
       "source": "radar",
       "telefone": "12988161417",
       "whatsapp": "12988161417",
-      "email": null,
+      "email": "maismulhersimpatia@gmail.com",
+      "banco": "itau"
+    },
+    {
+      "id": "65325872000175",
+      "nome": "CAROLINA AVELINO BERNARDES COMERCIO DE DOCES LTDA",
+      "cnpj": "65.325.872/0001-75",
+      "regime": "simples_nacional",
+      "uf": "SP",
+      "source": "radar",
+      "telefone": "12981809178",
+      "whatsapp": "12981809178",
+      "email": "emporiochocolatsjc@gmail.com",
       "banco": "itau"
     },
     {
@@ -1018,7 +1282,7 @@
       "source": "radar",
       "telefone": "12991879921",
       "whatsapp": "12991879921",
-      "email": null,
+      "email": "lucas.souza005@hotmail.com",
       "banco": "itau"
     },
     {
@@ -1030,7 +1294,7 @@
       "source": "radar",
       "telefone": "12988161417",
       "whatsapp": "12988161417",
-      "email": null,
+      "email": "cesarsjc_farmacia@hotmail.com",
       "banco": "itau"
     },
     {
@@ -1042,7 +1306,7 @@
       "source": "radar",
       "telefone": "12988161417",
       "whatsapp": "12988161417",
-      "email": null,
+      "email": "cesarsjc_farmacia@hotmail.com",
       "banco": "itau"
     }
   ]

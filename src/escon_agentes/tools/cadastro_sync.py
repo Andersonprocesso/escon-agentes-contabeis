@@ -82,12 +82,22 @@ def build_local_plan(
     to_update: list[dict[str, Any]] = []
     unchanged = 0
     sem_cnpj: list[dict[str, Any]] = []
+    inativas: list[dict[str, Any]] = []
 
     for raw in acessorias_rows:
         src = normalize_company(raw)
         cnpj = src["cnpj"]
         if not cnpj:
             sem_cnpj.append({"nome": src["nome"], "motivo": "sem CNPJ/CPF no Acessórias"})
+            continue
+        # Empresa baixada/encerrada no Acessórias (Status != Ativa) não entra no
+        # cadastro nem no Radar — monitorar CNPJ baixado gera consulta inútil e
+        # polui a carteira. Só reportamos para o humano decidir o que fazer com
+        # quem já estava cadastrado antes.
+        if src.get("ativa") is False:
+            inativas.append(
+                {"cnpj": cnpj, "nome": src["nome"], "ja_no_cadastro": cnpj in by_cnpj}
+            )
             continue
 
         existing = by_cnpj.get(cnpj)
@@ -134,6 +144,7 @@ def build_local_plan(
         "unchanged": unchanged,
         "only_in_local": only_local,
         "sem_cnpj": sem_cnpj,
+        "inativas": inativas,
     }
 
 
@@ -147,11 +158,17 @@ def build_radar_plan(
     to_create: list[dict[str, Any]] = []
     to_update: list[dict[str, Any]] = []
     unchanged = 0
+    inativas: list[dict[str, Any]] = []
 
     for raw in acessorias_rows:
         src = normalize_company(raw)
         cnpj = src["cnpj"]
         if not cnpj:
+            continue
+        if src.get("ativa") is False:  # baixada no Acessórias — não vai para o Radar
+            inativas.append(
+                {"cnpj": cnpj, "nome": src["nome"], "ja_no_radar": cnpj in by_cnpj}
+            )
             continue
         existing = by_cnpj.get(cnpj)
         if existing is None:
@@ -192,6 +209,7 @@ def build_radar_plan(
         "to_create": to_create,
         "to_update": to_update,
         "unchanged": unchanged,
+        "inativas": inativas,
         "politica": "somente leitura nesta versão — aplicar exige confirmação humana",
     }
 
@@ -265,6 +283,7 @@ def save_plan(data_dir: Path, plan: dict[str, Any]) -> Path:
 
 
 def summarize(local_plan: dict[str, Any], radar_plan: dict[str, Any] | None = None) -> str:
+    inativas = local_plan.get("inativas") or []
     lines = [
         f"Cadastro local: +{len(local_plan['to_create'])} nova(s), "
         f"~{len(local_plan['to_update'])} com divergência, "
