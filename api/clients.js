@@ -100,8 +100,15 @@ module.exports = async function handler(req, res) {
   if (!auth.ok) return res.status(auth.status).json({ error: auth.error });
 
   const url = new URL(req.url, "http://localhost");
+  // O Vercel roteia por arquivo: /api/clients/123 procuraria api/clients/123.js
+  // e devolvia NOT_FOUND. O rewrite em vercel.json manda o id por querystring;
+  // o caminho continua sendo lido para funcionar no servidor Python local.
   const parts = url.pathname.replace(/^\/api\/clients\/?/, "").split("/").filter(Boolean);
-  const clientId = parts[0] ? decodeURIComponent(parts[0]) : null;
+  const clientId = url.searchParams.get("id")
+    ? decodeURIComponent(url.searchParams.get("id"))
+    : parts[0]
+      ? decodeURIComponent(parts[0])
+      : null;
 
   try {
     if (req.method === "GET" && !clientId) {

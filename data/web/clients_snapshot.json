@@ -1,5 +1,5 @@
 {
-  "total": 109,
+  "total": 108,
   "clients": [
     {
       "id": "05026121000126",
@@ -1031,18 +1031,6 @@
       "telefone": "12974039102",
       "whatsapp": "12974039102",
       "email": "academiaespacofitness_sjc@hotmail.com",
-      "banco": "itau"
-    },
-    {
-      "id": "55484840000169",
-      "nome": "ANA CAROLINE DE SOUZA SANTOS STORE",
-      "cnpj": "55.484.840/0001-69",
-      "regime": "simples_nacional",
-      "uf": "SP",
-      "source": "radar",
-      "telefone": "1296832026",
-      "whatsapp": "1296832026",
-      "email": "lojamariavalentinashoes@gmail.com",
       "banco": "itau"
     },
     {
