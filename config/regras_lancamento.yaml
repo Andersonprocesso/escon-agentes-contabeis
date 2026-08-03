@@ -1,0 +1,235 @@
+# Regras de lançamento — aprendidas do Razão Analítico real da Escon
+#
+# Origem: "Razao Geral.pdf" (2020) + "Razao Geral2.pdf" (2022) = 2.090 lançamentos
+# reais, extraídos por `escon_agentes.tools.razao_parser`.
+#
+# PARA QUE SERVE: quando o Alexandre recebe um DAS, uma folha ou um extrato, ele
+# já sabe débito, crédito e histórico sem perguntar nada ao modelo. O LLM só
+# entra no que sobrar (ver `alexandre.py`), o que derruba o custo por documento
+# a praticamente zero no dia a dia.
+#
+# COMO LER: cada regra casa por palavras no documento e devolve o par contábil.
+# `debito`/`credito` aceitam:
+#   - um código de conta (ex.: 3221101)
+#   - `@banco`  → a conta do banco do cliente (resolvida em plano_contas.yaml)
+#
+# CONFERIDO: as contas de balanço batem com PlContas.TXT. As de resultado
+# (3xxx/4xxx) só existem no razão — PlContas.TXT está truncado e não as traz.
+
+versao: "2026-08-03"
+origem: "Razao Analitico Escon 2020 + 2022 (2090 lancamentos)"
+
+# Contas de resultado que o PlContas.TXT não tem, mas o razão comprova em uso.
+contas_resultado:
+  3111301: Combustiveis e lubrificantes
+  3111302: Energia eletrica
+  3111303: Servicos de terceiros
+  3212102: Pro-labore
+  3212301: Propaganda e publicidade
+  3212602: Manutencao e reparos
+  3212608: Energia Eletrica
+  3212609: Agua e Esgoto
+  3221101: Salarios e ordenados
+  3221104: 13o Salario
+  3221105: Ferias
+  3221107: FGTS
+  3221113: Alimentacao do Trabalhador
+  3221117: Transporte de Empregados
+  3221205: Alugueis de Veiculos
+  3221303: IPTU
+  3221304: IPVA
+  3221307: Multas de mora
+  3221402: Agua e esgoto
+  3221406: Material de escritorio
+  3221410: Depreciacoes e amortizacoes
+  3221422: Manutencao de Sistemas
+  3231105: Juros de mora
+  3231107: Juros e comissoes bancarias
+  4111201: Servicos prestados - mercado interno
+  4121205: ( - ) S/ Prestacao de Servicos
+
+regras:
+  # ---------------- IMPOSTOS ----------------
+  - id: das_pagamento
+    quando: {tipo: pdf, contem: ["DAS", "SIMPLES NACIONAL"], e_pagamento: true}
+    debito: 2131115          # Simples Nacional a recolher
+    credito: "@banco"
+    historico: 16            # Pgto Simples Nacional Mes
+    visto_no_razao: 20
+    descricao: "Pagamento do DAS — baixa a provisão contra o banco"
+
+  - id: das_provisao
+    quando: {tipo: pdf, contem: ["PGDAS", "APURACAO"], e_pagamento: false}
+    debito: 4121205          # ( - ) S/ Prestação de Serviços
+    credito: 2131115
+    historico: 7             # Simples Nacional Mes
+    visto_no_razao: 42
+    descricao: "Provisão do Simples sobre a receita do mês"
+
+  - id: darf_pagamento
+    quando: {tipo: pdf, contem: ["DARF"]}
+    debito: 2131117          # IRRF a Recolher
+    credito: "@banco"
+    historico: 15
+    visto_no_razao: 4
+    descricao: "DARF — confira o código da receita antes de importar"
+
+  # ---------------- FOLHA / PESSOAL ----------------
+  - id: salario_provisao
+    quando: {tipo: pdf, contem: ["FOLHA DE PAGAMENTO", "HOLERITE", "RECIBO DE PAGAMENTO"]}
+    debito: 3221101          # Salarios e ordenados
+    credito: 2141101         # Salarios e ordenados a pagar
+    historico: 3             # Salario do Mes
+    visto_no_razao: 24
+
+  - id: inss_sobre_salario
+    quando: {derivado_de: salario_provisao, parte: inss}
+    debito: 2141101
+    credito: 2141201         # INSS a recolher
+    historico: 6             # INSS sobre Salarios
+    visto_no_razao: 24
+
+  - id: fgts_provisao
+    quando: {tipo: pdf, contem: ["FGTS", "GRF", "GUIA DE RECOLHIMENTO DO FGTS"], e_pagamento: false}
+    debito: 3221107
+    credito: 2141202         # FGTS a recolher
+    historico: 5             # FGTS do Mes
+    visto_no_razao: 24
+
+  - id: fgts_pagamento
+    quando: {tipo: pdf, contem: ["FGTS"], e_pagamento: true}
+    debito: 2141202
+    credito: "@banco"
+    historico: 5
+    visto_no_razao: 20
+
+  - id: prolabore_provisao
+    quando: {tipo: pdf, contem: ["PRO-LABORE", "PRO LABORE", "PROLABORE"]}
+    debito: 3212102
+    credito: 2141102         # Pro-labore a pagar
+    historico: 1             # Pro-Labore do Mes
+    visto_no_razao: 24
+
+  - id: inss_sobre_prolabore
+    quando: {derivado_de: prolabore_provisao, parte: inss}
+    debito: 2141102
+    credito: 2141201
+    historico: 2             # INSS sobre Pro-Labore
+    visto_no_razao: 40
+
+  - id: prolabore_pagamento
+    quando: {tipo: ofx, contem: ["PRO-LABORE", "PROLABORE"]}
+    debito: 2141102
+    credito: "@banco"
+    historico: 1
+    visto_no_razao: 22
+
+  - id: salario_pagamento
+    quando: {tipo: ofx, contem: ["SALARIO", "FOLHA"]}
+    debito: 2141101
+    credito: "@banco"
+    historico: 3
+    visto_no_razao: 20
+
+  - id: vale_transporte
+    quando: {contem: ["VALE TRANSPORTE", "VT "]}
+    debito: 3221117          # Transporte de Empregados
+    credito: "@banco"
+    historico: 8
+    visto_no_razao: 12
+
+  - id: alimentacao
+    quando: {contem: ["ALIMENTACAO", "ALIMENTAÇÃO", "VALE REFEICAO", "VR "]}
+    debito: 3221113
+    credito: "@banco"
+    historico: 14
+    visto_no_razao: 22
+
+  # ---------------- RECEITA ----------------
+  - id: servico_a_vista
+    quando: {tipo: xml, documento: nfse, recebido: true}
+    debito: "@banco"
+    credito: 4111201
+    historico: 9             # Prestação de Serviços
+    visto_no_razao: 300      # somando as variações por cliente
+    descricao: "NFS-e recebida na hora — entra direto no banco"
+
+  - id: servico_a_prazo
+    quando: {tipo: xml, documento: nfse, recebido: false}
+    debito: 1121101          # Duplicatas a receber
+    credito: 4111201
+    historico: 9
+    visto_no_razao: 68
+    descricao: "NFS-e a receber — baixa depois pelo extrato"
+
+  - id: recebimento_duplicata
+    quando: {tipo: ofx, credito_banco: true, contem: ["REC", "PIX", "TED", "DEP"]}
+    debito: "@banco"
+    credito: 1121101
+    historico: 9
+    descricao: "Recebimento — baixa a duplicata"
+
+  # ---------------- DESPESAS ----------------
+  - id: combustivel
+    quando: {contem: ["POSTO", "COMBUSTIVEL", "GASOLINA", "ETANOL", "DIESEL"]}
+    debito: 3111301
+    credito: "@banco"
+    historico: 12
+    visto_no_razao: 52
+
+  - id: energia
+    quando: {contem: ["ENERGIA", "ELETRICA", "ELEKTRO", "CPFL", "EDP"]}
+    debito: 3212608
+    credito: "@banco"
+    historico: 11
+    visto_no_razao: 14
+
+  - id: agua
+    quando: {contem: ["SABESP", "AGUA", "ESGOTO"]}
+    debito: 3221402
+    credito: "@banco"
+    historico: 10
+    visto_no_razao: 12
+
+  - id: aluguel_veiculo
+    quando: {contem: ["LOCACAO", "ALUGUEL", "PRESTACAO DO CARRO", "LEASING"]}
+    debito: 3221205
+    credito: "@banco"
+    historico: 0
+    visto_no_razao: 24
+
+  - id: sistema_software
+    quando: {contem: ["CONTMATIC", "SISTEMA", "SOFTWARE", "LICENCA", "ASSINATURA"]}
+    debito: 3221422
+    credito: "@banco"
+    historico: 0
+    visto_no_razao: 18
+
+  - id: material_escritorio
+    quando: {contem: ["KALUNGA", "MATERIAL DE ESCRITORIO", "PAPELARIA"]}
+    debito: 3221406
+    credito: "@banco"
+    historico: 0
+    visto_no_razao: 8
+
+  - id: honorario_contabil
+    quando: {contem: ["HONORARIO", "CONTABILIDADE"]}
+    debito: 3111303          # Servicos de terceiros
+    credito: "@banco"
+    historico: 0
+    visto_no_razao: 6
+
+  - id: juros_bancarios
+    quando: {contem: ["JUROS", "TARIFA", "IOF", "COMISSAO"]}
+    debito: 3231107
+    credito: "@banco"
+    historico: 0
+    visto_no_razao: 10
+
+  - id: depreciacao
+    quando: {contem: ["DEPRECIACAO", "DEPRECIAÇÃO"]}
+    debito: 3221410
+    credito: 1232201         # (-) Depr. Acum. moveis e utensilios
+    historico: 18
+    visto_no_razao: 44
+    descricao: "Conferir se o bem é móvel (1232201) ou máquina (1232204)"

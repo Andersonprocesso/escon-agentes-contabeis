@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from escon_agentes.agents.alexandre import AlexandreAgent
 from escon_agentes.agents.anne import AnneAgent
 from escon_agentes.agents.base import BaseAgent
 from escon_agentes.agents.bella import BellaAgent
@@ -33,6 +34,7 @@ AGENT_CLASSES: dict[AgentId, type[BaseAgent]] = {
     AgentId.CESAR: CesarAgent,
     AgentId.XAVIER: XavierAgent,
     AgentId.FERNANDO: FernandoAgent,
+    AgentId.ALEXANDRE: AlexandreAgent,
     AgentId.PEDRO: PedroAgent,
 }
 
