@@ -60,6 +60,33 @@ def anexo_relevante(nome: str, conteudo: bytes) -> bool:
     return True
 
 
+
+def indice_por_email(clients, *, mailbox: str) -> tuple[dict, dict]:
+    """Mapa e-mail → cliente, tirando o que não pode virar cliente automaticamente.
+
+    Dois casos reais do cadastro da Escon:
+      - e-mail do próprio escritório cadastrado como contato de cliente (até a
+        Escon aparece como cliente dela mesma). Sem filtrar, a Raquel responde
+        às próprias notificações internas e de quarentena;
+      - o mesmo e-mail em várias empresas (um contador que atende 5 lojas, por
+        exemplo). Aí não dá para saber de qual empresa é a nota fiscal — filtrar
+        no palpite arquivaria documento fiscal na pasta da empresa errada.
+    """
+    dominio_escritorio = mailbox.split("@")[-1].strip().lower() if "@" in mailbox else ""
+    por_email: dict[str, list] = {}
+    for c in clients:
+        if not c.email:
+            continue
+        e = c.email.strip().lower()
+        if dominio_escritorio and e.endswith("@" + dominio_escritorio):
+            continue  # e-mail do escritório nunca identifica um cliente
+        por_email.setdefault(e, []).append(c)
+
+    unicos = {e: cs[0] for e, cs in por_email.items() if len(cs) == 1}
+    ambiguos = {e: [c.name for c in cs] for e, cs in por_email.items() if len(cs) > 1}
+    return unicos, ambiguos
+
+
 def _load_state(path: Path) -> dict[str, str]:
     if not path.exists():
         return {}
@@ -94,7 +121,9 @@ def run_email_triage(
 ) -> dict[str, Any]:
     clients = list_clients(settings.clients_dir)
     clients_with_email = [c for c in clients if c.email]
-    by_email = {c.email.strip().lower(): c for c in clients_with_email}
+    by_email, emails_ambiguos = indice_por_email(
+        clients, mailbox=settings.ms_graph_mailbox or settings.outlook_imap_user or ""
+    )
 
     from escon_agentes.config import PROJECT_ROOT
 
@@ -110,6 +139,7 @@ def run_email_triage(
     # interactive_ok=False: rodando pelo agendador não há ninguém para digitar
     # o código de login — melhor falhar rápido que travar a tarefa para sempre.
     token = mail.get_access_token(settings, interactive_ok=False)
+    mail.conferir_caixa(token, settings)
     messages = mail.list_recent_messages(
         token,
         settings,
@@ -142,6 +172,28 @@ def run_email_triage(
         graph_id = msg["id"]
 
         client = by_email.get(from_addr)
+
+        if client is None and from_addr in emails_ambiguos:
+            # remetente atende várias empresas: só o humano sabe de qual é
+            mail.flag_message(token, settings, graph_id)
+            flagged += 1
+            registro_amb = {
+                "message_id": internet_id,
+                "from": from_addr,
+                "subject": subject,
+                "date": received.isoformat(),
+                "has_attachments": has_attachments,
+                "nota": (
+                    "E-mail usado por várias empresas: "
+                    + ", ".join(emails_ambiguos[from_addr][:4])
+                    + ". Diga a qual pertence antes de arquivar."
+                ),
+            }
+            non_clients.append(registro_amb)
+            with non_client_report.open("a", encoding="utf-8") as f:
+                f.write(json.dumps(registro_amb, ensure_ascii=False) + "\n")
+            state[internet_id] = datetime.now().isoformat(timespec="seconds")
+            continue
 
         if ja_visto and (client or not re_mod.decidir(regras, remetente=from_addr, assunto=subject)):
             # já processado: só faz sentido reavaliar se agora existe uma regra
@@ -277,6 +329,7 @@ def run_email_triage(
         "non_clients": non_clients,
         "tratados_por_regra": por_regra,
         "clients_with_email_registered": len(clients_with_email),
+        "emails_ambiguos": emails_ambiguos,
         "clients_total": len(clients),
         "non_client_report_file": str(non_client_report),
         "processed_report_file": str(processed_report),

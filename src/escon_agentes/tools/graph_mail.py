@@ -10,6 +10,7 @@ Somente leitura + rascunho: nunca envia e-mail (nunca chama /sendMail).
 from __future__ import annotations
 
 import base64
+import json
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -93,10 +94,39 @@ def _headers(token: str) -> dict[str, str]:
     return {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
 
 
+def _identidade_do_token(token: str) -> str:
+    """Lê o UPN de dentro do próprio token (sem chamar a rede)."""
+    try:
+        payload = token.split(".")[1]
+        payload += "=" * (-len(payload) % 4)
+        dados = json.loads(base64.urlsafe_b64decode(payload))
+    except (IndexError, ValueError, json.JSONDecodeError):
+        return ""
+    return str(dados.get("upn") or dados.get("preferred_username") or "").strip().lower()
+
+
+def conferir_caixa(token: str, settings: Settings) -> None:
+    """Aborta se o login não for da caixa configurada.
+
+    Existe porque já aconteceu: o código usa "/me" (a caixa de quem logou), e um
+    login feito com a conta pessoal fez a Raquel criar rascunho, marcar e mover
+    e-mail na caixa errada — sem nenhum erro aparente. Divergência aqui é sempre
+    falha, nunca aviso.
+    """
+    esperada = (settings.ms_graph_mailbox or settings.outlook_imap_user or "").strip().lower()
+    logada = _identidade_do_token(token)
+    if esperada and logada and esperada != logada:
+        raise MailboxUnavailable(
+            f"Login é de '{logada}', mas a caixa configurada é '{esperada}'. "
+            f"Nada será feito para não mexer na caixa errada. "
+            f"Apague {settings.ms_graph_token_cache} e entre novamente como {esperada}."
+        )
+
+
 def _mailbox_base(settings: Settings) -> str:
-    # Login por device code é feito diretamente como a própria caixa
-    # (contato@escondigital.com.br) — "/me" é o endpoint correto, não
-    # "/users/{mailbox}" (que exige permissão de aplicativo/admin distinta).
+    # "/me" = a caixa de quem fez o login (device code). Quem garante que é a
+    # caixa certa é conferir_caixa(); sem essa checagem o agente opera em
+    # silêncio na caixa de quem logou.
     return f"{GRAPH_BASE}/me"
 
 

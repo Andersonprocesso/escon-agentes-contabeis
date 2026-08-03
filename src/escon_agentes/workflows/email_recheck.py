@@ -64,6 +64,7 @@ def run_email_recheck(settings: Settings, *, aplicar: bool = False) -> dict[str,
         }
 
     token = mail.get_access_token(settings, interactive_ok=False)
+    mail.conferir_caixa(token, settings)
     staging_root = settings.outbox / "email_attachments"
     processados: list[dict[str, Any]] = []
     rascunhos = 0
