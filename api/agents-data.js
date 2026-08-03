@@ -7,6 +7,8 @@ module.exports = [
   { id: "greg", name: "Greg", role: "Cobrança de extratos", color: "#f87171" },
   { id: "anne", name: "Anne", role: "Tarefas e prazos", color: "#38bdf8" },
   { id: "cesar", name: "Cesar", role: "Certidões (CND)", color: "#fb923c" },
+  { id: "fernando", name: "Fernando Batista", role: "Certificados digitais A1", color: "#f472b6" },
+  { id: "pedro", name: "Pedro Henrique", role: "Cadastro de empresas (Acessórias)", color: "#818cf8" },
   { id: "lucy", name: "Lucy", role: "Reforma Tributária", color: "#c084fc" },
   { id: "karen", name: "Karen", role: "Notícias e briefing", color: "#2dd4bf" },
   { id: "paul", name: "Paul", role: "Diretor financeiro", color: "#60a5fa" },
