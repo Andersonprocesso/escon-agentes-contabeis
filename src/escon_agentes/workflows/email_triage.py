@@ -23,6 +23,7 @@ from typing import Any
 from escon_agentes.agents.rachel import classify_category, classify_priority, default_draft_body
 from escon_agentes.config import Settings
 from escon_agentes.tools import graph_mail as mail
+from escon_agentes.tools import regras_email as re_mod
 from escon_agentes.tools.clients import list_clients
 
 
@@ -89,10 +90,15 @@ def run_email_triage(
     since_days: int | None = None,
     unseen_only: bool = False,
     limit: int = 100,
+    reaplicar_regras: bool = False,
 ) -> dict[str, Any]:
     clients = list_clients(settings.clients_dir)
     clients_with_email = [c for c in clients if c.email]
     by_email = {c.email.strip().lower(): c for c in clients_with_email}
+
+    from escon_agentes.config import PROJECT_ROOT
+
+    regras = re_mod.carregar(PROJECT_ROOT / "config" / "regras_email.yaml")
 
     state_path = settings.outbox / "email_triage_state.json"
     state = _load_state(state_path)
@@ -101,7 +107,9 @@ def run_email_triage(
     non_client_report = settings.outbox / "emails_nao_clientes.jsonl"
     processed_report = settings.outbox / "emails_processados.jsonl"
 
-    token = mail.get_access_token(settings)
+    # interactive_ok=False: rodando pelo agendador não há ninguém para digitar
+    # o código de login — melhor falhar rápido que travar a tarefa para sempre.
+    token = mail.get_access_token(settings, interactive_ok=False)
     messages = mail.list_recent_messages(
         token,
         settings,
@@ -115,11 +123,13 @@ def run_email_triage(
     drafts_created = 0
     attachments_staged = 0
     flagged = 0
+    por_regra = 0
     skipped_already_processed = 0
 
     for msg in messages:
         internet_id = msg.get("internetMessageId") or msg["id"]
-        if internet_id in state:
+        ja_visto = internet_id in state
+        if ja_visto and not reaplicar_regras:
             skipped_already_processed += 1
             continue
 
@@ -132,6 +142,12 @@ def run_email_triage(
         graph_id = msg["id"]
 
         client = by_email.get(from_addr)
+
+        if ja_visto and (client or not re_mod.decidir(regras, remetente=from_addr, assunto=subject)):
+            # já processado: só faz sentido reavaliar se agora existe uma regra
+            # para ele. Refazer o caminho de cliente criaria rascunho duplicado.
+            skipped_already_processed += 1
+            continue
 
         if client:
             saved_files: list[str] = []
@@ -195,9 +211,29 @@ def run_email_triage(
                     + "\n"
                 )
         else:
-            mail.flag_message(token, settings, graph_id)
-            flagged += 1
+            # Regras só valem para quem NÃO é cliente — e-mail de cliente
+            # sempre é rascunhado, nunca movido nem escondido.
+            regra = re_mod.decidir(regras, remetente=from_addr, assunto=subject)
+            acao_feita = "marcado"
+            if regra and regra.acao == "lixeira":
+                mail.mover_para_lixeira(token, settings, graph_id)
+                acao_feita = "lixeira"
+                por_regra += 1
+            elif regra and regra.acao == "arquivar" and regra.pasta:
+                mail.mover_para_pasta(token, settings, graph_id, regra.pasta)
+                acao_feita = f"arquivado em {regra.pasta}"
+                por_regra += 1
+            elif regra and regra.acao == "ignorar":
+                acao_feita = "ignorado"
+                por_regra += 1
+                state[internet_id] = datetime.now().isoformat(timespec="seconds")
+                continue  # nem marca nem entra no relatório
+            else:
+                mail.flag_message(token, settings, graph_id)
+                flagged += 1
             record = {
+                "acao": acao_feita,
+                "regra": (regra.motivo if regra else None),
                 "message_id": internet_id,
                 "from": from_addr,
                 "from_name": from_name,
@@ -219,7 +255,8 @@ def run_email_triage(
     summary_txt = (
         f"{len(messages)} e-mail(s) analisado(s) ({skipped_already_processed} já processados antes). "
         f"{drafts_created} rascunho(s) criado(s) na caixa, {attachments_staged} anexo(s) prontos "
-        f"para o Drive, {len(non_clients)} e-mail(s) de não-clientes marcado(s)/reportado(s)."
+        f"para o Drive, {len(non_clients)} e-mail(s) de não-clientes marcado(s)/reportado(s), "
+        f"{por_regra} tratado(s) por regra."
     )
     if len(clients_with_email) <= 5:
         summary_txt += (
@@ -238,6 +275,7 @@ def run_email_triage(
         "attachments_staging_root": str(staging_root),
         "clients_touched": list(clients_touched.values()),
         "non_clients": non_clients,
+        "tratados_por_regra": por_regra,
         "clients_with_email_registered": len(clients_with_email),
         "clients_total": len(clients),
         "non_client_report_file": str(non_client_report),

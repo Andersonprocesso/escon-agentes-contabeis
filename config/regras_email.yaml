@@ -1,0 +1,53 @@
+# Regras da Raquel — o que fazer quando um e-mail chega.
+#
+# Você edita este arquivo; a Raquel obedece. Nada de IA aqui: é comparação
+# direta de texto, então é previsível e não gasta token.
+#
+# AÇÕES POSSÍVEIS
+#   lixeira        → move para a Lixeira (Itens Excluídos). REVERSÍVEL: dá para
+#                    restaurar pelo Outlook. A Raquel NUNCA apaga em definitivo.
+#   arquivar: Nome → move para a pasta indicada (ex.: "Contmatic", "Sistemas")
+#   ignorar        → deixa na caixa, sem marcar e sem entrar no relatório
+#
+# COMO COMPARAR (pode combinar; todos precisam bater)
+#   de: joao@x.com.br          e-mail exato do remetente
+#   dominio: x.com.br          qualquer remetente desse domínio
+#   assunto_contem: "boleto"   trecho do assunto (não diferencia maiúscula)
+#
+# REGRA DE OURO: e-mail de cliente cadastrado NUNCA é mexido por estas regras.
+# Se o remetente é cliente, a Raquel sempre rascunha a resposta e guarda o anexo.
+#
+# Depois de editar, confira sem aplicar nada:
+#   python -m escon_agentes raquel-emails --dias 7
+# A coluna "regra" mostra o que ela faria.
+
+regras:
+  # --- exemplos reais que chegaram na caixa; ajuste ou remova ---
+
+  - quando: {de: "jobs-noreply@linkedin.com"}
+    fazer: lixeira
+    motivo: "anúncio de vaga"
+
+  - quando: {de: "messages-noreply@linkedin.com"}
+    fazer: lixeira
+    motivo: "notificação de perfil"
+
+  - quando: {dominio: "comunicacao.inter.co"}
+    fazer: lixeira
+    motivo: "marketing do banco"
+
+  # Convite de agenda: fica na caixa, mas sem virar pendência no relatório
+  - quando: {assunto_contem: "Invitation:"}
+    fazer: ignorar
+    motivo: "convite de calendário"
+
+  # --- exemplos de arquivamento (pastas que já existem na sua caixa) ---
+  # Descomente e ajuste conforme quiser:
+  #
+  # - quando: {dominio: "contmatic.com.br"}
+  #   fazer: {arquivar: "Contmatic"}
+  #   motivo: "fornecedor do sistema contábil"
+  #
+  # - quando: {dominio: "certisign.com.br"}
+  #   fazer: {arquivar: "Certificados"}
+  #   motivo: "certificado digital"

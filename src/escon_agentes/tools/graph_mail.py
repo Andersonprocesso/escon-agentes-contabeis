@@ -194,6 +194,42 @@ def _set_flag(token: str, settings: Settings, message_id: str, status: str) -> N
         raise MailboxUnavailable(f"Falha ao marcar e-mail ({status}): {r.status_code} {r.text[:300]}")
 
 
+def mover_para_lixeira(token: str, settings: Settings, message_id: str) -> None:
+    """Move para Itens Excluídos — reversível pelo Outlook. Nunca apaga de vez."""
+    _mover(token, settings, message_id, "deleteditems")
+
+
+def mover_para_pasta(token: str, settings: Settings, message_id: str, nome_pasta: str) -> None:
+    pasta_id = _achar_pasta_id(token, settings, nome_pasta)
+    if not pasta_id:
+        raise MailboxUnavailable(f"Pasta não encontrada na caixa: {nome_pasta}")
+    _mover(token, settings, message_id, pasta_id)
+
+
+def _mover(token: str, settings: Settings, message_id: str, destino: str) -> None:
+    url = f"{_mailbox_base(settings)}/messages/{message_id}/move"
+    with httpx.Client(timeout=30) as client:
+        r = client.post(url, headers=_headers(token), json={"destinationId": destino})
+    if r.status_code not in (200, 201):
+        raise MailboxUnavailable(f"Falha ao mover e-mail: {r.status_code} {r.text[:300]}")
+
+
+def _achar_pasta_id(token: str, settings: Settings, nome: str) -> str | None:
+    alvo = (nome or "").strip().lower()
+    with httpx.Client(timeout=30) as client:
+        r = client.get(
+            f"{_mailbox_base(settings)}/mailFolders",
+            headers=_headers(token),
+            params={"$top": "200", "$select": "id,displayName"},
+        )
+    if r.status_code != 200:
+        return None
+    for f in r.json().get("value", []):
+        if (f.get("displayName") or "").strip().lower() == alvo:
+            return f.get("id")
+    return None
+
+
 def find_by_internet_id(token: str, settings: Settings, internet_message_id: str) -> dict | None:
     """Localiza a mensagem pelo Message-ID do cabeçalho (o que guardamos no estado)."""
     safe = internet_message_id.replace("'", "''")

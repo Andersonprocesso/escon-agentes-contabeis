@@ -826,6 +826,10 @@ def raquel_emails_cmd(
         False, "--apenas-nao-lidos", help="Só e-mails ainda não lidos"
     ),
     limite: int = typer.Option(100, "--limite", help="Máx. e-mails por execução"),
+    reaplicar: bool = typer.Option(
+        False, "--reaplicar-regras",
+        help="Reavalia e-mails já vistos que agora batem com uma regra nova"
+    ),
 ) -> None:
     """Rachel: lê contato@escondigital.com.br, rascunha resposta (sem enviar),
     separa anexos de clientes por Empresa/Ano/Mês e reporta e-mails de não-clientes."""
@@ -834,7 +838,10 @@ def raquel_emails_cmd(
 
     s = get_settings()
     try:
-        result = run_email_triage(s, since_days=dias, unseen_only=apenas_nao_lidos, limit=limite)
+        result = run_email_triage(
+            s, since_days=dias, unseen_only=apenas_nao_lidos, limit=limite,
+            reaplicar_regras=reaplicar,
+        )
     except MailboxUnavailable as e:
         console.print(f"[red]{e}[/red]")
         raise typer.Exit(1) from e
