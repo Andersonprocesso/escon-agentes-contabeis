@@ -42,7 +42,12 @@ PREFIXOS_CABECALHO = (
 # passivo do pró-labore contra INSS a recolher.
 RUBRICAS: list[tuple[tuple[str, ...], str, str]] = [
     (("pro-labore", "pro labore", "prolabore"), "provento", "desp_prolabore"),
+    # "Horas Normais Diurnas" e o provento principal na folha da Escon — sem
+    # esta chave o salario do mes nao era reconhecido, so os descontos.
+    (("horas normais", "horas diurnas", "horas trabalhadas"), "provento", "desp_salarios"),
+    (("hora extra", "horas extras", "he "), "provento", "desp_salarios"),
     (("salario", "salário", "ordenado"), "provento", "desp_salarios"),
+    (("dsr", "descanso semanal"), "provento", "desp_salarios"),
     # "13" sozinho casava dentro de qualquer numero (137,50 virava 13o salario)
     (("13o salario", "13º salario", "decimo terceiro", "gratificacao natalina"),
      "provento", "desp_salarios"),
@@ -50,7 +55,10 @@ RUBRICAS: list[tuple[tuple[str, ...], str, str]] = [
     (("inss",), "desconto", "inss_pagar"),
     (("irrf", "imposto de renda"), "desconto", "irrf_pagar"),
     (("vale transporte", "vale-transporte", "vt"), "desconto", "desp_vale_transp"),
-    (("adiantamento",), "desconto", "salarios_pagar"),
+    (("desconto adiantamento", "adiantamento salarial", "adiantamento"),
+     "desconto", "salarios_pagar"),
+    (("taxa assistencial", "contribuicao sindical", "mensalidade sindical",
+      "contribuicao confederativa"), "desconto", "salarios_pagar"),
     (("fgts",), "encargo", "fgts_pagar"),
 ]
 
