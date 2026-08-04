@@ -315,6 +315,16 @@
             Puxar também do Drive (Radar)
           </label>
 
+          <label style="margin-top:.6rem">Recebimentos e pagamentos entram por</label>
+          <select id="fxForma">
+            <option value="caixa">Caixa</option>
+            <option value="banco">Banco</option>
+          </select>
+          <p class="muted" style="margin:.3rem 0 0">
+            Vale para venda à vista e compra paga na hora. Compra com duplicata
+            a vencer vai para Fornecedores de qualquer jeito.
+          </p>
+
           <button class="btn" id="fxRodar" type="button" style="margin-top:.8rem">
             Fazer a contabilidade desta competência
           </button>
@@ -442,6 +452,7 @@
         pasta_local: document.getElementById('fxPasta').value.trim() || null,
         pasta_onedrive: document.getElementById('fxOneDrive').value.trim() || null,
         usar_radar: document.getElementById('fxRadar').checked,
+        forma_pagamento: document.getElementById('fxForma').value,
       };
       if (!body.competencia) { st.textContent = 'Informe a competência (ex.: jan/21).'; return; }
       st.textContent = 'processando… pode levar alguns minutos';

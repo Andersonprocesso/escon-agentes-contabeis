@@ -88,6 +88,16 @@ Nunca invente conta que não esteja no plano.
             docs.extend(self._ler(arq))
 
         for doc in docs:
+            if motivo := doc.extras.get("nao_lancavel"):
+                nao_contabilizaveis.append({
+                    "arquivo": Path(doc.caminho).name,
+                    "data": doc.data,
+                    "valor": doc.valor,
+                    "natureza": "nao_lancavel",
+                    "motivo": motivo,
+                })
+                continue
+
             # O CFOP decide ANTES da regra: remessa, retorno, transferência e a
             # NF-e que só documenta cupom já lançado não geram lançamento —
             # lançá-las inventaria compra ou dobraria receita.
@@ -248,8 +258,7 @@ Nunca invente conta que não esteja no plano.
 
             tipos = Counter(x["natureza"] for x in nao_contabilizaveis)
             resumo += (
-                f"\n{len(nao_contabilizaveis)} nota(s) não geram lançamento "
-                f"(pelo CFOP): "
+                f"\n{len(nao_contabilizaveis)} documento(s) não geram lançamento: "
                 + ", ".join(f"{n} {t}" for t, n in tipos.most_common())
             )
             arq = saida / "notas_sem_lancamento.json"
@@ -476,6 +485,15 @@ Nunca invente conta que não esteja no plano.
         texto = documents.extract_text(arq)
         if not texto.strip():
             return [Documento(caminho=str(arq), tipo="pdf", texto="")]
+
+        # Relatório, protocolo e declaração não viram lançamento — e a folha
+        # tem agente próprio. Marcar aqui evita que virem "pendente", que é
+        # onde deve ficar só o que realmente falta decidir.
+        motivo = _nao_lancavel(texto, arq.name)
+        alvo = _sem_acento(f"{arq.name} {texto[:2500]}")
+        if not motivo and any(k in alvo for k in DA_FABIANA):
+            motivo = "Folha de pagamento — quem lança é a Fabiana"
+
         extraido = documents.process_document(arq)
         return [
             Documento(
@@ -485,7 +503,10 @@ Nunca invente conta que não esteja no plano.
                 data=getattr(extraido, "data", None),
                 valor=_para_float(getattr(extraido, "valor", None)),
                 e_pagamento=_parece_pagamento(texto),
-                extras={"tem_encargos": _tem_encargos(texto)},
+                extras={
+                    "tem_encargos": _tem_encargos(texto),
+                    **({"nao_lancavel": motivo} if motivo else {}),
+                },
             )
         ]
 
@@ -515,6 +536,58 @@ def _para_float(v: Any) -> float | None:
         return float(t)
     except ValueError:
         return None
+
+
+# Documentos que aparecem na pasta do cliente e NÃO são lançamento nenhum:
+# relatórios, protocolos, declarações, o próprio balancete. Numa competência
+# atrasada eles enchiam a lista de pendentes e escondiam o que era de verdade.
+# Cada chave é comparada com o texto E com o nome do arquivo.
+NAO_LANCAVEIS: list[tuple[tuple[str, ...], str]] = [
+    (("balancete", "balanco patrimonial", "demonstracao do resultado"),
+     "Relatório contábil — é resultado da contabilidade, não documento dela"),
+    # O DANFE é a representação impressa da NF-e: a nota já entra pelo XML.
+    # Lançar os dois duplica. Na Alumax de jan/21 eram 43 lançamentos a mais —
+    # e passavam despercebidos porque cada um, sozinho, parecia correto.
+    (("documento auxiliar da nota fiscal", "danfe",
+      "recebemos de", "os produtos e/ou servicos constantes da nota fiscal"),
+     "DANFE — a nota já é lançada pelo XML; lançar o PDF duplicaria"),
+    (("protocolo de transmissao", "protocolo de entrega", "protocolo de envio",
+      "recibo de entrega de arquivo", "comprovante de transmissao",
+      "conectividade social", "procuracao eletronica"),
+     "Protocolo de transmissão — não movimenta conta"),
+    (("notas emitidas", "relatorio de notas", "relacao de notas",
+      "listagem de notas", "espelho de nota"),
+     "Relatório de notas — as notas em si já são lidas"),
+    (("sedif", "gia ", "sintegra", "efd icms", "sped fiscal", "efd contribuicoes"),
+     "Declaração acessória — obrigação, não lançamento"),
+    (("relatorio de notas", "relacao de notas", "listagem de notas",
+      "espelho de nota"), "Relatório de notas — as notas em si já são lidas"),
+    (("livro razao", "razao analitico", "livro diario"),
+     "Livro contábil — saída da contabilidade, não entrada"),
+    (("cartao cnpj", "comprovante de inscricao", "contrato social",
+      "certidao negativa", "consulta de optantes"),
+     "Documento cadastral — sem efeito contábil"),
+]
+
+# A folha tem agente próprio: mandá-la para pendentes escondia que existe
+# alguém preparado para ela.
+DA_FABIANA = ("folha de pagamento", "holerite", "recibo de pagamento de salario",
+              "folha de prolabore", "pro-labore", "termo de rescisao", "trct")
+
+
+def _nao_lancavel(texto: str, nome: str) -> str:
+    """Devolve o motivo se o documento não é lançamento; senão, string vazia."""
+    alvo = _sem_acento(f"{nome} {texto[:2500]}")
+    for chaves, motivo in NAO_LANCAVEIS:
+        if any(k in alvo for k in chaves):
+            return motivo
+    return ""
+
+
+def _sem_acento(t: str) -> str:
+    import unicodedata
+
+    return unicodedata.normalize("NFKD", t or "").encode("ascii", "ignore").decode().lower()
 
 
 def _parece_pagamento(texto: str) -> bool:

@@ -43,6 +43,9 @@ class FechamentoIn(BaseModel):
     pasta_local: Optional[str] = None
     usar_radar: bool = False
     pasta_onedrive: Optional[str] = None
+    # Na contabilidade atrasada a maior parte entra pelo caixa — por isso o
+    # padrão aqui é caixa, e não banco como no resto do sistema.
+    forma_pagamento: str = "caixa"
     usar_llm: bool = True
 
 
@@ -306,6 +309,7 @@ def create_app() -> FastAPI:
                 pasta_local=body.pasta_local,
                 usar_radar=body.usar_radar,
                 pasta_onedrive=body.pasta_onedrive,
+                forma_pagamento=body.forma_pagamento,
                 usar_llm=body.usar_llm,
             )
         except ValueError as e:
