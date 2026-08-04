@@ -21,6 +21,14 @@ import unicodedata
 from dataclasses import dataclass, field
 from typing import Any
 
+# Marcador FORTE de rescisão. "rescis" solto aparece em folha comum (rubricas,
+# rodapé do sistema) e fazia a folha inteira virar rescisão — os 27 empregados
+# do Jorge foram parar em "Rescisão a pagar".
+RE_RESCISAO = re.compile(
+    r"(termo de rescis\w*\s+do\s+contrato|TRCT|termo de homologa\w*|"
+    r"demonstrativo de rescis\w*)",
+    re.IGNORECASE,
+)
 RE_FUNC = re.compile(r"Func:\s*(\d+)\s+(.+?)\s+Adm", re.IGNORECASE)
 RE_TOTAIS = re.compile(
     r"Proventos:\s*([\d.,]+).*?Vantagens:\s*([\d.,]+).*?Descontos:\s*([\d.,]+).*?"
@@ -41,6 +49,18 @@ PREFIXOS_CABECALHO = (
 # Aprendido do razão real: pró-labore D 3212102 / C 2141102 e o INSS sai do
 # passivo do pró-labore contra INSS a recolher.
 RUBRICAS: list[tuple[tuple[str, ...], str, str]] = [
+    # ---- verbas de rescisão ----
+    # Indenizatórias não sofrem INSS/IRRF e têm conta própria; misturá-las com
+    # salário distorce a base de encargos.
+    (("aviso previo indenizado", "aviso previo ind"), "rescisao", "desp_aviso_previo"),
+    (("ferias indenizadas", "ferias proporcionais", "ferias vencidas"),
+     "rescisao", "desp_ferias"),
+    (("13o proporcional", "13 proporcional", "gratificacao natalina prop"),
+     "rescisao", "desp_13"),
+    (("saldo de salario", "saldo salario"), "rescisao", "desp_salarios"),
+    (("multa fgts", "multa 40", "multa rescisoria", "indenizacao 40"),
+     "rescisao", "desp_multa_fgts"),
+
     (("pro-labore", "pro labore", "prolabore"), "provento", "desp_prolabore"),
     # "Horas Normais Diurnas" e o provento principal na folha da Escon — sem
     # esta chave o salario do mes nao era reconhecido, so os descontos.
@@ -142,6 +162,8 @@ def ler_folha(texto: str) -> Folha:
         folha.competencia = f"{m.group(2)}-{m.group(1)}"
     if "pro-labore" in _norm(texto) or "prolabore" in _norm(texto):
         folha.tipo = "prolabore"
+    if RE_RESCISAO.search(texto):
+        folha.tipo = "rescisao"
 
     # cada funcionário começa em "Func:" e vai até o próximo
     marcas = list(RE_FUNC.finditer(texto))
@@ -166,6 +188,7 @@ def ler_folha(texto: str) -> Folha:
             # uma linha pode trazer provento e desconto juntos:
             # "85 1 Pro-Labore 30 Dias 1.250,00  1950 3 INSS 11,00 % 137,50"
             baixo = _norm(crua)
+            usados: set[int] = set()  # posicao do valor ja atribuida a uma rubrica
             for chaves, natureza, alias in RUBRICAS:
                 pos = min(
                     (baixo.find(k) for k in chaves if baixo.find(k) >= 0),
@@ -182,7 +205,10 @@ def ler_folha(texto: str) -> Folha:
                 if "%" in crua[seguinte.end() : seguinte.end() + 4]:
                     depois = RE_VALOR.search(crua, seguinte.end())
                     valor = _num(depois.group(0)) if depois else valor
+                if seguinte.start() in usados:
+                    continue  # este valor ja foi de uma rubrica mais especifica
                 if valor:
+                    usados.add(seguinte.start())
                     f.rubricas.append(
                         Rubrica(descricao=crua[:70], valor=valor,
                                 natureza=natureza, conta_alias=alias)

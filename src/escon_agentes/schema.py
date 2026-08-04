@@ -107,6 +107,10 @@ class ClientProfile(BaseModel):
     radar_id: str | None = None
     uf: str | None = None
     tipo_pessoa: str = "J"  # J | F
+    # Anexo do Simples. O IV (construcao civil, limpeza, vigilancia) recolhe a
+    # CPP patronal FORA do DAS, via GPS — nos demais ela ja esta no DAS.
+    anexo_simples: int | None = None
+    aliquota_rat: float = 0.0  # RAT ajustado pelo FAP, sai da GFIP do cliente
     procuracao_ok: bool | None = None
     monitoramento_ativo: bool | None = None
     drive_folder_hint: str | None = None  # pasta esperada no Google Drive / MinIO

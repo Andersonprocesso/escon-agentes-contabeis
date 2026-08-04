@@ -25,8 +25,11 @@ DIA_UTIL_SALARIO = 5  # 5º dia útil do mês seguinte
 
 # Provisões mensais. Férias = 1/12 do salário + 1/3 constitucional; 13º = 1/12.
 # FGTS de 8% incide sobre as duas.
-# Não se provisiona INSS patronal: a carteira da Escon é Simples Nacional, onde
-# a contribuição já está dentro do DAS.
+# INSS patronal (CPP 20%) só é provisionado no **Anexo IV** do Simples —
+# construção civil, limpeza, vigilância —, onde a contribuição fica FORA do DAS
+# e é recolhida em GPS. Nos demais anexos ela já está no DAS e provisionar
+# duplicaria a despesa.
+CPP_PATRONAL = 0.20
 AVOS = 1 / 12
 TERCO_FERIAS = 1 / 3
 FGTS_ALIQUOTA = 0.08
@@ -125,7 +128,12 @@ Folha que não fecha (proventos - descontos ≠ líquido) não vira lançamento.
             return self.result_fail("Competência não identificada na folha.")
         ano, mes = int(comp[:4]), int(comp[5:7])
 
-        lancs = self._montar(folha, comp, ano, mes, banco)
+        # Anexo IV recolhe patronal por fora; o cadastro do cliente diz qual é
+        anexo = getattr(cliente, "anexo_simples", None)
+        rat = float(getattr(cliente, "aliquota_rat", 0.0) or 0.0)
+        patronal = anexo == 4
+
+        lancs = self._montar(folha, comp, ano, mes, banco, patronal=patronal, rat=rat)
         if task.input.get("provisionar", True):
             lancs += self._provisoes(folha, ano, mes)
         return self.result_ok(
@@ -149,6 +157,8 @@ Folha que não fecha (proventos - descontos ≠ líquido) não vira lançamento.
         """
         out: list[Lancamento] = []
         fim = _ultimo_dia(ano, mes).isoformat()
+        if folha.tipo == "rescisao":
+            return []  # na rescisão as provisões são baixadas, não constituídas
         for f in folha.funcionarios:
             if f.tipo == "prolabore":
                 continue
@@ -176,7 +186,8 @@ Folha que não fecha (proventos - descontos ≠ líquido) não vira lançamento.
         return out
 
     def _montar(
-        self, folha: Folha, comp: str, ano: int, mes: int, banco: str
+        self, folha: Folha, comp: str, ano: int, mes: int, banco: str,
+        *, patronal: bool = False, rat: float = 0.0,
     ) -> list[Lancamento]:
         """Provisão na competência; pagamento nas datas do calendário."""
         out: list[Lancamento] = []
@@ -193,8 +204,14 @@ Folha que não fecha (proventos - descontos ≠ líquido) não vira lançamento.
             # sócio vai para pró-labore, empregado para salários — o mesmo
             # arquivo traz os dois, então a conta é decidida por funcionário
             prolabore = f.tipo == "prolabore"
+            rescisao = folha.tipo == "rescisao"
             desp = self.conta("desp_prolabore" if prolabore else "desp_salarios")
-            pagar = self.conta("prolabore_pagar" if prolabore else "salarios_pagar")
+            # rescisão tem conta a pagar própria: separa do salário do mês e
+            # deixa visível o que ainda falta quitar com o desligado
+            pagar = self.conta(
+                "rescisao_pagar" if rescisao
+                else ("prolabore_pagar" if prolabore else "salarios_pagar")
+            )
             hist_prov = 1 if prolabore else 3
 
             # cada holerite é individual, com o nome e a competência no complemento
@@ -215,6 +232,11 @@ Folha que não fecha (proventos - descontos ≠ líquido) não vira lançamento.
                     out.append(Lancamento(fim, self.conta("desp_fgts"),
                                           self.conta("fgts_pagar"), r.valor,
                                           f"FGTS {quem}", "provisao", 5))
+                elif r.natureza == "rescisao":
+                    # cada verba com sua conta; indenizatórias não geram encargo
+                    out.append(Lancamento(fim, self.conta(r.conta_alias or "desp_salarios"),
+                                          pagar, r.valor,
+                                          f"{r.descricao[:28]} {quem}", "provisao", 0))
                 elif r.natureza == "desconto" and r.conta_alias == "salarios_pagar":
                     total_adiant += r.valor
                     out.append(Lancamento(data_adiant, pagar, banco, r.valor,
@@ -224,6 +246,19 @@ Folha que não fecha (proventos - descontos ≠ líquido) não vira lançamento.
             if liquido:
                 out.append(Lancamento(data_salario, pagar, banco, liquido,
                                       f"Pagamento {quem}", "pagamento", hist_prov))
+
+        # CPP patronal: só Anexo IV. Entra como despesa da empresa, não como
+        # retenção do empregado, e engorda a mesma GPS.
+        if patronal:
+            base_cpp = round(sum(f.proventos + f.vantagens for f in folha.funcionarios), 2)
+            valor_cpp = round(base_cpp * (CPP_PATRONAL + rat), 2)
+            if valor_cpp:
+                out.append(Lancamento(fim, self.conta("desp_inss_patronal"),
+                                      self.conta("inss_pagar"), valor_cpp,
+                                      f"CPP patronal {CPP_PATRONAL:.0%}"
+                                      + (f" + RAT {rat:.2%}" if rat else "")
+                                      + f" comp {mes:02d}/{ano}", "provisao", 6))
+                total_inss += valor_cpp
 
         # guias vão em um lançamento só, é assim que são recolhidas
         if total_inss:

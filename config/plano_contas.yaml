@@ -35,6 +35,10 @@ contas:
   provisao_13: 2141302          # Provisao para 13o Salario
   fgts_provisao_ferias: 2141305 # FGTS s/ provisao para ferias
   fgts_provisao_13: 2141306     # FGTS s/ provisao para 13o
+  desp_inss_patronal: 3221108  # CPP patronal Anexo IV (CONFERIR codigo)
+  desp_aviso_previo: 3221109  # Aviso previo indenizado (CONFERIR)
+  desp_multa_fgts: 3221110  # Multa 40% FGTS rescisorio (CONFERIR)
+  rescisao_pagar: 2141106  # Rescisao a pagar (visto no razao)
   desp_ferias: 3221105          # Ferias
   desp_13: 3221104              # 13o Salario
   salarios_pagar: 2141101
