@@ -359,6 +359,7 @@ def create_app() -> FastAPI:
         carteira = tit.abrir_carteira(get_settings().data_dir, client_id)
         return {
             "resumo": carteira.resumo(),
+            "ajustes": carteira.ajustes_abertos(),
             "titulos": [
                 {
                     "id": t.id, "tipo": t.tipo, "numero": t.numero,

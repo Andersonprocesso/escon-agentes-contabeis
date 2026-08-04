@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -179,6 +180,13 @@ Nunca invente conta que não esteja no plano.
                     sem_titulo.append(
                         {"arquivo": registro["arquivo"], "valor": doc.valor,
                          "data": doc.data, "motivo": motivo}
+                    )
+                    # Grava o ajuste: é o caso da nota lançada à vista para a
+                    # qual a duplicata apareceu depois. Se ficasse só no
+                    # relatório da rodada, a próxima execução não saberia.
+                    carteira.registrar_ajuste(
+                        motivo=motivo, documento=registro["arquivo"],
+                        valor=doc.valor, data=doc.data,
                     )
 
             lancados.append(registro)
@@ -448,7 +456,7 @@ Nunca invente conta que não esteja no plano.
                     extras={
                         "documento": d.tipo,
                         "sentido": "saida" if saida else "entrada",
-                        "a_prazo": _tem_parcelamento(arq),
+                        "a_prazo": _e_a_prazo(arq),
                         "emit_cnpj": emit,
                         "dest_cnpj": _so_digitos(d.dest_cnpj),
                         "numero": d.numero,
@@ -483,9 +491,7 @@ Nunca invente conta que não esteja no plano.
 
 
 def _so_digitos(v: Any) -> str:
-    import re as _re
-
-    return _re.sub(r"\D", "", str(v or ""))
+    return re.sub(r"\D", "", str(v or ""))
 
 
 def _para_float(v: Any) -> float | None:
@@ -520,17 +526,41 @@ def _parece_pagamento(texto: str) -> bool:
     )
 
 
-def _tem_parcelamento(arq: Path) -> bool:
-    """NF-e parcelada vira conta a receber, não caixa.
+def _e_a_prazo(arq: Path) -> bool:
+    """A nota é a prazo? Quem responde é o vencimento da duplicata.
 
-    O bloco <cobr><dup> traz uma tag por parcela; indPag=1 também marca prazo.
-    Sem isso, uma venda em 3x entraria como se tivesse sido paga à vista.
+    Regra do Anderson, e ela é exata: **duplicata com vencimento diferente da
+    emissão é a prazo** — vira Fornecedores/Duplicatas a receber e abre título.
+    Duplicata vencendo no dia da emissão, ou nota sem duplicata nenhuma, é à
+    vista: entra direto em caixa ou banco.
+
+    A simples existência do bloco <dup> não bastava. A NF 44.141 da Estoque do
+    Lojista traz duplicata 001 vencendo 13/01/2021, o mesmo dia da emissão: foi
+    paga na hora, mas virava conta a pagar que nunca seria baixada.
     """
     try:
         conteudo = arq.read_text(encoding="utf-8", errors="ignore")
     except OSError:
         return False
-    return "<dup>" in conteudo or "<dup " in conteudo or "<indPag>1</indPag>" in conteudo
+
+    emissao = None
+    if m := re.search(r"<d[Ehm]{1,2}Emi>([\d-]{10})", conteudo):
+        emissao = m.group(1)
+    parcelas = _ler_duplicatas_seguro(arq)
+    if parcelas:
+        # basta uma parcela vencendo depois da emissão para ser a prazo
+        return any(p.get("vencimento") and p["vencimento"] != emissao for p in parcelas)
+    # sem duplicata detalhada: só o indPag explícito indica prazo
+    return "<indPag>1</indPag>" in conteudo
+
+
+def _ler_duplicatas_seguro(arq: Path) -> list[dict[str, Any]]:
+    from escon_agentes.tools import titulos as _t
+
+    try:
+        return _t.ler_duplicatas(arq)
+    except Exception:  # noqa: BLE001 — XML torto não derruba o lote
+        return []
 
 
 def _tem_encargos(texto: str) -> bool:

@@ -170,13 +170,24 @@ regras:
     historico: 0
     descricao: "NF-e à vista — entra em caixa ou banco conforme informado."
 
-  - id: compra_mercadoria
-    quando: {tipo: xml, sentido: entrada}
+  # A ordem importa. "A prazo" é decidido pelo VENCIMENTO da duplicata:
+  # vencimento diferente da emissão = a prazo; mesma data, ou sem duplicata,
+  # = à vista. Regra do Anderson, conferida no DANFE 44.141 da Estoque do
+  # Lojista (emissão 13/01/2021, duplicata 001 vencendo 13/01/2021 = à vista).
+  - id: compra_a_prazo
+    quando: {tipo: xml, sentido: entrada, a_prazo: true}
     debito: 5131102          # Compra de Mercadoria
     credito: 2121101         # Fornecedores Nacionais
     historico: 0
     abre_titulo: pagar
-    descricao: "NF-e recebida de fornecedor — compra a prazo."
+    descricao: "NF-e de fornecedor com duplicata a vencer — vira conta a pagar."
+
+  - id: compra_mercadoria
+    quando: {tipo: xml, sentido: entrada}
+    debito: 5131102          # Compra de Mercadoria
+    credito: "@recebimento"  # à vista: sai do caixa ou do banco
+    historico: 0
+    descricao: "NF-e de fornecedor paga na hora — não abre conta a pagar."
 
   # ---------------- DUPLICATAS ----------------
   # A ordem importa: vence a PRIMEIRA regra que casa. A de atraso precisa vir

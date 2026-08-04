@@ -119,6 +119,11 @@ class Carteira:
         self.caminho = caminho
         self.cliente = cliente
         self.titulos: list[Titulo] = []
+        # Ajustes que a conciliação levantou e alguém precisa resolver: uma
+        # duplicata que apareceu depois da nota já ter sido lançada à vista,
+        # um pagamento sem título correspondente. Ficam gravados porque a
+        # rodada seguinte não teria como redescobrir sozinha.
+        self.ajustes: list[dict] = []
         if caminho.exists():
             try:
                 dados = json.loads(caminho.read_text(encoding="utf-8"))
@@ -126,6 +131,7 @@ class Carteira:
                 dados = {}
             for t in dados.get("titulos", []):
                 self.titulos.append(Titulo(**t))
+            self.ajustes = list(dados.get("ajustes") or [])
 
     # ---------- gravação ----------
 
@@ -137,6 +143,7 @@ class Carteira:
                     "cliente": self.cliente,
                     "atualizado": _hoje(),
                     "titulos": [asdict(t) for t in self.titulos],
+                    "ajustes": self.ajustes,
                 },
                 ensure_ascii=False,
                 indent=2,
@@ -159,6 +166,31 @@ class Carteira:
             return False
         self.titulos.append(titulo)
         return True
+
+    def registrar_ajuste(
+        self, *, motivo: str, documento: str, valor: float | None = None,
+        data: str | None = None, tipo: str = "pagamento_sem_titulo",
+    ) -> bool:
+        """Anota um ajuste para alguém resolver. Devolve True se é novo.
+
+        Nasce do caso que o Anderson descreveu: a nota foi lançada à vista
+        (duplicata vencendo no dia, ou sem duplicata) e depois aparece a
+        duplicata. A conciliação vê o pagamento que não bate com título nenhum
+        e registra aqui; o acerto contábil é feito por quem lança.
+        """
+        chave = (documento, round(valor or 0, 2))
+        if any((a.get("documento"), round(a.get("valor") or 0, 2)) == chave
+               and not a.get("resolvido") for a in self.ajustes):
+            return False
+        self.ajustes.append({
+            "tipo": tipo, "motivo": motivo, "documento": documento,
+            "valor": valor, "data": _iso(data) or data,
+            "detectado_em": _hoje(), "resolvido": False,
+        })
+        return True
+
+    def ajustes_abertos(self) -> list[dict]:
+        return [a for a in self.ajustes if not a.get("resolvido")]
 
     # ---------- consultar ----------
 

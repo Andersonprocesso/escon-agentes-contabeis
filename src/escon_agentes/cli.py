@@ -599,6 +599,19 @@ def titulos_cmd(
         )
         return
 
+    ajustes = carteira.ajustes_abertos()
+    if ajustes:
+        ta = Table(title="Ajustes pendentes (a conciliação levantou)")
+        for col in ("Detectado", "Data", "Valor", "Documento", "Motivo"):
+            ta.add_column(col)
+        for a in ajustes:
+            ta.add_row(
+                a.get("detectado_em", ""), str(a.get("data") or "—"),
+                f"{(a.get('valor') or 0):,.2f}", str(a.get("documento") or "")[:26],
+                str(a.get("motivo") or "")[:60],
+            )
+        console.print(ta)
+
     lista = carteira.vencidos() if vencidos else carteira.em_aberto(tipo)
     r = carteira.resumo()
     table = Table(title=f"Títulos em aberto — {cliente}")
