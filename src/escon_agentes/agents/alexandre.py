@@ -71,6 +71,9 @@ Nunca invente conta que não esteja no plano.
 
         lancados: list[dict[str, Any]] = []
         pendentes: list[dict[str, Any]] = []
+        # Notas que existem, estão certas, e simplesmente não viram lançamento.
+        # Ficam listadas para ninguém achar que sumiram.
+        nao_contabilizaveis: list[dict[str, Any]] = []
         por_regra = 0
         por_llm = 0
         chamadas_llm = 0
@@ -84,6 +87,29 @@ Nunca invente conta que não esteja no plano.
             docs.extend(self._ler(arq))
 
         for doc in docs:
+            # O CFOP decide ANTES da regra: remessa, retorno, transferência e a
+            # NF-e que só documenta cupom já lançado não geram lançamento —
+            # lançá-las inventaria compra ou dobraria receita.
+            if "cfop_contabiliza" in doc.extras:
+                contabiliza = doc.extras["cfop_contabiliza"]
+                if contabiliza is not True:
+                    item = {
+                        "arquivo": Path(doc.caminho).name,
+                        "data": doc.data,
+                        "valor": doc.valor,
+                        "cfop": doc.extras.get("cfop"),
+                        "natureza": doc.extras.get("natureza_cfop"),
+                        "motivo": doc.extras.get("cfop_descricao"),
+                        "contraparte": doc.extras.get("contraparte"),
+                    }
+                    if contabiliza is False:
+                        nao_contabilizaveis.append(item)
+                    else:
+                        # None = pode gerar lançamento, mas em conta diferente
+                        # da rotina (devolução, bonificação, imobilizado).
+                        pendentes.append(item)
+                    continue
+
             cls = self.classificador.classificar(doc, banco=banco, forma=forma)
 
             if cls.origem == "desconhecido" and usar_llm and self.llm.available:
@@ -209,6 +235,22 @@ Nunca invente conta que não esteja no plano.
         if pendentes:
             resumo += f"\nPendentes aguardam você: {saida / 'lancamentos_pendentes.json'}"
 
+        if nao_contabilizaveis:
+            from collections import Counter
+
+            tipos = Counter(x["natureza"] for x in nao_contabilizaveis)
+            resumo += (
+                f"\n{len(nao_contabilizaveis)} nota(s) não geram lançamento "
+                f"(pelo CFOP): "
+                + ", ".join(f"{n} {t}" for t, n in tipos.most_common())
+            )
+            arq = saida / "notas_sem_lancamento.json"
+            arq.write_text(
+                json.dumps(nao_contabilizaveis, ensure_ascii=False, indent=2, default=str),
+                encoding="utf-8",
+            )
+            artefatos.append(str(arq))
+
         # O que ficou a receber/pagar não pode sumir no fim do processamento:
         # é justamente o que a competência isolada perdia.
         r = carteira.resumo()
@@ -236,6 +278,7 @@ Nunca invente conta que não esteja no plano.
             data={
                 "lancados": lancados,
                 "pendentes": pendentes,
+                "nao_contabilizaveis": nao_contabilizaveis,
                 "por_regra": por_regra,
                 "por_llm": por_llm,
                 "chamadas_llm": chamadas_llm,
@@ -337,7 +380,16 @@ Nunca invente conta que não esteja no plano.
         if paths:
             return Path(paths[0])
         if task.client_id:
-            return client_inbox(self.settings.inbox, task.client_id)
+            raiz = client_inbox(self.settings.inbox, task.client_id)
+            # Com competência informada, ler só a pasta dela. A raiz do cliente
+            # acumula o que a Raquel foi baixando do Drive: pedir jan/21 e varrer
+            # tudo trouxe notas de 2026 para dentro da competência de 2021.
+            comp = task.input.get("competencia")
+            if comp:
+                da_comp = raiz / str(comp)
+                if da_comp.is_dir():
+                    return da_comp
+            return raiz
         return self.settings.inbox
 
     def _ler(self, arq: Path) -> list[Documento]:
@@ -375,11 +427,17 @@ Nunca invente conta que não esteja no plano.
                 return []
             # Os campos do Xavier sao data_emissao/valor_total — ler "data"/"valor"
             # devolvia None e mandava toda nota fiscal para pendentes.
+            from escon_agentes.tools import cfop as cfop_tool
+
             proprio = _so_digitos(getattr(self, "_cnpj_cliente", ""))
             emit = _so_digitos(d.emit_cnpj)
             # quem emitiu decide o lancamento: cliente emitente = venda,
             # cliente destinatario = compra.
             saida = bool(proprio) and emit == proprio
+            # O CFOP diz o que a operacao realmente e. Sem ele, remessa,
+            # devolucao e bonificacao viravam compra — pareciam iguais olhando
+            # so emitente e valor.
+            info = cfop_tool.resumir(d.cfops, "saida" if saida else "entrada")
             return [
                 Documento(
                     caminho=str(arq),
@@ -399,6 +457,10 @@ Nunca invente conta que não esteja no plano.
                         "contraparte_cnpj": _so_digitos(
                             d.dest_cnpj if saida else d.emit_cnpj
                         ),
+                        "cfop": info.codigo,
+                        "natureza_cfop": info.natureza,
+                        "cfop_contabiliza": info.contabiliza,
+                        "cfop_descricao": info.descricao,
                     },
                 )
             ]

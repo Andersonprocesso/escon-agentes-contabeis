@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import re
 import shutil
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -41,6 +41,10 @@ class XmlDoc:
     valor_total: str | None
     numero: str | None
     natureza: str | None
+    # CFOP de cada item. É a natureza declarada da operação e o único jeito
+    # confiável de saber que a nota é devolução, remessa ou bonificação —
+    # coisas que parecem compra quando se olha só emitente e valor.
+    cfops: list[str] = field(default_factory=list)
 
 
 def _normalizar_data(bruto: str | None) -> str | None:
@@ -102,7 +106,17 @@ def parse_xml_file(path: Path) -> XmlDoc:
         valor_total=_find_text(root, "vNF", "vCFe", "vTPrest", "ValorLiquidoNfse", "vServ"),
         numero=_find_text(root, "nNF", "nCT", "Numero"),
         natureza=_find_text(root, "natOp", "xProd"),
+        cfops=_ler_cfops(root),
     )
+
+
+def _ler_cfops(root: ET.Element) -> list[str]:
+    """Todos os CFOP da nota, na ordem dos itens (pode repetir)."""
+    return [
+        (el.text or "").strip()
+        for el in root.iter()
+        if _local(el.tag).upper() == "CFOP" and (el.text or "").strip()
+    ]
 
 
 def scan_folder(folder: Path) -> list[XmlDoc]:
