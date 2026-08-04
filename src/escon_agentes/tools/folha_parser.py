@@ -58,7 +58,7 @@ RUBRICAS: list[tuple[tuple[str, ...], str, str]] = [
     (("desconto adiantamento", "adiantamento salarial", "adiantamento"),
      "desconto", "salarios_pagar"),
     (("taxa assistencial", "contribuicao sindical", "mensalidade sindical",
-      "contribuicao confederativa"), "desconto", "salarios_pagar"),
+      "contribuicao confederativa"), "desconto", "sindicato_pagar"),
     (("fgts",), "encargo", "fgts_pagar"),
 ]
 
@@ -91,6 +91,9 @@ class Funcionario:
     descontos: float = 0.0
     liquido: float = 0.0
     rubricas: list[Rubrica] = field(default_factory=list)
+    # socio recebe pro-labore, empregado recebe salario: contas diferentes.
+    # O arquivo costuma trazer os dois juntos ("Folha de Pagamento e Pro labore").
+    tipo: str = "folha"
 
     @property
     def fecha(self) -> bool:
@@ -186,6 +189,8 @@ def ler_folha(texto: str) -> Folha:
                     )
 
         # só entra quem tem número: página de cabeçalho não é funcionário
+        if any(r.conta_alias == "desp_prolabore" for r in f.rubricas):
+            f.tipo = "prolabore"
         if f.proventos or f.liquido:
             folha.funcionarios.append(f)
     return folha

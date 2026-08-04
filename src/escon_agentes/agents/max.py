@@ -23,6 +23,7 @@ ROUTING_KEYWORDS: list[tuple[AgentId, list[str]]] = [
     (AgentId.PAUL, ["dre", "fluxo de caixa", "indicador", "rentabilidade", "financeiro", "margem"]),
     (AgentId.CESAR, ["certidão", "certidao", "cnd", "e-cac", "ecac", "regularidade"]),
     (AgentId.PEDRO, ["cadastro", "cadastrar", "acessorias", "acessórias", "nova empresa", "abrir empresa"]),
+    (AgentId.FABIANA, ["folha", "holerite", "prolabore", "pró-labore", "salário", "salario", "rescis", "férias", "ferias", "13"]),
     (AgentId.ALEXANDRE, ["lançamento", "lancamento", "lançar", "lancar", "razão", "razao", "partida dobrada", "débito e crédito", "debito e credito"]),
     (AgentId.FERNANDO, ["certificado digital", "certificado a1", "certificado", "renovação de certificado", "renovacao de certificado"]),
 ]

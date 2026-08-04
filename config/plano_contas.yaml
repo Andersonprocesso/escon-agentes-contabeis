@@ -30,6 +30,7 @@ contas:
   simples_nacional: 2131115  # Simples Nacional a recolher (era 2131101 = IPI a recolher!)
   inss_pagar: 2141201  # INSS a recolher (era 2131201, inexistente)
   fgts_pagar: 2141202  # FGTS a recolher (era 2131202, inexistente)
+  sindicato_pagar: 2141103  # contribuicao/taxa sindical retida (conferir codigo)
   salarios_pagar: 2141101
   prolabore_pagar: 2141102  # Pro-labore a pagar (era 2141202 = FGTS a recolher!)
 

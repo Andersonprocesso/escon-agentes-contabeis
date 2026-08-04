@@ -41,6 +41,7 @@ class AgentId(str, Enum):
     XAVIER = "xavier"
     FERNANDO = "fernando"
     ALEXANDRE = "alexandre"
+    FABIANA = "fabiana"
     PEDRO = "pedro"
 
 
