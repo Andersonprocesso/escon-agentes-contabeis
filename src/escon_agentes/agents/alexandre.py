@@ -53,6 +53,8 @@ Nunca invente conta que não esteja no plano.
 
         cliente = get_client(self.settings.clients_dir, task.client_id) if task.client_id else None
         banco = getattr(cliente, "banco_principal", None) or "itau"
+        # guardado para o _ler saber se a nota e de venda ou de compra
+        self._cnpj_cliente = getattr(cliente, "cnpj", None) or (task.client_id or "")
         usar_llm = bool(task.input.get("usar_llm", True))
 
         lancados: list[dict[str, Any]] = []
@@ -217,15 +219,27 @@ Nunca invente conta que não esteja no plano.
                 d = xml_fiscal.parse_xml_file(arq)
             except Exception:  # noqa: BLE001
                 return []
+            # Os campos do Xavier sao data_emissao/valor_total — ler "data"/"valor"
+            # devolvia None e mandava toda nota fiscal para pendentes.
+            proprio = _so_digitos(getattr(self, "_cnpj_cliente", ""))
+            emit = _so_digitos(d.emit_cnpj)
+            # quem emitiu decide o lancamento: cliente emitente = venda,
+            # cliente destinatario = compra.
+            saida = bool(proprio) and emit == proprio
             return [
                 Documento(
                     caminho=str(arq),
                     tipo="xml",
-                    texto=f"{getattr(d, 'tipo', '')} {getattr(d, 'emitente', '')} "
-                    f"{getattr(d, 'destinatario', '')}",
-                    data=getattr(d, "data", None),
-                    valor=_para_float(getattr(d, "valor", None)),
-                    extras={"documento": getattr(d, "tipo", "")},
+                    texto=f"{d.tipo} {d.emit_nome or ''} {d.dest_nome or ''} {d.natureza or ''}",
+                    data=d.data_emissao,
+                    valor=_para_float(d.valor_total),
+                    extras={
+                        "documento": d.tipo,
+                        "sentido": "saida" if saida else "entrada",
+                        "emit_cnpj": emit,
+                        "dest_cnpj": _so_digitos(d.dest_cnpj),
+                        "numero": d.numero,
+                    },
                 )
             ]
 
@@ -245,13 +259,29 @@ Nunca invente conta que não esteja no plano.
         ]
 
 
+def _so_digitos(v: Any) -> str:
+    import re as _re
+
+    return _re.sub(r"\D", "", str(v or ""))
+
+
 def _para_float(v: Any) -> float | None:
+    """Converte valor de documento, respeitando cada convenção.
+
+    XML fiscal usa ponto decimal ("20.70"); PDF e extrato em português usam
+    vírgula ("1.234,56"). Tratar todo ponto como milhar transformava R$ 20,70
+    em R$ 2.070,00 — cem vezes maior, em todas as notas.
+    """
     if v is None:
         return None
     if isinstance(v, (int, float)):
         return float(v)
-    t = str(v).strip().replace("R$", "").replace(" ", "")
-    t = t.replace(".", "").replace(",", ".")
+    t = str(v).strip().replace("R$", "").replace(" ", "").replace(" ", "")
+    if not t:
+        return None
+    if "," in t:  # formato brasileiro: ponto é milhar, vírgula é decimal
+        t = t.replace(".", "").replace(",", ".")
+    # só com pontos: já é decimal (padrão dos XML), não mexe
     try:
         return float(t)
     except ValueError:

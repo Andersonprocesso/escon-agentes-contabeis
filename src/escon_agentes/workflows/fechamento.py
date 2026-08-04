@@ -150,13 +150,58 @@ def importar_do_radar(
 
 
 
+def _onedrive_listar(caminho: str, token: str) -> tuple[int, list[dict]]:
+    import httpx
+
+    url = (
+        f"https://graph.microsoft.com/v1.0/me/drive/root:/{caminho}:/children"
+        if caminho
+        else "https://graph.microsoft.com/v1.0/me/drive/root/children"
+    )
+    with httpx.Client(timeout=60) as c:
+        r = c.get(url, headers={"Authorization": f"Bearer {token}"}, params={"$top": "200"})
+    return r.status_code, (r.json().get("value", []) if r.status_code == 200 else [])
+
+
+def caminho_da_competencia(base: str, competencia: str, token: str) -> str | None:
+    """Descobre a subpasta do mês dentro da pasta da empresa.
+
+    A árvore do Anderson é `Empresas/{Empresa}/{Ano}/{MM AAAA}` (ex.:
+    ".../Alumax Materiais de Construção/2021/01 2021"). Se o caminho informado
+    já for o da competência, devolve ele mesmo.
+    """
+    base = base.strip().strip("/")
+    ano, mes = competencia.split("-")
+    cod, itens = _onedrive_listar(base, token)
+    if cod != 200:
+        return None
+    nomes = {i["name"]: i for i in itens if "folder" in i}
+
+    # já é a pasta do mês?
+    if any(not "folder" in i for i in itens) and not nomes:
+        return base
+
+    if ano in nomes:  # base = pasta da empresa → desce para o ano
+        cod2, itens2 = _onedrive_listar(f"{base}/{ano}", token)
+        candidatos = [i["name"] for i in itens2 if "folder" in i]
+        for nome in candidatos:
+            if re.fullmatch(rf"0?{int(mes)}\s*[-_/]?\s*{ano}", nome.strip()) or nome.strip() == f"{mes} {ano}":
+                return f"{base}/{ano}/{nome}"
+        return None
+
+    for nome in nomes:  # base já é o ano
+        if nome.strip() == f"{mes} {ano}":
+            return f"{base}/{nome}"
+    return None
+
+
 def importar_do_onedrive(
     settings: Settings, client_id: str, competencia: str, pasta_onedrive: str
 ) -> dict[str, Any]:
-    """Baixa os documentos de uma pasta do OneDrive do escritório.
+    """Baixa os documentos da competência a partir da pasta da empresa no OneDrive.
 
-    Usa o mesmo login da Raquel (Microsoft Graph). Exige a permissão
-    `Files.Read.All` no app do Azure — só `Mail.Read` não alcança arquivos.
+    Percorre subpastas: dentro do mês o Anderson separa em Boleto, Pgto,
+    Nubank etc., e ler só o primeiro nível deixaria quase tudo para trás.
     """
     import httpx
 
@@ -166,42 +211,53 @@ def importar_do_onedrive(
         token = gm.get_access_token(settings, interactive_ok=False, perfil="arquivos")
         gm.conferir_conta(token, settings, "arquivos")
     except gm.MailboxUnavailable as e:
-        return {"ok": False, "erro": f"Login Microsoft indisponível: {e}"}
+        return {"ok": False, "erro": f"Login de arquivos indisponível: {e}"}
 
-    caminho = pasta_onedrive.strip().strip("/")
-    url = (
-        f"https://graph.microsoft.com/v1.0/me/drive/root:/{caminho}:/children"
-        if caminho
-        else "https://graph.microsoft.com/v1.0/me/drive/root/children"
-    )
+    alvo = caminho_da_competencia(pasta_onedrive, competencia, token)
+    if not alvo:
+        return {
+            "ok": False,
+            "erro": f"Não achei a pasta de {competencia} dentro de '{pasta_onedrive}'.",
+        }
+
+    destino = pasta_da_competencia(settings, client_id, competencia)
+    destino.mkdir(parents=True, exist_ok=True)
+    baixados, ignorados = 0, 0
     cab = {"Authorization": f"Bearer {token}"}
-    with httpx.Client(timeout=60) as c:
-        r = c.get(url, headers=cab)
-        if r.status_code == 403:
-            return {
-                "ok": False,
-                "erro": "Sem permissão de arquivos. Adicione Files.Read.All no app do Azure e entre de novo.",
-            }
-        if r.status_code != 200:
-            return {"ok": False, "erro": f"OneDrive respondeu {r.status_code}: {r.text[:150]}"}
 
-        destino = pasta_da_competencia(settings, client_id, competencia)
-        destino.mkdir(parents=True, exist_ok=True)
-        baixados, ignorados = 0, 0
-        for item in r.json().get("value", []):
-            nome = item.get("name") or ""
-            link = item.get("@microsoft.graph.downloadUrl")
-            if "folder" in item or not link:
-                continue
-            if Path(nome).suffix.lower() not in EXTENSOES:
-                ignorados += 1
-                continue
-            alvo = destino / nome
-            if alvo.exists() and alvo.stat().st_size == int(item.get("size") or 0):
-                continue
-            alvo.write_bytes(c.get(link, timeout=120).content)
-            baixados += 1
-    return {"ok": True, "baixados": baixados, "ignorados": ignorados, "destino": str(destino)}
+    def percorrer(caminho: str, profundidade: int = 0) -> None:
+        nonlocal baixados, ignorados
+        if profundidade > 4:  # trava contra árvore muito funda
+            return
+        cod, itens = _onedrive_listar(caminho, token)
+        if cod != 200:
+            return
+        with httpx.Client(timeout=180) as c:
+            for item in itens:
+                nome = item.get("name") or ""
+                if "folder" in item:
+                    percorrer(f"{caminho}/{nome}", profundidade + 1)
+                    continue
+                link = item.get("@microsoft.graph.downloadUrl")
+                if not link:
+                    continue
+                if Path(nome).suffix.lower() not in EXTENSOES:
+                    ignorados += 1
+                    continue
+                arq = destino / nome
+                if arq.exists() and arq.stat().st_size == int(item.get("size") or 0):
+                    continue
+                arq.write_bytes(c.get(link).content)
+                baixados += 1
+
+    percorrer(alvo)
+    return {
+        "ok": True,
+        "baixados": baixados,
+        "ignorados": ignorados,
+        "pasta_origem": alvo,
+        "destino": str(destino),
+    }
 
 
 def executar(

@@ -43,8 +43,24 @@ class XmlDoc:
     natureza: str | None
 
 
+def _normalizar_data(bruto: str | None) -> str | None:
+    """Devolve sempre AAAA-MM-DD. A NF-e manda ISO com fuso; o CFe manda
+    AAAAMMDD puro."""
+    if not bruto:
+        return None
+    t = bruto.strip()
+    if len(t) == 8 and t.isdigit():
+        return f"{t[:4]}-{t[4:6]}-{t[6:8]}"
+    return t[:10]
+
+
 def detect_tipo(root: ET.Element) -> str:
     tags = {_local(el.tag).lower() for el in root.iter()}
+    # CFe = Cupom Fiscal Eletronico (SAT-CF-e, varejo em SP). Sem isto o
+    # documento cai em "desconhecido" e some do lancamento: numa loja de
+    # balcao ele e a maior parte do movimento.
+    if "cfe" in tags or "infcfe" in tags:
+        return "cfe"
     if "nfeproc" in tags or "nfe" in tags:
         # NFC-e tem mod=65
         for el in root.iter():
@@ -81,8 +97,9 @@ def parse_xml_file(path: Path) -> XmlDoc:
         emit_nome=_find_text(emit, "xNome"),
         dest_cnpj=_find_text(dest, "CNPJ", "CPF"),
         dest_nome=_find_text(dest, "xNome"),
-        data_emissao=_find_text(root, "dhEmi", "dEmi", "DataEmissao"),
-        valor_total=_find_text(root, "vNF", "vTPrest", "ValorLiquidoNfse", "vServ"),
+        # o CFe (SAT) usa dEmi no formato AAAAMMDD e vCFe — nao dhEmi/vNF
+        data_emissao=_normalizar_data(_find_text(root, "dhEmi", "dEmi", "DataEmissao")),
+        valor_total=_find_text(root, "vNF", "vCFe", "vTPrest", "ValorLiquidoNfse", "vServ"),
         numero=_find_text(root, "nNF", "nCT", "Numero"),
         natureza=_find_text(root, "natOp", "xProd"),
     )

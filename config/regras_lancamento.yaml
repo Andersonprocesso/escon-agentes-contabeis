@@ -146,6 +146,20 @@ regras:
     visto_no_razao: 22
 
   # ---------------- RECEITA ----------------
+  - id: venda_mercadoria
+    quando: {tipo: xml, sentido: saida}
+    debito: 1121101          # Duplicatas a receber
+    credito: 4111103         # Venda de mercadorias no mercado interno
+    historico: 0
+    descricao: "NF-e/CFe emitida pelo cliente — venda. Baixa depois pelo extrato."
+
+  - id: compra_mercadoria
+    quando: {tipo: xml, sentido: entrada}
+    debito: 5131102          # Compra de Mercadoria
+    credito: 2121101         # Fornecedores Nacionais
+    historico: 0
+    descricao: "NF-e recebida de fornecedor — compra a prazo."
+
   - id: servico_a_vista
     quando: {tipo: xml, documento: nfse, recebido: true}
     debito: "@banco"

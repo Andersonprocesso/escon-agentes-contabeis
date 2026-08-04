@@ -80,6 +80,10 @@ class Classificador:
         if (esperado := q.get("e_pagamento")) is not None:
             if doc.e_pagamento is None or bool(doc.e_pagamento) != bool(esperado):
                 return False
+        if (sentido := q.get("sentido")) and doc.extras.get("sentido") != sentido:
+            return False
+        if (documento := q.get("documento")) and doc.extras.get("documento") != documento:
+            return False
         termos = q.get("contem") or []
         if termos:
             alvo = _norm(doc.texto + " " + Path(doc.caminho).name)
