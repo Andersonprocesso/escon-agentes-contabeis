@@ -514,6 +514,111 @@ def plano_contas_cmd(
     console.print(ht)
 
 
+@app.command("lancamentos")
+def lancamentos_cmd(
+    cliente: str = typer.Option(..., "--cliente", "-c"),
+    pasta: Optional[str] = typer.Option(None, "--pasta", "-p"),
+    competencia: Optional[str] = typer.Option(None, "--competencia", "-m"),
+    forma: str = typer.Option("banco", "--forma", help="banco ou caixa"),
+    sem_llm: bool = typer.Option(False, "--sem-llm"),
+) -> None:
+    """Alexandre: gera lançamentos contábeis dos documentos do cliente."""
+    from escon_agentes.agents.alexandre import AlexandreAgent
+    from escon_agentes.schema import AgentId, AgentTask
+
+    s = get_settings()
+    agent = AlexandreAgent(settings=s)
+    task = AgentTask(
+        agent=AgentId.ALEXANDRE,
+        title=f"Lançamentos {cliente} {competencia or ''}".strip(),
+        client_id=cliente,
+        input={
+            "folder": pasta,
+            "competencia": competencia,
+            "forma_pagamento": forma,
+            "usar_llm": not sem_llm,
+        },
+    )
+    res = agent.run(task)
+    if not res.success:
+        console.print(f"[red]{res.summary}[/red]")
+        raise typer.Exit(1)
+
+    lancados = res.data.get("lancados") or []
+    table = Table(title=f"Lançamentos — {cliente}")
+    for col in ("Data", "Débito", "Crédito", "Valor", "Regra", "Complemento"):
+        table.add_column(col)
+    for r in lancados[:40]:
+        table.add_row(
+            str(r.get("data") or "—"), r.get("debito", ""), r.get("credito", ""),
+            f"{(r.get('valor') or 0):,.2f}", r.get("regra", ""),
+            str(r.get("complemento") or "")[:38],
+        )
+    console.print(table)
+    if len(lancados) > 40:
+        console.print(f"[dim]... e mais {len(lancados) - 40} lançamento(s) no Excel.[/dim]")
+    console.print(res.summary)
+    for a in res.artifacts:
+        console.print(f"[green]→ {a}[/green]")
+
+
+@app.command("titulos")
+def titulos_cmd(
+    cliente: str = typer.Option(..., "--cliente", "-c"),
+    tipo: Optional[str] = typer.Option(None, "--tipo", help="receber ou pagar"),
+    vencidos: bool = typer.Option(False, "--vencidos", help="só os em atraso"),
+    baixar: Optional[str] = typer.Option(None, "--baixar", help="id do título"),
+    valor: Optional[float] = typer.Option(None, "--valor"),
+    data: Optional[str] = typer.Option(None, "--data", help="AAAA-MM-DD"),
+) -> None:
+    """Razão auxiliar: duplicatas e parcelas em aberto do cliente.
+
+    A baixa manual existe para o caso que o agente se recusou a decidir —
+    dois títulos com o mesmo valor, por exemplo. Quem escolhe é você.
+    """
+    from escon_agentes.tools import titulos as tit
+
+    settings = get_settings()
+    carteira = tit.abrir_carteira(settings.data_dir, cliente)
+
+    if baixar:
+        if valor is None:
+            console.print("[red]Informe --valor para baixar.[/red]")
+            raise typer.Exit(1)
+        alvo = carteira.baixar(
+            baixar, valor=valor, data=data or "", documento="baixa manual",
+            observacao="lançada manualmente pelo contador",
+        )
+        if not alvo:
+            console.print(f"[red]Título não encontrado: {baixar}[/red]")
+            raise typer.Exit(1)
+        carteira.salvar()
+        console.print(
+            f"[green]Baixado R$ {valor:,.2f} · saldo agora "
+            f"R$ {alvo.saldo:,.2f} ({alvo.status})[/green]"
+        )
+        return
+
+    lista = carteira.vencidos() if vencidos else carteira.em_aberto(tipo)
+    r = carteira.resumo()
+    table = Table(title=f"Títulos em aberto — {cliente}")
+    for col in ("Vencimento", "Tipo", "Nº/Parc.", "Saldo", "Contraparte", "Atraso", "ID"):
+        table.add_column(col)
+    for t in sorted(lista, key=lambda x: x.vencimento or "9999"):
+        atraso = t.vencido_em()
+        table.add_row(
+            t.vencimento or "—", t.tipo, f"{t.numero}/{t.parcela}",
+            f"{t.saldo:,.2f}", t.contraparte[:28],
+            f"[red]{atraso}d[/red]" if atraso else "—", t.id,
+        )
+    console.print(table)
+    console.print(
+        f"A receber: {r['a_receber_aberto']} (R$ {r['a_receber_saldo']:,.2f}) · "
+        f"A pagar: {r['a_pagar_aberto']} (R$ {r['a_pagar_saldo']:,.2f}) · "
+        f"Vencidos: {r['vencidos']} (R$ {r['vencidos_saldo']:,.2f})"
+    )
+
+
 @app.command("add-client")
 def add_client(
     client_id: str = typer.Argument(...),

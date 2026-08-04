@@ -36,3 +36,7 @@ data/inbox/**/*
 !data/web/**
 !data/knowledge/
 !data/knowledge/**
+
+# Razao auxiliar: estado operacional por cliente (regenerado pelo Alexandre)
+data/titulos/**
+!data/titulos/.gitkeep

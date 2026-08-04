@@ -160,6 +160,7 @@ regras:
     debito: 1121101          # Duplicatas a receber
     credito: 4111103
     historico: 0
+    abre_titulo: receber      # cria o título no razão auxiliar, com vencimento
     descricao: "NF-e com duplicata/parcelamento — recebimento futuro."
 
   - id: venda_mercadoria
@@ -174,6 +175,7 @@ regras:
     debito: 5131102          # Compra de Mercadoria
     credito: 2121101         # Fornecedores Nacionais
     historico: 0
+    abre_titulo: pagar
     descricao: "NF-e recebida de fornecedor — compra a prazo."
 
   # ---------------- DUPLICATAS ----------------
@@ -184,6 +186,7 @@ regras:
     debito: "@recebimento"
     credito: 1121101
     historico: 0
+    baixa_titulo: receber
     encargos:                # juros e multa entram como lançamento separado
       juros: {debito: "@recebimento", credito: 3231105}
       multa: {debito: "@recebimento", credito: 3221307}
@@ -194,6 +197,7 @@ regras:
     debito: "@recebimento"
     credito: 1121101         # baixa a duplicata
     historico: 0
+    baixa_titulo: receber
     descricao: "Duplicata paga pelo cliente — baixa o que estava a receber."
 
   - id: duplicata_emitida
@@ -216,6 +220,7 @@ regras:
     debito: 1121101          # Duplicatas a receber
     credito: 4111201
     historico: 9
+    abre_titulo: receber
     visto_no_razao: 68
     descricao: "NFS-e a receber — baixa depois pelo extrato"
 
@@ -224,6 +229,7 @@ regras:
     debito: "@banco"
     credito: 1121101
     historico: 9
+    baixa_titulo: receber
     descricao: "Recebimento — baixa a duplicata"
 
   # ---------------- DESPESAS ----------------

@@ -34,6 +34,10 @@ class Classificacao:
     observacao: str = ""
     # juros/multa viram lancamento proprio, nao entram no principal
     encargos: dict = field(default_factory=dict)
+    # razão auxiliar: "receber"/"pagar" quando a regra cria um título em aberto,
+    # ou quando o documento baixa um que já existia.
+    abre_titulo: str = ""
+    baixa_titulo: str = ""
 
 
 @dataclass
@@ -120,6 +124,8 @@ class Classificador:
                 confianca="alta",
                 observacao=str(regra.get("descricao") or ""),
                 encargos=regra.get("encargos") or {},
+                abre_titulo=str(regra.get("abre_titulo") or ""),
+                baixa_titulo=str(regra.get("baixa_titulo") or ""),
             )
         return Classificacao(
             debito="", credito="", historico_codigo=0, historico_texto="",

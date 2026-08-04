@@ -16,6 +16,7 @@ from escon_agentes.tools.classificador_lancamento import (
     Documento,
 )
 from escon_agentes.tools.clients import get_client
+from escon_agentes.tools import titulos as tit
 
 EXTENSOES = {".pdf", ".xml", ".ofx", ".txt"}
 
@@ -58,6 +59,15 @@ Nunca invente conta que não esteja no plano.
         usar_llm = bool(task.input.get("usar_llm", True))
         # "caixa" ou "banco" — quem pede a competência informa como recebeu
         forma = str(task.input.get("forma_pagamento") or "banco").lower()
+
+        # Razão auxiliar: a memória do que ficou a receber/pagar. Sem ela cada
+        # competência é uma ilha e nada lembra de baixar a duplicata de janeiro
+        # quando o dinheiro entra em março.
+        carteira = tit.abrir_carteira(self.settings.data_dir, task.client_id or "geral")
+        competencia = task.input.get("competencia")
+        abertos_agora: list[dict[str, Any]] = []
+        baixados_agora: list[dict[str, Any]] = []
+        sem_titulo: list[dict[str, Any]] = []
 
         lancados: list[dict[str, Any]] = []
         pendentes: list[dict[str, Any]] = []
@@ -110,7 +120,44 @@ Nunca invente conta que não esteja no plano.
                 por_regra += 1
             else:
                 por_llm += 1
+
+            # --- razão auxiliar ---
+            if cls.abre_titulo:
+                novos = self._abrir_titulos(
+                    carteira, doc, cls.abre_titulo, task.client_id or "geral", competencia
+                )
+                if novos:
+                    registro["titulos"] = [t.id for t in novos]
+                    abertos_agora.extend(
+                        {"id": t.id, "vencimento": t.vencimento, "valor": t.valor,
+                         "contraparte": t.contraparte} for t in novos
+                    )
+            elif cls.baixa_titulo:
+                achado, motivo = self._baixar(carteira, doc, cls.baixa_titulo)
+                if achado:
+                    registro["titulo_baixado"] = achado.id
+                    registro["complemento"] = (
+                        f"Baixa dupl. {achado.numero}/{achado.parcela} "
+                        f"{achado.contraparte[:24]}".strip()
+                    )
+                    baixados_agora.append(
+                        {"id": achado.id, "valor": doc.valor, "data": doc.data}
+                    )
+                else:
+                    # O lançamento continua — o que não pode é a baixa passar
+                    # despercebida. Fica marcado para conferência.
+                    registro["observacao"] = (
+                        (registro.get("observacao") or "") + f" | {motivo}"
+                    ).strip(" |")
+                    registro["revisar_titulo"] = motivo
+                    sem_titulo.append(
+                        {"arquivo": registro["arquivo"], "valor": doc.valor,
+                         "data": doc.data, "motivo": motivo}
+                    )
+
             lancados.append(registro)
+
+        carteira.salvar()
 
         saida = self.settings.outbox / (task.client_id or "geral")
         saida.mkdir(parents=True, exist_ok=True)
@@ -162,6 +209,28 @@ Nunca invente conta que não esteja no plano.
         if pendentes:
             resumo += f"\nPendentes aguardam você: {saida / 'lancamentos_pendentes.json'}"
 
+        # O que ficou a receber/pagar não pode sumir no fim do processamento:
+        # é justamente o que a competência isolada perdia.
+        r = carteira.resumo()
+        if abertos_agora or baixados_agora or r["total_titulos"]:
+            resumo += (
+                f"\n\nRazão auxiliar: {len(abertos_agora)} título(s) aberto(s), "
+                f"{len(baixados_agora)} baixado(s).\n"
+                f"  Em aberto: {r['a_receber_aberto']} a receber "
+                f"(R$ {r['a_receber_saldo']:,.2f}) · "
+                f"{r['a_pagar_aberto']} a pagar (R$ {r['a_pagar_saldo']:,.2f})"
+            )
+            if r["vencidos"]:
+                resumo += (
+                    f"\n  VENCIDOS: {r['vencidos']} título(s), "
+                    f"R$ {r['vencidos_saldo']:,.2f}"
+                )
+        if sem_titulo:
+            resumo += (
+                f"\n  {len(sem_titulo)} baixa(s) sem título correspondente — "
+                "confira antes de importar."
+            )
+
         return self.result_ok(
             resumo,
             data={
@@ -170,11 +239,94 @@ Nunca invente conta que não esteja no plano.
                 "por_regra": por_regra,
                 "por_llm": por_llm,
                 "chamadas_llm": chamadas_llm,
+                "titulos": {
+                    "abertos": abertos_agora,
+                    "baixados": baixados_agora,
+                    "sem_correspondencia": sem_titulo,
+                    "resumo": r,
+                    "em_aberto": [
+                        {"id": t.id, "tipo": t.tipo, "numero": t.numero,
+                         "parcela": t.parcela, "vencimento": t.vencimento,
+                         "saldo": t.saldo, "contraparte": t.contraparte,
+                         "atraso_dias": t.vencido_em()}
+                        for t in carteira.em_aberto()
+                    ],
+                },
             },
             artifacts=artefatos,
             needs_human=True,
             human_prompt="Revise o Excel antes de importar no Contmatic.",
         )
+
+    # ------------------------------------------------------- razão auxiliar
+
+    def _abrir_titulos(
+        self, carteira: tit.Carteira, doc: Documento, tipo: str,
+        cliente: str, competencia: str | None,
+    ) -> list[tit.Titulo]:
+        """Uma parcela = um título. O vencimento vem da nota quando existe.
+
+        A NF-e já traz `<cobr><dup>` com número, vencimento e valor de cada
+        parcela — informação que estava na nota e ninguém usava. Só quando ela
+        falta é que o prazo é presumido, e aí o título fica marcado como tal.
+        """
+        if not doc.valor:
+            return []
+        numero = str(doc.extras.get("numero") or Path(doc.caminho).stem)[:20]
+        parcelas = tit.ler_duplicatas(Path(doc.caminho)) if doc.tipo == "xml" else []
+        if not parcelas:
+            parcelas = tit.parcelas_presumidas(doc.valor, doc.data)
+        conta = "1121101" if tipo == tit.RECEBER else "2121101"
+
+        novos = []
+        for p in parcelas:
+            t = tit.Titulo(
+                id=tit.montar_id(cliente, tipo, numero, str(p["parcela"])),
+                tipo=tipo,
+                numero=numero,
+                parcela=str(p["parcela"]),
+                parcelas=len(parcelas),
+                contraparte=str(doc.extras.get("contraparte") or "")[:60],
+                cnpj=str(doc.extras.get("contraparte_cnpj") or ""),
+                emissao=doc.data,
+                vencimento=p.get("vencimento"),
+                valor=float(p["valor"]),
+                conta=conta,
+                origem=Path(doc.caminho).name,
+                competencia=competencia,
+                presumido=bool(p.get("presumido")),
+            )
+            if carteira.registrar(t):
+                novos.append(t)
+        return novos
+
+    def _baixar(
+        self, carteira: tit.Carteira, doc: Documento, tipo: str
+    ) -> tuple[tit.Titulo | None, str]:
+        """Procura o título que este pagamento liquida.
+
+        Na dúvida NÃO baixa: se dois títulos abertos têm o mesmo valor, quem
+        escolhe é a pessoa. Baixar o errado deixa o saldo total certo e a conta
+        do cliente errada — o tipo de erro que ninguém enxerga no balancete.
+        """
+        if not doc.valor:
+            return None, "sem valor para casar com título"
+        cands = carteira.candidatos(tipo=tipo, valor=doc.valor, data=doc.data)
+        if not cands:
+            abertos = len(carteira.em_aberto(tipo))
+            return None, (
+                f"nenhum título de R$ {doc.valor:,.2f} em aberto "
+                f"({abertos} título(s) na carteira)"
+            )
+        if carteira.ambiguo(cands, doc.valor, doc.data):
+            ids = ", ".join(f"{c.numero}/{c.parcela}" for c in cands[:3])
+            return None, f"{len(cands)} títulos indistinguíveis ({ids}) — escolha qual baixar"
+        alvo = cands[0]
+        carteira.baixar(
+            alvo.id, valor=doc.valor, data=doc.data or "",
+            documento=Path(doc.caminho).name,
+        )
+        return alvo, ""
 
     def _resolve_folder(self, task: AgentTask) -> Path:
         from escon_agentes.tools.clients import client_inbox
@@ -242,6 +394,11 @@ Nunca invente conta que não esteja no plano.
                         "emit_cnpj": emit,
                         "dest_cnpj": _so_digitos(d.dest_cnpj),
                         "numero": d.numero,
+                        # quem deve / a quem se deve, para o razão auxiliar
+                        "contraparte": (d.dest_nome if saida else d.emit_nome) or "",
+                        "contraparte_cnpj": _so_digitos(
+                            d.dest_cnpj if saida else d.emit_cnpj
+                        ),
                     },
                 )
             ]

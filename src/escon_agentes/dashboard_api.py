@@ -46,6 +46,15 @@ class FechamentoIn(BaseModel):
     usar_llm: bool = True
 
 
+# Modelos de corpo ficam FORA de create_app: com `from __future__ import
+# annotations` o Pydantic não resolve os tipos de classe aninhada e o FastAPI
+# devolve 422 "Field required: body".
+class BaixaIn(BaseModel):
+    valor: float
+    data: Optional[str] = None
+    documento: Optional[str] = None
+
+
 def create_app() -> FastAPI:
     app = FastAPI(
         title="Escon Agentes — Dashboard",
@@ -341,6 +350,45 @@ def create_app() -> FastAPI:
             filename=f"lancamentos_{client_id}_{competencia}.xlsx",
             media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         )
+
+    @app.get("/api/titulos/{client_id}")
+    def api_titulos(client_id: str, tipo: str | None = None) -> dict[str, Any]:
+        """Razão auxiliar do cliente: o que ficou a receber e a pagar."""
+        from escon_agentes.tools import titulos as tit
+
+        carteira = tit.abrir_carteira(get_settings().data_dir, client_id)
+        return {
+            "resumo": carteira.resumo(),
+            "titulos": [
+                {
+                    "id": t.id, "tipo": t.tipo, "numero": t.numero,
+                    "parcela": t.parcela, "parcelas": t.parcelas,
+                    "contraparte": t.contraparte, "vencimento": t.vencimento,
+                    "valor": t.valor, "saldo": t.saldo, "status": t.status,
+                    "atraso_dias": t.vencido_em(), "presumido": t.presumido,
+                    "origem": t.origem, "competencia": t.competencia,
+                }
+                for t in sorted(
+                    carteira.em_aberto(tipo), key=lambda x: x.vencimento or "9999"
+                )
+            ],
+        }
+
+    @app.post("/api/titulos/{client_id}/{titulo_id}/baixar")
+    def api_baixar_titulo(client_id: str, titulo_id: str, body: BaixaIn) -> dict[str, Any]:
+        """Baixa manual — para o caso em que o agente se recusou a escolher."""
+        from escon_agentes.tools import titulos as tit
+
+        carteira = tit.abrir_carteira(get_settings().data_dir, client_id)
+        alvo = carteira.baixar(
+            titulo_id, valor=body.valor, data=body.data or "",
+            documento=body.documento or "baixa pelo painel",
+            observacao="lançada manualmente",
+        )
+        if not alvo:
+            raise HTTPException(status_code=404, detail="Título não encontrado")
+        carteira.salvar()
+        return {"id": alvo.id, "saldo": alvo.saldo, "status": alvo.status}
 
     return app
 
