@@ -9,6 +9,8 @@ module.exports = [
   { id: "cesar", name: "Cesar", role: "Certidões (CND)", color: "#fb923c" },
   { id: "fernando", name: "Fernando Batista", role: "Certificados digitais A1", color: "#f472b6" },
   { id: "pedro", name: "Pedro Henrique", role: "Cadastro de empresas (Acessórias)", color: "#818cf8" },
+  { id: "alexandre", name: "Alexandre", role: "Lançamentos contábeis", color: "#f59e0b" },
+  { id: "fabiana", name: "Fabiana", role: "Folha de pagamento", color: "#a3e635" },
   { id: "lucy", name: "Lucy", role: "Reforma Tributária", color: "#c084fc" },
   { id: "karen", name: "Karen", role: "Notícias e briefing", color: "#2dd4bf" },
   { id: "paul", name: "Paul", role: "Diretor financeiro", color: "#60a5fa" },
