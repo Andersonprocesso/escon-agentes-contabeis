@@ -11,7 +11,9 @@
 # COMO LER: cada regra casa por palavras no documento e devolve o par contábil.
 # `debito`/`credito` aceitam:
 #   - um código de conta (ex.: 3221101)
-#   - `@banco`  → a conta do banco do cliente (resolvida em plano_contas.yaml)
+#   - `@banco`       → a conta do banco do cliente (plano_contas.yaml)
+#   - `@recebimento` → caixa OU banco, conforme a forma informada no fechamento
+#                      ("via caixa" / "via banco"). Padrão: banco.
 #
 # CONFERIDO: as contas de balanço batem com PlContas.TXT. As de resultado
 # (3xxx/4xxx) só existem no razão — PlContas.TXT está truncado e não as traz.
@@ -146,12 +148,26 @@ regras:
     visto_no_razao: 22
 
   # ---------------- RECEITA ----------------
-  - id: venda_mercadoria
-    quando: {tipo: xml, sentido: saida}
-    debito: 1121101          # Duplicatas a receber
+  - id: venda_balcao
+    quando: {tipo: xml, documento: cfe, sentido: saida}
+    debito: "@recebimento"   # cupom fiscal é venda à vista: caixa ou banco
     credito: 4111103         # Venda de mercadorias no mercado interno
     historico: 0
-    descricao: "NF-e/CFe emitida pelo cliente — venda. Baixa depois pelo extrato."
+    descricao: "Cupom fiscal (SAT) — venda à vista no balcão."
+
+  - id: venda_a_prazo
+    quando: {tipo: xml, sentido: saida, a_prazo: true}
+    debito: 1121101          # Duplicatas a receber
+    credito: 4111103
+    historico: 0
+    descricao: "NF-e com duplicata/parcelamento — recebimento futuro."
+
+  - id: venda_mercadoria
+    quando: {tipo: xml, sentido: saida}
+    debito: "@recebimento"
+    credito: 4111103
+    historico: 0
+    descricao: "NF-e à vista — entra em caixa ou banco conforme informado."
 
   - id: compra_mercadoria
     quando: {tipo: xml, sentido: entrada}
@@ -159,6 +175,33 @@ regras:
     credito: 2121101         # Fornecedores Nacionais
     historico: 0
     descricao: "NF-e recebida de fornecedor — compra a prazo."
+
+  # ---------------- DUPLICATAS ----------------
+  # A ordem importa: vence a PRIMEIRA regra que casa. A de atraso precisa vir
+  # antes da comum, senão a comum captura tudo e os juros se perdem.
+  - id: duplicata_paga_em_atraso
+    quando: {tipo: pdf, contem: ["DUPLICATA"], e_pagamento: true, tem_encargos: true}
+    debito: "@recebimento"
+    credito: 1121101
+    historico: 0
+    encargos:                # juros e multa entram como lançamento separado
+      juros: {debito: "@recebimento", credito: 3231105}
+      multa: {debito: "@recebimento", credito: 3221307}
+    descricao: "Duplicata em atraso: principal baixa a duplicata; juros e multa viram receita separada."
+
+  - id: duplicata_recebida
+    quando: {tipo: pdf, contem: ["DUPLICATA"], e_pagamento: true}
+    debito: "@recebimento"
+    credito: 1121101         # baixa a duplicata
+    historico: 0
+    descricao: "Duplicata paga pelo cliente — baixa o que estava a receber."
+
+  - id: duplicata_emitida
+    quando: {tipo: pdf, contem: ["DUPLICATA"], e_pagamento: false}
+    debito: 1121101
+    credito: 4111103
+    historico: 0
+    descricao: "Duplicata emitida sem a NF correspondente — confira se não duplica a nota."
 
   - id: servico_a_vista
     quando: {tipo: xml, documento: nfse, recebido: true}

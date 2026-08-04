@@ -268,6 +268,7 @@ def executar(
     pasta_local: str | None = None,
     usar_radar: bool = False,
     pasta_onedrive: str | None = None,
+    forma_pagamento: str = "banco",
     usar_llm: bool = True,
 ) -> dict[str, Any]:
     """Roda o fechamento inteiro e guarda o andamento a cada etapa."""
@@ -320,7 +321,12 @@ def executar(
             agent=AgentId.ALEXANDRE,
             title=f"Fechamento {competencia}",
             client_id=client_id,
-            input={"folder": str(pasta), "competencia": competencia, "usar_llm": usar_llm},
+            input={
+                "folder": str(pasta),
+                "competencia": competencia,
+                "forma_pagamento": forma_pagamento,
+                "usar_llm": usar_llm,
+            },
         )
     )
     dados = resultado.data or {}

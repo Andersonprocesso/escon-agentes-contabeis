@@ -32,6 +32,8 @@ class Classificacao:
     confianca: str = "alta"  # alta | media | nenhuma
     precisa_revisao: bool = False
     observacao: str = ""
+    # juros/multa viram lancamento proprio, nao entram no principal
+    encargos: dict = field(default_factory=dict)
 
 
 @dataclass
@@ -66,9 +68,16 @@ class Classificador:
         alias = self.bancos.get((banco or "itau").lower(), "banco_itau")
         return str(self.contas.get(alias, ""))
 
-    def _resolver(self, valor: Any, banco: str | None) -> str:
-        if isinstance(valor, str) and valor.startswith("@banco"):
-            return self.conta_do_banco(banco)
+    def _resolver(self, valor: Any, banco: str | None, forma: str = "banco") -> str:
+        """@banco = conta do banco; @recebimento = caixa ou banco, conforme a
+        forma informada no fechamento ("via caixa" / "via banco")."""
+        if isinstance(valor, str):
+            if valor.startswith("@banco"):
+                return self.conta_do_banco(banco)
+            if valor.startswith("@recebimento"):
+                if (forma or "banco").lower().startswith("caixa"):
+                    return str(self.contas.get("caixa", ""))
+                return self.conta_do_banco(banco)
         return str(valor)
 
     def _casa(self, regra: dict, doc: Documento) -> bool:
@@ -84,6 +93,9 @@ class Classificador:
             return False
         if (documento := q.get("documento")) and doc.extras.get("documento") != documento:
             return False
+        for chave in ("a_prazo", "tem_encargos"):
+            if (esperado := q.get(chave)) is not None and bool(doc.extras.get(chave)) != bool(esperado):
+                return False
         termos = q.get("contem") or []
         if termos:
             alvo = _norm(doc.texto + " " + Path(doc.caminho).name)
@@ -91,20 +103,23 @@ class Classificador:
                 return False
         return True
 
-    def classificar(self, doc: Documento, *, banco: str | None = None) -> Classificacao:
+    def classificar(
+        self, doc: Documento, *, banco: str | None = None, forma: str = "banco"
+    ) -> Classificacao:
         for regra in self.regras:
             if not self._casa(regra, doc):
                 continue
             cod = int(regra.get("historico") or 0)
             return Classificacao(
-                debito=self._resolver(regra.get("debito"), banco),
-                credito=self._resolver(regra.get("credito"), banco),
+                debito=self._resolver(regra.get("debito"), banco, forma),
+                credito=self._resolver(regra.get("credito"), banco, forma),
                 historico_codigo=cod,
                 historico_texto=self.historicos.get(cod, "") if cod else "",
                 regra_id=str(regra.get("id") or ""),
                 origem="regra",
                 confianca="alta",
                 observacao=str(regra.get("descricao") or ""),
+                encargos=regra.get("encargos") or {},
             )
         return Classificacao(
             debito="", credito="", historico_codigo=0, historico_texto="",

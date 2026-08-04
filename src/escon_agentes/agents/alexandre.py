@@ -56,6 +56,8 @@ Nunca invente conta que não esteja no plano.
         # guardado para o _ler saber se a nota e de venda ou de compra
         self._cnpj_cliente = getattr(cliente, "cnpj", None) or (task.client_id or "")
         usar_llm = bool(task.input.get("usar_llm", True))
+        # "caixa" ou "banco" — quem pede a competência informa como recebeu
+        forma = str(task.input.get("forma_pagamento") or "banco").lower()
 
         lancados: list[dict[str, Any]] = []
         pendentes: list[dict[str, Any]] = []
@@ -72,7 +74,7 @@ Nunca invente conta que não esteja no plano.
             docs.extend(self._ler(arq))
 
         for doc in docs:
-            cls = self.classificador.classificar(doc, banco=banco)
+            cls = self.classificador.classificar(doc, banco=banco, forma=forma)
 
             if cls.origem == "desconhecido" and usar_llm and self.llm.available:
                 bruto = self.think(self.classificador.prompt_para_llm(doc))
@@ -236,6 +238,7 @@ Nunca invente conta que não esteja no plano.
                     extras={
                         "documento": d.tipo,
                         "sentido": "saida" if saida else "entrada",
+                        "a_prazo": _tem_parcelamento(arq),
                         "emit_cnpj": emit,
                         "dest_cnpj": _so_digitos(d.dest_cnpj),
                         "numero": d.numero,
@@ -255,6 +258,7 @@ Nunca invente conta que não esteja no plano.
                 data=getattr(extraido, "data", None),
                 valor=_para_float(getattr(extraido, "valor", None)),
                 e_pagamento=_parece_pagamento(texto),
+                extras={"tem_encargos": _tem_encargos(texto)},
             )
         ]
 
@@ -295,3 +299,23 @@ def _parece_pagamento(texto: str) -> bool:
         k in baixo
         for k in ("comprovante", "pagamento efetuado", "pago em", "autenticacao", "autenticação")
     )
+
+
+def _tem_parcelamento(arq: Path) -> bool:
+    """NF-e parcelada vira conta a receber, não caixa.
+
+    O bloco <cobr><dup> traz uma tag por parcela; indPag=1 também marca prazo.
+    Sem isso, uma venda em 3x entraria como se tivesse sido paga à vista.
+    """
+    try:
+        conteudo = arq.read_text(encoding="utf-8", errors="ignore")
+    except OSError:
+        return False
+    return "<dup>" in conteudo or "<dup " in conteudo or "<indPag>1</indPag>" in conteudo
+
+
+def _tem_encargos(texto: str) -> bool:
+    """Duplicata paga em atraso traz juros e/ou multa no comprovante — eles
+    viram receita própria, não podem se misturar ao principal."""
+    baixo = texto.lower()
+    return any(k in baixo for k in ("juros", "multa", "mora", "acrescimo", "acréscimo"))
