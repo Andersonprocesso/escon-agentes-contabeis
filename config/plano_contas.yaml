@@ -31,6 +31,12 @@ contas:
   inss_pagar: 2141201  # INSS a recolher (era 2131201, inexistente)
   fgts_pagar: 2141202  # FGTS a recolher (era 2131202, inexistente)
   sindicato_pagar: 2141103  # contribuicao/taxa sindical retida (conferir codigo)
+  provisao_ferias: 2141301      # Provisao para ferias
+  provisao_13: 2141302          # Provisao para 13o Salario
+  fgts_provisao_ferias: 2141305 # FGTS s/ provisao para ferias
+  fgts_provisao_13: 2141306     # FGTS s/ provisao para 13o
+  desp_ferias: 3221105          # Ferias
+  desp_13: 3221104              # 13o Salario
   salarios_pagar: 2141101
   prolabore_pagar: 2141102  # Pro-labore a pagar (era 2141202 = FGTS a recolher!)
 

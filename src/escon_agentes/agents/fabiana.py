@@ -23,6 +23,14 @@ DIA_FGTS = 7  # mês seguinte
 DIA_INSS = 20  # mês seguinte
 DIA_UTIL_SALARIO = 5  # 5º dia útil do mês seguinte
 
+# Provisões mensais. Férias = 1/12 do salário + 1/3 constitucional; 13º = 1/12.
+# FGTS de 8% incide sobre as duas.
+# Não se provisiona INSS patronal: a carteira da Escon é Simples Nacional, onde
+# a contribuição já está dentro do DAS.
+AVOS = 1 / 12
+TERCO_FERIAS = 1 / 3
+FGTS_ALIQUOTA = 0.08
+
 
 @dataclass
 class Lancamento:
@@ -118,6 +126,8 @@ Folha que não fecha (proventos - descontos ≠ líquido) não vira lançamento.
         ano, mes = int(comp[:4]), int(comp[5:7])
 
         lancs = self._montar(folha, comp, ano, mes, banco)
+        if task.input.get("provisionar", True):
+            lancs += self._provisoes(folha, ano, mes)
         return self.result_ok(
             f"{info['funcionarios']} funcionário(s) · folha fecha · "
             f"{len(lancs)} lançamento(s): "
@@ -130,6 +140,40 @@ Folha que não fecha (proventos - descontos ≠ líquido) não vira lançamento.
             needs_human=True,
             human_prompt="Revise antes de importar; confira feriados nas datas de pagamento.",
         )
+
+    def _provisoes(self, folha: Folha, ano: int, mes: int) -> list[Lancamento]:
+        """Férias e 13º: competência mensal que NÃO está na folha do mês.
+
+        São cálculo, não leitura — por isso ficam separados do que veio do PDF.
+        Sócio não tem férias nem 13º, então o pró-labore fica de fora.
+        """
+        out: list[Lancamento] = []
+        fim = _ultimo_dia(ano, mes).isoformat()
+        for f in folha.funcionarios:
+            if f.tipo == "prolabore":
+                continue
+            base = round(f.proventos + f.vantagens, 2)
+            if not base:
+                continue
+            quem = f"{f.nome[:34]} - comp {mes:02d}/{ano}"
+
+            ferias = round(base * AVOS * (1 + TERCO_FERIAS), 2)
+            decimo = round(base * AVOS, 2)
+            out.append(Lancamento(fim, self.conta("desp_ferias"),
+                                  self.conta("provisao_ferias"), ferias,
+                                  f"Provisao ferias {quem}", "provisao", 0))
+            out.append(Lancamento(fim, self.conta("desp_13"),
+                                  self.conta("provisao_13"), decimo,
+                                  f"Provisao 13o {quem}", "provisao", 0))
+            out.append(Lancamento(fim, self.conta("desp_fgts"),
+                                  self.conta("fgts_provisao_ferias"),
+                                  round(ferias * FGTS_ALIQUOTA, 2),
+                                  f"FGTS s/ provisao ferias {quem}", "provisao", 5))
+            out.append(Lancamento(fim, self.conta("desp_fgts"),
+                                  self.conta("fgts_provisao_13"),
+                                  round(decimo * FGTS_ALIQUOTA, 2),
+                                  f"FGTS s/ provisao 13o {quem}", "provisao", 5))
+        return out
 
     def _montar(
         self, folha: Folha, comp: str, ano: int, mes: int, banco: str
