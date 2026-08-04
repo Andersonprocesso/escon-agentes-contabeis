@@ -163,7 +163,8 @@ def importar_do_onedrive(
     from escon_agentes.tools import graph_mail as gm
 
     try:
-        token = gm.get_access_token(settings, interactive_ok=False)
+        token = gm.get_access_token(settings, interactive_ok=False, perfil="arquivos")
+        gm.conferir_conta(token, settings, "arquivos")
     except gm.MailboxUnavailable as e:
         return {"ok": False, "erro": f"Login Microsoft indisponível: {e}"}
 

@@ -21,7 +21,8 @@ import msal
 from escon_agentes.config import Settings
 
 GRAPH_BASE = "https://graph.microsoft.com/v1.0"
-SCOPES = ["Mail.Read", "Mail.ReadWrite", "Files.Read.All"]
+SCOPES = ["Mail.Read", "Mail.ReadWrite"]
+SCOPES_ARQUIVOS = ["Files.Read.All"]
 # Files.Read.All: le os documentos no OneDrive do escritorio (fechamento por
 # competencia). Precisa estar registrada no app do Azure AD, senao o consent falha.
 
@@ -30,8 +31,9 @@ class MailboxUnavailable(RuntimeError):
     """Configuração ausente ou falha ao autenticar/chamar o Graph."""
 
 
-def _cache_path(settings: Settings) -> Path:
-    p = Path(settings.ms_graph_token_cache)
+def _cache_path(settings: Settings, perfil: str = "mail") -> Path:
+    bruto = settings.ms_graph_files_cache if perfil == "arquivos" else settings.ms_graph_token_cache
+    p = Path(bruto)
     if not p.is_absolute():
         from escon_agentes.config import PROJECT_ROOT
 
@@ -40,26 +42,29 @@ def _cache_path(settings: Settings) -> Path:
     return p
 
 
-def _load_cache(settings: Settings) -> msal.SerializableTokenCache:
+def _load_cache(settings: Settings, perfil: str = "mail") -> msal.SerializableTokenCache:
     cache = msal.SerializableTokenCache()
-    path = _cache_path(settings)
+    path = _cache_path(settings, perfil)
     if path.exists():
         cache.deserialize(path.read_text(encoding="utf-8"))
     return cache
 
 
-def _save_cache(settings: Settings, cache: msal.SerializableTokenCache) -> None:
+def _save_cache(settings: Settings, cache: msal.SerializableTokenCache, perfil: str = "mail") -> None:
     if cache.has_state_changed:
-        _cache_path(settings).write_text(cache.serialize(), encoding="utf-8")
+        _cache_path(settings, perfil).write_text(cache.serialize(), encoding="utf-8")
 
 
-def get_access_token(settings: Settings, *, interactive_ok: bool = True) -> str:
+def get_access_token(
+    settings: Settings, *, interactive_ok: bool = True, perfil: str = "mail"
+) -> str:
     if not settings.ms_graph_client_id or not settings.ms_graph_tenant_id:
         raise MailboxUnavailable(
             "MS_GRAPH_CLIENT_ID / MS_GRAPH_TENANT_ID ausentes no .env "
             "(registre o app no Azure AD e preencha o .env)"
         )
-    cache = _load_cache(settings)
+    escopos = SCOPES_ARQUIVOS if perfil == "arquivos" else SCOPES
+    cache = _load_cache(settings, perfil)
     app = msal.PublicClientApplication(
         settings.ms_graph_client_id,
         authority=f"https://login.microsoftonline.com/{settings.ms_graph_tenant_id}",
@@ -69,7 +74,7 @@ def get_access_token(settings: Settings, *, interactive_ok: bool = True) -> str:
     accounts = app.get_accounts()
     result = None
     if accounts:
-        result = app.acquire_token_silent(SCOPES, account=accounts[0])
+        result = app.acquire_token_silent(escopos, account=accounts[0])
 
     if not result:
         if not interactive_ok:
@@ -77,13 +82,13 @@ def get_access_token(settings: Settings, *, interactive_ok: bool = True) -> str:
                 "Sem token em cache — rode uma vez de forma interativa para autorizar "
                 "(abre um código para inserir em microsoft.com/devicelogin)."
             )
-        flow = app.initiate_device_flow(scopes=SCOPES)
+        flow = app.initiate_device_flow(scopes=escopos)
         if "user_code" not in flow:
             raise MailboxUnavailable(f"Falha ao iniciar device flow: {flow}")
         print(flow["message"])  # instrução com URL + código para o usuário
         result = app.acquire_token_by_device_flow(flow)
 
-    _save_cache(settings, cache)
+    _save_cache(settings, cache, perfil)
 
     if "access_token" not in result:
         raise MailboxUnavailable(
@@ -105,6 +110,18 @@ def _identidade_do_token(token: str) -> str:
     except (IndexError, ValueError, json.JSONDecodeError):
         return ""
     return str(dados.get("upn") or dados.get("preferred_username") or "").strip().lower()
+
+
+def conferir_conta(token: str, settings: Settings, perfil: str = "mail") -> None:
+    """Igual a conferir_caixa, mas sabe qual conta esperar em cada perfil."""
+    esperada = (
+        settings.ms_graph_files_user if perfil == "arquivos" else settings.ms_graph_mailbox
+    ).strip().lower()
+    logada = _identidade_do_token(token)
+    if esperada and logada and esperada != logada:
+        raise MailboxUnavailable(
+            f"Login é de '{logada}', mas o perfil '{perfil}' espera '{esperada}'."
+        )
 
 
 def conferir_caixa(token: str, settings: Settings) -> None:

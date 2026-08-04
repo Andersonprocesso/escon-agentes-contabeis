@@ -82,6 +82,10 @@ class Settings(BaseSettings):
     ms_graph_tenant_id: str = ""
     ms_graph_mailbox: str = ""  # contato@escondigital.com.br
     ms_graph_token_cache: str = ".msal_cache/rachel_token_cache.json"
+    # Documentos (OneDrive) costumam estar em outra conta que não a da caixa de
+    # e-mail. Dois logins separados: um token só para mail, outro só para arquivos.
+    ms_graph_files_user: str = ""
+    ms_graph_files_cache: str = ".msal_cache/arquivos_token_cache.json"
 
     # Pedro Henrique — cadastro (Sistema Acessórias)
     acessorias_token: str = ""
