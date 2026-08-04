@@ -30,6 +30,11 @@ DIA_UTIL_SALARIO = 5  # 5º dia útil do mês seguinte
 # e é recolhida em GPS. Nos demais anexos ela já está no DAS e provisionar
 # duplicaria a despesa.
 CPP_PATRONAL = 0.20
+# Encargos por atraso: viram lançamento próprio, nunca somam ao principal —
+# senão a guia fica com valor diferente do que foi provisionado e a conta a
+# pagar não zera.
+CONTA_JUROS = "juros_mora"
+CONTA_MULTA = "multa_mora"
 AVOS = 1 / 12
 TERCO_FERIAS = 1 / 3
 FGTS_ALIQUOTA = 0.08
@@ -128,12 +133,18 @@ Folha que não fecha (proventos - descontos ≠ líquido) não vira lançamento.
             return self.result_fail("Competência não identificada na folha.")
         ano, mes = int(comp[:4]), int(comp[5:7])
 
+        # Datas reais informadas por quem pagou. Ex.:
+        #   {"fgts": {"data": "2020-09-15", "juros": 12.50, "multa": 33.34}}
+        # Sem isso vale o calendário padrão.
+        reais: dict[str, dict] = task.input.get("pagamentos") or {}
+
         # Anexo IV recolhe patronal por fora; o cadastro do cliente diz qual é
         anexo = getattr(cliente, "anexo_simples", None)
         rat = float(getattr(cliente, "aliquota_rat", 0.0) or 0.0)
         patronal = anexo == 4
 
-        lancs = self._montar(folha, comp, ano, mes, banco, patronal=patronal, rat=rat)
+        lancs = self._montar(folha, comp, ano, mes, banco,
+                             patronal=patronal, rat=rat, reais=reais)
         if task.input.get("provisionar", True):
             lancs += self._provisoes(folha, ano, mes)
         return self.result_ok(
@@ -188,6 +199,7 @@ Folha que não fecha (proventos - descontos ≠ líquido) não vira lançamento.
     def _montar(
         self, folha: Folha, comp: str, ano: int, mes: int, banco: str,
         *, patronal: bool = False, rat: float = 0.0,
+        reais: dict[str, dict] | None = None,
     ) -> list[Lancamento]:
         """Provisão na competência; pagamento nas datas do calendário."""
         out: list[Lancamento] = []
@@ -197,6 +209,30 @@ Folha que não fecha (proventos - descontos ≠ líquido) não vira lançamento.
         data_fgts = _proximo_util(date(ano2, mes2, DIA_FGTS)).isoformat()
         data_inss = _proximo_util(date(ano2, mes2, DIA_INSS)).isoformat()
         data_adiant = _proximo_util(date(ano, mes, DIA_ADIANTAMENTO)).isoformat()
+
+        reais = reais or {}
+
+        def quando(chave: str, padrao: str) -> str:
+            """Data real do comprovante, quando informada."""
+            return str((reais.get(chave) or {}).get("data") or padrao)
+
+        def encargos(chave: str, referencia: str) -> list[Lancamento]:
+            """Juros e multa de pagamento em atraso, cada um em conta própria."""
+            info = reais.get(chave) or {}
+            data = str(info.get("data") or "")
+            saida: list[Lancamento] = []
+            for campo, alias in (("juros", CONTA_JUROS), ("multa", CONTA_MULTA)):
+                valor = round(float(info.get(campo) or 0), 2)
+                if valor:
+                    saida.append(Lancamento(data, self.conta(alias), banco, valor,
+                                            f"{campo.capitalize()} atraso {referencia}",
+                                            "pagamento", 0))
+            return saida
+
+        data_salario = quando("salario", data_salario)
+        data_fgts = quando("fgts", data_fgts)
+        data_inss = quando("inss", data_inss)
+        data_adiant = quando("adiantamento", data_adiant)
 
         total_inss = total_fgts = total_adiant = 0.0
 
@@ -266,7 +302,8 @@ Folha que não fecha (proventos - descontos ≠ líquido) não vira lançamento.
                                   round(total_inss, 2),
                                   f"GPS INSS comp {mes:02d}/{ano}", "pagamento", 15))
         if total_fgts:
+            ref_fgts = f"GRF FGTS comp {mes:02d}/{ano}"
             out.append(Lancamento(data_fgts, self.conta("fgts_pagar"), banco,
-                                  round(total_fgts, 2),
-                                  f"GRF FGTS comp {mes:02d}/{ano}", "pagamento", 5))
+                                  round(total_fgts, 2), ref_fgts, "pagamento", 5))
+            out += encargos("fgts", ref_fgts)
         return out

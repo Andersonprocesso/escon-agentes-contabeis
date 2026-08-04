@@ -39,6 +39,8 @@ contas:
   desp_aviso_previo: 3221109  # Aviso previo indenizado (CONFERIR)
   desp_multa_fgts: 3221110  # Multa 40% FGTS rescisorio (CONFERIR)
   rescisao_pagar: 2141106  # Rescisao a pagar (visto no razao)
+  juros_mora: 3231105  # Juros de mora (visto no razao)
+  multa_mora: 3221307  # Multas de mora (visto no razao)
   desp_ferias: 3221105          # Ferias
   desp_13: 3221104              # 13o Salario
   salarios_pagar: 2141101
