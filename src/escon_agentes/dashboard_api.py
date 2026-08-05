@@ -387,30 +387,46 @@ def create_app() -> FastAPI:
         """Contas para o contador escolher ao ensinar uma regra.
 
         Sem digitar código: escolher 3111303 de cabeça é como o plano de contas
-        foi para IPI da última vez.
+        foi para IPI da última vez. Nome real do PlContas.TXT tem prioridade —
+        o alias do yaml só entra se a conta não existir no export Contmatic.
         """
         import yaml as _yaml
 
+        from escon_agentes.tools.plcontas_parser import load_or_build_index
+
+        por_codigo: dict[str, dict[str, str]] = {}
+
+        # 1) Plano Contmatic de verdade (fonte de nomes)
+        try:
+            idx = load_or_build_index()
+            for cod, info in (idx.get("by_code") or {}).items():
+                nome = (info.get("descricao") or "").strip()
+                if cod and nome:
+                    por_codigo[str(cod)] = {"codigo": str(cod), "nome": nome}
+        except Exception:
+            pass  # sem PlContas o painel ainda lista aliases do yaml
+
+        # 2) Aliases do yaml (só preenche o que faltou no PlContas)
         plano = _yaml.safe_load(
             (PROJECT_ROOT / "config" / "plano_contas.yaml").read_text(encoding="utf-8")
         ) or {}
+        for alias, cod in (plano.get("contas") or {}).items():
+            c = str(cod)
+            if c not in por_codigo:
+                por_codigo[c] = {
+                    "codigo": c,
+                    "nome": alias.replace("_", " ").capitalize(),
+                }
+
         regras = _yaml.safe_load(
             (PROJECT_ROOT / "config" / "regras_lancamento.yaml").read_text(encoding="utf-8")
         ) or {}
-        saida = [
-            {"codigo": str(cod), "nome": alias.replace("_", " ").capitalize()}
-            for alias, cod in (plano.get("contas") or {}).items()
-        ]
-        saida += [
-            {"codigo": str(cod), "nome": nome}
-            for cod, nome in (regras.get("contas_resultado") or {}).items()
-        ]
-        vistos, unicas = set(), []
-        for c in sorted(saida, key=lambda x: x["codigo"]):
-            if c["codigo"] not in vistos:
-                vistos.add(c["codigo"])
-                unicas.append(c)
-        return unicas
+        for cod, nome in (regras.get("contas_resultado") or {}).items():
+            c = str(cod)
+            if c not in por_codigo:
+                por_codigo[c] = {"codigo": c, "nome": str(nome)}
+
+        return sorted(por_codigo.values(), key=lambda x: x["codigo"])
 
     @app.get("/api/fechamentos/{client_id}/{competencia}/pendente")
     def api_pendente_detalhe(client_id: str, competencia: str, arquivo: str) -> dict[str, Any]:

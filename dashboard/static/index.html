@@ -3,474 +3,659 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Escon Agentes — Painel da Equipe</title>
+  <title>Escon Agentes — Conferência de lançamentos</title>
   <style>
     :root {
-      --bg: #0f1419;
-      --panel: #1a2332;
-      --panel2: #243044;
-      --text: #e7ecf3;
+      --bg: #0c1017;
+      --bg2: #111827;
+      --panel: #161f2e;
+      --panel2: #1e2a3d;
+      --text: #e8eef7;
       --muted: #8b9bb4;
       --accent: #3d8bfd;
+      --accent-dim: rgba(61, 139, 253, 0.14);
       --ok: #3ecf8e;
+      --ok-dim: rgba(62, 207, 142, 0.12);
       --warn: #f5a524;
+      --warn-dim: rgba(245, 165, 36, 0.12);
       --bad: #f31260;
-      --border: #2d3a4f;
-      --radius: 12px;
-      --font: "Segoe UI", system-ui, sans-serif;
+      --bad-dim: rgba(243, 18, 96, 0.1);
+      --border: #2a364a;
+      --radius: 14px;
+      --font: "Segoe UI", system-ui, -apple-system, sans-serif;
+      --shadow: 0 8px 28px rgba(0,0,0,.28);
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: var(--font);
-      background: linear-gradient(160deg, #0b1020 0%, #0f1419 40%, #152238 100%);
+      background: radial-gradient(1200px 600px at 10% -10%, #1a2740 0%, transparent 55%),
+                  radial-gradient(900px 500px at 100% 0%, #152033 0%, transparent 50%),
+                  var(--bg);
       color: var(--text);
       min-height: 100vh;
     }
-    header {
-      padding: 1.25rem 1.5rem;
+    a { color: var(--accent); }
+
+    /* ---- Shell ---- */
+    header.app {
+      position: sticky; top: 0; z-index: 30;
+      background: rgba(12, 16, 23, 0.88);
+      backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(15, 20, 25, 0.85);
-      backdrop-filter: blur(8px);
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      padding: 0.85rem 1.25rem 0;
+    }
+    .header-top {
+      display: flex; flex-wrap: wrap; gap: 0.75rem;
+      align-items: center; justify-content: space-between;
+      margin-bottom: 0.75rem;
     }
     header h1 {
-      margin: 0;
-      font-size: 1.25rem;
-      font-weight: 650;
+      margin: 0; font-size: 1.1rem; font-weight: 700;
       letter-spacing: -0.02em;
     }
-    header .sub { color: var(--muted); font-size: 0.85rem; margin-top: 0.2rem; }
+    header .sub { color: var(--muted); font-size: 0.8rem; margin-top: 0.15rem; }
+    .nav-tabs {
+      display: flex; gap: 0.25rem; overflow-x: auto;
+      margin: 0 -0.25rem; padding-bottom: 0;
+    }
+    .nav-tab {
+      appearance: none; border: none; background: transparent;
+      color: var(--muted); font: inherit; font-weight: 600; font-size: 0.88rem;
+      padding: 0.7rem 1rem; cursor: pointer; border-bottom: 2px solid transparent;
+      white-space: nowrap; border-radius: 8px 8px 0 0;
+    }
+    .nav-tab:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+    .nav-tab[aria-selected="true"] {
+      color: var(--text); border-bottom-color: var(--accent);
+      background: var(--accent-dim);
+    }
+    .nav-tab .pill {
+      display: inline-block; min-width: 1.2rem; padding: 0 0.35rem;
+      margin-left: 0.35rem; border-radius: 999px; font-size: 0.72rem;
+      background: var(--panel2); color: var(--muted); font-variant-numeric: tabular-nums;
+    }
+    .nav-tab.alerta .pill { background: #3d2e10; color: var(--warn); }
+
+    main {
+      max-width: 1400px; margin: 0 auto;
+      padding: 1.15rem 1.25rem 4rem;
+    }
+    .view { display: none; }
+    .view.active { display: block; }
+
     .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      padding: 0.25rem 0.65rem;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      background: var(--panel2);
-      border: 1px solid var(--border);
-      color: var(--muted);
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      padding: 0.28rem 0.7rem; border-radius: 999px; font-size: 0.75rem;
+      background: var(--panel2); border: 1px solid var(--border); color: var(--muted);
     }
     .badge.ok { color: var(--ok); border-color: #2a5a44; }
     .badge.warn { color: var(--warn); border-color: #5a4520; }
-    main {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 1.25rem 1.5rem 3rem;
-      display: grid;
-      gap: 1.25rem;
-    }
-    .kpis {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 0.75rem;
-    }
-    .kpi {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1rem;
-    }
-    .kpi .n { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.03em; }
-    .kpi .l { color: var(--muted); font-size: 0.8rem; margin-top: 0.25rem; }
-    .grid2 {
-      display: grid;
-      grid-template-columns: 1.2fr 1fr;
-      gap: 1.25rem;
-    }
-    @media (max-width: 960px) {
-      .grid2 { grid-template-columns: 1fr; }
-    }
+
     .card {
       background: var(--panel);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       overflow: hidden;
     }
-    .card h2 {
-      margin: 0;
-      padding: 0.9rem 1rem;
-      font-size: 0.95rem;
+    .card h2, .card-head {
+      margin: 0; padding: 0.85rem 1.05rem; font-size: 0.95rem;
       border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 0.5rem;
+      display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;
     }
-    .card .body { padding: 1rem; }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.85rem;
-    }
-    th, td {
-      text-align: left;
-      padding: 0.55rem 0.4rem;
-      border-bottom: 1px solid var(--border);
-      vertical-align: top;
-    }
-    th { color: var(--muted); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; }
-    tr:hover td { background: rgba(255,255,255,0.02); }
-    .status {
-      font-size: 0.72rem;
-      font-weight: 600;
-      padding: 0.15rem 0.45rem;
-      border-radius: 6px;
-      text-transform: uppercase;
-    }
-    .status.waiting_human, .status.queued { background: #3d2e10; color: var(--warn); }
-    .status.done { background: #143528; color: var(--ok); }
-    .status.running { background: #1a2f4a; color: var(--accent); }
-    .status.failed { background: #3a1520; color: var(--bad); }
-    label { display: block; font-size: 0.78rem; color: var(--muted); margin-bottom: 0.3rem; }
-    input, select, textarea, button {
-      font: inherit;
-      color: var(--text);
-    }
-    input, select, textarea {
-      width: 100%;
-      background: var(--panel2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.55rem 0.65rem;
-      margin-bottom: 0.75rem;
-    }
-    textarea { min-height: 72px; resize: vertical; }
-    button {
-      background: var(--accent);
-      border: none;
-      border-radius: 8px;
-      padding: 0.65rem 1rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    button:hover { filter: brightness(1.08); }
-    button:disabled { opacity: 0.5; cursor: not-allowed; }
-    button.ghost {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--muted);
-    }
-    .row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-    .row > * { flex: 1; min-width: 120px; }
+    .card .body { padding: 1rem 1.05rem; }
     .muted { color: var(--muted); font-size: 0.8rem; }
     .mono { font-family: ui-monospace, Consolas, monospace; font-size: 0.8rem; }
-    .detail {
-      white-space: pre-wrap;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.75rem;
-      max-height: 280px;
-      overflow: auto;
-      font-size: 0.82rem;
-      line-height: 1.45;
-    }
-    .priority {
-      background: linear-gradient(90deg, #2a1f0a, var(--panel));
-      border: 1px solid #5a4520;
-      border-radius: var(--radius);
-      padding: 0.85rem 1rem;
-      font-size: 0.9rem;
-    }
-    .priority strong { color: var(--warn); }
-    a { color: var(--accent); }
 
-    /* Revisão dos lançamentos ------------------------------------------- */
-    .abas { display: flex; gap: 0.35rem; flex-wrap: wrap; }
-    .aba {
-      background: transparent;
+    label { display: block; font-size: 0.78rem; color: var(--muted); margin-bottom: 0.3rem; }
+    input, select, textarea, button {
+      font: inherit; color: var(--text);
+    }
+    input, select, textarea {
+      width: 100%; background: var(--panel2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 0.55rem 0.7rem; margin-bottom: 0.7rem;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none; border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-dim);
+    }
+    textarea { min-height: 72px; resize: vertical; }
+    button, .btn {
+      background: var(--accent); border: none; border-radius: 10px;
+      padding: 0.65rem 1.05rem; font-weight: 650; cursor: pointer;
+      color: #fff; display: inline-flex; align-items: center; gap: 0.4rem;
+      text-decoration: none; font-size: 0.9rem;
+    }
+    button:hover, .btn:hover { filter: brightness(1.08); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    button.ghost, .btn.ghost {
+      background: transparent; border: 1px solid var(--border); color: var(--muted);
+    }
+    button.ok, .btn.ok { background: #1f8a58; }
+    button.warn, .btn.warn { background: #a66a0c; }
+    .row { display: flex; gap: 0.55rem; flex-wrap: wrap; }
+    .row > * { flex: 1; min-width: 140px; }
+    .grid2 {
+      display: grid; grid-template-columns: 1.15fr 1fr; gap: 1rem;
+    }
+    @media (max-width: 960px) { .grid2 { grid-template-columns: 1fr; } }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    th, td {
+      text-align: left; padding: 0.6rem 0.45rem;
+      border-bottom: 1px solid var(--border); vertical-align: top;
+    }
+    th {
+      color: var(--muted); font-weight: 600; font-size: 0.72rem;
+      text-transform: uppercase; letter-spacing: 0.04em;
+      position: sticky; top: 0; background: var(--panel); z-index: 1;
+    }
+    tr:hover td { background: rgba(255,255,255,0.025); }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+    .status {
+      font-size: 0.72rem; font-weight: 650; padding: 0.15rem 0.45rem;
+      border-radius: 6px; text-transform: uppercase;
+    }
+    .status.waiting_human, .status.queued { background: #3d2e10; color: var(--warn); }
+    .status.done, .status.concluido { background: #143528; color: var(--ok); }
+    .status.running, .status.em_andamento { background: #1a2f4a; color: var(--accent); }
+    .status.failed, .status.erro { background: #3a1520; color: var(--bad); }
+
+    .detail {
+      white-space: pre-wrap; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 10px; padding: 0.75rem; max-height: 280px; overflow: auto;
+      font-size: 0.82rem; line-height: 1.45;
+    }
+    .kpis {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.65rem;
+    }
+    .kpi {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 0.9rem 1rem;
+    }
+    .kpi .n { font-size: 1.55rem; font-weight: 750; letter-spacing: -0.03em; }
+    .kpi .l { color: var(--muted); font-size: 0.78rem; margin-top: 0.2rem; }
+    .kpi.warn .n { color: var(--warn); }
+    .kpi.ok .n { color: var(--ok); }
+
+    /* ---- Steps (conferência) ---- */
+    .steps {
+      display: flex; gap: 0.4rem; flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .step {
+      flex: 1; min-width: 140px;
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 12px; padding: 0.7rem 0.85rem;
+      display: flex; gap: 0.6rem; align-items: flex-start;
+    }
+    .step .num {
+      width: 1.55rem; height: 1.55rem; border-radius: 999px;
+      display: grid; place-items: center; font-size: 0.78rem; font-weight: 700;
+      background: var(--panel2); color: var(--muted); flex-shrink: 0;
+    }
+    .step strong { display: block; font-size: 0.82rem; }
+    .step span { font-size: 0.72rem; color: var(--muted); line-height: 1.3; }
+    .step.done { border-color: #2a5a44; background: var(--ok-dim); }
+    .step.done .num { background: #1f8a58; color: #fff; }
+    .step.active { border-color: var(--accent); background: var(--accent-dim); }
+    .step.active .num { background: var(--accent); color: #fff; }
+    .step.warn { border-color: #5a4520; background: var(--warn-dim); }
+    .step.warn .num { background: #a66a0c; color: #fff; }
+
+    /* ---- Revisão ---- */
+    .rev-shell {
+      display: none;
+      margin-top: 1rem;
       border: 1px solid var(--border);
-      color: var(--muted);
-      border-radius: 8px;
-      padding: 0.45rem 0.8rem;
-      font-size: 0.82rem;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
+      border-radius: var(--radius);
+      background: var(--panel);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .rev-shell.open { display: block; }
+    .rev-header {
+      padding: 1rem 1.1rem;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(61,139,253,0.08), transparent);
+      display: flex; flex-wrap: wrap; gap: 0.75rem;
+      justify-content: space-between; align-items: flex-start;
+    }
+    .rev-header h3 { margin: 0; font-size: 1.05rem; }
+    .rev-kpis {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.5rem; padding: 0.85rem 1.1rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg2);
+    }
+    @media (max-width: 720px) {
+      .rev-kpis { grid-template-columns: repeat(2, 1fr); }
+    }
+    .rev-kpi {
+      border-radius: 10px; padding: 0.55rem 0.7rem;
+      background: var(--panel); border: 1px solid var(--border);
+    }
+    .rev-kpi .v { font-size: 1.2rem; font-weight: 750; font-variant-numeric: tabular-nums; }
+    .rev-kpi .t { font-size: 0.72rem; color: var(--muted); margin-top: 0.1rem; }
+    .rev-kpi.pend { border-color: #5a4520; background: var(--warn-dim); }
+    .rev-kpi.pend .v { color: var(--warn); }
+    .rev-kpi.ok { border-color: #2a5a44; background: var(--ok-dim); }
+    .rev-kpi.ok .v { color: var(--ok); }
+
+    .rev-toolbar {
+      display: flex; flex-wrap: wrap; gap: 0.55rem;
+      align-items: center; padding: 0.75rem 1.1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .rev-toolbar input {
+      margin: 0; max-width: 280px; flex: 1; min-width: 160px;
+    }
+    .abas { display: flex; gap: 0.35rem; flex-wrap: wrap; flex: 1; }
+    .aba {
+      background: transparent; border: 1px solid var(--border);
+      color: var(--muted); border-radius: 999px;
+      padding: 0.4rem 0.85rem; font-size: 0.82rem; font-weight: 650;
+      display: inline-flex; align-items: center; gap: 0.4rem;
     }
     .aba[aria-selected="true"] {
-      background: var(--panel2);
-      color: var(--text);
-      border-color: var(--accent);
+      background: var(--accent-dim); color: var(--text); border-color: var(--accent);
     }
     .aba .cont {
-      font-variant-numeric: tabular-nums;
-      background: var(--bg);
-      border-radius: 999px;
-      padding: 0 0.4rem;
-      font-size: 0.75rem;
-      color: var(--muted);
+      font-variant-numeric: tabular-nums; background: var(--bg);
+      border-radius: 999px; padding: 0 0.4rem; font-size: 0.75rem; color: var(--muted);
     }
     .aba[aria-selected="true"] .cont { color: var(--text); }
     .aba.alerta .cont { background: #3d2e10; color: var(--warn); }
-    /* valores em coluna: alinhar à direita e tabular, senão não se compara */
-    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
-    tr.linha-pend td { background: rgba(245, 165, 36, 0.06); }
-    tr.linha-pend:hover td { background: rgba(245, 165, 36, 0.11); cursor: pointer; }
-    tr.aberta td { background: rgba(61, 139, 253, 0.1); }
-    .ensinar {
-      background: var(--panel2);
-      border: 1px solid var(--accent);
-      border-radius: var(--radius);
-      padding: 1rem;
-      margin-top: 0.75rem;
+
+    .rev-body {
+      display: grid;
+      grid-template-columns: 1fr;
+      min-height: 320px;
     }
-    .ensinar h4 { margin: 0 0 0.15rem; font-size: 0.95rem; }
+    .rev-body.com-painel {
+      grid-template-columns: 1.35fr 1fr;
+    }
+    @media (max-width: 1000px) {
+      .rev-body.com-painel { grid-template-columns: 1fr; }
+    }
+    .rev-lista {
+      max-height: 520px; overflow: auto; padding: 0.25rem 0;
+    }
+    .rev-painel {
+      display: none; border-left: 1px solid var(--border);
+      background: var(--panel2); max-height: 520px; overflow: auto;
+    }
+    .rev-body.com-painel .rev-painel { display: block; }
+    @media (max-width: 1000px) {
+      .rev-painel { border-left: none; border-top: 1px solid var(--border); }
+    }
+
+    tr.linha-pend td { background: rgba(245, 165, 36, 0.05); }
+    tr.linha-pend:hover td { background: rgba(245, 165, 36, 0.1); cursor: pointer; }
+    tr.aberta td { background: rgba(61, 139, 253, 0.12) !important; }
+    tr.linha-lanc { cursor: pointer; }
+    tr.linha-lanc.aberta td { background: rgba(61, 139, 253, 0.1) !important; }
+
+    .tag {
+      display: inline-block; font-size: 0.68rem; font-weight: 650;
+      padding: 0.12rem 0.4rem; border-radius: 6px;
+      background: var(--bg); color: var(--muted); border: 1px solid var(--border);
+    }
+    .tag.regra { color: var(--ok); border-color: #2a5a44; background: var(--ok-dim); }
+    .tag.llm { color: var(--accent); border-color: #1a3a66; background: var(--accent-dim); }
+    .tag.recorrente { color: var(--warn); border-color: #5a4520; background: var(--warn-dim); }
+    .conta-nome {
+      display: block; font-size: 0.72rem; color: var(--muted);
+      max-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    .ensinar { padding: 1rem 1.1rem; }
+    .ensinar h4 { margin: 0 0 0.2rem; font-size: 0.98rem; line-height: 1.3; }
     .chips { display: flex; gap: 0.35rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
     .chip {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      color: var(--text);
-      border-radius: 999px;
-      padding: 0.3rem 0.7rem;
-      font-size: 0.78rem;
-      cursor: pointer;
+      background: var(--bg); border: 1px solid var(--border); color: var(--text);
+      border-radius: 999px; padding: 0.32rem 0.75rem; font-size: 0.78rem; cursor: pointer;
     }
     .chip:hover { border-color: var(--accent); }
-    .chip[aria-pressed="true"] { border-color: var(--accent); background: var(--panel); }
+    .chip[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-dim); }
     .previa {
-      max-height: 130px;
-      overflow: auto;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.6rem;
-      font-size: 0.76rem;
-      line-height: 1.5;
-      color: var(--muted);
-      white-space: pre-wrap;
-      margin-bottom: 0.75rem;
+      max-height: 140px; overflow: auto; background: var(--bg);
+      border: 1px solid var(--border); border-radius: 10px; padding: 0.65rem;
+      font-size: 0.76rem; line-height: 1.5; color: var(--muted);
+      white-space: pre-wrap; margin-bottom: 0.75rem;
     }
-    .vazio { color: var(--muted); padding: 1.5rem 0.5rem; text-align: center; font-size: 0.85rem; }
+    .vazio {
+      color: var(--muted); padding: 2.5rem 1rem; text-align: center; font-size: 0.9rem;
+    }
+    .vazio strong { display: block; color: var(--text); margin-bottom: 0.35rem; font-size: 1rem; }
+
+    .rev-footer {
+      padding: 0.9rem 1.1rem; border-top: 1px solid var(--border);
+      display: flex; flex-wrap: wrap; gap: 0.75rem;
+      align-items: center; justify-content: space-between;
+      background: var(--bg2);
+    }
+    .rev-footer .cta-box {
+      display: flex; flex-wrap: wrap; gap: 0.55rem; align-items: center;
+    }
+    .hint-box {
+      font-size: 0.8rem; color: var(--muted); max-width: 520px; line-height: 1.4;
+    }
+    .hint-box strong { color: var(--warn); }
+
+    .setup-card { margin-bottom: 1rem; }
+    .setup-card.collapsed .setup-body { display: none; }
+    .setup-toggle {
+      background: transparent; border: none; color: var(--accent);
+      font-size: 0.82rem; padding: 0; cursor: pointer; font-weight: 600;
+    }
+
+    .lista-hist {
+      margin-top: 1rem;
+    }
+    .lista-hist table { font-size: 0.84rem; }
+    .progress-list { font-size: 0.86rem; line-height: 1.55; }
+    .progress-list .ok { color: var(--ok); }
+    .progress-list .bad { color: var(--bad); }
+
+    .chat-bolha {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 12px; padding: 0.85rem; margin-top: 0.75rem;
+    }
+    .chat-bolha .quem { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.35rem; }
+
+    .help-tip {
+      background: linear-gradient(90deg, rgba(61,139,253,0.1), transparent);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 0.85rem 1rem; margin-bottom: 1rem; font-size: 0.88rem; line-height: 1.45;
+    }
+    .help-tip strong { color: var(--accent); }
+
+    .select-busca { position: relative; margin-bottom: 0.7rem; }
+    .select-busca input { margin-bottom: 0.35rem; }
+    .select-busca select { margin-bottom: 0; }
   </style>
 </head>
 <body>
-  <header>
-    <div>
-      <h1>Escon Soluções Contábeis — Agentes</h1>
-      <div class="sub">Painel da equipe · fluxos · solicitações · revisão humana</div>
+  <header class="app">
+    <div class="header-top">
+      <div>
+        <h1>Escon — Conferência de lançamentos</h1>
+        <div class="sub">Veja o que o agente lançou · ensine o que ele não sabe · só então emita a planilha</div>
+      </div>
+      <div class="row" style="flex:0;align-items:center;gap:.5rem">
+        <span class="badge" id="llmBadge">LLM…</span>
+        <button class="ghost" type="button" onclick="refreshAll()">Atualizar</button>
+      </div>
     </div>
-    <div class="row" style="flex:0; align-items:center;">
-      <span class="badge" id="llmBadge">LLM…</span>
-      <button class="ghost" type="button" onclick="refreshAll()">Atualizar</button>
-    </div>
+    <nav class="nav-tabs" role="tablist">
+      <button class="nav-tab" type="button" role="tab" id="tab-conferir" aria-selected="true"
+              onclick="mostrarView('conferir')">
+        Conferir <span class="pill" id="pillPendentes" title="Pendentes abertos">0</span>
+      </button>
+      <button class="nav-tab" type="button" role="tab" id="tab-conversar" aria-selected="false"
+              onclick="mostrarView('conversar')">Conversar com agentes</button>
+      <button class="nav-tab" type="button" role="tab" id="tab-equipe" aria-selected="false"
+              onclick="mostrarView('equipe')">Equipe e filas</button>
+    </nav>
   </header>
 
   <main>
-    <div class="priority" id="priorityBox">
-      Prioridade #1: <strong>Lançamentos Contmatic</strong> (zerar atraso → migrar Contábil 100% Oneflow)
-    </div>
-
-    <section class="kpis" id="kpis"></section>
-
-    <div class="card" id="chatCard">
-      <h2>Falar com o Max <span class="muted">ele aciona a equipe</span></h2>
-      <div class="body">
-        <div class="row">
-          <div style="flex:3">
-            <label>O que você precisa</label>
-            <input id="chatPedido" placeholder="Ex.: Alexandre, quais títulos da Alumax estão vencidos?"
-                   onkeydown="if(event.key==='Enter')document.getElementById('chatEnviar').click()" />
-          </div>
-          <div style="flex:1">
-            <label>Cliente (opcional)</label>
-            <select id="chatCliente"></select>
-          </div>
-        </div>
-        <button id="chatEnviar" type="button" style="margin-top:.6rem">Enviar</button>
-        <p class="muted" style="margin:.5rem 0 0">
-          Aqui o pedido é <strong>executado</strong>, não só respondido: o Max escolhe o
-          agente e mostra o que ele fez de verdade.
-        </p>
-        <div id="chatResposta" class="detail" style="display:none;margin-top:.75rem"></div>
+    <!-- ===================== CONFERIR ===================== -->
+    <section class="view active" id="view-conferir">
+      <div class="help-tip">
+        <strong>Como trabalhar aqui:</strong>
+        o agente processa os documentos da competência e mostra os lançamentos nesta tela.
+        O que ele não souber fica em <em>Aguardando você</em> — clique e ensine uma vez
+        (vira regra para os próximos meses). A planilha do Contmatic só deve ser emitida
+        depois da conferência.
       </div>
-    </div>
 
-    <section class="grid2">
-      <div class="card">
-        <h2>Solicitar serviço <span class="muted">colaboradoras</span></h2>
-        <div class="body">
-          <form id="reqForm">
-            <label>Serviço</label>
-            <select id="service" required></select>
-            <div class="row">
-              <div>
-                <label>Cliente</label>
-                <select id="client"></select>
+      <div class="steps" id="stepsBar">
+        <div class="step active" id="step1">
+          <div class="num">1</div>
+          <div><strong>Processar</strong><span>Cliente + competência + pasta</span></div>
+        </div>
+        <div class="step" id="step2">
+          <div class="num">2</div>
+          <div><strong>Conferir</strong><span>Ver cada lançamento na tela</span></div>
+        </div>
+        <div class="step" id="step3">
+          <div class="num">3</div>
+          <div><strong>Ensinar</strong><span>Resolver o que ficou pendente</span></div>
+        </div>
+        <div class="step" id="step4">
+          <div class="num">4</div>
+          <div><strong>Planilha</strong><span>Importar no Contmatic</span></div>
+        </div>
+      </div>
+
+      <div class="card setup-card" id="setupCard">
+        <div class="card-head">
+          <span>Processar competência <span class="muted">Alexandre lança por regras · 0 token no dia a dia</span></span>
+          <button class="setup-toggle" type="button" id="setupToggle" onclick="toggleSetup()">Recolher</button>
+        </div>
+        <div class="body setup-body" id="setupBody">
+          <div class="grid2">
+            <div>
+              <label>Cliente</label>
+              <select id="fxCliente"></select>
+
+              <label>Competência</label>
+              <input id="fxComp" placeholder="jan/21, 01/2021 ou 2021-01" />
+
+              <label>Recebimentos e pagamentos à vista entram por</label>
+              <select id="fxForma">
+                <option value="caixa">Caixa</option>
+                <option value="banco">Banco</option>
+              </select>
+              <p class="muted" style="margin:-.35rem 0 .7rem">
+                Compra com duplicata a vencer vai para Fornecedores de qualquer jeito.
+              </p>
+
+              <label>Pasta no PC (opcional)</label>
+              <div class="row" style="margin-bottom:.7rem">
+                <input id="fxPasta" placeholder="C:\Users\…\Cliente\jan-21" style="margin:0;flex:1" />
+                <button class="ghost" id="fxVerPasta" type="button" style="flex:0">Conferir pasta</button>
               </div>
-              <div>
-                <label>Modelo (OpenRouter)</label>
-                <select id="model"></select>
-              </div>
+              <p class="muted" id="fxPastaInfo" style="min-height:1.1em;margin:-.4rem 0 .7rem"></p>
+
+              <label>Pasta no OneDrive (opcional)</label>
+              <input id="fxOneDrive" placeholder="Documentos/Clientes/Alumax/jan-21" />
+
+              <label style="display:flex;align-items:center;gap:.45rem;margin-bottom:.9rem">
+                <input type="checkbox" id="fxRadar" style="width:auto;margin:0" />
+                Puxar também do Drive (Radar)
+              </label>
+
+              <button id="fxRodar" type="button">Fazer a contabilidade desta competência</button>
+              <p class="muted" id="fxStatus" style="min-height:1.2em;margin-top:.55rem"></p>
             </div>
-            <label>Seu nome</label>
-            <input id="by" placeholder="Ex.: Maria" value="equipe" />
-            <label>Observações / pasta (opcional)</label>
-            <textarea id="notes" placeholder="Ex.: competência 07/2026, pasta com XMLs já na inbox"></textarea>
-            <button type="submit" id="btnSubmit">Solicitar e executar</button>
-            <p class="muted" style="margin-top:0.75rem;">
-              WhatsApp de produção: use a <strong>Secretaria / EsconZap</strong> (não duplicar aqui).
-              Contmatic gera Excel em <span class="mono">data/outbox/{cliente}/contmatic/</span> para revisão.
-            </p>
-          </form>
-          <div id="reqResult" class="detail" style="display:none;margin-top:0.75rem;"></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>Fila de solicitações</h2>
-        <div class="body" style="padding:0;">
-          <div style="overflow:auto; max-height:420px;">
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Serviço</th>
-                  <th>Cliente</th>
-                  <th>Status</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody id="reqBody"></tbody>
-            </table>
+            <div>
+              <h3 style="font-size:.9rem;margin:0 0 .5rem;color:var(--muted)">Andamento</h3>
+              <div id="fxEtapas" class="progress-list muted">Nada em andamento.</div>
+              <div id="fxResultado" style="margin-top:.8rem"></div>
+            </div>
           </div>
         </div>
       </div>
-    </section>
 
-    <section class="card">
-      <h2>
-        Execuções dos agentes
-        <span class="muted" id="runsMeta"></span>
-      </h2>
-      <div class="body" style="padding:0;">
-        <div style="overflow:auto;">
+      <!-- Workbench de revisão -->
+      <div class="rev-shell" id="fxRevisao">
+        <div class="rev-header">
+          <div>
+            <h3 id="revTitulo">Revisão</h3>
+            <p class="muted" id="revSub" style="margin:.25rem 0 0"></p>
+          </div>
+          <div class="row" style="flex:0">
+            <button class="ghost" type="button" onclick="fecharRevisao()">Fechar revisão</button>
+          </div>
+        </div>
+
+        <div class="rev-kpis" id="revKpis"></div>
+
+        <div class="rev-toolbar">
+          <div class="abas" id="fxAbas"></div>
+          <input id="revBusca" type="search" placeholder="Buscar histórico, conta, documento…"
+                 oninput="pintarRevisao()" />
+        </div>
+
+        <div class="rev-body" id="revBody">
+          <div class="rev-lista" id="fxTabela"></div>
+          <div class="rev-painel" id="fxEnsinar"></div>
+        </div>
+
+        <div class="rev-footer">
+          <div class="hint-box" id="revHint"></div>
+          <div class="cta-box" id="fxRodape"></div>
+        </div>
+      </div>
+
+      <div class="card lista-hist">
+        <div class="card-head">
+          <span>Competências já processadas <span class="muted">abra de novo para continuar a conferência</span></span>
+        </div>
+        <div class="body" style="padding:0;overflow:auto">
           <table>
             <thead>
               <tr>
-                <th>Quando</th>
-                <th>Run</th>
-                <th>Pedido</th>
-                <th>Cliente</th>
-                <th>Agentes</th>
-                <th>Status</th>
-                <th>Modelo</th>
+                <th>Cliente</th><th>Competência</th><th>Situação</th>
+                <th class="num">Lançados</th><th class="num">Pendentes</th><th></th>
               </tr>
             </thead>
-            <tbody id="runsBody"></tbody>
+            <tbody id="fxLista"></tbody>
           </table>
-        </div>
-        <div class="body">
-          <label>Detalhe do run selecionado</label>
-          <div class="detail" id="runDetail">Clique em um run para ver o que cada agente fez.</div>
         </div>
       </div>
     </section>
 
-
-    <section class="card" id="fechamentoCard">
-      <h2>Contabilidade atrasada <span class="muted">por competência</span></h2>
-      <p class="muted" style="margin:.2rem 0 .8rem">
-        Aponte a pasta do PC e/ou puxe do Drive. Cada competência fica separada,
-        e no fim você confere e baixa a planilha do Contmatic.
-      </p>
-      <div class="grid2" style="gap:.8rem">
-        <div>
-          <label>Cliente</label>
-          <select id="fxCliente"></select>
-
-          <label style="margin-top:.6rem">Competência</label>
-          <input id="fxComp" placeholder="jan/21, 01/2021 ou 2021-01" />
-
-          <label style="margin-top:.6rem">Pasta no PC (opcional)</label>
-          <div style="display:flex;gap:.4rem">
-            <input id="fxPasta" placeholder="C:\Users\ander\Documentos\Cliente\jan-21" style="flex:1" />
-            <button class="btn ghost" id="fxVerPasta" type="button">Conferir</button>
+    <!-- ===================== CONVERSAR ===================== -->
+    <section class="view" id="view-conversar">
+      <div class="grid2">
+        <div class="card" id="chatCard">
+          <h2>Falar com o Max <span class="muted">ele aciona a equipe de verdade</span></h2>
+          <div class="body">
+            <p class="muted" style="margin:0 0 .85rem">
+              Aqui o pedido é <strong>executado</strong>, não só respondido. Use para dúvidas
+              (“quais títulos vencidos?”), rodar um agente, ou pedir orientação — o resultado
+              real aparece abaixo.
+            </p>
+            <div class="row">
+              <div style="flex:3">
+                <label>O que você precisa</label>
+                <input id="chatPedido"
+                       placeholder="Ex.: Alexandre, quais títulos da Alumax estão vencidos?"
+                       onkeydown="if(event.key==='Enter')document.getElementById('chatEnviar').click()" />
+              </div>
+              <div style="flex:1">
+                <label>Cliente (opcional)</label>
+                <select id="chatCliente"></select>
+              </div>
+            </div>
+            <button id="chatEnviar" type="button">Enviar ao Max</button>
+            <div id="chatResposta" style="display:none"></div>
           </div>
-          <p class="muted" id="fxPastaInfo" style="min-height:1.1em;margin:.35rem 0 0"></p>
-
-          <label style="margin-top:.6rem">Pasta no OneDrive (opcional)</label>
-          <input id="fxOneDrive" placeholder="Documentos/Clientes/Alumax/jan-21" />
-
-          <label style="margin-top:.6rem;display:flex;align-items:center;gap:.45rem">
-            <input type="checkbox" id="fxRadar" style="width:auto" />
-            Puxar também do Drive (Radar)
-          </label>
-
-          <label style="margin-top:.6rem">Recebimentos e pagamentos entram por</label>
-          <select id="fxForma">
-            <option value="caixa">Caixa</option>
-            <option value="banco">Banco</option>
-          </select>
-          <p class="muted" style="margin:.3rem 0 0">
-            Vale para venda à vista e compra paga na hora. Compra com duplicata
-            a vencer vai para Fornecedores de qualquer jeito.
-          </p>
-
-          <button class="btn" id="fxRodar" type="button" style="margin-top:.8rem">
-            Fazer a contabilidade desta competência
-          </button>
-          <p class="muted" id="fxStatus" style="min-height:1.2em;margin-top:.5rem"></p>
         </div>
-        <div>
-          <h3 style="font-size:.95rem;margin:0 0 .5rem">Andamento</h3>
-          <div id="fxEtapas" class="muted">Nada em andamento.</div>
-          <div id="fxResultado" style="margin-top:.8rem"></div>
+
+        <div class="card">
+          <h2>Solicitar serviço <span class="muted">atalhos da equipe</span></h2>
+          <div class="body">
+            <form id="reqForm">
+              <label>Serviço</label>
+              <select id="service" required></select>
+              <div class="row">
+                <div>
+                  <label>Cliente</label>
+                  <select id="client"></select>
+                </div>
+                <div>
+                  <label>Modelo (OpenRouter)</label>
+                  <select id="model"></select>
+                </div>
+              </div>
+              <label>Seu nome</label>
+              <input id="by" placeholder="Ex.: Maria" value="equipe" />
+              <label>Observações / pasta (opcional)</label>
+              <textarea id="notes" placeholder="Ex.: competência 07/2026, pasta com XMLs já na inbox"></textarea>
+              <button type="submit" id="btnSubmit">Solicitar e executar</button>
+              <p class="muted" style="margin-top:0.75rem;">
+                WhatsApp de produção: use a <strong>Secretaria / EsconZap</strong>.
+              </p>
+            </form>
+            <div id="reqResult" class="detail" style="display:none;margin-top:0.75rem;"></div>
+          </div>
         </div>
       </div>
-      <!-- Revisão: os lançamentos em tela antes de virar planilha. A planilha
-           é o fim do processo, não o meio; conferir dentro de um Excel baixado
-           é onde o erro passa. -->
-      <div id="fxRevisao" style="display:none;margin-top:1.2rem;border-top:1px solid var(--border);padding-top:1rem">
-        <div class="abas" id="fxAbas"></div>
-        <div id="fxTabela" style="margin-top:.75rem;max-height:460px;overflow:auto"></div>
-        <div id="fxEnsinar"></div>
-        <div id="fxRodape" style="margin-top:.9rem;display:flex;gap:.6rem;align-items:center;flex-wrap:wrap"></div>
-      </div>
 
-      <div style="margin-top:1rem">
-        <h3 style="font-size:.95rem;margin:0 0 .5rem">Competências já processadas</h3>
-        <table><thead><tr>
-          <th>Cliente</th><th>Competência</th><th>Situação</th><th>Lançados</th><th>Pendentes</th><th></th>
-        </tr></thead><tbody id="fxLista"></tbody></table>
+      <div class="card" style="margin-top:1rem">
+        <h2>Fila de solicitações</h2>
+        <div class="body" style="padding:0;max-height:360px;overflow:auto">
+          <table>
+            <thead>
+              <tr><th>ID</th><th>Serviço</th><th>Cliente</th><th>Status</th><th></th></tr>
+            </thead>
+            <tbody id="reqBody"></tbody>
+          </table>
+        </div>
       </div>
     </section>
-    <section class="grid2">
-      <div class="card">
-        <h2>Tarefas abertas (Anne)</h2>
-        <div class="body" style="padding:0; max-height:280px; overflow:auto;">
-          <table>
-            <thead><tr><th>Tarefa</th><th>Cliente</th><th>Vence</th></tr></thead>
-            <tbody id="tasksBody"></tbody>
-          </table>
+
+    <!-- ===================== EQUIPE ===================== -->
+    <section class="view" id="view-equipe">
+      <section class="kpis" id="kpis" style="margin-bottom:1rem"></section>
+
+      <div class="card" style="margin-bottom:1rem">
+        <h2>Execuções dos agentes <span class="muted" id="runsMeta"></span></h2>
+        <div class="body" style="padding:0">
+          <div style="overflow:auto;max-height:360px">
+            <table>
+              <thead>
+                <tr>
+                  <th>Quando</th><th>Run</th><th>Pedido</th><th>Cliente</th>
+                  <th>Agentes</th><th>Status</th><th>Modelo</th>
+                </tr>
+              </thead>
+              <tbody id="runsBody"></tbody>
+            </table>
+          </div>
+          <div class="body">
+            <label>Detalhe do run selecionado</label>
+            <div class="detail" id="runDetail">Clique em um run para ver o que cada agente fez.</div>
+          </div>
         </div>
       </div>
-      <div class="card">
-        <h2>Agentes <span class="muted">clique para ver o que fez</span></h2>
-        <div class="body" style="padding:0; max-height:240px; overflow:auto;">
-          <table>
-            <thead><tr><th>ID</th><th>Nome</th><th>Papel</th></tr></thead>
-            <tbody id="agentsBody"></tbody>
-          </table>
+
+      <div class="grid2">
+        <div class="card">
+          <h2>Tarefas abertas (Anne)</h2>
+          <div class="body" style="padding:0;max-height:280px;overflow:auto">
+            <table>
+              <thead><tr><th>Tarefa</th><th>Cliente</th><th>Vence</th></tr></thead>
+              <tbody id="tasksBody"></tbody>
+            </table>
+          </div>
         </div>
-        <div class="body" style="padding-top:0">
-          <div class="detail" id="agenteDetalhe" style="display:none"></div>
+        <div class="card">
+          <h2>Agentes <span class="muted">clique para ver o que fez</span></h2>
+          <div class="body" style="padding:0;max-height:240px;overflow:auto">
+            <table>
+              <thead><tr><th>ID</th><th>Nome</th><th>Papel</th></tr></thead>
+              <tbody id="agentsBody"></tbody>
+            </table>
+          </div>
+          <div class="body" style="padding-top:0">
+            <div class="detail" id="agenteDetalhe" style="display:none"></div>
+          </div>
         </div>
       </div>
     </section>
   </main>
 
   <script>
+    /* ---------- util ---------- */
     async function j(url, opts) {
       const r = await fetch(url, opts);
       if (!r.ok) {
@@ -479,28 +664,87 @@
       }
       return r.json();
     }
-
     function statusHtml(s) {
       const cls = (s || '').replace(/\s/g, '_');
       return `<span class="status ${cls}">${s || '-'}</span>`;
     }
+    const brl = v => (v === null || v === undefined || v === '')
+      ? '—' : Number(v).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    const txt = s => String(s ?? '').replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
 
+    let rev = null;
+    let abaAtual = 'lancados';
+    let contasCache = null;       // [{codigo, nome}]
+    let contasMap = {};           // codigo -> nome
+    let clientesMap = {};         // id -> nome
+    let linhaAberta = null;       // índice da linha em destaque
+    let setupCollapsed = false;
+
+    function nomeConta(cod) {
+      if (!cod) return '';
+      return contasMap[String(cod)] || '';
+    }
+    function htmlConta(cod) {
+      const n = nomeConta(cod);
+      return `<span class="mono">${txt(cod)}</span>${n ? `<span class="conta-nome" title="${txt(n)}">${txt(n)}</span>` : ''}`;
+    }
+    function tagOrigem(l) {
+      const o = (l.origem || l.regra || '').toLowerCase();
+      if (o === 'recorrente' || l.origem === 'recorrente') return '<span class="tag recorrente">recorrente</span>';
+      if (o === 'llm' || l.origem === 'llm') return '<span class="tag llm">modelo</span>';
+      if (l.regra) return `<span class="tag regra" title="regra">${txt(l.regra)}</span>`;
+      return '';
+    }
+
+    /* ---------- navegação ---------- */
+    function mostrarView(nome) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.querySelectorAll('.nav-tab').forEach(t => t.setAttribute('aria-selected', 'false'));
+      document.getElementById('view-' + nome).classList.add('active');
+      document.getElementById('tab-' + nome).setAttribute('aria-selected', 'true');
+    }
+    function toggleSetup() {
+      setupCollapsed = !setupCollapsed;
+      document.getElementById('setupCard').classList.toggle('collapsed', setupCollapsed);
+      document.getElementById('setupToggle').textContent = setupCollapsed ? 'Expandir' : 'Recolher';
+    }
+
+    function atualizarSteps() {
+      const s1 = document.getElementById('step1');
+      const s2 = document.getElementById('step2');
+      const s3 = document.getElementById('step3');
+      const s4 = document.getElementById('step4');
+      [s1,s2,s3,s4].forEach(s => s.className = 'step');
+      if (!rev) { s1.classList.add('active'); return; }
+      s1.classList.add('done');
+      const pend = (rev.pendentes || []).length;
+      const temLanc = (rev.lancados || []).length > 0;
+      if (pend > 0) {
+        s2.classList.add('done');
+        s3.classList.add('active', 'warn');
+      } else if (temLanc) {
+        s2.classList.add('done');
+        s3.classList.add('done');
+        s4.classList.add('active');
+      } else {
+        s2.classList.add('active');
+      }
+    }
+
+    /* ---------- health / overview ---------- */
     async function loadHealth() {
       const h = await j('/api/health');
       const el = document.getElementById('llmBadge');
       if (h.offline) {
-        el.textContent = 'LLM offline (tools OK)';
+        el.textContent = 'LLM offline (regras OK)';
         el.className = 'badge warn';
       } else {
         el.textContent = `${h.llm_provider} · ${h.llm_model || ''}`;
         el.className = 'badge ok';
       }
     }
-
     async function loadOverview() {
       const o = await j('/api/overview');
-      document.getElementById('priorityBox').innerHTML =
-        `Prioridade #1: <strong>${o.priority}</strong>`;
       document.getElementById('kpis').innerHTML = [
         ['Aguardando humano', o.runs_waiting_human, 'warn'],
         ['Solicitações abertas', o.requests_open, ''],
@@ -509,57 +753,32 @@
         ['Runs recentes', o.runs_total, ''],
         ['Clientes cad.', o.clients, ''],
       ].map(([l, n, c]) => `
-        <div class="kpi">
-          <div class="n" style="${c==='warn'&&n>0?'color:var(--warn)':''}">${n}</div>
+        <div class="kpi ${c && n > 0 ? c : ''}">
+          <div class="n">${n}</div>
           <div class="l">${l}</div>
         </div>`).join('');
     }
 
+    async function carregarContas() {
+      if (contasCache) return contasCache;
+      contasCache = await j('/api/contas');
+      contasMap = {};
+      for (const c of contasCache) contasMap[String(c.codigo)] = c.nome;
+      return contasCache;
+    }
 
-    // ---------- Fechamento por competência ----------
+    /* ---------- Fechamento / setup ---------- */
     async function fxCarregarClientes() {
       const r = await j('/api/clients');
       const lista = Array.isArray(r) ? r : (r.clients || []);
-      const opcoes = lista.map(c => `<option value="${c.id}">${c.nome} (${c.id})</option>`).join('');
+      clientesMap = {};
+      for (const c of lista) clientesMap[c.id] = c.nome;
+      const opcoes = lista.map(c =>
+        `<option value="${c.id}">${txt(c.nome)} (${c.id})</option>`).join('');
       document.getElementById('fxCliente').innerHTML = opcoes;
-      // o chat aceita pedido sem cliente ("liste os agentes"), então tem vazio
       document.getElementById('chatCliente').innerHTML =
         '<option value="">— nenhum —</option>' + opcoes;
     }
-
-    // ---------- Chat com o Max ----------
-    // Diferente do chat que existia no Vercel: ali era só conversa e o modelo
-    // respondia COMO SE tivesse executado. Aqui vai para /api/run, que aciona
-    // o agente de verdade e devolve o que ele realmente fez.
-    document.getElementById('chatEnviar').onclick = async () => {
-      const pedido = document.getElementById('chatPedido').value.trim();
-      const box = document.getElementById('chatResposta');
-      if (!pedido) return;
-      box.style.display = 'block';
-      box.textContent = 'pensando e executando…';
-      try {
-        const r = await j('/api/run', {
-          method: 'POST', headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({
-            pedido,
-            client_id: document.getElementById('chatCliente').value || null,
-          })
-        });
-        const quem = (r.agents || []).join(', ') || '—';
-        const partes = (r.results || []).map(x => `
-          <div style="margin-top:.5rem">
-            <strong>${x.agent}</strong>
-            ${x.needs_human ? '<span class="muted"> · precisa da sua revisão</span>' : ''}
-            <div style="white-space:pre-wrap;margin-top:.2rem">${(x.summary||'').replace(/</g,'&lt;')}</div>
-            ${(x.artifacts||[]).map(a => `<div class="mono muted">→ ${a}</div>`).join('')}
-          </div>`).join('');
-        box.innerHTML = `<div class="muted">${r.reasoning || ''} · acionou: ${quem}</div>${partes}`;
-        document.getElementById('chatPedido').value = '';
-        loadRuns();
-      } catch (e) {
-        box.textContent = 'Falhou: ' + e.message;
-      }
-    };
 
     document.getElementById('fxVerPasta').onclick = async () => {
       const el = document.getElementById('fxPastaInfo');
@@ -581,8 +800,9 @@
           : e.baixados !== undefined ? `${e.baixados} baixado(s)`
           : e.lancados !== undefined ? `${e.lancados} lançado(s), ${e.pendentes} pendente(s)`
           : e.total !== undefined ? `${e.total} arquivo(s)` : '';
-        return `<div style="margin-bottom:.3rem">${e.ok === false ? '✗' : '✓'}
-          <strong>${e.etapa}</strong> <span class="muted">${detalhe} ${e.erro || ''}</span></div>`;
+        const cls = e.ok === false ? 'bad' : 'ok';
+        return `<div class="${cls}">${e.ok === false ? '✗' : '✓'}
+          <strong>${txt(e.etapa)}</strong> <span class="muted">${txt(detalhe)} ${txt(e.erro || '')}</span></div>`;
       }).join('') || 'Nada em andamento.';
     }
 
@@ -606,41 +826,71 @@
         });
         fxPintarEtapas(r.etapas);
         st.textContent = r.resumo || r.situacao;
-        document.getElementById('fxResultado').innerHTML = '';
-        revisar(r);
+        await revisar(r);
+        // recolhe o formulário para a revisão ocupar a tela
+        if (!setupCollapsed) toggleSetup();
         fxListar();
       } catch (e) {
         st.textContent = 'Falhou: ' + e.message;
       }
     };
 
-    // ---------- Revisão dos lançamentos ----------
-    // A planilha é o FIM do processo. Conferir dentro de um Excel baixado é
-    // onde o erro passa: aqui os lançamentos ficam em tela, os pendentes são
-    // resolvidos conversando, e só então a planilha é emitida.
-    let rev = null;      // estado da competência em revisão
-    let abaAtual = 'lancados';
-    let contasCache = null;
-
-    const brl = v => (v === null || v === undefined || v === '')
-      ? '—' : Number(v).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-    const txt = s => String(s ?? '').replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
-
-    function revisar(estado) {
+    /* ---------- Revisão (coração do painel) ---------- */
+    async function revisar(estado) {
       rev = estado;
+      linhaAberta = null;
+      await carregarContas();
       abaAtual = (estado.pendentes || []).length ? 'pendentes' : 'lancados';
-      document.getElementById('fxRevisao').style.display = 'block';
+      document.getElementById('fxRevisao').classList.add('open');
       document.getElementById('fxEnsinar').innerHTML = '';
+      document.getElementById('revBody').classList.remove('com-painel');
+      const nome = clientesMap[estado.client_id] || estado.client_id;
+      document.getElementById('revTitulo').textContent =
+        `${nome} · ${estado.competencia}`;
+      document.getElementById('revSub').textContent =
+        estado.resumo || `${estado.documentos || '—'} documento(s) · forma: ${estado.forma_pagamento || '—'}`;
       pintarRevisao();
+      atualizarSteps();
+      atualizarPillPendentes();
       document.getElementById('fxRevisao').scrollIntoView({behavior:'smooth', block:'start'});
+    }
+
+    function fecharRevisao() {
+      rev = null;
+      document.getElementById('fxRevisao').classList.remove('open');
+      document.getElementById('fxEnsinar').innerHTML = '';
+      document.getElementById('revBody').classList.remove('com-painel');
+      atualizarSteps();
+      if (setupCollapsed) toggleSetup();
+    }
+
+    function filtrar(itens, campos) {
+      const q = (document.getElementById('revBusca')?.value || '').trim().toLowerCase();
+      if (!q) return itens.map((it, i) => ({it, i}));
+      return itens.map((it, i) => ({it, i})).filter(({it}) =>
+        campos.some(c => String(it[c] ?? '').toLowerCase().includes(q)
+          || String(nomeConta(it.debito) || '').toLowerCase().includes(q)
+          || String(nomeConta(it.credito) || '').toLowerCase().includes(q)));
     }
 
     function pintarRevisao() {
       if (!rev) return;
+      const lancados = rev.lancados || [];
+      const pendentes = rev.pendentes || [];
+      const ignorados = rev.nao_contabilizaveis || [];
+      const totalValor = lancados.reduce((s, l) => s + (Number(l.valor) || 0), 0);
+
+      document.getElementById('revKpis').innerHTML = `
+        <div class="rev-kpi ok"><div class="v">${lancados.length}</div><div class="t">Lançados</div></div>
+        <div class="rev-kpi ${pendentes.length ? 'pend' : ''}">
+          <div class="v">${pendentes.length}</div><div class="t">Aguardando você</div></div>
+        <div class="rev-kpi"><div class="v">${ignorados.length}</div><div class="t">Sem lançamento</div></div>
+        <div class="rev-kpi"><div class="v">R$ ${brl(totalValor)}</div><div class="t">Total lançado</div></div>`;
+
       const grupos = {
-        lancados:   {rot: 'Lançados',       itens: rev.lancados || []},
-        pendentes:  {rot: 'Aguardando você', itens: rev.pendentes || []},
-        ignorados:  {rot: 'Sem lançamento',  itens: rev.nao_contabilizaveis || []},
+        lancados:  {rot: 'Lançados',        itens: lancados},
+        pendentes: {rot: 'Aguardando você', itens: pendentes},
+        ignorados: {rot: 'Sem lançamento',  itens: ignorados},
       };
       document.getElementById('fxAbas').innerHTML = Object.entries(grupos).map(([k, g]) => `
         <button class="aba ${k==='pendentes' && g.itens.length ? 'alerta' : ''}" type="button"
@@ -648,100 +898,227 @@
           ${g.rot} <span class="cont">${g.itens.length}</span>
         </button>`).join('');
 
-      const itens = grupos[abaAtual].itens;
       const alvo = document.getElementById('fxTabela');
-      if (!itens.length) {
-        alvo.innerHTML = `<p class="vazio">${
-          abaAtual === 'pendentes'
-            ? 'Nada aguardando decisão — todos os documentos foram classificados.'
-            : abaAtual === 'ignorados'
-              ? 'Nenhum documento foi descartado nesta competência.'
-              : 'Nenhum lançamento gerado.'}</p>`;
+      const lista = grupos[abaAtual].itens;
+      const filtrados = filtrar(lista, ['arquivo','complemento','motivo','data','debito','credito','regra','historico_texto']);
+
+      if (!lista.length) {
+        alvo.innerHTML = `<div class="vazio"><strong>${
+          abaAtual === 'pendentes' ? 'Nada aguardando decisão'
+            : abaAtual === 'ignorados' ? 'Nenhum documento descartado'
+            : 'Nenhum lançamento gerado'}</strong>
+          ${abaAtual === 'pendentes'
+            ? 'Todos os documentos desta competência foram classificados. Pode emitir a planilha.'
+            : abaAtual === 'lancados'
+              ? 'Processe uma competência ou reabra uma já feita na lista abaixo.'
+              : 'Documentos que existem mas não movimentam conta (DANFE, balancete, etc.).'}</div>`;
+      } else if (!filtrados.length) {
+        alvo.innerHTML = `<div class="vazio"><strong>Nada com esse filtro</strong>Tente outro termo na busca.</div>`;
       } else if (abaAtual === 'lancados') {
         alvo.innerHTML = `<table><thead><tr>
             <th>Data</th><th>Débito</th><th>Crédito</th><th class="num">Valor</th>
-            <th>Histórico</th><th>Documento</th></tr></thead><tbody>
-          ${itens.map(l => `<tr>
-            <td>${txt(l.data)}</td>
-            <td class="mono">${txt(l.debito)}</td>
-            <td class="mono">${txt(l.credito)}</td>
-            <td class="num">${brl(l.valor)}</td>
-            <td>${txt(l.complemento).slice(0,44)}</td>
-            <td class="muted">${txt(l.arquivo).slice(0,34)}</td>
-          </tr>`).join('')}</tbody></table>`;
+            <th>Histórico</th><th>Origem</th><th>Documento</th></tr></thead><tbody>
+          ${filtrados.map(({it:l, i}) => `
+            <tr class="linha-lanc ${linhaAberta===i?'aberta':''}" onclick="abrirLancamento(${i})">
+              <td>${txt(l.data)}</td>
+              <td>${htmlConta(l.debito)}</td>
+              <td>${htmlConta(l.credito)}</td>
+              <td class="num">${brl(l.valor)}</td>
+              <td>${txt(l.complemento || l.historico_texto || '').slice(0,48)}</td>
+              <td>${tagOrigem(l)}</td>
+              <td class="muted" title="${txt(l.arquivo)}">${txt(l.arquivo).slice(0,28)}</td>
+            </tr>`).join('')}</tbody></table>
+          <p class="muted" style="padding:.5rem 1rem">
+            ${filtrados.length} de ${lista.length} · clique na linha para ver o detalhe
+          </p>`;
       } else if (abaAtual === 'pendentes') {
         alvo.innerHTML = `<table><thead><tr>
-            <th>Documento</th><th class="num">Valor</th><th>Data</th><th>Por quê</th></tr></thead><tbody>
-          ${itens.map((p,i) => `<tr class="linha-pend" onclick="abrirEnsinar(${i})">
-            <td>${txt(p.arquivo).slice(0,40)}</td>
-            <td class="num">${brl(p.valor)}</td>
-            <td>${txt(p.data)}</td>
-            <td class="muted">${txt(p.motivo).slice(0,52)}</td>
-          </tr>`).join('')}</tbody></table>
-          <p class="muted" style="margin:.5rem 0 0">Clique na linha para dizer ao agente o que é.</p>`;
+            <th>Documento</th><th class="num">Valor</th><th>Data</th>
+            <th>Por quê o agente parou</th><th></th></tr></thead><tbody>
+          ${filtrados.map(({it:p, i}) => `
+            <tr class="linha-pend ${linhaAberta===i?'aberta':''}" onclick="abrirEnsinar(${i})">
+              <td title="${txt(p.arquivo)}">${txt(p.arquivo).slice(0,36)}</td>
+              <td class="num">${brl(p.valor)}</td>
+              <td>${txt(p.data) || '—'}</td>
+              <td class="muted">${txt(p.motivo || 'sem regra').slice(0,64)}</td>
+              <td><button class="ghost" type="button" style="padding:.35rem .6rem;font-size:.78rem"
+                          onclick="event.stopPropagation();abrirEnsinar(${i})">Ensinar</button></td>
+            </tr>`).join('')}</tbody></table>
+          <p class="muted" style="padding:.5rem 1rem">
+            Clique em <strong>Ensinar</strong>: você escolhe as contas na lista (nunca digita código)
+            e a regra vale para os próximos meses.
+          </p>`;
       } else {
         alvo.innerHTML = `<table><thead><tr>
-            <th>Documento</th><th>Motivo</th></tr></thead><tbody>
-          ${itens.map(n => `<tr>
-            <td>${txt(n.arquivo).slice(0,44)}</td>
+            <th>Documento</th><th>Motivo (existe, mas não lança)</th></tr></thead><tbody>
+          ${filtrados.map(({it:n}) => `<tr>
+            <td title="${txt(n.arquivo)}">${txt(n.arquivo).slice(0,44)}</td>
             <td class="muted">${txt(n.motivo)}</td>
           </tr>`).join('')}</tbody></table>`;
       }
       pintarRodape();
+      atualizarSteps();
     }
 
     function trocarAba(k) {
       abaAtual = k;
+      linhaAberta = null;
       document.getElementById('fxEnsinar').innerHTML = '';
+      document.getElementById('revBody').classList.remove('com-painel');
+      pintarRevisao();
+    }
+
+    function abrirLancamento(i) {
+      const l = (rev.lancados || [])[i];
+      if (!l) return;
+      linhaAberta = i;
+      const painel = document.getElementById('fxEnsinar');
+      document.getElementById('revBody').classList.add('com-painel');
+      painel.innerHTML = `
+        <div class="ensinar">
+          <h4>Lançamento conferido</h4>
+          <p class="muted" style="margin:.15rem 0 .75rem">${txt(l.arquivo)}</p>
+          <table>
+            <tr><th>Data</th><td>${txt(l.data)}</td></tr>
+            <tr><th>Valor</th><td class="num">R$ ${brl(l.valor)}</td></tr>
+            <tr><th>Débito</th><td>${htmlConta(l.debito)}</td></tr>
+            <tr><th>Crédito</th><td>${htmlConta(l.credito)}</td></tr>
+            <tr><th>Histórico</th><td>${txt(l.complemento || l.historico_texto || '—')}</td></tr>
+            <tr><th>Regra</th><td>${txt(l.regra || '—')} ${tagOrigem(l)}</td></tr>
+            <tr><th>Obs.</th><td class="muted">${txt(l.observacao || '—')}</td></tr>
+          </table>
+          <p class="muted" style="margin:.85rem 0 .4rem">
+            Se este lançamento estiver errado, anote e avise o Anderson — não inventamos
+            correção automática de lançamento já gerado. O aprendizado vale para
+            <em>documentos pendentes</em> (aba Aguardando você).
+          </p>
+          <button class="ghost" type="button" onclick="fecharPainel()">Fechar</button>
+        </div>`;
+      pintarRevisao();
+    }
+
+    function fecharPainel() {
+      linhaAberta = null;
+      document.getElementById('fxEnsinar').innerHTML = '';
+      document.getElementById('revBody').classList.remove('com-painel');
       pintarRevisao();
     }
 
     function pintarRodape() {
       const pend = (rev.pendentes || []).length;
+      const nLanc = (rev.lancados || []).length;
       const url = `/api/fechamentos/${rev.client_id}/${rev.competencia}/planilha`;
-      document.getElementById('fxRodape').innerHTML = rev.planilha
-        ? `<a class="btn" href="${url}">Baixar planilha do Contmatic</a>
-           <span class="muted">${(rev.lancados||[]).length} lançamento(s)${
-             pend ? ` · <strong style="color:var(--warn)">${pend} ainda sem decisão</strong> — a planilha sai sem eles` : ' · nada pendente'}</span>`
-        : `<span class="muted">Planilha ainda não gerada.</span>`;
+      const temPlanilha = !!rev.planilha;
+
+      let hint = '';
+      if (pend > 0) {
+        hint = `<strong>${pend} documento(s) ainda sem decisão.</strong>
+          Resolva na aba “Aguardando você” (ensine o agente) antes de importar no Contmatic.
+          A planilha sai <em>sem</em> esses itens se você emitir agora.`;
+      } else if (nLanc > 0) {
+        hint = `Conferência limpa: ${nLanc} lançamento(s), nada pendente.
+          Revise a aba Lançados e, se estiver ok, emita a planilha para o Contmatic.`;
+      } else {
+        hint = 'Nenhum lançamento nesta competência.';
+      }
+      document.getElementById('revHint').innerHTML = hint;
+
+      if (!temPlanilha) {
+        document.getElementById('fxRodape').innerHTML =
+          `<span class="muted">Planilha ainda não gerada nesta rodada.</span>`;
+        return;
+      }
+
+      if (pend > 0) {
+        document.getElementById('fxRodape').innerHTML = `
+          <label style="display:flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--muted);margin:0">
+            <input type="checkbox" id="aceitaPend" style="width:auto;margin:0" />
+            Emitir mesmo com ${pend} pendente(s)
+          </label>
+          <button class="warn" type="button" id="btnEmitir"
+                  onclick="emitirPlanilha('${url}')">Emitir planilha Contmatic</button>`;
+      } else {
+        document.getElementById('fxRodape').innerHTML = `
+          <a class="btn ok" href="${url}">Emitir planilha Contmatic</a>
+          <span class="muted">${nLanc} lançamento(s) · pronto para importar</span>`;
+      }
+    }
+
+    function emitirPlanilha(url) {
+      const cb = document.getElementById('aceitaPend');
+      if (cb && !cb.checked) {
+        alert('Marque a caixa se quiser emitir a planilha com documentos ainda pendentes.\nMelhor: ensine os pendentes primeiro.');
+        return;
+      }
+      window.location.href = url;
     }
 
     async function abrirEnsinar(i) {
       const p = (rev.pendentes || [])[i];
-      const box = document.getElementById('fxEnsinar');
-      box.innerHTML = `<div class="ensinar"><p class="muted">lendo o documento…</p></div>`;
-      if (!contasCache) contasCache = await j('/api/contas');
+      if (!p) return;
+      linhaAberta = i;
+      abaAtual = 'pendentes';
+      const painel = document.getElementById('fxEnsinar');
+      document.getElementById('revBody').classList.add('com-painel');
+      painel.innerHTML = `<div class="ensinar"><p class="muted">lendo o documento…</p></div>`;
+      pintarRevisao();
+
+      await carregarContas();
       let det = {texto: '', chaves_sugeridas: []};
       try {
         det = await j(`/api/fechamentos/${rev.client_id}/${rev.competencia}/pendente?arquivo=`
                       + encodeURIComponent(p.arquivo));
-      } catch (e) { /* XML do eSocial, PDF sem texto: segue sem prévia */ }
+      } catch (e) { /* XML eSocial, PDF imagem: segue sem prévia */ }
 
+      // selects com busca: lista completa do PlContas (centenas de contas)
       const opcoes = contasCache.map(c =>
         `<option value="${c.codigo}">${c.codigo} — ${txt(c.nome)}</option>`).join('');
-      box.innerHTML = `
+
+      painel.innerHTML = `
         <div class="ensinar">
-          <h4>${txt(p.arquivo)}</h4>
-          <p class="muted" style="margin:.1rem 0 .8rem">
-            R$ ${brl(p.valor)} · ${txt(p.data) || 'sem data'} · ${txt(p.motivo)}
+          <div style="display:flex;justify-content:space-between;gap:.5rem;align-items:flex-start">
+            <h4>Ensinar o Alexandre</h4>
+            <button class="ghost" type="button" style="padding:.3rem .55rem;font-size:.75rem"
+                    onclick="fecharPainel()">Fechar</button>
+          </div>
+          <p class="muted" style="margin:.1rem 0 .55rem;word-break:break-all">${txt(p.arquivo)}</p>
+          <p style="margin:0 0 .75rem;font-size:.9rem">
+            <strong>R$ ${brl(p.valor)}</strong>
+            <span class="muted"> · ${txt(p.data) || 'sem data'} · ${txt(p.motivo || '')}</span>
           </p>
-          ${det.texto ? `<div class="previa">${txt(det.texto.slice(0,900))}</div>` : ''}
-          <label>O que identifica este documento (vale para os próximos meses)</label>
+          ${det.texto
+            ? `<label>O que o agente leu no documento</label>
+               <div class="previa">${txt(det.texto.slice(0,1200))}</div>`
+            : `<p class="muted">Sem texto extraível — use o nome do arquivo ou o que você sabe do documento.</p>`}
+
+          <label>O que identifica este documento <span class="muted">(vale para os próximos meses)</span></label>
           <div class="chips" id="chips">
             ${(det.chaves_sugeridas||[]).map(k =>
               `<button class="chip" type="button" onclick="usarChave(this)">${txt(k)}</button>`).join('')
-              || '<span class="muted">Sem sugestão — digite abaixo.</span>'}
+              || '<span class="muted">Sem sugestão automática — digite abaixo (CNPJ, nome do fornecedor…).</span>'}
           </div>
-          <input id="ensChave" placeholder="Ex.: 09.377.184/0001-88" />
+          <input id="ensChave" placeholder="Ex.: 09.377.184/0001-88 ou DIAS DE PAULA" />
+
           <div class="row">
-            <div><label>Débito</label><select id="ensDeb">${opcoes}</select></div>
-            <div><label>Crédito</label><select id="ensCred">${opcoes}</select></div>
+            <div class="select-busca">
+              <label>Débito (conta que sobe)</label>
+              <input type="search" id="ensDebFiltro" placeholder="Buscar conta…"
+                     oninput="filtrarSelect('ensDeb','ensDebFiltro')" />
+              <select id="ensDeb">${opcoes}</select>
+            </div>
+            <div class="select-busca">
+              <label>Crédito (conta que desce)</label>
+              <input type="search" id="ensCredFiltro" placeholder="Buscar conta…"
+                     oninput="filtrarSelect('ensCred','ensCredFiltro')" />
+              <select id="ensCred">${opcoes}</select>
+            </div>
           </div>
+
           <label>Como chamar no histórico</label>
           <input id="ensDesc" placeholder="Ex.: Honorários contábeis" />
 
           <label style="display:flex;align-items:center;gap:.45rem;margin:.2rem 0 .6rem">
-            <input type="checkbox" id="ensRec" style="width:auto"
+            <input type="checkbox" id="ensRec" style="width:auto;margin:0"
                    onchange="document.getElementById('ensRecBox').style.display=this.checked?'block':'none'" />
             É todo mês — provisionar mesmo quando não vier documento
           </label>
@@ -752,24 +1129,37 @@
               <div><label>A partir de</label>
                 <input id="ensRecInicio" placeholder="AAAA-MM" value="${(rev.competencia||'')}" /></div>
             </div>
-            <p class="muted" style="margin:-.4rem 0 .6rem">
-              A provisão entra no último dia do mês, contra a conta de crédito
-              escolhida acima. Em vários meses atrasados o boleto nem existe —
-              sem isso a despesa some e o resultado sai errado para mais.
+            <p class="muted" style="margin:-.3rem 0 .6rem">
+              Em meses atrasados o boleto muitas vezes não está na pasta — sem a
+              recorrência a despesa some e o resultado sai errado para mais.
             </p>
           </div>
 
-          <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.4rem">
-            <button class="btn" type="button" onclick="ensinar()">Ensinar e reprocessar</button>
-            <button class="btn ghost" type="button"
-                    onclick="document.getElementById('fxEnsinar').innerHTML=''">Agora não</button>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem">
+            <button type="button" onclick="ensinar()">Ensinar e reprocessar</button>
+            <button class="ghost" type="button" onclick="fecharPainel()">Agora não</button>
           </div>
-          <p class="muted" id="ensStatus" style="margin:.5rem 0 0"></p>
+          <p class="muted" id="ensStatus" style="margin:.55rem 0 0"></p>
         </div>`;
+
       if ((det.chaves_sugeridas || []).length) {
         document.getElementById('ensChave').value = det.chaves_sugeridas[0];
         document.querySelector('#chips .chip')?.setAttribute('aria-pressed', 'true');
       }
+      // tenta pré-selecionar se o pendente já veio com débito/crédito chutado
+      if (p.debito) document.getElementById('ensDeb').value = p.debito;
+      if (p.credito) document.getElementById('ensCred').value = p.credito;
+    }
+
+    function filtrarSelect(selectId, filtroId) {
+      const q = (document.getElementById(filtroId).value || '').toLowerCase();
+      const sel = document.getElementById(selectId);
+      const atual = sel.value;
+      const opts = contasCache.filter(c =>
+        !q || c.codigo.includes(q) || (c.nome || '').toLowerCase().includes(q));
+      sel.innerHTML = opts.map(c =>
+        `<option value="${c.codigo}">${c.codigo} — ${txt(c.nome)}</option>`).join('');
+      if (opts.some(c => c.codigo === atual)) sel.value = atual;
     }
 
     function usarChave(btn) {
@@ -781,11 +1171,13 @@
     async function ensinar() {
       const st = document.getElementById('ensStatus');
       const chave = document.getElementById('ensChave').value.trim();
-      if (!chave) { st.textContent = 'Diga o que identifica o documento — sem isso a regra casaria com tudo.'; return; }
+      if (!chave) {
+        st.textContent = 'Diga o que identifica o documento — sem isso a regra casaria com tudo.';
+        return;
+      }
       st.textContent = 'gravando a regra e reprocessando a competência…';
       try {
-        // A recorrência vai ANTES: o reprocessamento já traz a provisão junto,
-        // senão a pessoa veria o resultado sem ela e reprocessaria de novo.
+        // recorrência ANTES: o reprocessamento já traz a provisão junto
         if (document.getElementById('ensRec')?.checked) {
           await j(`/api/recorrentes/${rev.client_id}`, {
             method: 'POST', headers: {'Content-Type':'application/json'},
@@ -808,64 +1200,115 @@
             reprocessar: true,
           })
         });
-        document.getElementById('fxEnsinar').innerHTML = '';
-        if (r.estado) { rev = r.estado; abaAtual = 'pendentes'; pintarRevisao(); }
+        if (r.estado) {
+          rev = r.estado;
+          abaAtual = (rev.pendentes || []).length ? 'pendentes' : 'lancados';
+        }
+        fecharPainel();
         document.getElementById('fxStatus').textContent =
           `Regra criada para "${chave}". ${(rev.pendentes||[]).length} pendente(s) restante(s).`;
+        atualizarPillPendentes();
         fxListar();
       } catch (e) {
         st.textContent = 'Falhou: ' + e.message;
       }
     }
 
-    async function fxListar() {
-      const itens = await j('/api/fechamentos');
-      document.getElementById('fxLista').innerHTML = itens.map(i => `
-        <tr>
-          <td>${i.client_id}</td>
-          <td>${i.competencia}</td>
-          <td>${i.situacao}</td>
-          <td>${i.total_lancados}</td>
-          <td>${i.total_pendentes}</td>
-          <td>
-            <button class="ghost" type="button"
-                    onclick="reabrir('${i.client_id}','${i.competencia}')">revisar</button>
-            ${i.planilha ? `<a href="/api/fechamentos/${i.client_id}/${i.competencia}/planilha">baixar</a>` : ''}
-          </td>
-        </tr>`).join('') || '<tr><td colspan="6" class="muted">Nenhuma competência processada.</td></tr>';
+    function atualizarPillPendentes() {
+      const n = rev ? (rev.pendentes || []).length : 0;
+      const pill = document.getElementById('pillPendentes');
+      pill.textContent = n;
+      document.getElementById('tab-conferir').classList.toggle('alerta', n > 0);
     }
 
-    // Reabrir uma competência já processada: o atraso é de meses, ninguém
-    // resolve tudo numa sentada.
+    async function fxListar() {
+      const itens = await j('/api/fechamentos');
+      let totalPend = 0;
+      document.getElementById('fxLista').innerHTML = itens.map(i => {
+        totalPend += i.total_pendentes || 0;
+        const nome = clientesMap[i.client_id] || i.client_id;
+        return `
+        <tr>
+          <td>${txt(nome)}<div class="mono muted">${i.client_id}</div></td>
+          <td>${i.competencia}</td>
+          <td>${statusHtml(i.situacao)}</td>
+          <td class="num">${i.total_lancados}</td>
+          <td class="num" style="${i.total_pendentes ? 'color:var(--warn);font-weight:700' : ''}">${i.total_pendentes}</td>
+          <td>
+            <button class="ghost" type="button"
+                    onclick="reabrir('${i.client_id}','${i.competencia}')">Conferir</button>
+          </td>
+        </tr>`;
+      }).join('') || '<tr><td colspan="6" class="muted">Nenhuma competência processada ainda.</td></tr>';
+
+      // pill global: soma dos pendentes em competências conhecidas (quando sem revisão aberta)
+      if (!rev) {
+        document.getElementById('pillPendentes').textContent = totalPend;
+        document.getElementById('tab-conferir').classList.toggle('alerta', totalPend > 0);
+      }
+    }
+
     async function reabrir(cliente, comp) {
       const st = document.getElementById('fxStatus');
-      st.textContent = 'abrindo…';
+      st.textContent = 'abrindo conferência…';
+      mostrarView('conferir');
       try {
-        revisar(await j(`/api/fechamentos/${cliente}/${comp}`));
-        st.textContent = `${comp} de ${cliente}`;
+        await revisar(await j(`/api/fechamentos/${cliente}/${comp}`));
+        st.textContent = `${comp} · ${clientesMap[cliente] || cliente}`;
+        if (!setupCollapsed) toggleSetup();
       } catch (e) { st.textContent = 'Falhou: ' + e.message; }
     }
 
+    /* ---------- Chat Max ---------- */
+    document.getElementById('chatEnviar').onclick = async () => {
+      const pedido = document.getElementById('chatPedido').value.trim();
+      const box = document.getElementById('chatResposta');
+      if (!pedido) return;
+      box.style.display = 'block';
+      box.innerHTML = `<div class="chat-bolha"><span class="muted">pensando e executando…</span></div>`;
+      try {
+        const r = await j('/api/run', {
+          method: 'POST', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({
+            pedido,
+            client_id: document.getElementById('chatCliente').value || null,
+          })
+        });
+        const quem = (r.agents || []).join(', ') || '—';
+        const partes = (r.results || []).map(x => `
+          <div class="chat-bolha">
+            <div class="quem"><strong>${txt(x.agent)}</strong>
+              ${x.needs_human ? ' · precisa da sua revisão' : ''}</div>
+            <div style="white-space:pre-wrap">${txt(x.summary||'')}</div>
+            ${(x.artifacts||[]).map(a => `<div class="mono muted">→ ${txt(a)}</div>`).join('')}
+          </div>`).join('');
+        box.innerHTML = `<div class="muted" style="margin-bottom:.4rem">${txt(r.reasoning || '')} · acionou: ${txt(quem)}</div>${partes}`;
+        document.getElementById('chatPedido').value = '';
+        loadRuns();
+      } catch (e) {
+        box.innerHTML = `<div class="chat-bolha" style="border-color:#5a2030">Falhou: ${txt(e.message)}</div>`;
+      }
+    };
+
+    /* ---------- selects / filas / runs ---------- */
     async function loadSelects() {
       const [services, clients, models] = await Promise.all([
         j('/api/services'),
         j('/api/clients'),
         j('/api/models'),
       ]);
-      fxCarregarClientes(); fxListar();
-      const svc = document.getElementById('service');
-      svc.innerHTML = services.map(s =>
+      await fxCarregarClientes();
+      await fxListar();
+      await carregarContas();
+      document.getElementById('service').innerHTML = services.map(s =>
         `<option value="${s.id}">${s.label}</option>`).join('');
-      const cl = document.getElementById('client');
-      // /api/clients devolve {total, clients} desde que o CRUD foi criado; esta
-      // tela seguia tratando a resposta como lista e quebrava com
-      // "clients.map is not a function". Aceita os dois formatos.
       const listaClientes = Array.isArray(clients) ? clients : (clients.clients || []);
-      cl.innerHTML = `<option value="">— opcional / todos —</option>` +
-        listaClientes.map(c => `<option value="${c.id}">${c.nome} (${c.id})</option>`).join('');
-      const md = document.getElementById('model');
+      document.getElementById('client').innerHTML =
+        `<option value="">— opcional / todos —</option>` +
+        listaClientes.map(c => `<option value="${c.id}">${txt(c.nome)} (${c.id})</option>`).join('');
       const aliases = models.aliases || {};
-      md.innerHTML = `<option value="">padrão (${models.default || 'offline'})</option>` +
+      document.getElementById('model').innerHTML =
+        `<option value="">padrão (${models.default || 'offline'})</option>` +
         Object.entries(aliases).map(([k, v]) =>
           `<option value="${k}">${k} → ${v}</option>`).join('');
     }
@@ -875,10 +1318,12 @@
       document.getElementById('reqBody').innerHTML = items.slice(0, 30).map(it => `
         <tr>
           <td class="mono">${it.id}</td>
-          <td>${it.service_label || it.service_id}<div class="muted">${(it.result_summary||'').slice(0,80)}</div></td>
+          <td>${txt(it.service_label || it.service_id)}
+            <div class="muted">${txt((it.result_summary||'').slice(0,80))}</div></td>
           <td>${it.client_id || '—'}</td>
           <td>${statusHtml(it.status)}</td>
-          <td>${it.status==='queued' ? `<button class="ghost" type="button" onclick="execReq('${it.id}')">Rodar</button>` : ''}</td>
+          <td>${it.status==='queued'
+            ? `<button class="ghost" type="button" onclick="execReq('${it.id}')">Rodar</button>` : ''}</td>
         </tr>`).join('') || '<tr><td colspan="5" class="muted">Nenhuma solicitação ainda</td></tr>';
     }
 
@@ -889,7 +1334,7 @@
         <tr style="cursor:pointer" onclick="showRun('${r.id}')">
           <td class="muted">${(r.created_at||'').replace('T',' ')}</td>
           <td class="mono">${r.id}</td>
-          <td>${(r.title||'').slice(0,60)}</td>
+          <td>${txt((r.title||'').slice(0,60))}</td>
           <td>${r.client_id || '—'}</td>
           <td class="mono">${(r.agents||[]).join(', ')}</td>
           <td>${statusHtml(r.status)}</td>
@@ -916,10 +1361,6 @@
         lines.push('Revisão humana:');
         d.needs_human.forEach(n => lines.push('• ' + n));
       }
-      if (d.pipeline) {
-        lines.push('Pipeline Contmatic:');
-        lines.push(JSON.stringify(d.pipeline.checklist || d.pipeline.summary, null, 2));
-      }
       document.getElementById('runDetail').textContent = lines.join('\n');
     }
 
@@ -928,7 +1369,7 @@
       const open = tasks.filter(t => t.status === 'open');
       document.getElementById('tasksBody').innerHTML = open.map(t => `
         <tr>
-          <td>${t.title}<div class="muted mono">${t.id}</div></td>
+          <td>${txt(t.title)}<div class="muted mono">${t.id}</div></td>
           <td>${t.client_id || '—'}</td>
           <td>${t.due_at || '—'}</td>
         </tr>`).join('') || '<tr><td colspan="3" class="muted">Nenhuma tarefa aberta</td></tr>';
@@ -938,12 +1379,10 @@
       const agents = await j('/api/agents');
       document.getElementById('agentsBody').innerHTML = agents.map(a => `
         <tr style="cursor:pointer" onclick="verAgente('${a.id}')">
-          <td class="mono">${a.id}</td><td>${a.name}</td><td class="muted">${a.role}</td></tr>
-      `).join('');
+          <td class="mono">${a.id}</td><td>${txt(a.name)}</td><td class="muted">${txt(a.role)}</td>
+        </tr>`).join('');
     }
 
-    // Clicar no agente e ver o que ele processou — sem isso a lista é só
-    // um cartaz de nomes.
     async function verAgente(id) {
       const box = document.getElementById('agenteDetalhe');
       box.style.display = 'block';
@@ -1001,9 +1440,9 @@
         });
         el.textContent = JSON.stringify(r, null, 2);
         await refreshAll();
-        if (r.run_id) showRun(r.run_id);
-        else if (r.service_id === 'contmatic') {
-          // show pipeline summary
+        if (r.run_id) {
+          mostrarView('equipe');
+          showRun(r.run_id);
         }
       } catch (e) {
         el.textContent = 'Erro: ' + e.message;
@@ -1020,6 +1459,7 @@
         loadRuns(),
         loadTasks(),
         loadAgents(),
+        fxListar().catch(() => {}),
       ]);
     }
 
