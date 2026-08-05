@@ -1,102 +1,368 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Escon Agentes — Conferência de lançamentos</title>
+  <title>Escon Agentes Contábeis</title>
+  <meta name="description" content="Dashboard multiagente — Escon Soluções Contábeis" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #0c1017;
-      --bg2: #111827;
-      --panel: #161f2e;
-      --panel2: #1e2a3d;
-      --text: #e8eef7;
-      --muted: #8b9bb4;
-      --accent: #3d8bfd;
-      --accent-dim: rgba(61, 139, 253, 0.14);
-      --ok: #3ecf8e;
-      --ok-dim: rgba(62, 207, 142, 0.12);
-      --warn: #f5a524;
-      --warn-dim: rgba(245, 165, 36, 0.12);
-      --bad: #f31260;
-      --bad-dim: rgba(243, 18, 96, 0.1);
-      --border: #2a364a;
+      color-scheme: light;
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --panel2: #f1f5f9;
+      --panel3: #e2e8f0;
+      --border: #dde3ec;
+      --border-strong: #94a3b8;
+      --text: #0f172a;
+      --muted: #475569;
+      --muted-2: #64748b;
+      --accent: #1d4ed8;
+      --accent-dim: rgba(29, 78, 216, 0.10);
+      --green: #047857;
+      --green-dim: rgba(4, 120, 87, 0.10);
+      --amber: #92400e;
+      --amber-dim: rgba(146, 64, 14, 0.10);
+      --danger: #b91c1c;
+      --danger-dim: rgba(185, 28, 28, 0.10);
       --radius: 14px;
-      --font: "Segoe UI", system-ui, -apple-system, sans-serif;
-      --shadow: 0 8px 28px rgba(0,0,0,.28);
+      --radius-sm: 10px;
+      --shadow: 0 20px 44px rgba(15, 23, 42, .12);
+      --shadow-sm: 0 8px 20px rgba(15, 23, 42, .08);
+      --row-hover: rgba(15, 23, 42, .035);
+      --priority-bg: linear-gradient(90deg, #fef3c7, var(--panel));
+      --priority-border: #f2cf7e;
+      --banner-bg: linear-gradient(90deg, #e6f1ff, var(--panel));
+      --banner-border: #bcdcff;
+      --focus-card-border: #bbe3c2;
+      --msg-user-bg: #e6f0ff;
+      --msg-user-border: #bcd6ff;
+      --msg-agent-bg: #e9f7ee;
+      --msg-agent-border: #bfe3c8;
+      --ok: #047857;
+      --ok-dim: rgba(4, 120, 87, 0.10);
+      --warn: #92400e;
+      --warn-dim: rgba(146, 64, 14, 0.10);
+      --bad: #b91c1c;
     }
-    * { box-sizing: border-box; }
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #070b10;
+      --panel: #0e1520;
+      --panel2: #121c2a;
+      --panel3: #16202f;
+      --border: #1e2c3f;
+      --border-strong: #2a3c54;
+      --text: #e9eef6;
+      --muted: #8b9cb3;
+      --muted-2: #5f7089;
+      --accent: #3b9eff;
+      --accent-dim: rgba(59, 158, 255, 0.15);
+      --green: #34d399;
+      --green-dim: rgba(52, 211, 153, 0.15);
+      --amber: #fbbf24;
+      --amber-dim: rgba(251, 191, 36, 0.15);
+      --danger: #f87171;
+      --danger-dim: rgba(248, 113, 113, 0.15);
+      --shadow: 0 20px 60px rgba(0, 0, 0, .45);
+      --shadow-sm: 0 10px 30px rgba(0, 0, 0, .35);
+      --row-hover: rgba(255, 255, 255, .035);
+      --priority-bg: linear-gradient(90deg, #2a1f0a, var(--panel));
+      --priority-border: #5a4520;
+      --banner-bg: linear-gradient(90deg, #0a1a2e, var(--panel));
+      --banner-border: #1e4a7a;
+      --focus-card-border: #3d5a40;
+      --msg-user-bg: #1a2740;
+      --msg-user-border: #2a3f5c;
+      --msg-agent-bg: #0f1a14;
+      --msg-agent-border: #1f3a2e;
+      --ok: #34d399;
+      --ok-dim: rgba(52, 211, 153, 0.15);
+      --warn: #fbbf24;
+      --warn-dim: rgba(251, 191, 36, 0.15);
+      --bad: #f87171;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
     body {
-      margin: 0;
-      font-family: var(--font);
-      background: radial-gradient(1200px 600px at 10% -10%, #1a2740 0%, transparent 55%),
-                  radial-gradient(900px 500px at 100% 0%, #152033 0%, transparent 50%),
-                  var(--bg);
+      font-family: "DM Sans", system-ui, sans-serif;
+      background: var(--bg);
       color: var(--text);
-      min-height: 100vh;
+      min-height: 100%;
     }
-    a { color: var(--accent); }
+    .hidden { display: none !important; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    body, .top, .sidebar, .right, .main, input, select, textarea,
+    table, .kpi, .service-card, .info-card, .msg, .agent-btn, .badge, .chip, .icon-btn {
+      transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+    }
 
-    /* ---- Shell ---- */
-    header.app {
-      position: sticky; top: 0; z-index: 30;
-      background: rgba(12, 16, 23, 0.88);
-      backdrop-filter: blur(12px);
+    .icon-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); background: var(--panel);
+      color: var(--muted); cursor: pointer; flex-shrink: 0;
+    }
+    .icon-btn:hover { color: var(--text); border-color: var(--accent); }
+    .mobile-only { display: none; }
+
+    .btn {
+      border: none; border-radius: 10px; padding: .7rem 1rem;
+      background: var(--accent); color: #fff; font-weight: 600;
+      font: inherit; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; gap: .4rem;
+    }
+    .btn:hover { filter: brightness(1.08); }
+    .btn:disabled { opacity: .5; cursor: not-allowed; filter: none; }
+    .btn.ghost {
+      background: transparent; border: 1px solid var(--border); color: var(--muted);
+    }
+    .btn.ghost:hover { color: var(--text); border-color: var(--border-strong); filter: none; }
+    .btn.ok { background: var(--green); color: #fff; }
+    .btn.warn { background: #a66a0c; color: #fff; }
+    button, .btn-native {
+      font: inherit; cursor: pointer;
+    }
+
+    #app-view { min-height: 100vh; display: flex; flex-direction: column; }
+    .top {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; padding: .85rem 1.25rem;
       border-bottom: 1px solid var(--border);
-      padding: 0.85rem 1.25rem 0;
+      background: color-mix(in srgb, var(--panel) 92%, transparent);
+      backdrop-filter: blur(10px);
+      position: sticky; top: 0; z-index: 20;
     }
-    .header-top {
-      display: flex; flex-wrap: wrap; gap: 0.75rem;
-      align-items: center; justify-content: space-between;
-      margin-bottom: 0.75rem;
+    .brand { display: flex; align-items: center; gap: .7rem; min-width: 0; }
+    .logo {
+      width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+      background: linear-gradient(135deg, #3b9eff, #34d399);
+      display: grid; place-items: center; font-weight: 700; font-size: .7rem; color: #051018;
     }
-    header h1 {
-      margin: 0; font-size: 1.1rem; font-weight: 700;
-      letter-spacing: -0.02em;
+    .brand h1 { font-size: 1.05rem; font-weight: 700; }
+    .brand p { font-size: .75rem; color: var(--muted); display: flex; align-items: center; }
+    .status-dot {
+      display: inline-block; width: 7px; height: 7px; border-radius: 50%;
+      background: var(--muted-2); margin-right: .4rem; flex-shrink: 0;
     }
-    header .sub { color: var(--muted); font-size: 0.8rem; margin-top: 0.15rem; }
-    .nav-tabs {
-      display: flex; gap: 0.25rem; overflow-x: auto;
-      margin: 0 -0.25rem; padding-bottom: 0;
+    .status-dot.ok { background: var(--green); }
+    .status-dot.warn { background: var(--amber); }
+    .top-actions { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
+    .select {
+      border: 1px solid var(--border); background: var(--panel2); color: var(--text);
+      font: inherit; padding: .45rem .6rem; border-radius: var(--radius-sm);
     }
-    .nav-tab {
-      appearance: none; border: none; background: transparent;
-      color: var(--muted); font: inherit; font-weight: 600; font-size: 0.88rem;
-      padding: 0.7rem 1rem; cursor: pointer; border-bottom: 2px solid transparent;
-      white-space: nowrap; border-radius: 8px 8px 0 0;
+    .chip {
+      border: 1px solid var(--border); background: var(--panel);
+      color: var(--muted); font-size: .8rem; padding: .4rem .7rem;
+      border-radius: 999px; cursor: pointer; font-family: inherit;
+      display: inline-flex; align-items: center; gap: .35rem;
     }
-    .nav-tab:hover { color: var(--text); background: rgba(255,255,255,0.03); }
-    .nav-tab[aria-selected="true"] {
-      color: var(--text); border-bottom-color: var(--accent);
-      background: var(--accent-dim);
-    }
-    .nav-tab .pill {
-      display: inline-block; min-width: 1.2rem; padding: 0 0.35rem;
-      margin-left: 0.35rem; border-radius: 999px; font-size: 0.72rem;
-      background: var(--panel2); color: var(--muted); font-variant-numeric: tabular-nums;
-    }
-    .nav-tab.alerta .pill { background: #3d2e10; color: var(--warn); }
+    .chip.active { color: var(--text); border-color: var(--accent); background: var(--accent-dim); }
+    .chip:hover { color: var(--text); border-color: var(--border-strong); }
 
-    main {
-      max-width: 1400px; margin: 0 auto;
-      padding: 1.15rem 1.25rem 4rem;
+    .layout {
+      flex: 1; display: grid;
+      grid-template-columns: 260px 1fr 320px;
+      min-height: 0;
     }
-    .view { display: none; }
-    .view.active { display: block; }
+    .scrim {
+      position: fixed; inset: 0; background: rgba(4, 8, 14, .55);
+      z-index: 14;
+    }
+    @media (min-width: 1101px) { .scrim { display: none; } }
+    .sidebar, .right {
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      padding: 1rem;
+      overflow: auto;
+      display: flex; flex-direction: column; gap: 1.1rem;
+    }
+    .right { border-right: none; border-left: 1px solid var(--border); }
+    .side-section { display: flex; flex-direction: column; gap: .5rem; }
+    .sidebar h2, .right h2 {
+      font-size: .7rem; text-transform: uppercase; letter-spacing: .08em;
+      color: var(--muted); display: flex; align-items: center; gap: .4rem;
+    }
+    .hint-sm { font-size: .72rem; line-height: 1.4; color: var(--muted); }
+    .drawer-close { display: none; align-self: flex-end; }
+    @media (max-width: 1100px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar, .right { display: none; }
+      .sidebar.open, .right.open {
+        display: flex; position: fixed; inset: 57px 0 0 0; z-index: 15;
+      }
+      .mobile-only { display: inline-flex; }
+      .sidebar.open .drawer-close, .right.open .drawer-close { display: inline-flex; }
+    }
+    .agent-list { display: flex; flex-direction: column; gap: .45rem; }
+    .agent-btn {
+      display: flex; align-items: center; gap: .6rem; text-align: left;
+      border: 1px solid var(--border);
+      background: var(--panel2); color: var(--text);
+      border-radius: 12px; padding: .55rem .7rem; cursor: pointer;
+      font-family: inherit; width: 100%;
+    }
+    .agent-btn:hover, .agent-btn.active {
+      border-color: var(--accent); background: var(--accent-dim);
+    }
+    .agent-btn-text { min-width: 0; display: flex; flex-direction: column; }
+    .agent-name-row { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; }
+    .agent-btn strong { font-size: .92rem; }
+    .agent-btn span { font-size: .75rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .avatar {
+      border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 700; flex-shrink: 0; line-height: 1;
+    }
 
     .badge {
-      display: inline-flex; align-items: center; gap: 0.35rem;
-      padding: 0.28rem 0.7rem; border-radius: 999px; font-size: 0.75rem;
-      background: var(--panel2); border: 1px solid var(--border); color: var(--muted);
+      display: inline-flex; align-items: center; padding: .2rem .55rem;
+      border-radius: 999px; font-size: .72rem; font-weight: 600;
     }
-    .badge.ok { color: var(--ok); border-color: #2a5a44; }
-    .badge.warn { color: var(--warn); border-color: #5a4520; }
+    .badge.tone-green { background: var(--green-dim); color: var(--green); }
+    .badge.tone-accent { background: var(--accent-dim); color: var(--accent); }
+    .badge.tone-amber { background: var(--amber-dim); color: var(--amber); }
+    .badge.tone-danger { background: var(--danger-dim); color: var(--danger); }
+    .badge.tone-muted { background: var(--panel3); color: var(--muted); }
 
+    .main {
+      display: flex; flex-direction: column; min-height: 0; min-width: 0;
+      background: linear-gradient(180deg, var(--panel2) 0%, var(--bg) 40%);
+    }
+    .table-wrap { overflow-x: auto; border-radius: var(--radius); }
+    .tabs {
+      display: flex; gap: .35rem; padding: .75rem 1rem 0;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .tab {
+      border: none; background: transparent; color: var(--muted);
+      padding: .55rem .9rem; border-radius: 10px 10px 0 0;
+      cursor: pointer; font: inherit; font-weight: 600; font-size: .9rem;
+      display: inline-flex; align-items: center; gap: .4rem;
+    }
+    .tab.active {
+      color: var(--text); background: var(--panel);
+      border: 1px solid var(--border); border-bottom-color: var(--panel);
+    }
+    .tab .pill {
+      display: inline-block; min-width: 1.2rem; padding: 0 0.35rem;
+      border-radius: 999px; font-size: 0.72rem;
+      background: var(--panel3); color: var(--muted); font-variant-numeric: tabular-nums;
+    }
+    .tab.alerta .pill { background: var(--amber-dim); color: var(--amber); }
+    .panel { display: none; flex: 1; min-height: 0; flex-direction: column; }
+    .panel.active { display: flex; }
+
+    /* Chat */
+    .chat-log {
+      flex: 1; overflow: auto; padding: 1.25rem;
+      display: flex; flex-direction: column; gap: .85rem;
+    }
+    .msg {
+      max-width: min(720px, 95%);
+      padding: .85rem 1rem; border-radius: 14px;
+      line-height: 1.5; font-size: .95rem;
+      white-space: pre-wrap; word-break: break-word;
+    }
+    .msg.user {
+      align-self: flex-end;
+      background: var(--msg-user-bg); border: 1px solid var(--msg-user-border);
+    }
+    .msg.agent {
+      align-self: flex-start;
+      background: var(--msg-agent-bg); border: 1px solid var(--msg-agent-border);
+    }
+    .msg .who {
+      font-size: .72rem; color: var(--muted); margin-bottom: .35rem;
+      font-family: "JetBrains Mono", monospace;
+    }
+    .composer {
+      border-top: 1px solid var(--border);
+      padding: .85rem 1rem 1.1rem;
+      display: flex; gap: .6rem; align-items: flex-end; flex-wrap: wrap;
+      background: var(--panel);
+    }
+    .composer .composer-meta {
+      width: 100%; display: flex; gap: .5rem; flex-wrap: wrap; align-items: center;
+    }
+    .composer textarea {
+      flex: 1; min-height: 48px; max-height: 140px; min-width: 180px;
+      resize: vertical; border-radius: 12px;
+      border: 1px solid var(--border); background: var(--panel2);
+      color: var(--text); padding: .7rem .85rem; font: inherit;
+    }
+    .composer .btn { width: auto; padding: .75rem 1.1rem; }
+
+    .scroll { flex: 1; overflow: auto; padding: 1rem; }
+    .kpis {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: .75rem; margin-bottom: 1rem;
+    }
+    .kpi {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1rem;
+    }
+    .kpi .n { font-size: 1.6rem; font-weight: 700; letter-spacing: -.03em; }
+    .kpi .l { color: var(--muted); font-size: .8rem; margin-top: .2rem; }
+    .kpi.warn .n { color: var(--amber); }
+    .kpi.ok .n { color: var(--green); }
+    .priority {
+      background: var(--priority-bg);
+      border: 1px solid var(--priority-border); border-radius: var(--radius);
+      padding: .85rem 1rem; margin-bottom: 1rem; font-size: .9rem;
+    }
+    .priority strong { color: var(--amber); }
+    .banner-accent { background: var(--banner-bg); border-color: var(--banner-border); }
+    table {
+      width: 100%; border-collapse: collapse; font-size: .85rem;
+      background: var(--panel); border-radius: var(--radius);
+      overflow: hidden; border: 1px solid var(--border);
+    }
+    th, td {
+      text-align: left; padding: .55rem .65rem;
+      border-bottom: 1px solid var(--border); vertical-align: top;
+    }
+    th {
+      color: var(--muted); font-size: .72rem; text-transform: uppercase;
+      letter-spacing: .04em; background: var(--panel2);
+    }
+    tr:hover td { background: var(--row-hover); }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .mono { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: .8rem; }
+    .muted { color: var(--muted); font-size: .85rem; }
+    .info-card {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 12px; padding: .9rem;
+    }
+    .info-card.focus-highlight { border-color: var(--focus-card-border); }
+    .info-card p { font-size: .8rem; color: var(--muted); }
+    .empty-state {
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      gap: .6rem; color: var(--muted); padding: 2.5rem 1rem;
+    }
+
+    /* Conferir */
+    label { display: block; font-size: 0.78rem; color: var(--muted); margin-bottom: 0.3rem; }
+    input, select, textarea {
+      width: 100%; background: var(--panel2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 0.55rem 0.7rem; margin-bottom: 0.7rem;
+      color: var(--text); font: inherit;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none; border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-dim);
+    }
     .card {
       background: var(--panel);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       overflow: hidden;
+      margin-bottom: 1rem;
     }
     .card h2, .card-head {
       margin: 0; padding: 0.85rem 1.05rem; font-size: 0.95rem;
@@ -104,35 +370,6 @@
       display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;
     }
     .card .body { padding: 1rem 1.05rem; }
-    .muted { color: var(--muted); font-size: 0.8rem; }
-    .mono { font-family: ui-monospace, Consolas, monospace; font-size: 0.8rem; }
-
-    label { display: block; font-size: 0.78rem; color: var(--muted); margin-bottom: 0.3rem; }
-    input, select, textarea, button {
-      font: inherit; color: var(--text);
-    }
-    input, select, textarea {
-      width: 100%; background: var(--panel2); border: 1px solid var(--border);
-      border-radius: 10px; padding: 0.55rem 0.7rem; margin-bottom: 0.7rem;
-    }
-    input:focus, select:focus, textarea:focus {
-      outline: none; border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-dim);
-    }
-    textarea { min-height: 72px; resize: vertical; }
-    button, .btn {
-      background: var(--accent); border: none; border-radius: 10px;
-      padding: 0.65rem 1.05rem; font-weight: 650; cursor: pointer;
-      color: #fff; display: inline-flex; align-items: center; gap: 0.4rem;
-      text-decoration: none; font-size: 0.9rem;
-    }
-    button:hover, .btn:hover { filter: brightness(1.08); }
-    button:disabled { opacity: 0.5; cursor: not-allowed; }
-    button.ghost, .btn.ghost {
-      background: transparent; border: 1px solid var(--border); color: var(--muted);
-    }
-    button.ok, .btn.ok { background: #1f8a58; }
-    button.warn, .btn.warn { background: #a66a0c; }
     .row { display: flex; gap: 0.55rem; flex-wrap: wrap; }
     .row > * { flex: 1; min-width: 140px; }
     .grid2 {
@@ -140,53 +377,21 @@
     }
     @media (max-width: 960px) { .grid2 { grid-template-columns: 1fr; } }
 
-    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-    th, td {
-      text-align: left; padding: 0.6rem 0.45rem;
-      border-bottom: 1px solid var(--border); vertical-align: top;
-    }
-    th {
-      color: var(--muted); font-weight: 600; font-size: 0.72rem;
-      text-transform: uppercase; letter-spacing: 0.04em;
-      position: sticky; top: 0; background: var(--panel); z-index: 1;
-    }
-    tr:hover td { background: rgba(255,255,255,0.025); }
-    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
-
     .status {
       font-size: 0.72rem; font-weight: 650; padding: 0.15rem 0.45rem;
       border-radius: 6px; text-transform: uppercase;
     }
-    .status.waiting_human, .status.queued { background: #3d2e10; color: var(--warn); }
-    .status.done, .status.concluido { background: #143528; color: var(--ok); }
-    .status.running, .status.em_andamento { background: #1a2f4a; color: var(--accent); }
-    .status.failed, .status.erro { background: #3a1520; color: var(--bad); }
+    .status.waiting_human, .status.queued { background: var(--amber-dim); color: var(--amber); }
+    .status.done, .status.concluido { background: var(--ok-dim); color: var(--ok); }
+    .status.running, .status.em_andamento { background: var(--accent-dim); color: var(--accent); }
+    .status.failed, .status.erro { background: var(--danger-dim); color: var(--bad); }
 
-    .detail {
-      white-space: pre-wrap; background: var(--bg); border: 1px solid var(--border);
-      border-radius: 10px; padding: 0.75rem; max-height: 280px; overflow: auto;
-      font-size: 0.82rem; line-height: 1.45;
-    }
-    .kpis {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 0.65rem;
-    }
-    .kpi {
-      background: var(--panel); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 0.9rem 1rem;
-    }
-    .kpi .n { font-size: 1.55rem; font-weight: 750; letter-spacing: -0.03em; }
-    .kpi .l { color: var(--muted); font-size: 0.78rem; margin-top: 0.2rem; }
-    .kpi.warn .n { color: var(--warn); }
-    .kpi.ok .n { color: var(--ok); }
-
-    /* ---- Steps (conferência) ---- */
     .steps {
       display: flex; gap: 0.4rem; flex-wrap: wrap;
       margin-bottom: 1rem;
     }
     .step {
-      flex: 1; min-width: 140px;
+      flex: 1; min-width: 120px;
       background: var(--panel); border: 1px solid var(--border);
       border-radius: 12px; padding: 0.7rem 0.85rem;
       display: flex; gap: 0.6rem; align-items: flex-start;
@@ -198,28 +403,40 @@
     }
     .step strong { display: block; font-size: 0.82rem; }
     .step span { font-size: 0.72rem; color: var(--muted); line-height: 1.3; }
-    .step.done { border-color: #2a5a44; background: var(--ok-dim); }
-    .step.done .num { background: #1f8a58; color: #fff; }
+    .step.done { border-color: var(--green); background: var(--ok-dim); }
+    .step.done .num { background: var(--green); color: #fff; }
     .step.active { border-color: var(--accent); background: var(--accent-dim); }
     .step.active .num { background: var(--accent); color: #fff; }
-    .step.warn { border-color: #5a4520; background: var(--warn-dim); }
+    .step.warn { border-color: var(--amber); background: var(--warn-dim); }
     .step.warn .num { background: #a66a0c; color: #fff; }
 
-    /* ---- Revisão ---- */
+    .help-tip {
+      background: var(--banner-bg);
+      border: 1px solid var(--banner-border); border-radius: var(--radius);
+      padding: 0.85rem 1rem; margin-bottom: 1rem; font-size: 0.88rem; line-height: 1.45;
+    }
+    .help-tip strong { color: var(--accent); }
+
+    .setup-card.collapsed .setup-body { display: none; }
+    .setup-toggle {
+      background: transparent; border: none; color: var(--accent);
+      font-size: 0.82rem; padding: 0; cursor: pointer; font-weight: 600;
+    }
+
     .rev-shell {
       display: none;
-      margin-top: 1rem;
+      margin-top: 0; margin-bottom: 1rem;
       border: 1px solid var(--border);
       border-radius: var(--radius);
       background: var(--panel);
       overflow: hidden;
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow-sm);
     }
     .rev-shell.open { display: block; }
     .rev-header {
       padding: 1rem 1.1rem;
       border-bottom: 1px solid var(--border);
-      background: linear-gradient(180deg, rgba(61,139,253,0.08), transparent);
+      background: var(--banner-bg);
       display: flex; flex-wrap: wrap; gap: 0.75rem;
       justify-content: space-between; align-items: flex-start;
     }
@@ -229,7 +446,7 @@
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 0.5rem; padding: 0.85rem 1.1rem;
       border-bottom: 1px solid var(--border);
-      background: var(--bg2);
+      background: var(--panel2);
     }
     @media (max-width: 720px) {
       .rev-kpis { grid-template-columns: repeat(2, 1fr); }
@@ -240,10 +457,10 @@
     }
     .rev-kpi .v { font-size: 1.2rem; font-weight: 750; font-variant-numeric: tabular-nums; }
     .rev-kpi .t { font-size: 0.72rem; color: var(--muted); margin-top: 0.1rem; }
-    .rev-kpi.pend { border-color: #5a4520; background: var(--warn-dim); }
-    .rev-kpi.pend .v { color: var(--warn); }
-    .rev-kpi.ok { border-color: #2a5a44; background: var(--ok-dim); }
-    .rev-kpi.ok .v { color: var(--ok); }
+    .rev-kpi.pend { border-color: var(--amber); background: var(--warn-dim); }
+    .rev-kpi.pend .v { color: var(--amber); }
+    .rev-kpi.ok { border-color: var(--green); background: var(--ok-dim); }
+    .rev-kpi.ok .v { color: var(--green); }
 
     .rev-toolbar {
       display: flex; flex-wrap: wrap; gap: 0.55rem;
@@ -258,7 +475,7 @@
       background: transparent; border: 1px solid var(--border);
       color: var(--muted); border-radius: 999px;
       padding: 0.4rem 0.85rem; font-size: 0.82rem; font-weight: 650;
-      display: inline-flex; align-items: center; gap: 0.4rem;
+      display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer;
     }
     .aba[aria-selected="true"] {
       background: var(--accent-dim); color: var(--text); border-color: var(--accent);
@@ -268,7 +485,7 @@
       border-radius: 999px; padding: 0 0.4rem; font-size: 0.75rem; color: var(--muted);
     }
     .aba[aria-selected="true"] .cont { color: var(--text); }
-    .aba.alerta .cont { background: #3d2e10; color: var(--warn); }
+    .aba.alerta .cont { background: var(--amber-dim); color: var(--amber); }
 
     .rev-body {
       display: grid;
@@ -293,20 +510,19 @@
       .rev-painel { border-left: none; border-top: 1px solid var(--border); }
     }
 
-    tr.linha-pend td { background: rgba(245, 165, 36, 0.05); }
-    tr.linha-pend:hover td { background: rgba(245, 165, 36, 0.1); cursor: pointer; }
-    tr.aberta td { background: rgba(61, 139, 253, 0.12) !important; }
+    tr.linha-pend td { background: var(--warn-dim); }
+    tr.linha-pend:hover td { cursor: pointer; filter: brightness(0.98); }
+    tr.aberta td { background: var(--accent-dim) !important; }
     tr.linha-lanc { cursor: pointer; }
-    tr.linha-lanc.aberta td { background: rgba(61, 139, 253, 0.1) !important; }
 
     .tag {
       display: inline-block; font-size: 0.68rem; font-weight: 650;
       padding: 0.12rem 0.4rem; border-radius: 6px;
       background: var(--bg); color: var(--muted); border: 1px solid var(--border);
     }
-    .tag.regra { color: var(--ok); border-color: #2a5a44; background: var(--ok-dim); }
-    .tag.llm { color: var(--accent); border-color: #1a3a66; background: var(--accent-dim); }
-    .tag.recorrente { color: var(--warn); border-color: #5a4520; background: var(--warn-dim); }
+    .tag.regra { color: var(--green); border-color: var(--green); background: var(--ok-dim); }
+    .tag.llm { color: var(--accent); border-color: var(--accent); background: var(--accent-dim); }
+    .tag.recorrente { color: var(--amber); border-color: var(--amber); background: var(--warn-dim); }
     .conta-nome {
       display: block; font-size: 0.72rem; color: var(--muted);
       max-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -315,12 +531,12 @@
     .ensinar { padding: 1rem 1.1rem; }
     .ensinar h4 { margin: 0 0 0.2rem; font-size: 0.98rem; line-height: 1.3; }
     .chips { display: flex; gap: 0.35rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
-    .chip {
+    .chip-key {
       background: var(--bg); border: 1px solid var(--border); color: var(--text);
       border-radius: 999px; padding: 0.32rem 0.75rem; font-size: 0.78rem; cursor: pointer;
     }
-    .chip:hover { border-color: var(--accent); }
-    .chip[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-dim); }
+    .chip-key:hover { border-color: var(--accent); }
+    .chip-key[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-dim); }
     .previa {
       max-height: 140px; overflow: auto; background: var(--bg);
       border: 1px solid var(--border); border-radius: 10px; padding: 0.65rem;
@@ -336,7 +552,7 @@
       padding: 0.9rem 1.1rem; border-top: 1px solid var(--border);
       display: flex; flex-wrap: wrap; gap: 0.75rem;
       align-items: center; justify-content: space-between;
-      background: var(--bg2);
+      background: var(--panel2);
     }
     .rev-footer .cta-box {
       display: flex; flex-wrap: wrap; gap: 0.55rem; align-items: center;
@@ -344,533 +560,863 @@
     .hint-box {
       font-size: 0.8rem; color: var(--muted); max-width: 520px; line-height: 1.4;
     }
-    .hint-box strong { color: var(--warn); }
-
-    .setup-card { margin-bottom: 1rem; }
-    .setup-card.collapsed .setup-body { display: none; }
-    .setup-toggle {
-      background: transparent; border: none; color: var(--accent);
-      font-size: 0.82rem; padding: 0; cursor: pointer; font-weight: 600;
-    }
-
-    .lista-hist {
-      margin-top: 1rem;
-    }
-    .lista-hist table { font-size: 0.84rem; }
+    .hint-box strong { color: var(--amber); }
     .progress-list { font-size: 0.86rem; line-height: 1.55; }
-    .progress-list .ok { color: var(--ok); }
+    .progress-list .ok { color: var(--green); }
     .progress-list .bad { color: var(--bad); }
-
-    .chat-bolha {
-      background: var(--bg); border: 1px solid var(--border);
-      border-radius: 12px; padding: 0.85rem; margin-top: 0.75rem;
-    }
-    .chat-bolha .quem { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.35rem; }
-
-    .help-tip {
-      background: linear-gradient(90deg, rgba(61,139,253,0.1), transparent);
-      border: 1px solid var(--border); border-radius: var(--radius);
-      padding: 0.85rem 1rem; margin-bottom: 1rem; font-size: 0.88rem; line-height: 1.45;
-    }
-    .help-tip strong { color: var(--accent); }
-
     .select-busca { position: relative; margin-bottom: 0.7rem; }
     .select-busca input { margin-bottom: 0.35rem; }
     .select-busca select { margin-bottom: 0; }
   </style>
 </head>
 <body>
-  <header class="app">
-    <div class="header-top">
-      <div>
-        <h1>Escon — Conferência de lançamentos</h1>
-        <div class="sub">Veja o que o agente lançou · ensine o que ele não sabe · só então emita a planilha</div>
+  <div id="app-view">
+    <header class="top">
+      <div class="brand">
+        <div class="logo">EA</div>
+        <div style="min-width:0">
+          <h1>Escon Agentes Contábeis</h1>
+          <p id="top-sub"><span class="status-dot" id="status-dot"></span>Carregando…</p>
+        </div>
       </div>
-      <div class="row" style="flex:0;align-items:center;gap:.5rem">
-        <span class="badge" id="llmBadge">LLM…</span>
-        <button class="ghost" type="button" onclick="refreshAll()">Atualizar</button>
+      <div class="top-actions">
+        <select id="model-select" class="select" title="Modelo">
+          <option value="">modelo padrão</option>
+        </select>
+        <button class="icon-btn mobile-only" type="button" id="btn-team-m" aria-label="Abrir equipe" title="Equipe">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <button class="icon-btn mobile-only" type="button" id="btn-panel-m" aria-label="Abrir painel" title="Painel">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M15.5 14a5 5 0 0 1 5.5 5"/></svg>
+        </button>
+        <button class="icon-btn" type="button" id="theme-toggle" aria-label="Alternar tema" title="Alternar tema clara/escura">
+          <span id="theme-icon"></span>
+        </button>
       </div>
+    </header>
+
+    <div class="scrim hidden" id="scrim"></div>
+
+    <div class="layout">
+      <aside class="sidebar" id="sidebar">
+        <button class="icon-btn drawer-close" id="sidebar-close" type="button" aria-label="Fechar equipe">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+        </button>
+        <div class="side-section">
+          <h2>Canal do chat</h2>
+          <div id="channel-max"></div>
+        </div>
+        <div class="side-section">
+          <h2>Equipe · Max aciona</h2>
+          <p class="hint-sm">
+            Clique para ver o papel. O chat continua com <strong style="color:var(--text)">Max</strong>, que executa de verdade e repassa à equipe.
+          </p>
+          <div id="agent-list" class="agent-list"></div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <div class="tabs">
+          <button class="tab active" data-tab="chat" type="button" id="tab-btn-chat">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8.5 8.5 0 0 1-8.5 8.5c-1.4 0-2.7-.3-3.9-.9L3 21l1.4-4.6A8.5 8.5 0 1 1 21 12Z"/></svg>
+            <span>Chat</span>
+          </button>
+          <button class="tab" data-tab="conferir" type="button" id="tab-btn-conferir">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            <span>Conferir</span>
+            <span class="pill" id="pillPendentes" title="Pendentes abertos">0</span>
+          </button>
+          <button class="tab" data-tab="clients" type="button" id="tab-btn-clients">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M15.5 14a5 5 0 0 1 5.5 5"/></svg>
+            <span>Clientes</span>
+          </button>
+          <button class="tab" data-tab="overview" type="button" id="tab-btn-overview">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>
+            <span>Visão geral</span>
+          </button>
+        </div>
+
+        <!-- CHAT -->
+        <section class="panel active" id="tab-chat">
+          <div id="chat-banner" class="priority banner-accent" style="margin:.75rem 1rem 0">
+            Você fala com <strong style="color:var(--accent)">Max</strong>. Ele <strong>executa de verdade</strong> — não é só conversa.
+          </div>
+          <div class="chat-log" id="chat-log"></div>
+          <div class="composer">
+            <div class="composer-meta">
+              <label class="muted" style="margin:0;white-space:nowrap">Cliente no chat</label>
+              <select id="chat-client" class="select" style="flex:1;min-width:160px;margin:0"></select>
+            </div>
+            <textarea id="chat-input" placeholder="Fale com o Max… Ex.: contabilize a Alumax em set/2024 (Enter envia, Shift+Enter quebra linha)"></textarea>
+            <button class="btn" type="button" id="chat-send">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4Z"/></svg>
+              Enviar
+            </button>
+          </div>
+        </section>
+
+        <!-- CONFERIR -->
+        <section class="panel" id="tab-conferir">
+          <div class="scroll">
+            <div class="help-tip">
+              <strong>Como trabalhar aqui:</strong>
+              o agente processa os documentos da competência e mostra os lançamentos nesta tela.
+              O que ele não souber fica em <em>Aguardando você</em> — clique e ensine uma vez
+              (vira regra para os próximos meses). A planilha do Contmatic só deve ser emitida
+              depois da conferência.
+            </div>
+
+            <div class="steps" id="stepsBar">
+              <div class="step active" id="step1">
+                <div class="num">1</div>
+                <div><strong>Processar</strong><span>Cliente + competência + pasta</span></div>
+              </div>
+              <div class="step" id="step2">
+                <div class="num">2</div>
+                <div><strong>Conferir</strong><span>Ver cada lançamento na tela</span></div>
+              </div>
+              <div class="step" id="step3">
+                <div class="num">3</div>
+                <div><strong>Ensinar</strong><span>Resolver o que ficou pendente</span></div>
+              </div>
+              <div class="step" id="step4">
+                <div class="num">4</div>
+                <div><strong>Planilha</strong><span>Importar no Contmatic</span></div>
+              </div>
+            </div>
+
+            <div class="card setup-card" id="setupCard">
+              <div class="card-head">
+                <span>Processar competência <span class="muted">Alexandre lança por regras · 0 token no dia a dia</span></span>
+                <button class="setup-toggle" type="button" id="setupToggle">Recolher</button>
+              </div>
+              <div class="body setup-body" id="setupBody">
+                <div class="grid2">
+                  <div>
+                    <label>Cliente</label>
+                    <select id="fxCliente"></select>
+
+                    <label>Competência</label>
+                    <input id="fxComp" placeholder="jan/21, 01/2021 ou 2021-01" />
+
+                    <label>Recebimentos e pagamentos à vista entram por</label>
+                    <select id="fxForma">
+                      <option value="caixa">Caixa</option>
+                      <option value="banco">Banco</option>
+                    </select>
+                    <p class="muted" style="margin:-.35rem 0 .7rem">
+                      Compra com duplicata a vencer vai para Fornecedores de qualquer jeito.
+                    </p>
+
+                    <label>Pasta no PC (opcional)</label>
+                    <div class="row" style="margin-bottom:.7rem">
+                      <input id="fxPasta" placeholder="C:\Users\…\Cliente\jan-21" style="margin:0;flex:1" />
+                      <button class="btn ghost" id="fxVerPasta" type="button" style="flex:0;width:auto">Conferir pasta</button>
+                    </div>
+                    <p class="muted" id="fxPastaInfo" style="min-height:1.1em;margin:-.4rem 0 .7rem"></p>
+
+                    <label>Pasta no OneDrive (opcional)</label>
+                    <input id="fxOneDrive" placeholder="Documentos/Clientes/Alumax/jan-21" />
+
+                    <label style="display:flex;align-items:center;gap:.45rem;margin-bottom:.9rem">
+                      <input type="checkbox" id="fxRadar" style="width:auto;margin:0" checked />
+                      Puxar também do Drive (Radar)
+                    </label>
+
+                    <button class="btn" id="fxRodar" type="button" style="width:100%">Fazer a contabilidade desta competência</button>
+                    <p class="muted" id="fxStatus" style="min-height:1.2em;margin-top:.55rem"></p>
+                  </div>
+                  <div>
+                    <h3 style="font-size:.9rem;margin:0 0 .5rem;color:var(--muted)">Andamento</h3>
+                    <div id="fxEtapas" class="progress-list muted">Nada em andamento.</div>
+                    <div id="fxResultado" style="margin-top:.8rem"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="rev-shell" id="fxRevisao">
+              <div class="rev-header">
+                <div>
+                  <h3 id="revTitulo">Revisão</h3>
+                  <p class="muted" id="revSub" style="margin:.25rem 0 0"></p>
+                </div>
+                <div class="row" style="flex:0">
+                  <button class="btn ghost" type="button" id="btn-fechar-rev" style="width:auto">Fechar revisão</button>
+                </div>
+              </div>
+
+              <div class="rev-kpis" id="revKpis"></div>
+
+              <div class="rev-toolbar">
+                <div class="abas" id="fxAbas"></div>
+                <input id="revBusca" type="search" placeholder="Buscar histórico, conta, documento…" />
+              </div>
+
+              <div class="rev-body" id="revBody">
+                <div class="rev-lista" id="fxTabela"></div>
+                <div class="rev-painel" id="fxEnsinar"></div>
+              </div>
+
+              <div class="rev-footer">
+                <div class="hint-box" id="revHint"></div>
+                <div class="cta-box" id="fxRodape"></div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head">
+                <span>Competências já processadas <span class="muted">abra de novo para continuar a conferência</span></span>
+              </div>
+              <div class="body" style="padding:0;overflow:auto">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Cliente</th><th>Competência</th><th>Situação</th>
+                      <th class="num">Lançados</th><th class="num">Pendentes</th><th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="fxLista"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- CLIENTES -->
+        <section class="panel" id="tab-clients">
+          <div class="scroll">
+            <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:.75rem;align-items:center">
+              <input id="client-filter" placeholder="Filtrar por nome, CNPJ, telefone ou e-mail…" style="flex:1;min-width:180px;margin:0" />
+            </div>
+            <p class="muted" style="margin-bottom:.75rem">Cadastro local da VPS · telefone e e-mail alimentam cobrança de extratos (Greg).</p>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>CNPJ</th>
+                    <th>Telefone</th>
+                    <th>E-mail</th>
+                    <th>Regime</th>
+                  </tr>
+                </thead>
+                <tbody id="clients-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- VISÃO GERAL -->
+        <section class="panel" id="tab-overview">
+          <div class="scroll">
+            <div class="priority" id="priority-box">Prioridade #1: Contmatic</div>
+            <div class="kpis" id="kpis"></div>
+            <p class="muted" id="overview-note"></p>
+          </div>
+        </section>
+      </main>
+
+      <aside class="right" id="right">
+        <button class="icon-btn drawer-close" id="right-close" type="button" aria-label="Fechar painel">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+        </button>
+        <div class="side-section">
+          <h2>Com quem você fala</h2>
+          <div id="active-agent-card" class="info-card"></div>
+          <div id="focus-agent-card" class="info-card focus-highlight hidden" style="margin-top:.5rem"></div>
+        </div>
+        <div class="side-section">
+          <h2>Cliente do chat</h2>
+          <select id="chat-client-right" class="select" style="width:100%"></select>
+          <p class="hint-sm">Use o seletor para o Max saber em qual cliente executar (ex.: contabilidade).</p>
+        </div>
+        <div class="side-section">
+          <h2>Atalhos para o Max</h2>
+          <button class="agent-btn" type="button" data-prompt="Max, faça o fechamento Contmatic deste cliente na competência que eu informar. Liste o que precisa e execute se já tiver cliente e competência.">Fechamento Contmatic</button>
+          <button class="agent-btn" type="button" data-prompt="Max, acione o Greg: como cobrar extratos pendentes? Me entregue as mensagens prontas.">Cobrar extratos</button>
+          <button class="agent-btn" type="button" data-prompt="Max, peça à Lucy um resumo de CBS/IBS para empresa de serviços no Simples e me reporte.">Reforma Tributária</button>
+          <button class="agent-btn" type="button" data-prompt="Max, para conciliação e XMLs, quem acionar e em que ordem?">Orquestrar equipe</button>
+          <button class="agent-btn" type="button" data-prompt="Max, quais títulos vencidos deste cliente?">Títulos vencidos</button>
+        </div>
+        <p class="muted" style="margin-top:auto;font-size:.75rem">Escon Soluções Contábeis · VPS</p>
+      </aside>
     </div>
-    <nav class="nav-tabs" role="tablist">
-      <button class="nav-tab" type="button" role="tab" id="tab-conferir" aria-selected="true"
-              onclick="mostrarView('conferir')">
-        Conferir <span class="pill" id="pillPendentes" title="Pendentes abertos">0</span>
-      </button>
-      <button class="nav-tab" type="button" role="tab" id="tab-conversar" aria-selected="false"
-              onclick="mostrarView('conversar')">Conversar com agentes</button>
-      <button class="nav-tab" type="button" role="tab" id="tab-equipe" aria-selected="false"
-              onclick="mostrarView('equipe')">Equipe e filas</button>
-    </nav>
-  </header>
-
-  <main>
-    <!-- ===================== CONFERIR ===================== -->
-    <section class="view active" id="view-conferir">
-      <div class="help-tip">
-        <strong>Como trabalhar aqui:</strong>
-        o agente processa os documentos da competência e mostra os lançamentos nesta tela.
-        O que ele não souber fica em <em>Aguardando você</em> — clique e ensine uma vez
-        (vira regra para os próximos meses). A planilha do Contmatic só deve ser emitida
-        depois da conferência.
-      </div>
-
-      <div class="steps" id="stepsBar">
-        <div class="step active" id="step1">
-          <div class="num">1</div>
-          <div><strong>Processar</strong><span>Cliente + competência + pasta</span></div>
-        </div>
-        <div class="step" id="step2">
-          <div class="num">2</div>
-          <div><strong>Conferir</strong><span>Ver cada lançamento na tela</span></div>
-        </div>
-        <div class="step" id="step3">
-          <div class="num">3</div>
-          <div><strong>Ensinar</strong><span>Resolver o que ficou pendente</span></div>
-        </div>
-        <div class="step" id="step4">
-          <div class="num">4</div>
-          <div><strong>Planilha</strong><span>Importar no Contmatic</span></div>
-        </div>
-      </div>
-
-      <div class="card setup-card" id="setupCard">
-        <div class="card-head">
-          <span>Processar competência <span class="muted">Alexandre lança por regras · 0 token no dia a dia</span></span>
-          <button class="setup-toggle" type="button" id="setupToggle" onclick="toggleSetup()">Recolher</button>
-        </div>
-        <div class="body setup-body" id="setupBody">
-          <div class="grid2">
-            <div>
-              <label>Cliente</label>
-              <select id="fxCliente"></select>
-
-              <label>Competência</label>
-              <input id="fxComp" placeholder="jan/21, 01/2021 ou 2021-01" />
-
-              <label>Recebimentos e pagamentos à vista entram por</label>
-              <select id="fxForma">
-                <option value="caixa">Caixa</option>
-                <option value="banco">Banco</option>
-              </select>
-              <p class="muted" style="margin:-.35rem 0 .7rem">
-                Compra com duplicata a vencer vai para Fornecedores de qualquer jeito.
-              </p>
-
-              <label>Pasta no PC (opcional)</label>
-              <div class="row" style="margin-bottom:.7rem">
-                <input id="fxPasta" placeholder="C:\Users\…\Cliente\jan-21" style="margin:0;flex:1" />
-                <button class="ghost" id="fxVerPasta" type="button" style="flex:0">Conferir pasta</button>
-              </div>
-              <p class="muted" id="fxPastaInfo" style="min-height:1.1em;margin:-.4rem 0 .7rem"></p>
-
-              <label>Pasta no OneDrive (opcional)</label>
-              <input id="fxOneDrive" placeholder="Documentos/Clientes/Alumax/jan-21" />
-
-              <label style="display:flex;align-items:center;gap:.45rem;margin-bottom:.9rem">
-                <input type="checkbox" id="fxRadar" style="width:auto;margin:0" />
-                Puxar também do Drive (Radar)
-              </label>
-
-              <button id="fxRodar" type="button">Fazer a contabilidade desta competência</button>
-              <p class="muted" id="fxStatus" style="min-height:1.2em;margin-top:.55rem"></p>
-            </div>
-            <div>
-              <h3 style="font-size:.9rem;margin:0 0 .5rem;color:var(--muted)">Andamento</h3>
-              <div id="fxEtapas" class="progress-list muted">Nada em andamento.</div>
-              <div id="fxResultado" style="margin-top:.8rem"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Workbench de revisão -->
-      <div class="rev-shell" id="fxRevisao">
-        <div class="rev-header">
-          <div>
-            <h3 id="revTitulo">Revisão</h3>
-            <p class="muted" id="revSub" style="margin:.25rem 0 0"></p>
-          </div>
-          <div class="row" style="flex:0">
-            <button class="ghost" type="button" onclick="fecharRevisao()">Fechar revisão</button>
-          </div>
-        </div>
-
-        <div class="rev-kpis" id="revKpis"></div>
-
-        <div class="rev-toolbar">
-          <div class="abas" id="fxAbas"></div>
-          <input id="revBusca" type="search" placeholder="Buscar histórico, conta, documento…"
-                 oninput="pintarRevisao()" />
-        </div>
-
-        <div class="rev-body" id="revBody">
-          <div class="rev-lista" id="fxTabela"></div>
-          <div class="rev-painel" id="fxEnsinar"></div>
-        </div>
-
-        <div class="rev-footer">
-          <div class="hint-box" id="revHint"></div>
-          <div class="cta-box" id="fxRodape"></div>
-        </div>
-      </div>
-
-      <div class="card lista-hist">
-        <div class="card-head">
-          <span>Competências já processadas <span class="muted">abra de novo para continuar a conferência</span></span>
-        </div>
-        <div class="body" style="padding:0;overflow:auto">
-          <table>
-            <thead>
-              <tr>
-                <th>Cliente</th><th>Competência</th><th>Situação</th>
-                <th class="num">Lançados</th><th class="num">Pendentes</th><th></th>
-              </tr>
-            </thead>
-            <tbody id="fxLista"></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===================== CONVERSAR ===================== -->
-    <section class="view" id="view-conversar">
-      <div class="grid2">
-        <div class="card" id="chatCard">
-          <h2>Falar com o Max <span class="muted">ele aciona a equipe de verdade</span></h2>
-          <div class="body">
-            <p class="muted" style="margin:0 0 .85rem">
-              Aqui o pedido é <strong>executado</strong>, não só respondido. Use para dúvidas
-              (“quais títulos vencidos?”), rodar um agente, ou pedir orientação — o resultado
-              real aparece abaixo.
-            </p>
-            <div class="row">
-              <div style="flex:3">
-                <label>O que você precisa</label>
-                <input id="chatPedido"
-                       placeholder="Ex.: Alexandre, quais títulos da Alumax estão vencidos?"
-                       onkeydown="if(event.key==='Enter')document.getElementById('chatEnviar').click()" />
-              </div>
-              <div style="flex:1">
-                <label>Cliente (opcional)</label>
-                <select id="chatCliente"></select>
-              </div>
-            </div>
-            <button id="chatEnviar" type="button">Enviar ao Max</button>
-            <div id="chatResposta" style="display:none"></div>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2>Solicitar serviço <span class="muted">atalhos da equipe</span></h2>
-          <div class="body">
-            <form id="reqForm">
-              <label>Serviço</label>
-              <select id="service" required></select>
-              <div class="row">
-                <div>
-                  <label>Cliente</label>
-                  <select id="client"></select>
-                </div>
-                <div>
-                  <label>Modelo (OpenRouter)</label>
-                  <select id="model"></select>
-                </div>
-              </div>
-              <label>Seu nome</label>
-              <input id="by" placeholder="Ex.: Maria" value="equipe" />
-              <label>Observações / pasta (opcional)</label>
-              <textarea id="notes" placeholder="Ex.: competência 07/2026, pasta com XMLs já na inbox"></textarea>
-              <button type="submit" id="btnSubmit">Solicitar e executar</button>
-              <p class="muted" style="margin-top:0.75rem;">
-                WhatsApp de produção: use a <strong>Secretaria / EsconZap</strong>.
-              </p>
-            </form>
-            <div id="reqResult" class="detail" style="display:none;margin-top:0.75rem;"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" style="margin-top:1rem">
-        <h2>Fila de solicitações</h2>
-        <div class="body" style="padding:0;max-height:360px;overflow:auto">
-          <table>
-            <thead>
-              <tr><th>ID</th><th>Serviço</th><th>Cliente</th><th>Status</th><th></th></tr>
-            </thead>
-            <tbody id="reqBody"></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===================== EQUIPE ===================== -->
-    <section class="view" id="view-equipe">
-      <section class="kpis" id="kpis" style="margin-bottom:1rem"></section>
-
-      <div class="card" style="margin-bottom:1rem">
-        <h2>Execuções dos agentes <span class="muted" id="runsMeta"></span></h2>
-        <div class="body" style="padding:0">
-          <div style="overflow:auto;max-height:360px">
-            <table>
-              <thead>
-                <tr>
-                  <th>Quando</th><th>Run</th><th>Pedido</th><th>Cliente</th>
-                  <th>Agentes</th><th>Status</th><th>Modelo</th>
-                </tr>
-              </thead>
-              <tbody id="runsBody"></tbody>
-            </table>
-          </div>
-          <div class="body">
-            <label>Detalhe do run selecionado</label>
-            <div class="detail" id="runDetail">Clique em um run para ver o que cada agente fez.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="grid2">
-        <div class="card">
-          <h2>Tarefas abertas (Anne)</h2>
-          <div class="body" style="padding:0;max-height:280px;overflow:auto">
-            <table>
-              <thead><tr><th>Tarefa</th><th>Cliente</th><th>Vence</th></tr></thead>
-              <tbody id="tasksBody"></tbody>
-            </table>
-          </div>
-        </div>
-        <div class="card">
-          <h2>Agentes <span class="muted">clique para ver o que fez</span></h2>
-          <div class="body" style="padding:0;max-height:240px;overflow:auto">
-            <table>
-              <thead><tr><th>ID</th><th>Nome</th><th>Papel</th></tr></thead>
-              <tbody id="agentsBody"></tbody>
-            </table>
-          </div>
-          <div class="body" style="padding-top:0">
-            <div class="detail" id="agenteDetalhe" style="display:none"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
+  </div>
 
   <script>
-    /* ---------- util ---------- */
-    async function j(url, opts) {
+    const THEME_KEY = "escon_agentes_theme";
+
+    const REGIME_META = {
+      simples_nacional: { label: "Simples Nacional", tone: "green" },
+      mei: { label: "MEI", tone: "accent" },
+      lucropresumido: { label: "Lucro Presumido", tone: "amber" },
+      lucroreal: { label: "Lucro Real", tone: "danger" },
+    };
+
+    const state = {
+      chatAgent: "max",
+      focusAgent: "max",
+      agents: [],
+      clients: [],
+      directMode: false,
+      activeTab: "chat",
+    };
+
+    // --- revisão / fechamento ---
+    let rev = null;
+    let abaAtual = "lancados";
+    let contasCache = null;
+    let contasMap = {};
+    let clientesMap = {};
+    let linhaAberta = null;
+    let setupCollapsed = false;
+    let chatBusy = false;
+
+    const ICONS = {
+      sun: '<circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4" y1="12" x2="2" y2="12"/><line x1="22" y1="12" x2="20" y2="12"/><line x1="4.9" y1="4.9" x2="6.3" y2="6.3"/><line x1="17.7" y1="17.7" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="6.3" y2="17.7"/><line x1="17.7" y1="6.3" x2="19.1" y2="4.9"/>',
+      moon: '<path d="M20 12.5A8 8 0 1 1 11.5 4 6.5 6.5 0 0 0 20 12.5Z"/>',
+    };
+    function icon(name, size) {
+      size = size || 16;
+      return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ""}</svg>`;
+    }
+    function hashCode(str) {
+      let h = 0;
+      for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) >>> 0;
+      return h;
+    }
+    function initials(name) {
+      const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
+      if (!parts.length) return "?";
+      if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+    function avatarHTML(name, size) {
+      size = size || 40;
+      const hue = hashCode(name || "?") % 360;
+      const bg = `hsl(${hue} 55% 38%)`;
+      const fontSize = Math.round(size * 0.4);
+      return `<span class="avatar" style="width:${size}px;height:${size}px;min-width:${size}px;font-size:${fontSize}px;background:${bg}">${initials(name)}</span>`;
+    }
+    function escapeHtml(s) {
+      return String(s ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+    const txt = escapeHtml;
+    const brl = (v) =>
+      v === null || v === undefined || v === ""
+        ? "—"
+        : Number(v).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    async function j(url, opts = {}) {
       const r = await fetch(url, opts);
       if (!r.ok) {
-        const t = await r.text();
-        throw new Error(t || r.statusText);
+        let msg = r.statusText;
+        try {
+          const t = await r.text();
+          try {
+            const d = JSON.parse(t);
+            msg = d.detail || d.error || d.message || t || msg;
+            if (Array.isArray(msg)) msg = msg.map((x) => x.msg || JSON.stringify(x)).join("; ");
+          } catch {
+            msg = t || msg;
+          }
+        } catch (_) {}
+        throw new Error(typeof msg === "string" ? msg : JSON.stringify(msg));
       }
-      return r.json();
+      if (r.status === 204) return null;
+      const ct = r.headers.get("content-type") || "";
+      if (ct.includes("application/json")) return r.json();
+      return r.text();
     }
+
     function statusHtml(s) {
-      const cls = (s || '').replace(/\s/g, '_');
-      return `<span class="status ${cls}">${s || '-'}</span>`;
+      const cls = (s || "").replace(/\s/g, "_");
+      return `<span class="status ${cls}">${escapeHtml(s || "-")}</span>`;
     }
-    const brl = v => (v === null || v === undefined || v === '')
-      ? '—' : Number(v).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-    const txt = s => String(s ?? '').replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
 
-    let rev = null;
-    let abaAtual = 'lancados';
-    let contasCache = null;       // [{codigo, nome}]
-    let contasMap = {};           // codigo -> nome
-    let clientesMap = {};         // id -> nome
-    let linhaAberta = null;       // índice da linha em destaque
-    let setupCollapsed = false;
+    // ---------- tema ----------
+    function applyTheme(t) {
+      document.documentElement.setAttribute("data-theme", t);
+      const svg = icon(t === "light" ? "moon" : "sun", 18);
+      const ic1 = document.getElementById("theme-icon");
+      if (ic1) ic1.innerHTML = svg;
+      localStorage.setItem(THEME_KEY, t);
+    }
+    function toggleTheme() {
+      const cur = document.documentElement.getAttribute("data-theme") || "light";
+      applyTheme(cur === "dark" ? "light" : "dark");
+    }
+    function initTheme() {
+      const saved = localStorage.getItem(THEME_KEY);
+      // default light (como Vercel / screenshots)
+      applyTheme(saved === "dark" ? "dark" : "light");
+    }
 
+    // ---------- drawers (mobile) ----------
+    function openDrawer(which) {
+      const other = which === "sidebar" ? "right" : "sidebar";
+      document.getElementById(other).classList.remove("open");
+      document.getElementById(which).classList.add("open");
+      document.getElementById("scrim").classList.remove("hidden");
+    }
+    function closeDrawers() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.getElementById("right").classList.remove("open");
+      document.getElementById("scrim").classList.add("hidden");
+    }
+
+    // ---------- tabs ----------
+    function setTab(name) {
+      state.activeTab = name;
+      document.querySelectorAll(".tab").forEach((t) => {
+        t.classList.toggle("active", t.dataset.tab === name);
+      });
+      document.querySelectorAll(".panel").forEach((p) => {
+        p.classList.toggle("active", p.id === "tab-" + name);
+      });
+      if (name === "conferir") {
+        fxListar().catch(() => {});
+      }
+      if (name === "overview") loadOverview().catch(() => {});
+      if (name === "clients") renderClients();
+      closeDrawers();
+    }
+
+    // ---------- agents UI ----------
+    function agentById(id) {
+      return state.agents.find((x) => x.id === id) || { id, name: id, role: "" };
+    }
+
+    function refreshChannelUI() {
+      const max = agentById("max");
+      document.getElementById("active-agent-card").innerHTML =
+        `<div style="display:flex;gap:.6rem;align-items:center;margin-bottom:.5rem">
+           ${avatarHTML(max.name || "Max", 40)}
+           <div>
+             <h3 style="font-size:.95rem">Max <span class="badge tone-accent">Gerente</span></h3>
+             <p>canal do chat · execução real</p>
+           </div>
+         </div>
+         <p class="muted" style="font-size:.75rem">
+           As mensagens vão para o Max via <code>POST /api/run</code>. Ele aciona a equipe de verdade.
+         </p>`;
+
+      document.querySelectorAll(".agent-btn[data-agent]").forEach((b) => {
+        const isMax = b.dataset.agent === "max";
+        const focused = b.dataset.agent === state.focusAgent;
+        b.classList.toggle("active", isMax || focused);
+        if (isMax) b.classList.add("active");
+      });
+
+      const focusEl = document.getElementById("focus-agent-card");
+      if (state.focusAgent && state.focusAgent !== "max") {
+        const a = agentById(state.focusAgent);
+        focusEl.classList.remove("hidden");
+        focusEl.innerHTML =
+          `<div style="display:flex;gap:.6rem;align-items:center;margin-bottom:.5rem">
+             ${avatarHTML(a.name, 36)}
+             <div>
+               <h3 style="font-size:.9rem">${escapeHtml(a.name)}</h3>
+               <p>${escapeHtml(a.role || "")}</p>
+             </div>
+           </div>
+           <p class="muted" style="font-size:.75rem;margin-bottom:.65rem">
+             O chat permanece com Max. Peça para ele acionar ${escapeHtml(a.name)}.
+           </p>
+           <button type="button" class="btn" id="btn-ask-max-about" style="width:100%">
+             Pedir ao Max sobre ${escapeHtml(a.name)}
+           </button>
+           <button type="button" class="btn ghost" id="btn-direct" style="margin-top:.4rem;width:100%;font-size:.8rem">
+             Avançado: falar direto com ${escapeHtml(a.name)}
+           </button>`;
+        document.getElementById("btn-ask-max-about").onclick = () => {
+          setTab("chat");
+          sendChat(
+            `Max, acione o especialista ${a.name} (${a.role}). ` +
+              `Explique o que ele faria agora na operação Contmatic/Radar e me entregue o plano e próximos passos.`
+          );
+        };
+        document.getElementById("btn-direct").onclick = () => {
+          if (!confirm(`Falar DIRETO com ${a.name}?\n\nO normal é só o Max. Direto é modo avançado.`)) return;
+          state.directMode = true;
+          state.chatAgent = a.id;
+          state.focusAgent = a.id;
+          document.getElementById("top-sub").innerHTML =
+            `<span class="status-dot" id="status-dot"></span>Modo direto: ${escapeHtml(a.name)} (avançado)`;
+          document.getElementById("chat-banner").innerHTML =
+            `Modo avançado: falando <strong style="color:var(--amber)">direto com ${escapeHtml(a.name)}</strong>. ` +
+            `<a href="#" id="back-to-max" style="color:var(--accent)">Voltar ao Max</a>`;
+          document.getElementById("back-to-max").onclick = (e) => {
+            e.preventDefault();
+            resetToMaxChannel();
+          };
+          addMsg("agent", "Sistema", `Canal alterado para ${a.name}. Para voltar ao Max, use o link no banner.`);
+        };
+      } else {
+        focusEl.classList.add("hidden");
+        focusEl.innerHTML = "";
+      }
+
+      if (!state.directMode) {
+        document.getElementById("chat-banner").innerHTML =
+          `Você fala com <strong style="color:var(--accent)">Max</strong> (gerente). ` +
+          `Ele <strong>executa de verdade</strong> — contabilidade, cobrança, orquestração. Não é só chat.`;
+      }
+    }
+
+    function resetToMaxChannel() {
+      state.directMode = false;
+      state.chatAgent = "max";
+      state.focusAgent = "max";
+      refreshChannelUI();
+      loadHealth().catch(() => {});
+      addMsg("agent", "Sistema", "Canal restaurado: Max (gerente).");
+    }
+
+    function setFocusAgent(id) {
+      state.focusAgent = id || "max";
+      if (id === "max") {
+        resetToMaxChannel();
+        return;
+      }
+      if (!state.directMode) state.chatAgent = "max";
+      refreshChannelUI();
+    }
+
+    function addMsg(role, who, text) {
+      const log = document.getElementById("chat-log");
+      const div = document.createElement("div");
+      div.className = "msg " + role;
+      div.innerHTML = `<div class="who">${escapeHtml(who)}</div>${escapeHtml(text)}`;
+      log.appendChild(div);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    // ---------- Chat: POST /api/run (execução real) ----------
+    async function sendChat(text) {
+      if (chatBusy) return;
+      const input = document.getElementById("chat-input");
+      const btn = document.getElementById("chat-send");
+      const msg = (text || input.value || "").trim();
+      if (!msg) return;
+      input.value = "";
+      chatBusy = true;
+      if (btn) btn.disabled = true;
+
+      addMsg("user", "Você", msg);
+
+      const channelId = state.directMode ? state.chatAgent : "max";
+      const agentMeta = agentById(channelId);
+      addMsg("agent", agentMeta.name + "…", "Executando…");
+      const pending = document.getElementById("chat-log").lastChild;
+
+      try {
+        const model = document.getElementById("model-select").value || undefined;
+        const clientId =
+          document.getElementById("chat-client").value ||
+          document.getElementById("chat-client-right").value ||
+          null;
+
+        let pedido = msg;
+        if (!state.directMode && state.focusAgent && state.focusAgent !== "max") {
+          const f = agentById(state.focusAgent);
+          pedido =
+            `[Contexto: o usuário olha o especialista ${f.name} (${f.role}). ` +
+            `Você é Max e deve orquestrar/reportar como gerente.]\n\n` +
+            msg;
+        }
+
+        const body = {
+          pedido,
+          client_id: clientId || null,
+          model: model || null,
+          agent: state.directMode ? channelId : null,
+        };
+
+        const data = await j("/api/run", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+
+        const agents = (data.agents || []).join(", ");
+        let reply =
+          (data.reply || "").trim() ||
+          (data.results || []).map((r) => `${r.agent}: ${r.summary || ""}`).join("\n\n") ||
+          "(sem resposta)";
+
+        if (agents && !state.directMode) {
+          reply = reply + (reply.endsWith("\n") ? "" : "\n\n") + `→ acionou: ${agents}`;
+        }
+
+        const name = state.directMode ? agentMeta.name : "Max";
+        pending.innerHTML = `<div class="who">${escapeHtml(name)}</div>${escapeHtml(reply)}`;
+
+        // Abre revisão se o backend pediu
+        const fx = data.fechamento;
+        if (fx && fx.abrir_revisao && fx.client_id && fx.competencia) {
+          try {
+            setTab("conferir");
+            const estado = await j(`/api/fechamentos/${fx.client_id}/${fx.competencia}`);
+            await revisar(estado);
+            addMsg(
+              "agent",
+              "Sistema",
+              `Abri a aba Conferir para ${fx.client_id} · ${fx.competencia} ` +
+                `(${fx.total_lancados || 0} lançados, ${fx.total_pendentes || 0} pendentes).`
+            );
+          } catch (e) {
+            addMsg("agent", "Sistema", "Fechamento feito, mas não abri a revisão: " + e.message);
+          }
+        } else if (fx && fx.client_id && fx.competencia && (fx.total_pendentes > 0 || fx.situacao === "concluido")) {
+          // mesmo sem abrir_revisao, oferece atalho se houver resultado
+          addMsg(
+            "agent",
+            "Sistema",
+            `Dica: abra Conferir → ${fx.client_id} / ${fx.competencia} para revisar lançamentos.`
+          );
+        }
+      } catch (e) {
+        pending.innerHTML =
+          `<div class="who">Erro</div>` + escapeHtml(e.message || "Falha ao executar");
+      } finally {
+        chatBusy = false;
+        if (btn) btn.disabled = false;
+        const log = document.getElementById("chat-log");
+        log.scrollTop = log.scrollHeight;
+      }
+    }
+
+    // ---------- health / overview / clients ----------
+    async function loadHealth() {
+      try {
+        const h = await j("/api/health");
+        const dot = document.getElementById("status-dot");
+        if (dot) {
+          dot.className = "status-dot " + (h.offline ? "warn" : "ok");
+        }
+        const label = h.offline
+          ? "LLM offline · regras OK"
+          : `${h.llm_provider || "llm"} · ${h.llm_model || "ok"}`;
+        if (!state.directMode) {
+          document.getElementById("top-sub").innerHTML =
+            `<span class="status-dot ${h.offline ? "warn" : "ok"}" id="status-dot"></span>${escapeHtml(label)}`;
+        }
+      } catch (e) {
+        document.getElementById("top-sub").innerHTML =
+          `<span class="status-dot warn" id="status-dot"></span>API indisponível`;
+      }
+    }
+
+    async function loadOverview() {
+      const o = await j("/api/overview");
+      document.getElementById("priority-box").innerHTML =
+        `Prioridade #1: <strong>${escapeHtml(o.priority || "Contmatic")}</strong>`;
+      document.getElementById("kpis").innerHTML = [
+        ["Aguardando humano", o.runs_waiting_human, "warn"],
+        ["Solicitações abertas", o.requests_open, ""],
+        ["Na fila", o.requests_queued, ""],
+        ["Tarefas Anne", o.tasks_open, ""],
+        ["Runs recentes", o.runs_total, ""],
+        ["Clientes cad.", o.clients, ""],
+      ]
+        .map(
+          ([l, n, c]) => `
+        <div class="kpi ${c && n > 0 ? c : ""}">
+          <div class="n">${n ?? 0}</div>
+          <div class="l">${l}</div>
+        </div>`
+        )
+        .join("");
+      document.getElementById("overview-note").textContent =
+        "Painel VPS · autenticação via Traefik (basic auth). Chat executa agentes reais via POST /api/run.";
+    }
+
+    function renderClients() {
+      const q = (document.getElementById("client-filter").value || "").toLowerCase();
+      const rows = state.clients.filter((c) => {
+        if (!q) return true;
+        const blob = [c.nome, c.name, c.cnpj, c.id, c.telefone, c.whatsapp, c.email, c.regime]
+          .join(" ")
+          .toLowerCase();
+        return blob.includes(q);
+      });
+      document.getElementById("clients-body").innerHTML =
+        rows
+          .slice(0, 500)
+          .map((c) => {
+            const name = c.nome || c.name || "";
+            const tel = c.telefone || c.whatsapp || "—";
+            const em = c.email || "—";
+            const meta = REGIME_META[c.regime] || { label: c.regime || "—", tone: "muted" };
+            return `<tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:.55rem">
+                  ${avatarHTML(name || c.id, 30)}
+                  <div>
+                    <div>${escapeHtml(name)}</div>
+                    <div class="mono muted" style="font-size:.72rem">${escapeHtml(c.id || "")}</div>
+                  </div>
+                </div>
+              </td>
+              <td class="mono">${escapeHtml(c.cnpj || c.id || "—")}</td>
+              <td>${escapeHtml(tel)}</td>
+              <td>${escapeHtml(em)}</td>
+              <td><span class="badge tone-${meta.tone}">${escapeHtml(meta.label)}</span></td>
+            </tr>`;
+          })
+          .join("") ||
+        `<tr><td colspan="5" class="muted" style="padding:1.5rem;text-align:center">Nenhum cliente encontrado</td></tr>`;
+    }
+
+    function fillClientSelects(lista) {
+      const opcoes =
+        lista
+          .map((c) => `<option value="${escapeHtml(c.id)}">${escapeHtml(c.nome || c.name || c.id)} (${escapeHtml(c.id)})</option>`)
+          .join("") || "";
+      const empty = '<option value="">— nenhum / todos —</option>';
+      document.getElementById("fxCliente").innerHTML = opcoes || empty;
+      document.getElementById("chat-client").innerHTML = empty + opcoes;
+      document.getElementById("chat-client-right").innerHTML = empty + opcoes;
+    }
+
+    function syncClientSelects(fromEl) {
+      const v = fromEl.value;
+      ["chat-client", "chat-client-right"].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el && el !== fromEl) el.value = v;
+      });
+    }
+
+    // ---------- contas / fechamento ----------
     function nomeConta(cod) {
-      if (!cod) return '';
-      return contasMap[String(cod)] || '';
+      if (!cod) return "";
+      return contasMap[String(cod)] || "";
     }
     function htmlConta(cod) {
       const n = nomeConta(cod);
-      return `<span class="mono">${txt(cod)}</span>${n ? `<span class="conta-nome" title="${txt(n)}">${txt(n)}</span>` : ''}`;
+      return `<span class="mono">${txt(cod)}</span>${n ? `<span class="conta-nome" title="${txt(n)}">${txt(n)}</span>` : ""}`;
     }
     function tagOrigem(l) {
-      const o = (l.origem || l.regra || '').toLowerCase();
-      if (o === 'recorrente' || l.origem === 'recorrente') return '<span class="tag recorrente">recorrente</span>';
-      if (o === 'llm' || l.origem === 'llm') return '<span class="tag llm">modelo</span>';
+      const o = (l.origem || l.regra || "").toLowerCase();
+      if (o === "recorrente" || l.origem === "recorrente") return '<span class="tag recorrente">recorrente</span>';
+      if (o === "llm" || l.origem === "llm") return '<span class="tag llm">modelo</span>';
       if (l.regra) return `<span class="tag regra" title="regra">${txt(l.regra)}</span>`;
-      return '';
-    }
-
-    /* ---------- navegação ---------- */
-    function mostrarView(nome) {
-      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-      document.querySelectorAll('.nav-tab').forEach(t => t.setAttribute('aria-selected', 'false'));
-      document.getElementById('view-' + nome).classList.add('active');
-      document.getElementById('tab-' + nome).setAttribute('aria-selected', 'true');
-    }
-    function toggleSetup() {
-      setupCollapsed = !setupCollapsed;
-      document.getElementById('setupCard').classList.toggle('collapsed', setupCollapsed);
-      document.getElementById('setupToggle').textContent = setupCollapsed ? 'Expandir' : 'Recolher';
-    }
-
-    function atualizarSteps() {
-      const s1 = document.getElementById('step1');
-      const s2 = document.getElementById('step2');
-      const s3 = document.getElementById('step3');
-      const s4 = document.getElementById('step4');
-      [s1,s2,s3,s4].forEach(s => s.className = 'step');
-      if (!rev) { s1.classList.add('active'); return; }
-      s1.classList.add('done');
-      const pend = (rev.pendentes || []).length;
-      const temLanc = (rev.lancados || []).length > 0;
-      if (pend > 0) {
-        s2.classList.add('done');
-        s3.classList.add('active', 'warn');
-      } else if (temLanc) {
-        s2.classList.add('done');
-        s3.classList.add('done');
-        s4.classList.add('active');
-      } else {
-        s2.classList.add('active');
-      }
-    }
-
-    /* ---------- health / overview ---------- */
-    async function loadHealth() {
-      const h = await j('/api/health');
-      const el = document.getElementById('llmBadge');
-      if (h.offline) {
-        el.textContent = 'LLM offline (regras OK)';
-        el.className = 'badge warn';
-      } else {
-        el.textContent = `${h.llm_provider} · ${h.llm_model || ''}`;
-        el.className = 'badge ok';
-      }
-    }
-    async function loadOverview() {
-      const o = await j('/api/overview');
-      document.getElementById('kpis').innerHTML = [
-        ['Aguardando humano', o.runs_waiting_human, 'warn'],
-        ['Solicitações abertas', o.requests_open, ''],
-        ['Na fila', o.requests_queued, ''],
-        ['Tarefas Anne', o.tasks_open, ''],
-        ['Runs recentes', o.runs_total, ''],
-        ['Clientes cad.', o.clients, ''],
-      ].map(([l, n, c]) => `
-        <div class="kpi ${c && n > 0 ? c : ''}">
-          <div class="n">${n}</div>
-          <div class="l">${l}</div>
-        </div>`).join('');
+      return "";
     }
 
     async function carregarContas() {
       if (contasCache) return contasCache;
-      contasCache = await j('/api/contas');
+      contasCache = await j("/api/contas");
       contasMap = {};
       for (const c of contasCache) contasMap[String(c.codigo)] = c.nome;
       return contasCache;
     }
 
-    /* ---------- Fechamento / setup ---------- */
-    async function fxCarregarClientes() {
-      const r = await j('/api/clients');
-      const lista = Array.isArray(r) ? r : (r.clients || []);
-      clientesMap = {};
-      for (const c of lista) clientesMap[c.id] = c.nome;
-      const opcoes = lista.map(c =>
-        `<option value="${c.id}">${txt(c.nome)} (${c.id})</option>`).join('');
-      document.getElementById('fxCliente').innerHTML = opcoes;
-      document.getElementById('chatCliente').innerHTML =
-        '<option value="">— nenhum —</option>' + opcoes;
+    function toggleSetup() {
+      setupCollapsed = !setupCollapsed;
+      document.getElementById("setupCard").classList.toggle("collapsed", setupCollapsed);
+      document.getElementById("setupToggle").textContent = setupCollapsed ? "Expandir" : "Recolher";
     }
 
-    document.getElementById('fxVerPasta').onclick = async () => {
-      const el = document.getElementById('fxPastaInfo');
-      const caminho = document.getElementById('fxPasta').value.trim();
-      if (!caminho) { el.textContent = 'Informe o caminho da pasta.'; return; }
-      el.textContent = 'conferindo…';
-      const r = await j('/api/pastas/inspecionar', {
-        method: 'POST', headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ caminho })
-      });
-      el.textContent = r.ok
-        ? `${r.total} documento(s): ${Object.entries(r.por_tipo).map(([k,v]) => v+' '+k).join(', ')}`
-        : r.erro;
-    };
+    function atualizarSteps() {
+      const s1 = document.getElementById("step1");
+      const s2 = document.getElementById("step2");
+      const s3 = document.getElementById("step3");
+      const s4 = document.getElementById("step4");
+      [s1, s2, s3, s4].forEach((s) => (s.className = "step"));
+      if (!rev) {
+        s1.classList.add("active");
+        return;
+      }
+      s1.classList.add("done");
+      const pend = (rev.pendentes || []).length;
+      const temLanc = (rev.lancados || []).length > 0;
+      if (pend > 0) {
+        s2.classList.add("done");
+        s3.classList.add("active", "warn");
+      } else if (temLanc) {
+        s2.classList.add("done");
+        s3.classList.add("done");
+        s4.classList.add("active");
+      } else {
+        s2.classList.add("active");
+      }
+    }
 
     function fxPintarEtapas(etapas) {
-      document.getElementById('fxEtapas').innerHTML = (etapas || []).map(e => {
-        const detalhe = e.copiados !== undefined ? `${e.copiados} copiado(s)`
-          : e.baixados !== undefined ? `${e.baixados} baixado(s)`
-          : e.lancados !== undefined ? `${e.lancados} lançado(s), ${e.pendentes} pendente(s)`
-          : e.total !== undefined ? `${e.total} arquivo(s)` : '';
-        const cls = e.ok === false ? 'bad' : 'ok';
-        return `<div class="${cls}">${e.ok === false ? '✗' : '✓'}
-          <strong>${txt(e.etapa)}</strong> <span class="muted">${txt(detalhe)} ${txt(e.erro || '')}</span></div>`;
-      }).join('') || 'Nada em andamento.';
+      document.getElementById("fxEtapas").innerHTML =
+        (etapas || [])
+          .map((e) => {
+            const detalhe =
+              e.copiados !== undefined
+                ? `${e.copiados} copiado(s)`
+                : e.baixados !== undefined
+                  ? `${e.baixados} baixado(s)`
+                  : e.lancados !== undefined
+                    ? `${e.lancados} lançado(s), ${e.pendentes} pendente(s)`
+                    : e.total !== undefined
+                      ? `${e.total} arquivo(s)`
+                      : "";
+            const cls = e.ok === false ? "bad" : "ok";
+            return `<div class="${cls}">${e.ok === false ? "✗" : "✓"}
+          <strong>${txt(e.etapa)}</strong> <span class="muted">${txt(detalhe)} ${txt(e.erro || "")}</span></div>`;
+          })
+          .join("") || "Nada em andamento.";
     }
 
-    document.getElementById('fxRodar').onclick = async () => {
-      const st = document.getElementById('fxStatus');
-      const body = {
-        client_id: document.getElementById('fxCliente').value,
-        competencia: document.getElementById('fxComp').value.trim(),
-        pasta_local: document.getElementById('fxPasta').value.trim() || null,
-        pasta_onedrive: document.getElementById('fxOneDrive').value.trim() || null,
-        usar_radar: document.getElementById('fxRadar').checked,
-        forma_pagamento: document.getElementById('fxForma').value,
-      };
-      if (!body.competencia) { st.textContent = 'Informe a competência (ex.: jan/21).'; return; }
-      st.textContent = 'processando… pode levar alguns minutos';
-      document.getElementById('fxResultado').innerHTML = '';
-      try {
-        const r = await j('/api/fechamentos', {
-          method: 'POST', headers: {'Content-Type':'application/json'},
-          body: JSON.stringify(body)
-        });
-        fxPintarEtapas(r.etapas);
-        st.textContent = r.resumo || r.situacao;
-        await revisar(r);
-        // recolhe o formulário para a revisão ocupar a tela
-        if (!setupCollapsed) toggleSetup();
-        fxListar();
-      } catch (e) {
-        st.textContent = 'Falhou: ' + e.message;
-      }
-    };
-
-    /* ---------- Revisão (coração do painel) ---------- */
     async function revisar(estado) {
       rev = estado;
       linhaAberta = null;
       await carregarContas();
-      abaAtual = (estado.pendentes || []).length ? 'pendentes' : 'lancados';
-      document.getElementById('fxRevisao').classList.add('open');
-      document.getElementById('fxEnsinar').innerHTML = '';
-      document.getElementById('revBody').classList.remove('com-painel');
+      abaAtual = (estado.pendentes || []).length ? "pendentes" : "lancados";
+      document.getElementById("fxRevisao").classList.add("open");
+      document.getElementById("fxEnsinar").innerHTML = "";
+      document.getElementById("revBody").classList.remove("com-painel");
       const nome = clientesMap[estado.client_id] || estado.client_id;
-      document.getElementById('revTitulo').textContent =
-        `${nome} · ${estado.competencia}`;
-      document.getElementById('revSub').textContent =
-        estado.resumo || `${estado.documentos || '—'} documento(s) · forma: ${estado.forma_pagamento || '—'}`;
+      document.getElementById("revTitulo").textContent = `${nome} · ${estado.competencia}`;
+      document.getElementById("revSub").textContent =
+        estado.resumo ||
+        `${estado.documentos || "—"} documento(s) · forma: ${estado.forma_pagamento || "—"}`;
       pintarRevisao();
       atualizarSteps();
       atualizarPillPendentes();
-      document.getElementById('fxRevisao').scrollIntoView({behavior:'smooth', block:'start'});
+      document.getElementById("fxRevisao").scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
     function fecharRevisao() {
       rev = null;
-      document.getElementById('fxRevisao').classList.remove('open');
-      document.getElementById('fxEnsinar').innerHTML = '';
-      document.getElementById('revBody').classList.remove('com-painel');
+      document.getElementById("fxRevisao").classList.remove("open");
+      document.getElementById("fxEnsinar").innerHTML = "";
+      document.getElementById("revBody").classList.remove("com-painel");
       atualizarSteps();
       if (setupCollapsed) toggleSetup();
     }
 
     function filtrar(itens, campos) {
-      const q = (document.getElementById('revBusca')?.value || '').trim().toLowerCase();
-      if (!q) return itens.map((it, i) => ({it, i}));
-      return itens.map((it, i) => ({it, i})).filter(({it}) =>
-        campos.some(c => String(it[c] ?? '').toLowerCase().includes(q)
-          || String(nomeConta(it.debito) || '').toLowerCase().includes(q)
-          || String(nomeConta(it.credito) || '').toLowerCase().includes(q)));
+      const q = (document.getElementById("revBusca")?.value || "").trim().toLowerCase();
+      if (!q) return itens.map((it, i) => ({ it, i }));
+      return itens
+        .map((it, i) => ({ it, i }))
+        .filter(({ it }) =>
+          campos.some(
+            (c) =>
+              String(it[c] ?? "")
+                .toLowerCase()
+                .includes(q) ||
+              String(nomeConta(it.debito) || "")
+                .toLowerCase()
+                .includes(q) ||
+              String(nomeConta(it.credito) || "")
+                .toLowerCase()
+                .includes(q)
+          )
+        );
     }
 
     function pintarRevisao() {
@@ -880,81 +1426,126 @@
       const ignorados = rev.nao_contabilizaveis || [];
       const totalValor = lancados.reduce((s, l) => s + (Number(l.valor) || 0), 0);
 
-      document.getElementById('revKpis').innerHTML = `
+      document.getElementById("revKpis").innerHTML = `
         <div class="rev-kpi ok"><div class="v">${lancados.length}</div><div class="t">Lançados</div></div>
-        <div class="rev-kpi ${pendentes.length ? 'pend' : ''}">
+        <div class="rev-kpi ${pendentes.length ? "pend" : ""}">
           <div class="v">${pendentes.length}</div><div class="t">Aguardando você</div></div>
         <div class="rev-kpi"><div class="v">${ignorados.length}</div><div class="t">Sem lançamento</div></div>
         <div class="rev-kpi"><div class="v">R$ ${brl(totalValor)}</div><div class="t">Total lançado</div></div>`;
 
       const grupos = {
-        lancados:  {rot: 'Lançados',        itens: lancados},
-        pendentes: {rot: 'Aguardando você', itens: pendentes},
-        ignorados: {rot: 'Sem lançamento',  itens: ignorados},
+        lancados: { rot: "Lançados", itens: lancados },
+        pendentes: { rot: "Aguardando você", itens: pendentes },
+        ignorados: { rot: "Sem lançamento", itens: ignorados },
       };
-      document.getElementById('fxAbas').innerHTML = Object.entries(grupos).map(([k, g]) => `
-        <button class="aba ${k==='pendentes' && g.itens.length ? 'alerta' : ''}" type="button"
-                aria-selected="${k===abaAtual}" onclick="trocarAba('${k}')">
+      document.getElementById("fxAbas").innerHTML = Object.entries(grupos)
+        .map(
+          ([k, g]) => `
+        <button class="aba ${k === "pendentes" && g.itens.length ? "alerta" : ""}" type="button"
+                aria-selected="${k === abaAtual}" data-aba="${k}">
           ${g.rot} <span class="cont">${g.itens.length}</span>
-        </button>`).join('');
+        </button>`
+        )
+        .join("");
+      document.querySelectorAll("#fxAbas .aba").forEach((b) => {
+        b.onclick = () => trocarAba(b.dataset.aba);
+      });
 
-      const alvo = document.getElementById('fxTabela');
+      const alvo = document.getElementById("fxTabela");
       const lista = grupos[abaAtual].itens;
-      const filtrados = filtrar(lista, ['arquivo','complemento','motivo','data','debito','credito','regra','historico_texto']);
+      const filtrados = filtrar(lista, [
+        "arquivo",
+        "complemento",
+        "motivo",
+        "data",
+        "debito",
+        "credito",
+        "regra",
+        "historico_texto",
+      ]);
 
       if (!lista.length) {
         alvo.innerHTML = `<div class="vazio"><strong>${
-          abaAtual === 'pendentes' ? 'Nada aguardando decisão'
-            : abaAtual === 'ignorados' ? 'Nenhum documento descartado'
-            : 'Nenhum lançamento gerado'}</strong>
-          ${abaAtual === 'pendentes'
-            ? 'Todos os documentos desta competência foram classificados. Pode emitir a planilha.'
-            : abaAtual === 'lancados'
-              ? 'Processe uma competência ou reabra uma já feita na lista abaixo.'
-              : 'Documentos que existem mas não movimentam conta (DANFE, balancete, etc.).'}</div>`;
+          abaAtual === "pendentes"
+            ? "Nada aguardando decisão"
+            : abaAtual === "ignorados"
+              ? "Nenhum documento descartado"
+              : "Nenhum lançamento gerado"
+        }</strong>
+          ${
+            abaAtual === "pendentes"
+              ? "Todos os documentos desta competência foram classificados. Pode emitir a planilha."
+              : abaAtual === "lancados"
+                ? "Processe uma competência ou reabra uma já feita na lista abaixo."
+                : "Documentos que existem mas não movimentam conta (DANFE, balancete, etc.)."
+          }</div>`;
       } else if (!filtrados.length) {
         alvo.innerHTML = `<div class="vazio"><strong>Nada com esse filtro</strong>Tente outro termo na busca.</div>`;
-      } else if (abaAtual === 'lancados') {
+      } else if (abaAtual === "lancados") {
         alvo.innerHTML = `<table><thead><tr>
             <th>Data</th><th>Débito</th><th>Crédito</th><th class="num">Valor</th>
             <th>Histórico</th><th>Origem</th><th>Documento</th></tr></thead><tbody>
-          ${filtrados.map(({it:l, i}) => `
-            <tr class="linha-lanc ${linhaAberta===i?'aberta':''}" onclick="abrirLancamento(${i})">
+          ${filtrados
+            .map(
+              ({ it: l, i }) => `
+            <tr class="linha-lanc ${linhaAberta === i ? "aberta" : ""}" data-lanc="${i}">
               <td>${txt(l.data)}</td>
               <td>${htmlConta(l.debito)}</td>
               <td>${htmlConta(l.credito)}</td>
               <td class="num">${brl(l.valor)}</td>
-              <td>${txt(l.complemento || l.historico_texto || '').slice(0,48)}</td>
+              <td>${txt(l.complemento || l.historico_texto || "").slice(0, 48)}</td>
               <td>${tagOrigem(l)}</td>
-              <td class="muted" title="${txt(l.arquivo)}">${txt(l.arquivo).slice(0,28)}</td>
-            </tr>`).join('')}</tbody></table>
+              <td class="muted" title="${txt(l.arquivo)}">${txt(l.arquivo).slice(0, 28)}</td>
+            </tr>`
+            )
+            .join("")}</tbody></table>
           <p class="muted" style="padding:.5rem 1rem">
             ${filtrados.length} de ${lista.length} · clique na linha para ver o detalhe
           </p>`;
-      } else if (abaAtual === 'pendentes') {
+        alvo.querySelectorAll("tr[data-lanc]").forEach((tr) => {
+          tr.onclick = () => abrirLancamento(Number(tr.dataset.lanc));
+        });
+      } else if (abaAtual === "pendentes") {
         alvo.innerHTML = `<table><thead><tr>
             <th>Documento</th><th class="num">Valor</th><th>Data</th>
             <th>Por quê o agente parou</th><th></th></tr></thead><tbody>
-          ${filtrados.map(({it:p, i}) => `
-            <tr class="linha-pend ${linhaAberta===i?'aberta':''}" onclick="abrirEnsinar(${i})">
-              <td title="${txt(p.arquivo)}">${txt(p.arquivo).slice(0,36)}</td>
+          ${filtrados
+            .map(
+              ({ it: p, i }) => `
+            <tr class="linha-pend ${linhaAberta === i ? "aberta" : ""}" data-pend="${i}">
+              <td title="${txt(p.arquivo)}">${txt(p.arquivo).slice(0, 36)}</td>
               <td class="num">${brl(p.valor)}</td>
-              <td>${txt(p.data) || '—'}</td>
-              <td class="muted">${txt(p.motivo || 'sem regra').slice(0,64)}</td>
-              <td><button class="ghost" type="button" style="padding:.35rem .6rem;font-size:.78rem"
-                          onclick="event.stopPropagation();abrirEnsinar(${i})">Ensinar</button></td>
-            </tr>`).join('')}</tbody></table>
+              <td>${txt(p.data) || "—"}</td>
+              <td class="muted">${txt(p.motivo || "sem regra").slice(0, 64)}</td>
+              <td><button class="btn ghost" type="button" style="padding:.35rem .6rem;font-size:.78rem;width:auto"
+                          data-ensinar="${i}">Ensinar</button></td>
+            </tr>`
+            )
+            .join("")}</tbody></table>
           <p class="muted" style="padding:.5rem 1rem">
             Clique em <strong>Ensinar</strong>: você escolhe as contas na lista (nunca digita código)
             e a regra vale para os próximos meses.
           </p>`;
+        alvo.querySelectorAll("tr[data-pend]").forEach((tr) => {
+          tr.onclick = () => abrirEnsinar(Number(tr.dataset.pend));
+        });
+        alvo.querySelectorAll("button[data-ensinar]").forEach((b) => {
+          b.onclick = (e) => {
+            e.stopPropagation();
+            abrirEnsinar(Number(b.dataset.ensinar));
+          };
+        });
       } else {
         alvo.innerHTML = `<table><thead><tr>
             <th>Documento</th><th>Motivo (existe, mas não lança)</th></tr></thead><tbody>
-          ${filtrados.map(({it:n}) => `<tr>
-            <td title="${txt(n.arquivo)}">${txt(n.arquivo).slice(0,44)}</td>
+          ${filtrados
+            .map(
+              ({ it: n }) => `<tr>
+            <td title="${txt(n.arquivo)}">${txt(n.arquivo).slice(0, 44)}</td>
             <td class="muted">${txt(n.motivo)}</td>
-          </tr>`).join('')}</tbody></table>`;
+          </tr>`
+            )
+            .join("")}</tbody></table>`;
       }
       pintarRodape();
       atualizarSteps();
@@ -963,8 +1554,8 @@
     function trocarAba(k) {
       abaAtual = k;
       linhaAberta = null;
-      document.getElementById('fxEnsinar').innerHTML = '';
-      document.getElementById('revBody').classList.remove('com-painel');
+      document.getElementById("fxEnsinar").innerHTML = "";
+      document.getElementById("revBody").classList.remove("com-painel");
       pintarRevisao();
     }
 
@@ -972,8 +1563,8 @@
       const l = (rev.lancados || [])[i];
       if (!l) return;
       linhaAberta = i;
-      const painel = document.getElementById('fxEnsinar');
-      document.getElementById('revBody').classList.add('com-painel');
+      const painel = document.getElementById("fxEnsinar");
+      document.getElementById("revBody").classList.add("com-painel");
       painel.innerHTML = `
         <div class="ensinar">
           <h4>Lançamento conferido</h4>
@@ -983,24 +1574,24 @@
             <tr><th>Valor</th><td class="num">R$ ${brl(l.valor)}</td></tr>
             <tr><th>Débito</th><td>${htmlConta(l.debito)}</td></tr>
             <tr><th>Crédito</th><td>${htmlConta(l.credito)}</td></tr>
-            <tr><th>Histórico</th><td>${txt(l.complemento || l.historico_texto || '—')}</td></tr>
-            <tr><th>Regra</th><td>${txt(l.regra || '—')} ${tagOrigem(l)}</td></tr>
-            <tr><th>Obs.</th><td class="muted">${txt(l.observacao || '—')}</td></tr>
+            <tr><th>Histórico</th><td>${txt(l.complemento || l.historico_texto || "—")}</td></tr>
+            <tr><th>Regra</th><td>${txt(l.regra || "—")} ${tagOrigem(l)}</td></tr>
+            <tr><th>Obs.</th><td class="muted">${txt(l.observacao || "—")}</td></tr>
           </table>
           <p class="muted" style="margin:.85rem 0 .4rem">
-            Se este lançamento estiver errado, anote e avise o Anderson — não inventamos
-            correção automática de lançamento já gerado. O aprendizado vale para
+            Se este lançamento estiver errado, anote e avise o Anderson — o aprendizado vale para
             <em>documentos pendentes</em> (aba Aguardando você).
           </p>
-          <button class="ghost" type="button" onclick="fecharPainel()">Fechar</button>
+          <button class="btn ghost" type="button" id="btn-fechar-painel" style="width:auto">Fechar</button>
         </div>`;
+      document.getElementById("btn-fechar-painel").onclick = fecharPainel;
       pintarRevisao();
     }
 
     function fecharPainel() {
       linhaAberta = null;
-      document.getElementById('fxEnsinar').innerHTML = '';
-      document.getElementById('revBody').classList.remove('com-painel');
+      document.getElementById("fxEnsinar").innerHTML = "";
+      document.getElementById("revBody").classList.remove("com-painel");
       pintarRevisao();
     }
 
@@ -1010,7 +1601,7 @@
       const url = `/api/fechamentos/${rev.client_id}/${rev.competencia}/planilha`;
       const temPlanilha = !!rev.planilha;
 
-      let hint = '';
+      let hint = "";
       if (pend > 0) {
         hint = `<strong>${pend} documento(s) ainda sem decisão.</strong>
           Resolva na aba “Aguardando você” (ensine o agente) antes de importar no Contmatic.
@@ -1019,35 +1610,37 @@
         hint = `Conferência limpa: ${nLanc} lançamento(s), nada pendente.
           Revise a aba Lançados e, se estiver ok, emita a planilha para o Contmatic.`;
       } else {
-        hint = 'Nenhum lançamento nesta competência.';
+        hint = "Nenhum lançamento nesta competência.";
       }
-      document.getElementById('revHint').innerHTML = hint;
+      document.getElementById("revHint").innerHTML = hint;
 
       if (!temPlanilha) {
-        document.getElementById('fxRodape').innerHTML =
+        document.getElementById("fxRodape").innerHTML =
           `<span class="muted">Planilha ainda não gerada nesta rodada.</span>`;
         return;
       }
 
       if (pend > 0) {
-        document.getElementById('fxRodape').innerHTML = `
+        document.getElementById("fxRodape").innerHTML = `
           <label style="display:flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--muted);margin:0">
             <input type="checkbox" id="aceitaPend" style="width:auto;margin:0" />
             Emitir mesmo com ${pend} pendente(s)
           </label>
-          <button class="warn" type="button" id="btnEmitir"
-                  onclick="emitirPlanilha('${url}')">Emitir planilha Contmatic</button>`;
+          <button class="btn warn" type="button" id="btnEmitir" style="width:auto">Emitir planilha Contmatic</button>`;
+        document.getElementById("btnEmitir").onclick = () => emitirPlanilha(url);
       } else {
-        document.getElementById('fxRodape').innerHTML = `
-          <a class="btn ok" href="${url}">Emitir planilha Contmatic</a>
+        document.getElementById("fxRodape").innerHTML = `
+          <a class="btn ok" href="${url}" style="text-decoration:none">Emitir planilha Contmatic</a>
           <span class="muted">${nLanc} lançamento(s) · pronto para importar</span>`;
       }
     }
 
     function emitirPlanilha(url) {
-      const cb = document.getElementById('aceitaPend');
+      const cb = document.getElementById("aceitaPend");
       if (cb && !cb.checked) {
-        alert('Marque a caixa se quiser emitir a planilha com documentos ainda pendentes.\nMelhor: ensine os pendentes primeiro.');
+        alert(
+          "Marque a caixa se quiser emitir a planilha com documentos ainda pendentes.\nMelhor: ensine os pendentes primeiro."
+        );
         return;
       }
       window.location.href = url;
@@ -1057,59 +1650,63 @@
       const p = (rev.pendentes || [])[i];
       if (!p) return;
       linhaAberta = i;
-      abaAtual = 'pendentes';
-      const painel = document.getElementById('fxEnsinar');
-      document.getElementById('revBody').classList.add('com-painel');
+      abaAtual = "pendentes";
+      const painel = document.getElementById("fxEnsinar");
+      document.getElementById("revBody").classList.add("com-painel");
       painel.innerHTML = `<div class="ensinar"><p class="muted">lendo o documento…</p></div>`;
       pintarRevisao();
 
       await carregarContas();
-      let det = {texto: '', chaves_sugeridas: []};
+      let det = { texto: "", chaves_sugeridas: [] };
       try {
-        det = await j(`/api/fechamentos/${rev.client_id}/${rev.competencia}/pendente?arquivo=`
-                      + encodeURIComponent(p.arquivo));
-      } catch (e) { /* XML eSocial, PDF imagem: segue sem prévia */ }
+        det = await j(
+          `/api/fechamentos/${rev.client_id}/${rev.competencia}/pendente?arquivo=` +
+            encodeURIComponent(p.arquivo)
+        );
+      } catch (e) {
+        /* XML eSocial, PDF imagem: segue sem prévia */
+      }
 
-      // selects com busca: lista completa do PlContas (centenas de contas)
-      const opcoes = contasCache.map(c =>
-        `<option value="${c.codigo}">${c.codigo} — ${txt(c.nome)}</option>`).join('');
+      const opcoes = contasCache
+        .map((c) => `<option value="${c.codigo}">${c.codigo} — ${txt(c.nome)}</option>`)
+        .join("");
 
       painel.innerHTML = `
         <div class="ensinar">
           <div style="display:flex;justify-content:space-between;gap:.5rem;align-items:flex-start">
             <h4>Ensinar o Alexandre</h4>
-            <button class="ghost" type="button" style="padding:.3rem .55rem;font-size:.75rem"
-                    onclick="fecharPainel()">Fechar</button>
+            <button class="btn ghost" type="button" id="btn-fechar-ens" style="padding:.3rem .55rem;font-size:.75rem;width:auto">Fechar</button>
           </div>
           <p class="muted" style="margin:.1rem 0 .55rem;word-break:break-all">${txt(p.arquivo)}</p>
           <p style="margin:0 0 .75rem;font-size:.9rem">
             <strong>R$ ${brl(p.valor)}</strong>
-            <span class="muted"> · ${txt(p.data) || 'sem data'} · ${txt(p.motivo || '')}</span>
+            <span class="muted"> · ${txt(p.data) || "sem data"} · ${txt(p.motivo || "")}</span>
           </p>
-          ${det.texto
-            ? `<label>O que o agente leu no documento</label>
-               <div class="previa">${txt(det.texto.slice(0,1200))}</div>`
-            : `<p class="muted">Sem texto extraível — use o nome do arquivo ou o que você sabe do documento.</p>`}
+          ${
+            det.texto
+              ? `<label>O que o agente leu no documento</label>
+               <div class="previa">${txt(det.texto.slice(0, 1200))}</div>`
+              : `<p class="muted">Sem texto extraível — use o nome do arquivo ou o que você sabe do documento.</p>`
+          }
 
           <label>O que identifica este documento <span class="muted">(vale para os próximos meses)</span></label>
           <div class="chips" id="chips">
-            ${(det.chaves_sugeridas||[]).map(k =>
-              `<button class="chip" type="button" onclick="usarChave(this)">${txt(k)}</button>`).join('')
-              || '<span class="muted">Sem sugestão automática — digite abaixo (CNPJ, nome do fornecedor…).</span>'}
+            ${(det.chaves_sugeridas || [])
+              .map((k) => `<button class="chip-key" type="button" data-chave="${txt(k)}">${txt(k)}</button>`)
+              .join("") ||
+            '<span class="muted">Sem sugestão automática — digite abaixo (CNPJ, nome do fornecedor…).</span>'}
           </div>
           <input id="ensChave" placeholder="Ex.: 09.377.184/0001-88 ou DIAS DE PAULA" />
 
           <div class="row">
             <div class="select-busca">
               <label>Débito (conta que sobe)</label>
-              <input type="search" id="ensDebFiltro" placeholder="Buscar conta…"
-                     oninput="filtrarSelect('ensDeb','ensDebFiltro')" />
+              <input type="search" id="ensDebFiltro" placeholder="Buscar conta…" />
               <select id="ensDeb">${opcoes}</select>
             </div>
             <div class="select-busca">
               <label>Crédito (conta que desce)</label>
-              <input type="search" id="ensCredFiltro" placeholder="Buscar conta…"
-                     oninput="filtrarSelect('ensCred','ensCredFiltro')" />
+              <input type="search" id="ensCredFiltro" placeholder="Buscar conta…" />
               <select id="ensCred">${opcoes}</select>
             </div>
           </div>
@@ -1118,16 +1715,15 @@
           <input id="ensDesc" placeholder="Ex.: Honorários contábeis" />
 
           <label style="display:flex;align-items:center;gap:.45rem;margin:.2rem 0 .6rem">
-            <input type="checkbox" id="ensRec" style="width:auto;margin:0"
-                   onchange="document.getElementById('ensRecBox').style.display=this.checked?'block':'none'" />
+            <input type="checkbox" id="ensRec" style="width:auto;margin:0" />
             É todo mês — provisionar mesmo quando não vier documento
           </label>
           <div id="ensRecBox" style="display:none">
             <div class="row">
               <div><label>Valor mensal</label>
-                <input id="ensRecValor" type="number" step="0.01" value="${p.valor ?? ''}" /></div>
+                <input id="ensRecValor" type="number" step="0.01" value="${p.valor ?? ""}" /></div>
               <div><label>A partir de</label>
-                <input id="ensRecInicio" placeholder="AAAA-MM" value="${(rev.competencia||'')}" /></div>
+                <input id="ensRecInicio" placeholder="AAAA-MM" value="${rev.competencia || ""}" /></div>
             </div>
             <p class="muted" style="margin:-.3rem 0 .6rem">
               Em meses atrasados o boleto muitas vezes não está na pasta — sem a
@@ -1136,337 +1732,352 @@
           </div>
 
           <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem">
-            <button type="button" onclick="ensinar()">Ensinar e reprocessar</button>
-            <button class="ghost" type="button" onclick="fecharPainel()">Agora não</button>
+            <button class="btn" type="button" id="btn-ensinar" style="width:auto">Ensinar e reprocessar</button>
+            <button class="btn ghost" type="button" id="btn-ens-agora-nao" style="width:auto">Agora não</button>
           </div>
           <p class="muted" id="ensStatus" style="margin:.55rem 0 0"></p>
         </div>`;
 
+      document.getElementById("btn-fechar-ens").onclick = fecharPainel;
+      document.getElementById("btn-ens-agora-nao").onclick = fecharPainel;
+      document.getElementById("btn-ensinar").onclick = ensinar;
+      document.getElementById("ensDebFiltro").oninput = () => filtrarSelect("ensDeb", "ensDebFiltro");
+      document.getElementById("ensCredFiltro").oninput = () => filtrarSelect("ensCred", "ensCredFiltro");
+      document.getElementById("ensRec").onchange = function () {
+        document.getElementById("ensRecBox").style.display = this.checked ? "block" : "none";
+      };
+      document.querySelectorAll("#chips .chip-key").forEach((btn) => {
+        btn.onclick = () => usarChave(btn);
+      });
+
       if ((det.chaves_sugeridas || []).length) {
-        document.getElementById('ensChave').value = det.chaves_sugeridas[0];
-        document.querySelector('#chips .chip')?.setAttribute('aria-pressed', 'true');
+        document.getElementById("ensChave").value = det.chaves_sugeridas[0];
+        document.querySelector("#chips .chip-key")?.setAttribute("aria-pressed", "true");
       }
-      // tenta pré-selecionar se o pendente já veio com débito/crédito chutado
-      if (p.debito) document.getElementById('ensDeb').value = p.debito;
-      if (p.credito) document.getElementById('ensCred').value = p.credito;
+      if (p.debito) document.getElementById("ensDeb").value = p.debito;
+      if (p.credito) document.getElementById("ensCred").value = p.credito;
     }
 
     function filtrarSelect(selectId, filtroId) {
-      const q = (document.getElementById(filtroId).value || '').toLowerCase();
+      const q = (document.getElementById(filtroId).value || "").toLowerCase();
       const sel = document.getElementById(selectId);
       const atual = sel.value;
-      const opts = contasCache.filter(c =>
-        !q || c.codigo.includes(q) || (c.nome || '').toLowerCase().includes(q));
-      sel.innerHTML = opts.map(c =>
-        `<option value="${c.codigo}">${c.codigo} — ${txt(c.nome)}</option>`).join('');
-      if (opts.some(c => c.codigo === atual)) sel.value = atual;
+      const opts = contasCache.filter(
+        (c) => !q || c.codigo.includes(q) || (c.nome || "").toLowerCase().includes(q)
+      );
+      sel.innerHTML = opts
+        .map((c) => `<option value="${c.codigo}">${c.codigo} — ${txt(c.nome)}</option>`)
+        .join("");
+      if (opts.some((c) => c.codigo === atual)) sel.value = atual;
     }
 
     function usarChave(btn) {
-      document.querySelectorAll('#chips .chip').forEach(c => c.setAttribute('aria-pressed','false'));
-      btn.setAttribute('aria-pressed','true');
-      document.getElementById('ensChave').value = btn.textContent.trim();
+      document.querySelectorAll("#chips .chip-key").forEach((c) => c.setAttribute("aria-pressed", "false"));
+      btn.setAttribute("aria-pressed", "true");
+      document.getElementById("ensChave").value = btn.textContent.trim();
     }
 
     async function ensinar() {
-      const st = document.getElementById('ensStatus');
-      const chave = document.getElementById('ensChave').value.trim();
+      const st = document.getElementById("ensStatus");
+      const chave = document.getElementById("ensChave").value.trim();
       if (!chave) {
-        st.textContent = 'Diga o que identifica o documento — sem isso a regra casaria com tudo.';
+        st.textContent = "Diga o que identifica o documento — sem isso a regra casaria com tudo.";
         return;
       }
-      st.textContent = 'gravando a regra e reprocessando a competência…';
+      st.textContent = "gravando a regra e reprocessando a competência…";
       try {
-        // recorrência ANTES: o reprocessamento já traz a provisão junto
-        if (document.getElementById('ensRec')?.checked) {
+        if (document.getElementById("ensRec")?.checked) {
           await j(`/api/recorrentes/${rev.client_id}`, {
-            method: 'POST', headers: {'Content-Type':'application/json'},
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              descricao: document.getElementById('ensDesc').value.trim() || chave,
-              debito: document.getElementById('ensDeb').value,
-              credito: document.getElementById('ensCred').value,
-              valor: Number(document.getElementById('ensRecValor').value || 0),
-              inicio: document.getElementById('ensRecInicio').value.trim(),
-            })
+              descricao: document.getElementById("ensDesc").value.trim() || chave,
+              debito: document.getElementById("ensDeb").value,
+              credito: document.getElementById("ensCred").value,
+              valor: Number(document.getElementById("ensRecValor").value || 0),
+              inicio: document.getElementById("ensRecInicio").value.trim(),
+            }),
           });
         }
         const r = await j(`/api/fechamentos/${rev.client_id}/${rev.competencia}/ensinar`, {
-          method: 'POST', headers: {'Content-Type':'application/json'},
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            arquivo: '', chave,
-            debito: document.getElementById('ensDeb').value,
-            credito: document.getElementById('ensCred').value,
-            descricao: document.getElementById('ensDesc').value.trim(),
+            arquivo: "",
+            chave,
+            debito: document.getElementById("ensDeb").value,
+            credito: document.getElementById("ensCred").value,
+            descricao: document.getElementById("ensDesc").value.trim(),
             reprocessar: true,
-          })
+          }),
         });
         if (r.estado) {
           rev = r.estado;
-          abaAtual = (rev.pendentes || []).length ? 'pendentes' : 'lancados';
+          abaAtual = (rev.pendentes || []).length ? "pendentes" : "lancados";
         }
         fecharPainel();
-        document.getElementById('fxStatus').textContent =
-          `Regra criada para "${chave}". ${(rev.pendentes||[]).length} pendente(s) restante(s).`;
+        document.getElementById("fxStatus").textContent =
+          `Regra criada para "${chave}". ${(rev.pendentes || []).length} pendente(s) restante(s).`;
         atualizarPillPendentes();
         fxListar();
       } catch (e) {
-        st.textContent = 'Falhou: ' + e.message;
+        st.textContent = "Falhou: " + e.message;
       }
     }
 
     function atualizarPillPendentes() {
       const n = rev ? (rev.pendentes || []).length : 0;
-      const pill = document.getElementById('pillPendentes');
+      const pill = document.getElementById("pillPendentes");
       pill.textContent = n;
-      document.getElementById('tab-conferir').classList.toggle('alerta', n > 0);
+      document.getElementById("tab-btn-conferir").classList.toggle("alerta", n > 0);
     }
 
     async function fxListar() {
-      const itens = await j('/api/fechamentos');
+      const itens = await j("/api/fechamentos");
       let totalPend = 0;
-      document.getElementById('fxLista').innerHTML = itens.map(i => {
-        totalPend += i.total_pendentes || 0;
-        const nome = clientesMap[i.client_id] || i.client_id;
-        return `
+      document.getElementById("fxLista").innerHTML =
+        itens
+          .map((i) => {
+            totalPend += i.total_pendentes || 0;
+            const nome = clientesMap[i.client_id] || i.client_id;
+            return `
         <tr>
           <td>${txt(nome)}<div class="mono muted">${i.client_id}</div></td>
           <td>${i.competencia}</td>
           <td>${statusHtml(i.situacao)}</td>
           <td class="num">${i.total_lancados}</td>
-          <td class="num" style="${i.total_pendentes ? 'color:var(--warn);font-weight:700' : ''}">${i.total_pendentes}</td>
+          <td class="num" style="${i.total_pendentes ? "color:var(--warn);font-weight:700" : ""}">${i.total_pendentes}</td>
           <td>
-            <button class="ghost" type="button"
-                    onclick="reabrir('${i.client_id}','${i.competencia}')">Conferir</button>
+            <button class="btn ghost" type="button" style="width:auto;padding:.35rem .65rem;font-size:.8rem"
+                    data-reabrir-c="${i.client_id}" data-reabrir-m="${i.competencia}">Conferir</button>
           </td>
         </tr>`;
-      }).join('') || '<tr><td colspan="6" class="muted">Nenhuma competência processada ainda.</td></tr>';
+          })
+          .join("") ||
+        '<tr><td colspan="6" class="muted" style="padding:1rem">Nenhuma competência processada ainda.</td></tr>';
 
-      // pill global: soma dos pendentes em competências conhecidas (quando sem revisão aberta)
+      document.querySelectorAll("[data-reabrir-c]").forEach((b) => {
+        b.onclick = () => reabrir(b.dataset.reabrirC, b.dataset.reabrirM);
+      });
+
       if (!rev) {
-        document.getElementById('pillPendentes').textContent = totalPend;
-        document.getElementById('tab-conferir').classList.toggle('alerta', totalPend > 0);
+        document.getElementById("pillPendentes").textContent = totalPend;
+        document.getElementById("tab-btn-conferir").classList.toggle("alerta", totalPend > 0);
       }
     }
 
     async function reabrir(cliente, comp) {
-      const st = document.getElementById('fxStatus');
-      st.textContent = 'abrindo conferência…';
-      mostrarView('conferir');
+      const st = document.getElementById("fxStatus");
+      st.textContent = "abrindo conferência…";
+      setTab("conferir");
       try {
         await revisar(await j(`/api/fechamentos/${cliente}/${comp}`));
         st.textContent = `${comp} · ${clientesMap[cliente] || cliente}`;
         if (!setupCollapsed) toggleSetup();
-      } catch (e) { st.textContent = 'Falhou: ' + e.message; }
+      } catch (e) {
+        st.textContent = "Falhou: " + e.message;
+      }
     }
 
-    /* ---------- Chat Max ---------- */
-    document.getElementById('chatEnviar').onclick = async () => {
-      const pedido = document.getElementById('chatPedido').value.trim();
-      const box = document.getElementById('chatResposta');
-      if (!pedido) return;
-      box.style.display = 'block';
-      box.innerHTML = `<div class="chat-bolha"><span class="muted">pensando e executando…</span></div>`;
+    // ---------- boot ----------
+    async function bootApp() {
+      initTheme();
+
+      const [agentsRes, clientsRes, modelsRes] = await Promise.all([
+        j("/api/agents"),
+        j("/api/clients"),
+        j("/api/models").catch(() => ({ aliases: {}, default: null })),
+      ]);
+
+      state.agents = Array.isArray(agentsRes) ? agentsRes : agentsRes.agents || [];
+      const lista = Array.isArray(clientsRes) ? clientsRes : clientsRes.clients || [];
+      state.clients = lista;
+      clientesMap = {};
+      for (const c of lista) clientesMap[c.id] = c.nome || c.name || c.id;
+      fillClientSelects(lista);
+
+      // models
+      const sel = document.getElementById("model-select");
+      const aliases = modelsRes.aliases || {};
+      sel.innerHTML =
+        `<option value="">padrão (${modelsRes.default || "offline"})</option>` +
+        Object.entries(aliases)
+          .map(([k, v]) => `<option value="${escapeHtml(k)}">${escapeHtml(k)} → ${escapeHtml(v)}</option>`)
+          .join("");
+
+      const max = agentById("max");
+      document.getElementById("channel-max").innerHTML =
+        `<button type="button" class="agent-btn active" data-agent="max" id="btn-channel-max">
+          ${avatarHTML(max.name || "Max", 32)}
+          <div class="agent-btn-text">
+            <span class="agent-name-row"><strong>${escapeHtml(max.name || "Max")}</strong> <span class="badge tone-accent">Gerente</span></span>
+            <span>${escapeHtml(max.role || "Canal do chat")}</span>
+          </div>
+        </button>`;
+      document.getElementById("btn-channel-max").onclick = () => setFocusAgent("max");
+
+      const list = document.getElementById("agent-list");
+      const team = state.agents.filter((a) => a.id !== "max");
+      list.innerHTML = team
+        .map(
+          (a) =>
+            `<button type="button" class="agent-btn" data-agent="${escapeHtml(a.id)}">
+              ${avatarHTML(a.name, 32)}
+              <div class="agent-btn-text">
+                <strong>${escapeHtml(a.name)}</strong><span>${escapeHtml(a.role)}</span>
+              </div>
+            </button>`
+        )
+        .join("");
+      list.querySelectorAll("[data-agent]").forEach((b) =>
+        b.addEventListener("click", () => setFocusAgent(b.dataset.agent))
+      );
+
+      state.chatAgent = "max";
+      state.focusAgent = "max";
+      state.directMode = false;
+      refreshChannelUI();
+
+      await loadHealth();
+      await loadOverview().catch(() => {});
+      await fxListar().catch(() => {});
+      carregarContas().catch(() => {});
+
+      if (!document.getElementById("chat-log").children.length) {
+        addMsg(
+          "agent",
+          "Max",
+          "Olá! Sou o Max, gerente dos agentes Escon.\n\n" +
+            "Agora eu executo de verdade: contabilidade, cobrança de extratos, títulos e o que a equipe fizer no servidor — não é só conversa.\n\n" +
+            "Como usar:\n" +
+            "1) Selecione o cliente (no composer ou à direita)\n" +
+            "2) Peça algo claro, ex.: «contabilize set/2024» ou «cobre extratos pendentes»\n" +
+            "3) Se eu rodar o fechamento, abro a aba Conferir para você revisar e ensinar o que faltou\n\n" +
+            "Atalhos à direita e a equipe à esquerda ajudam a montar o pedido. Vamos lá?"
+        );
+      }
+    }
+
+    // ---------- event wiring ----------
+    document.getElementById("theme-toggle").onclick = toggleTheme;
+    document.getElementById("btn-team-m").onclick = () => openDrawer("sidebar");
+    document.getElementById("btn-panel-m").onclick = () => openDrawer("right");
+    document.getElementById("sidebar-close").onclick = closeDrawers;
+    document.getElementById("right-close").onclick = closeDrawers;
+    document.getElementById("scrim").onclick = closeDrawers;
+
+    document.querySelectorAll(".tab").forEach((t) => {
+      t.addEventListener("click", () => setTab(t.dataset.tab));
+    });
+
+    document.getElementById("chat-send").onclick = () => sendChat();
+    document.getElementById("chat-input").addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendChat();
+      }
+    });
+
+    document.getElementById("chat-client").onchange = function () {
+      syncClientSelects(this);
+    };
+    document.getElementById("chat-client-right").onchange = function () {
+      syncClientSelects(this);
+    };
+
+    document.querySelectorAll("[data-prompt]").forEach((b) => {
+      b.addEventListener("click", () => {
+        setTab("chat");
+        const input = document.getElementById("chat-input");
+        input.value = b.dataset.prompt;
+        input.focus();
+      });
+    });
+
+    document.getElementById("client-filter").oninput = renderClients;
+    document.getElementById("setupToggle").onclick = toggleSetup;
+    document.getElementById("btn-fechar-rev").onclick = fecharRevisao;
+    document.getElementById("revBusca").oninput = () => pintarRevisao();
+
+    document.getElementById("fxVerPasta").onclick = async () => {
+      const el = document.getElementById("fxPastaInfo");
+      const caminho = document.getElementById("fxPasta").value.trim();
+      if (!caminho) {
+        el.textContent = "Informe o caminho da pasta.";
+        return;
+      }
+      el.textContent = "conferindo…";
       try {
-        const r = await j('/api/run', {
-          method: 'POST', headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({
-            pedido,
-            client_id: document.getElementById('chatCliente').value || null,
-          })
+        const r = await j("/api/pastas/inspecionar", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ caminho }),
         });
-        const quem = (r.agents || []).join(', ') || '—';
-        const partes = (r.results || []).map(x => `
-          <div class="chat-bolha">
-            <div class="quem"><strong>${txt(x.agent)}</strong>
-              ${x.needs_human ? ' · precisa da sua revisão' : ''}</div>
-            <div style="white-space:pre-wrap">${txt(x.summary||'')}</div>
-            ${(x.artifacts||[]).map(a => `<div class="mono muted">→ ${txt(a)}</div>`).join('')}
-          </div>`).join('');
-        box.innerHTML = `<div class="muted" style="margin-bottom:.4rem">${txt(r.reasoning || '')} · acionou: ${txt(quem)}</div>${partes}`;
-        document.getElementById('chatPedido').value = '';
-        loadRuns();
+        el.textContent = r.ok
+          ? `${r.total} documento(s): ${Object.entries(r.por_tipo || {})
+              .map(([k, v]) => v + " " + k)
+              .join(", ")}`
+          : r.erro;
       } catch (e) {
-        box.innerHTML = `<div class="chat-bolha" style="border-color:#5a2030">Falhou: ${txt(e.message)}</div>`;
+        el.textContent = "Falhou: " + e.message;
       }
     };
 
-    /* ---------- selects / filas / runs ---------- */
-    async function loadSelects() {
-      const [services, clients, models] = await Promise.all([
-        j('/api/services'),
-        j('/api/clients'),
-        j('/api/models'),
-      ]);
-      await fxCarregarClientes();
-      await fxListar();
-      await carregarContas();
-      document.getElementById('service').innerHTML = services.map(s =>
-        `<option value="${s.id}">${s.label}</option>`).join('');
-      const listaClientes = Array.isArray(clients) ? clients : (clients.clients || []);
-      document.getElementById('client').innerHTML =
-        `<option value="">— opcional / todos —</option>` +
-        listaClientes.map(c => `<option value="${c.id}">${txt(c.nome)} (${c.id})</option>`).join('');
-      const aliases = models.aliases || {};
-      document.getElementById('model').innerHTML =
-        `<option value="">padrão (${models.default || 'offline'})</option>` +
-        Object.entries(aliases).map(([k, v]) =>
-          `<option value="${k}">${k} → ${v}</option>`).join('');
-    }
-
-    async function loadRequests() {
-      const items = await j('/api/requests');
-      document.getElementById('reqBody').innerHTML = items.slice(0, 30).map(it => `
-        <tr>
-          <td class="mono">${it.id}</td>
-          <td>${txt(it.service_label || it.service_id)}
-            <div class="muted">${txt((it.result_summary||'').slice(0,80))}</div></td>
-          <td>${it.client_id || '—'}</td>
-          <td>${statusHtml(it.status)}</td>
-          <td>${it.status==='queued'
-            ? `<button class="ghost" type="button" onclick="execReq('${it.id}')">Rodar</button>` : ''}</td>
-        </tr>`).join('') || '<tr><td colspan="5" class="muted">Nenhuma solicitação ainda</td></tr>';
-    }
-
-    async function loadRuns() {
-      const runs = await j('/api/runs?limit=40');
-      document.getElementById('runsMeta').textContent = `${runs.length} recentes`;
-      document.getElementById('runsBody').innerHTML = runs.map(r => `
-        <tr style="cursor:pointer" onclick="showRun('${r.id}')">
-          <td class="muted">${(r.created_at||'').replace('T',' ')}</td>
-          <td class="mono">${r.id}</td>
-          <td>${txt((r.title||'').slice(0,60))}</td>
-          <td>${r.client_id || '—'}</td>
-          <td class="mono">${(r.agents||[]).join(', ')}</td>
-          <td>${statusHtml(r.status)}</td>
-          <td class="muted">${r.llm || ''}</td>
-        </tr>`).join('') || '<tr><td colspan="7" class="muted">Nenhum run</td></tr>';
-    }
-
-    async function showRun(id) {
-      const d = await j('/api/runs/' + id);
-      const lines = [];
-      lines.push(`# Run ${d.id} · ${d.status}`);
-      lines.push(`Pedido: ${d.title || ''}`);
-      lines.push(`Cliente: ${d.client_id || '—'} · modelo: ${d.model || d.llm || '—'}`);
-      lines.push(`Roteamento: ${d.reasoning || ''}`);
-      lines.push('');
-      for (const r of (d.results || [])) {
-        lines.push(`## ${r.agent} ${r.success ? '✓' : '✗'}`);
-        lines.push(r.summary || '');
-        if (r.needs_human) lines.push(`⏸ Humano: ${r.human_prompt || ''}`);
-        if (r.artifacts && r.artifacts.length) lines.push('Artefatos:\n- ' + r.artifacts.join('\n- '));
-        lines.push('');
+    document.getElementById("fxRodar").onclick = async () => {
+      const st = document.getElementById("fxStatus");
+      const body = {
+        client_id: document.getElementById("fxCliente").value,
+        competencia: document.getElementById("fxComp").value.trim(),
+        pasta_local: document.getElementById("fxPasta").value.trim() || null,
+        pasta_onedrive: document.getElementById("fxOneDrive").value.trim() || null,
+        usar_radar: document.getElementById("fxRadar").checked,
+        forma_pagamento: document.getElementById("fxForma").value,
+      };
+      if (!body.competencia) {
+        st.textContent = "Informe a competência (ex.: jan/21).";
+        return;
       }
-      if (d.needs_human && d.needs_human.length) {
-        lines.push('Revisão humana:');
-        d.needs_human.forEach(n => lines.push('• ' + n));
-      }
-      document.getElementById('runDetail').textContent = lines.join('\n');
-    }
-
-    async function loadTasks() {
-      const tasks = await j('/api/tasks');
-      const open = tasks.filter(t => t.status === 'open');
-      document.getElementById('tasksBody').innerHTML = open.map(t => `
-        <tr>
-          <td>${txt(t.title)}<div class="muted mono">${t.id}</div></td>
-          <td>${t.client_id || '—'}</td>
-          <td>${t.due_at || '—'}</td>
-        </tr>`).join('') || '<tr><td colspan="3" class="muted">Nenhuma tarefa aberta</td></tr>';
-    }
-
-    async function loadAgents() {
-      const agents = await j('/api/agents');
-      document.getElementById('agentsBody').innerHTML = agents.map(a => `
-        <tr style="cursor:pointer" onclick="verAgente('${a.id}')">
-          <td class="mono">${a.id}</td><td>${txt(a.name)}</td><td class="muted">${txt(a.role)}</td>
-        </tr>`).join('');
-    }
-
-    async function verAgente(id) {
-      const box = document.getElementById('agenteDetalhe');
-      box.style.display = 'block';
-      box.textContent = 'carregando…';
+      st.textContent = "processando… pode levar alguns minutos";
+      document.getElementById("fxResultado").innerHTML = "";
       try {
-        const a = await j(`/api/agentes/${id}/atividade`);
-        if (!a.execucoes.length) {
-          box.innerHTML = `<strong>${txt(a.nome)}</strong> — ${txt(a.papel)}
-            <p class="muted" style="margin:.4rem 0 0">Ainda não executou nada por aqui.</p>`;
-          return;
-        }
-        box.innerHTML = `<strong>${txt(a.nome)}</strong> — ${txt(a.papel)}
-          <p class="muted" style="margin:.3rem 0 .5rem">${a.total} execução(ões) recentes</p>
-          ${a.execucoes.map(e => `
-            <div style="border-top:1px solid var(--border);padding:.45rem 0">
-              <span class="mono muted">${txt(e.id)}</span> ${statusHtml(e.status)}
-              <div>${txt(e.title).slice(0,70)}</div>
-            </div>`).join('')}`;
-      } catch (e) { box.textContent = 'Falhou: ' + e.message; }
-    }
-
-    async function execReq(id) {
-      const el = document.getElementById('reqResult');
-      el.style.display = 'block';
-      el.textContent = 'Executando ' + id + '…';
-      try {
-        const r = await j('/api/requests/' + id + '/execute', { method: 'POST' });
-        el.textContent = JSON.stringify(r, null, 2);
-        await refreshAll();
-      } catch (e) {
-        el.textContent = 'Erro: ' + e.message;
-      }
-    }
-
-    document.getElementById('reqForm').addEventListener('submit', async (ev) => {
-      ev.preventDefault();
-      const btn = document.getElementById('btnSubmit');
-      const el = document.getElementById('reqResult');
-      btn.disabled = true;
-      el.style.display = 'block';
-      el.textContent = 'Enviando…';
-      try {
-        const body = {
-          service_id: document.getElementById('service').value,
-          client_id: document.getElementById('client').value || null,
-          notes: document.getElementById('notes').value,
-          requested_by: document.getElementById('by').value || 'equipe',
-          model: document.getElementById('model').value || null,
-          execute_now: true,
-        };
-        const r = await j('/api/requests', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const r = await j("/api/fechamentos", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),
         });
-        el.textContent = JSON.stringify(r, null, 2);
-        await refreshAll();
-        if (r.run_id) {
-          mostrarView('equipe');
-          showRun(r.run_id);
-        }
+        fxPintarEtapas(r.etapas);
+        st.textContent = r.resumo || r.situacao;
+        await revisar(r);
+        if (!setupCollapsed) toggleSetup();
+        fxListar();
       } catch (e) {
-        el.textContent = 'Erro: ' + e.message;
-      } finally {
-        btn.disabled = false;
+        st.textContent = "Falhou: " + e.message;
       }
-    });
+    };
 
-    async function refreshAll() {
-      await Promise.all([
-        loadHealth(),
-        loadOverview(),
-        loadRequests(),
-        loadRuns(),
-        loadTasks(),
-        loadAgents(),
-        fxListar().catch(() => {}),
-      ]);
-    }
+    // expose for any residual inline handlers
+    window.trocarAba = trocarAba;
+    window.abrirLancamento = abrirLancamento;
+    window.abrirEnsinar = abrirEnsinar;
+    window.ensinar = ensinar;
+    window.fecharPainel = fecharPainel;
+    window.fecharRevisao = fecharRevisao;
+    window.emitirPlanilha = emitirPlanilha;
+    window.pintarRevisao = pintarRevisao;
+    window.reabrir = reabrir;
+    window.filtrarSelect = filtrarSelect;
+    window.usarChave = usarChave;
+    window.sendChat = sendChat;
+    window.setTab = setTab;
 
-    loadSelects().then(refreshAll).catch(e => {
-      document.getElementById('runDetail').textContent = 'Falha ao carregar API: ' + e.message;
+    bootApp().catch((e) => {
+      addMsg("agent", "Sistema", "Falha ao carregar o painel: " + e.message);
     });
-    setInterval(refreshAll, 20000);
+    setInterval(() => {
+      loadHealth().catch(() => {});
+      if (state.activeTab === "overview") loadOverview().catch(() => {});
+      if (state.activeTab === "conferir") fxListar().catch(() => {});
+    }, 30000);
   </script>
 </body>
 </html>

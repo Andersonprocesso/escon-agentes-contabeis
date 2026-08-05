@@ -298,16 +298,191 @@ def create_app() -> FastAPI:
 
     @app.post("/api/run")
     def api_run(body: QuickRun) -> dict[str, Any]:
+        """Pedido em linguagem natural — executa de verdade (não só conversa).
+
+        Contabilização com cliente + competência roda o fechamento completo e
+        devolve contagem de lançados/pendentes para a UI abrir a revisão.
+        """
+        from escon_agentes.agents.max import (
+            _CONTABIL_KEYS,
+            _extract_competencia_e_forma,
+        )
+
+        pedido = (body.pedido or "").strip()
+        low = pedido.lower()
+        extra = _extract_competencia_e_forma(pedido)
+        competencia = extra.get("competencia")
+        forma = extra.get("forma_pagamento") or "caixa"
+        eh_contabil = any(k in low for k in _CONTABIL_KEYS) or (
+            "fechamento" in low and "extrato" not in low
+        )
+
+        # Atalho operacional: contabilizar competência → workflow real
+        if eh_contabil and body.client_id and competencia:
+            from escon_agentes.workflows import fechamento as fx
+
+            s = get_settings()
+            try:
+                estado = fx.executar(
+                    s,
+                    client_id=body.client_id,
+                    competencia=competencia,
+                    pasta_local=body.folder,
+                    usar_radar=True,  # na VPS a fonte natural é o Drive
+                    forma_pagamento=forma,
+                    usar_llm=False,
+                )
+            except ValueError as e:
+                raise HTTPException(status_code=400, detail=str(e)) from e
+
+            n_lanc = len(estado.get("lancados") or [])
+            n_pend = len(estado.get("pendentes") or [])
+            n_docs = estado.get("documentos") or 0
+            situacao = estado.get("situacao") or ""
+            reply = (
+                f"Acionei o Alexandre para {body.client_id} · {estado.get('competencia')}.\n\n"
+                f"Situação: {situacao}\n"
+                f"Documentos: {n_docs}\n"
+                f"Lançados: {n_lanc}\n"
+                f"Aguardando você: {n_pend}\n\n"
+            )
+            if situacao == "sem_documentos":
+                reply += (
+                    "Não achei documentos nessa competência. "
+                    "Marque o Drive (Radar) ou informe a pasta/OneDrive na aba Conferir."
+                )
+            elif n_pend:
+                reply += (
+                    f"Há {n_pend} documento(s) sem regra. Abra a aba Conferir → "
+                    "Aguardando você e ensine o Alexandre (a regra vale nos próximos meses)."
+                )
+            else:
+                reply += (
+                    "Nada pendente. Revise os lançamentos na aba Conferir e, "
+                    "se estiver ok, emita a planilha do Contmatic."
+                )
+            if estado.get("resumo"):
+                reply += f"\n\n{estado['resumo']}"
+
+            return {
+                "id": f"fx-{body.client_id}-{estado.get('competencia')}",
+                "title": pedido[:120],
+                "client_id": body.client_id,
+                "status": "done" if situacao == "concluido" else situacao,
+                "reasoning": "Pedido de contabilidade → fechamento real (Alexandre)",
+                "agents": ["alexandre"],
+                "results": [
+                    {
+                        "agent": "alexandre",
+                        "success": situacao in {"concluido", "sem_documentos"},
+                        "summary": reply,
+                        "needs_human": n_pend > 0,
+                        "human_prompt": "Revisar lançamentos e ensinar pendentes"
+                        if n_pend
+                        else None,
+                        "artifacts": [estado["planilha"]] if estado.get("planilha") else [],
+                        "data_keys": ["fechamento"],
+                    }
+                ],
+                "needs_human": [f"alexandre: {n_pend} pendente(s)"] if n_pend else [],
+                "reply": reply,
+                "fechamento": {
+                    "client_id": body.client_id,
+                    "competencia": estado.get("competencia"),
+                    "total_lancados": n_lanc,
+                    "total_pendentes": n_pend,
+                    "situacao": situacao,
+                    "abrir_revisao": situacao == "concluido",
+                },
+                "llm": "regras (sem token)",
+                "provider": "local",
+                "model": "regras",
+            }
+
+        if eh_contabil and body.client_id and not competencia:
+            reply = (
+                "Vou acionar o Alexandre, mas preciso da competência.\n\n"
+                "Ex.: «contabilize set/2024» ou «faça a contabilidade de 2024-09».\n"
+                "Forma (opcional): diga caixa ou banco."
+            )
+            return {
+                "id": "need-comp",
+                "title": pedido[:120],
+                "client_id": body.client_id,
+                "status": "waiting_human",
+                "reasoning": "Contabilidade pedida sem competência",
+                "agents": ["alexandre"],
+                "results": [
+                    {
+                        "agent": "max",
+                        "success": True,
+                        "summary": reply,
+                        "needs_human": True,
+                        "human_prompt": "Informar competência",
+                        "artifacts": [],
+                        "data_keys": [],
+                    }
+                ],
+                "needs_human": ["Informar competência (AAAA-MM ou set/2024)"],
+                "reply": reply,
+                "llm": "local",
+                "provider": "local",
+                "model": "roteamento",
+            }
+
+        if eh_contabil and not body.client_id:
+            reply = (
+                "Para contabilizar preciso do cliente.\n\n"
+                "Selecione o cliente no seletor do chat (ou diga o CNPJ) e a "
+                "competência, ex.: «contabilize a Alumax em set/2024»."
+            )
+            return {
+                "id": "need-client",
+                "title": pedido[:120],
+                "client_id": None,
+                "status": "waiting_human",
+                "reasoning": "Contabilidade pedida sem cliente",
+                "agents": ["alexandre"],
+                "results": [
+                    {
+                        "agent": "max",
+                        "success": True,
+                        "summary": reply,
+                        "needs_human": True,
+                        "human_prompt": "Selecionar cliente",
+                        "artifacts": [],
+                        "data_keys": [],
+                    }
+                ],
+                "needs_human": ["Selecionar cliente"],
+                "reply": reply,
+                "llm": "local",
+                "provider": "local",
+                "model": "roteamento",
+            }
+
         orch = Orchestrator(model=body.model)
-        params = {}
+        params: dict[str, Any] = {}
         if body.folder:
             params["folder"] = body.folder
-        return orch.run(
-            body.pedido,
+        params.update(extra)
+        payload = orch.run(
+            pedido,
             client_id=body.client_id,
             agent=body.agent,
             params=params,
         )
+        # Resposta amigável para o chat (bolha do Max)
+        partes = []
+        for r in payload.get("results") or []:
+            quem = r.get("agent") or "?"
+            partes.append(f"→ {quem}: {r.get('summary') or ''}")
+        payload["reply"] = (
+            (payload.get("reasoning") or "")
+            + ("\n\n" if partes else "")
+            + "\n\n".join(partes)
+        ).strip()
+        return payload
 
     @app.post("/api/contmatic/{client_id}")
     def api_contmatic(client_id: str, folder: Optional[str] = None) -> dict[str, Any]:

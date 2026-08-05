@@ -17,16 +17,35 @@ ROUTING_KEYWORDS: list[tuple[AgentId, list[str]]] = [
     (AgentId.GREG, ["cobr", "extrato pendente", "solicitar extrato", "falta extrato"]),
     (AgentId.BELLA, ["whatsapp", "cliente mandou", "mensagem", "atendimento"]),
     (AgentId.RACHEL, ["e-mail", "email", "caixa de entrada", "rascunho"]),
-    (AgentId.ANNE, ["tarefa", "prazo", "follow-up", "follow up", "pendência", "pendencia", "atrasad"]),
+    # "atrasad" sozinho pegava "contabilidade atrasada" e mandava pra Anne —
+    # tarefa falsa. Só rota de prazos/tarefas genéricas.
+    (AgentId.ANNE, ["tarefa", "prazo", "follow-up", "follow up", "agenda de"]),
     (AgentId.LUCY, ["reforma", "cbs", "ibs", "tributár", "tributar", "iva dual"]),
     (AgentId.KAREN, ["notícia", "noticia", "briefing", "mudança legal", "mudanca legal"]),
     (AgentId.PAUL, ["dre", "fluxo de caixa", "indicador", "rentabilidade", "financeiro", "margem"]),
     (AgentId.CESAR, ["certidão", "certidao", "cnd", "e-cac", "ecac", "regularidade"]),
     (AgentId.PEDRO, ["cadastro", "cadastrar", "acessorias", "acessórias", "nova empresa", "abrir empresa"]),
-    (AgentId.FABIANA, ["folha", "holerite", "prolabore", "pró-labore", "salário", "salario", "rescis", "férias", "ferias", "13"]),
-    (AgentId.ALEXANDRE, ["lançamento", "lancamento", "lançar", "lancar", "razão", "razao", "partida dobrada", "débito e crédito", "debito e credito"]),
+    (AgentId.FABIANA, ["folha", "holerite", "prolabore", "pró-labore", "salário", "salario", "rescis", "férias", "ferias", "13º", "13o"]),
+    # "contabiliz*" é o que a equipe digita no chat. Sem isso caía no Anne.
+    (AgentId.ALEXANDRE, [
+        "lançamento", "lancamento", "lançar", "lancar",
+        "razão", "razao", "partida dobrada",
+        "débito e crédito", "debito e credito",
+        "contabiliz", "contabilidade", "contábil", "contabil",
+        "contmatic", "planilha de lançamento", "planilha de lancamento",
+        "zerar atraso", "atrasada", "atrasado",
+        "competência", "competencia",
+    ]),
     (AgentId.FERNANDO, ["certificado digital", "certificado a1", "certificado", "renovação de certificado", "renovacao de certificado"]),
 ]
+
+# Pedido de contabilidade do mês — NÃO é a Anne e NÃO é o pipeline antigo
+# (Greg+Xavier+…). Quem lança é o Alexandre; a revisão fica no painel.
+_CONTABIL_KEYS = (
+    "contabiliz", "contabilidade", "contábil", "contabil", "contmatic",
+    "lançamento", "lancamento", "lançar", "lancar", "zerar atraso",
+    "fazer a contabilidade", "processar competência", "processar competencia",
+)
 
 
 class MaxAgent(BaseAgent):
@@ -70,16 +89,16 @@ Agentes disponíveis: Bella, Rachel, Greg, John, Bill, Anne, Lucy, Karen, Paul, 
             if any(k in low for k in keys):
                 hits.append(agent_id)
 
-        # Pipeline mensal
-        if any(k in low for k in ("fechamento", "mensal", "rotina do mês", "rotina do mes", "pipeline")):
-            hits = [
-                AgentId.GREG,
-                AgentId.XAVIER,
-                AgentId.BILL,
-                AgentId.JOHN,
-                AgentId.ANNE,
-                AgentId.CESAR,
-            ]
+        # Contabilidade / Contmatic: SEMPRE Alexandre. O pipeline antigo
+        # (Greg→Xavier→Bill…) só planejava e a equipe via "tarefa registrada"
+        # sem nenhum lançamento na tela.
+        if any(k in low for k in _CONTABIL_KEYS) or (
+            "fechamento" in low and any(k in low for k in ("cont", "mês", "mes", "compet", "cliente"))
+        ):
+            hits = [AgentId.ALEXANDRE]
+        elif any(k in low for k in ("fechamento", "rotina do mês", "rotina do mes", "pipeline mensal")):
+            # fechamento genérico ainda aponta para contábil (prioridade #1)
+            hits = [AgentId.ALEXANDRE]
 
         if not hits:
             # tenta LLM se disponível
@@ -114,12 +133,14 @@ Agentes disponíveis: Bella, Rachel, Greg, John, Bill, Anne, Lucy, Karen, Paul, 
                 seen.add(h)
                 ordered.append(h)
 
+        params = _extract_paths(text)
+        params.update(_extract_competencia_e_forma(text))
         return OrchestratorPlan(
             intent=text[:120],
             agents=ordered,
             reasoning=f"Roteamento por palavras-chave → {len(ordered)} agente(s)",
             client_id=client_id,
-            params=_extract_paths(text),
+            params=params,
         )
 
     def _write_status(self, plan: OrchestratorPlan, task: AgentTask) -> str:
@@ -168,8 +189,56 @@ def _try_json(text: str) -> dict | None:
 
 
 def _extract_paths(text: str) -> dict:
-    paths = re.findall(r'[A-Za-z]:\\[^\s"\']+|/(?:[^\s"\']+)', text)
+    # Só caminho Windows real (C:\...) — o padrão unix `/algo` pegava
+    # "set/2024" e virava path falso.
+    paths = re.findall(r'[A-Za-z]:\\[^\s"\']+', text)
     out: dict = {}
     if paths:
         out["paths"] = paths
+    return out
+
+
+def _extract_competencia_e_forma(text: str) -> dict:
+    """Tira competência e forma de pagamento do pedido em português."""
+    out: dict = {}
+    low = (text or "").lower()
+    # 2024-09 | 09/2024 | set/2024 | set/24 | setembro 2024
+    meses = {
+        "jan": "01", "janeiro": "01",
+        "fev": "02", "fevereiro": "02",
+        "mar": "03", "marco": "03", "março": "03",
+        "abr": "04", "abril": "04",
+        "mai": "05", "maio": "05",
+        "jun": "06", "junho": "06",
+        "jul": "07", "julho": "07",
+        "ago": "08", "agosto": "08",
+        "set": "09", "setembro": "09",
+        "out": "10", "outubro": "10",
+        "nov": "11", "novembro": "11",
+        "dez": "12", "dezembro": "12",
+    }
+    if m := re.search(r"\b(20\d{2})-(\d{2})\b", low):
+        out["competencia"] = f"{m.group(1)}-{m.group(2)}"
+    elif m := re.search(r"\b(\d{2})/(\d{4})\b", low):
+        out["competencia"] = f"{m.group(2)}-{m.group(1)}"
+    elif m := re.search(
+        r"\b(jan|fev|mar|abr|mai|jun|jul|ago|set|out|nov|dez|"
+        r"janeiro|fevereiro|mar[cç]o|abril|maio|junho|julho|agosto|"
+        r"setembro|outubro|novembro|dezembro)[a-z]*[/\-\s]+(\d{2,4})\b",
+        low,
+    ):
+        mes = meses.get(m.group(1)[:3] if len(m.group(1)) >= 3 else m.group(1))
+        if not mes:
+            for k, v in meses.items():
+                if m.group(1).startswith(k):
+                    mes = v
+                    break
+        ano = m.group(2)
+        if mes:
+            out["competencia"] = f"{'20' + ano if len(ano) == 2 else ano}-{mes}"
+
+    if re.search(r"\bcaixa\b", low):
+        out["forma_pagamento"] = "caixa"
+    elif re.search(r"\bbanco\b", low):
+        out["forma_pagamento"] = "banco"
     return out
