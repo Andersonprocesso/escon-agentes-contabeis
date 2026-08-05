@@ -23,6 +23,8 @@ dependencies = [
   "tenacity>=8.3.0",
   "fastapi>=0.111.0",
   "uvicorn[standard]>=0.30.0",
+  # login da Microsoft por device code (Raquel lê e-mail, Alexandre lê OneDrive)
+  "msal>=1.28.0",
 ]
 
 [project.scripts]

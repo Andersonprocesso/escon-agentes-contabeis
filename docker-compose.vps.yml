@@ -1,0 +1,49 @@
+# Painel dos agentes na VPS da Hostinger (147.79.86.221 / srv653140).
+#
+# Sai do Vercel e vem para cá porque no Vercel só havia conversa: os agentes
+# são Python e precisam ler XML, PDF, OneDrive e o Radar. Aqui rodam de
+# verdade, e o escritório (home office) abre pelo navegador de qualquer lugar.
+#
+# Assume o lugar do sistema antigo em lancamentos.escondigital.com.br. O
+# Traefik desta VPS já resolve HTTPS por Let's Encrypt, então basta a label
+# com o mesmo Host — o certificado já existe e a URL não muda.
+#
+# CUIDADO: esta VPS também roda o EsconZap (WhatsApp da Secretaria), o
+# atendemei e o financeiro. Mexer só no que é nosso.
+services:
+  painel:
+    build: .
+    image: escon-agentes-painel
+    container_name: escon-agentes
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      ESCON_DATA_DIR: /app/data
+    volumes:
+      # cadastro de clientes, títulos em aberto e planilhas geradas não podem
+      # morrer com o container
+      - agentes_data:/app/data
+      # cache do login da Microsoft: sem isso cada restart pede device code
+      - agentes_msal:/app/.msal_cache
+    networks: [lancamentos_net]
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=lancamentos_net
+      - "traefik.http.routers.agentes.rule=Host(`lancamentos.escondigital.com.br`)"
+      - traefik.http.routers.agentes.entrypoints=websecure
+      - traefik.http.routers.agentes.tls.certresolver=letsencrypt
+      - traefik.http.services.agentes.loadbalancer.server.port=8787
+      # O painel não tem login próprio, e na internet isso exporia o cadastro
+      # de 108 clientes. A senha fica aqui: uma linha, e não depende de eu
+      # acertar sessão/cookie/CSRF no Python.
+      - traefik.http.routers.agentes.middlewares=agentes-auth
+      - "traefik.http.middlewares.agentes-auth.basicauth.users=${PAINEL_BASICAUTH}"
+
+volumes:
+  agentes_data:
+  agentes_msal:
+
+networks:
+  lancamentos_net:
+    name: lancamentos_net
+    external: true
