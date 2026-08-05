@@ -61,7 +61,13 @@ def _norm(texto: str) -> str:
 class Classificador:
     def __init__(self, regras_path: Path, plano_path: Path):
         dados = yaml.safe_load(regras_path.read_text(encoding="utf-8")) or {}
-        self.regras: list[dict] = dados.get("regras") or []
+        # As regras que o contador ensinou vêm PRIMEIRO: são correção humana
+        # sobre um caso concreto e devem vencer o palpite geral. Ex.: o boleto
+        # da Alumax não diz "honorário", diz o CNPJ do escritório — nenhuma
+        # regra genérica pegaria, e a pessoa ensinou uma vez.
+        from escon_agentes.tools import aprendizado
+
+        self.regras: list[dict] = (aprendizado.carregar() or []) + (dados.get("regras") or [])
         self.contas_resultado: dict = dados.get("contas_resultado") or {}
         plano = yaml.safe_load(plano_path.read_text(encoding="utf-8")) or {}
         self.contas: dict = plano.get("contas") or {}

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 from typing import Any, Optional
 
@@ -64,6 +65,31 @@ class BaixaIn(BaseModel):
     valor: float
     data: Optional[str] = None
     documento: Optional[str] = None
+
+
+class EnsinarIn(BaseModel):
+    """O contador explicando um pendente: 'esse boleto é honorário contábil'."""
+
+    arquivo: str
+    chave: str  # o que identifica o documento (CNPJ, nome do fornecedor)
+    debito: str
+    credito: str
+    descricao: str = ""
+    historico: int = 0
+    reprocessar: bool = True  # roda a competência de novo já com a regra nova
+
+
+class RecorrenteIn(BaseModel):
+    """Despesa de contrato — o honorário do mês existe mesmo sem boleto."""
+
+    descricao: str
+    debito: str
+    credito: str
+    valor: float
+    dia: int = 0  # 0 = último dia do mês
+    inicio: str = ""  # AAAA-MM
+    fim: str = ""
+    id: str = ""
 
 
 def create_app() -> FastAPI:
@@ -355,6 +381,142 @@ def create_app() -> FastAPI:
             filename=f"lancamentos_{client_id}_{competencia}.xlsx",
             media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         )
+
+    @app.get("/api/contas")
+    def api_contas() -> list[dict[str, str]]:
+        """Contas para o contador escolher ao ensinar uma regra.
+
+        Sem digitar código: escolher 3111303 de cabeça é como o plano de contas
+        foi para IPI da última vez.
+        """
+        import yaml as _yaml
+
+        plano = _yaml.safe_load(
+            (PROJECT_ROOT / "config" / "plano_contas.yaml").read_text(encoding="utf-8")
+        ) or {}
+        regras = _yaml.safe_load(
+            (PROJECT_ROOT / "config" / "regras_lancamento.yaml").read_text(encoding="utf-8")
+        ) or {}
+        saida = [
+            {"codigo": str(cod), "nome": alias.replace("_", " ").capitalize()}
+            for alias, cod in (plano.get("contas") or {}).items()
+        ]
+        saida += [
+            {"codigo": str(cod), "nome": nome}
+            for cod, nome in (regras.get("contas_resultado") or {}).items()
+        ]
+        vistos, unicas = set(), []
+        for c in sorted(saida, key=lambda x: x["codigo"]):
+            if c["codigo"] not in vistos:
+                vistos.add(c["codigo"])
+                unicas.append(c)
+        return unicas
+
+    @app.get("/api/fechamentos/{client_id}/{competencia}/pendente")
+    def api_pendente_detalhe(client_id: str, competencia: str, arquivo: str) -> dict[str, Any]:
+        """O documento como o agente o viu, com sugestões do que o identifica."""
+        from escon_agentes.tools import aprendizado, documents
+        from escon_agentes.workflows import fechamento as fx
+
+        pasta = fx.pasta_da_competencia(get_settings(), client_id, competencia)
+        achados = [p for p in pasta.rglob("*") if p.name == arquivo]
+        if not achados:
+            raise HTTPException(404, f"Documento não encontrado: {arquivo}")
+        texto = documents.extract_text(achados[0])
+        return {
+            "arquivo": arquivo,
+            "texto": texto[:4000],
+            "chaves_sugeridas": aprendizado.sugerir_chaves(texto, arquivo),
+        }
+
+    @app.post("/api/fechamentos/{client_id}/{competencia}/ensinar")
+    def api_ensinar(client_id: str, competencia: str, body: EnsinarIn) -> dict[str, Any]:
+        """Vira regra e, se pedido, reprocessa a competência já com ela.
+
+        Reprocessar é de propósito: a regra nova costuma resolver mais de um
+        documento do mesmo fornecedor no mesmo mês.
+        """
+        from escon_agentes.tools import aprendizado
+
+        try:
+            regra = aprendizado.registrar(
+                chave=body.chave,
+                debito=body.debito,
+                credito=body.credito,
+                descricao=body.descricao,
+                historico=body.historico,
+            )
+        except ValueError as e:
+            raise HTTPException(400, str(e)) from e
+
+        resultado: dict[str, Any] = {"regra": regra, "reprocessado": False}
+        if body.reprocessar:
+            from escon_agentes.workflows import fechamento as fx
+
+            s = get_settings()
+            estado = fx.carregar(s, client_id, competencia) or {}
+            novo = fx.reprocessar(
+                s,
+                client_id=client_id,
+                competencia=competencia,
+                forma_pagamento=estado.get("forma_pagamento", "caixa"),
+            )
+            resultado["reprocessado"] = True
+            resultado["estado"] = novo
+        return resultado
+
+    @app.get("/api/recorrentes/{client_id}")
+    def api_recorrentes(client_id: str) -> list[dict[str, Any]]:
+        from dataclasses import asdict as _asdict
+
+        from escon_agentes.tools import recorrentes
+
+        return [_asdict(r) for r in recorrentes.carregar(get_settings().data_dir, client_id)]
+
+    @app.post("/api/recorrentes/{client_id}")
+    def api_recorrente_criar(client_id: str, body: RecorrenteIn) -> dict[str, Any]:
+        """Despesa de contrato: provisionada todo mês, com ou sem documento."""
+        from dataclasses import asdict as _asdict
+
+        from escon_agentes.tools import recorrentes
+
+        rec = recorrentes.Recorrente(
+            id=body.id or re.sub(r"[^a-z0-9]+", "_", body.descricao.lower()).strip("_")[:40],
+            descricao=body.descricao,
+            debito=body.debito,
+            credito=body.credito,
+            valor=body.valor,
+            dia=body.dia,
+            inicio=body.inicio,
+            fim=body.fim,
+        )
+        recorrentes.registrar(get_settings().data_dir, client_id, rec)
+        return _asdict(rec)
+
+    @app.delete("/api/recorrentes/{client_id}/{rec_id}")
+    def api_recorrente_remover(client_id: str, rec_id: str) -> dict[str, Any]:
+        from escon_agentes.tools import recorrentes
+
+        if not recorrentes.remover(get_settings().data_dir, client_id, rec_id):
+            raise HTTPException(404, "Recorrente não encontrada")
+        return {"ok": True, "removida": rec_id}
+
+    @app.get("/api/agentes/{agente}/atividade")
+    def api_agente_atividade(agente: str, limit: int = 12) -> dict[str, Any]:
+        """O que este agente fez — para clicar nele e ver, não adivinhar."""
+        s = get_settings()
+        execucoes = [
+            r for r in _list_runs(s.tasks_dir, limit=200)
+            if agente in (r.get("agents") or [])
+        ][:limit]
+        cls = AGENT_CLASSES.get(next((a for a in AGENT_CLASSES if a.value == agente), None))
+        return {
+            "id": agente,
+            "nome": getattr(cls, "name", agente),
+            "papel": getattr(cls, "role", ""),
+            "execucoes": execucoes,
+            "total": len(execucoes),
+        }
 
     @app.get("/api/titulos/{client_id}")
     def api_titulos(client_id: str, tipo: str | None = None) -> dict[str, Any]:

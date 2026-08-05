@@ -203,6 +203,20 @@ Nunca invente conta que não esteja no plano.
 
         carteira.salvar()
 
+        # Despesas de contrato: existem no mês mesmo sem documento na pasta.
+        # Em vários meses atrasados o boleto do honorário simplesmente não
+        # está lá, e sem isso o resultado do mês sai errado para mais.
+        if task.client_id and competencia:
+            from escon_agentes.tools import recorrentes
+
+            for rec in recorrentes.lancamentos_da_competencia(
+                self.settings.data_dir, task.client_id, competencia
+            ):
+                if any(l.get("regra") == rec["regra"] for l in lancados):
+                    continue  # já lançada nesta rodada
+                lancados.append(rec)
+                por_regra += 1
+
         saida = self.settings.outbox / (task.client_id or "geral")
         saida.mkdir(parents=True, exist_ok=True)
         artefatos: list[str] = []

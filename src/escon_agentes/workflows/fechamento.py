@@ -373,7 +373,37 @@ def executar(
         pendentes=dados.get("pendentes", []),
         planilha=planilha,
         documentos=len(documentos),
+        nao_contabilizaveis=dados.get("nao_contabilizaveis", []),
+        titulos=(dados.get("titulos") or {}).get("resumo", {}),
+        forma_pagamento=forma_pagamento,
         terminado_em=datetime.now().isoformat(timespec="seconds"),
     )
     salvar(settings, estado)
     return estado
+
+
+def reprocessar(
+    settings: Settings,
+    *,
+    client_id: str,
+    competencia: str,
+    forma_pagamento: str = "caixa",
+    usar_llm: bool = False,
+) -> dict[str, Any]:
+    """Roda o Alexandre de novo sobre os documentos que já estão na pasta.
+
+    Serve para depois de ensinar uma regra: os arquivos já foram baixados, e
+    baixar 113 documentos do OneDrive de novo só para reclassificar seria
+    desperdício. Sem LLM por padrão — se o humano acabou de ensinar, o que
+    faltava não era palpite.
+    """
+    return executar(
+        settings,
+        client_id=client_id,
+        competencia=competencia,
+        pasta_local=None,
+        usar_radar=False,
+        pasta_onedrive=None,
+        forma_pagamento=forma_pagamento,
+        usar_llm=usar_llm,
+    )

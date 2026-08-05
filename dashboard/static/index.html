@@ -183,6 +183,75 @@
     }
     .priority strong { color: var(--warn); }
     a { color: var(--accent); }
+
+    /* Revisão dos lançamentos ------------------------------------------- */
+    .abas { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+    .aba {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 8px;
+      padding: 0.45rem 0.8rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .aba[aria-selected="true"] {
+      background: var(--panel2);
+      color: var(--text);
+      border-color: var(--accent);
+    }
+    .aba .cont {
+      font-variant-numeric: tabular-nums;
+      background: var(--bg);
+      border-radius: 999px;
+      padding: 0 0.4rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .aba[aria-selected="true"] .cont { color: var(--text); }
+    .aba.alerta .cont { background: #3d2e10; color: var(--warn); }
+    /* valores em coluna: alinhar à direita e tabular, senão não se compara */
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    tr.linha-pend td { background: rgba(245, 165, 36, 0.06); }
+    tr.linha-pend:hover td { background: rgba(245, 165, 36, 0.11); cursor: pointer; }
+    tr.aberta td { background: rgba(61, 139, 253, 0.1); }
+    .ensinar {
+      background: var(--panel2);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 1rem;
+      margin-top: 0.75rem;
+    }
+    .ensinar h4 { margin: 0 0 0.15rem; font-size: 0.95rem; }
+    .chips { display: flex; gap: 0.35rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
+    .chip {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 0.3rem 0.7rem;
+      font-size: 0.78rem;
+      cursor: pointer;
+    }
+    .chip:hover { border-color: var(--accent); }
+    .chip[aria-pressed="true"] { border-color: var(--accent); background: var(--panel); }
+    .previa {
+      max-height: 130px;
+      overflow: auto;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem;
+      font-size: 0.76rem;
+      line-height: 1.5;
+      color: var(--muted);
+      white-space: pre-wrap;
+      margin-bottom: 0.75rem;
+    }
+    .vazio { color: var(--muted); padding: 1.5rem 0.5rem; text-align: center; font-size: 0.85rem; }
   </style>
 </head>
 <body>
@@ -359,6 +428,16 @@
           <div id="fxResultado" style="margin-top:.8rem"></div>
         </div>
       </div>
+      <!-- Revisão: os lançamentos em tela antes de virar planilha. A planilha
+           é o fim do processo, não o meio; conferir dentro de um Excel baixado
+           é onde o erro passa. -->
+      <div id="fxRevisao" style="display:none;margin-top:1.2rem;border-top:1px solid var(--border);padding-top:1rem">
+        <div class="abas" id="fxAbas"></div>
+        <div id="fxTabela" style="margin-top:.75rem;max-height:460px;overflow:auto"></div>
+        <div id="fxEnsinar"></div>
+        <div id="fxRodape" style="margin-top:.9rem;display:flex;gap:.6rem;align-items:center;flex-wrap:wrap"></div>
+      </div>
+
       <div style="margin-top:1rem">
         <h3 style="font-size:.95rem;margin:0 0 .5rem">Competências já processadas</h3>
         <table><thead><tr>
@@ -377,12 +456,15 @@
         </div>
       </div>
       <div class="card">
-        <h2>Agentes disponíveis</h2>
-        <div class="body" style="padding:0; max-height:280px; overflow:auto;">
+        <h2>Agentes <span class="muted">clique para ver o que fez</span></h2>
+        <div class="body" style="padding:0; max-height:240px; overflow:auto;">
           <table>
             <thead><tr><th>ID</th><th>Nome</th><th>Papel</th></tr></thead>
             <tbody id="agentsBody"></tbody>
           </table>
+        </div>
+        <div class="body" style="padding-top:0">
+          <div class="detail" id="agenteDetalhe" style="display:none"></div>
         </div>
       </div>
     </section>
@@ -524,17 +606,217 @@
         });
         fxPintarEtapas(r.etapas);
         st.textContent = r.resumo || r.situacao;
-        if (r.planilha) {
-          const url = `/api/fechamentos/${r.client_id}/${r.competencia}/planilha`;
-          document.getElementById('fxResultado').innerHTML =
-            `<a class="btn" href="${url}">Baixar planilha do Contmatic</a>
-             <p class="muted" style="margin-top:.5rem">Confira antes de importar.</p>`;
-        }
+        document.getElementById('fxResultado').innerHTML = '';
+        revisar(r);
         fxListar();
       } catch (e) {
         st.textContent = 'Falhou: ' + e.message;
       }
     };
+
+    // ---------- Revisão dos lançamentos ----------
+    // A planilha é o FIM do processo. Conferir dentro de um Excel baixado é
+    // onde o erro passa: aqui os lançamentos ficam em tela, os pendentes são
+    // resolvidos conversando, e só então a planilha é emitida.
+    let rev = null;      // estado da competência em revisão
+    let abaAtual = 'lancados';
+    let contasCache = null;
+
+    const brl = v => (v === null || v === undefined || v === '')
+      ? '—' : Number(v).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    const txt = s => String(s ?? '').replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
+
+    function revisar(estado) {
+      rev = estado;
+      abaAtual = (estado.pendentes || []).length ? 'pendentes' : 'lancados';
+      document.getElementById('fxRevisao').style.display = 'block';
+      document.getElementById('fxEnsinar').innerHTML = '';
+      pintarRevisao();
+      document.getElementById('fxRevisao').scrollIntoView({behavior:'smooth', block:'start'});
+    }
+
+    function pintarRevisao() {
+      if (!rev) return;
+      const grupos = {
+        lancados:   {rot: 'Lançados',       itens: rev.lancados || []},
+        pendentes:  {rot: 'Aguardando você', itens: rev.pendentes || []},
+        ignorados:  {rot: 'Sem lançamento',  itens: rev.nao_contabilizaveis || []},
+      };
+      document.getElementById('fxAbas').innerHTML = Object.entries(grupos).map(([k, g]) => `
+        <button class="aba ${k==='pendentes' && g.itens.length ? 'alerta' : ''}" type="button"
+                aria-selected="${k===abaAtual}" onclick="trocarAba('${k}')">
+          ${g.rot} <span class="cont">${g.itens.length}</span>
+        </button>`).join('');
+
+      const itens = grupos[abaAtual].itens;
+      const alvo = document.getElementById('fxTabela');
+      if (!itens.length) {
+        alvo.innerHTML = `<p class="vazio">${
+          abaAtual === 'pendentes'
+            ? 'Nada aguardando decisão — todos os documentos foram classificados.'
+            : abaAtual === 'ignorados'
+              ? 'Nenhum documento foi descartado nesta competência.'
+              : 'Nenhum lançamento gerado.'}</p>`;
+      } else if (abaAtual === 'lancados') {
+        alvo.innerHTML = `<table><thead><tr>
+            <th>Data</th><th>Débito</th><th>Crédito</th><th class="num">Valor</th>
+            <th>Histórico</th><th>Documento</th></tr></thead><tbody>
+          ${itens.map(l => `<tr>
+            <td>${txt(l.data)}</td>
+            <td class="mono">${txt(l.debito)}</td>
+            <td class="mono">${txt(l.credito)}</td>
+            <td class="num">${brl(l.valor)}</td>
+            <td>${txt(l.complemento).slice(0,44)}</td>
+            <td class="muted">${txt(l.arquivo).slice(0,34)}</td>
+          </tr>`).join('')}</tbody></table>`;
+      } else if (abaAtual === 'pendentes') {
+        alvo.innerHTML = `<table><thead><tr>
+            <th>Documento</th><th class="num">Valor</th><th>Data</th><th>Por quê</th></tr></thead><tbody>
+          ${itens.map((p,i) => `<tr class="linha-pend" onclick="abrirEnsinar(${i})">
+            <td>${txt(p.arquivo).slice(0,40)}</td>
+            <td class="num">${brl(p.valor)}</td>
+            <td>${txt(p.data)}</td>
+            <td class="muted">${txt(p.motivo).slice(0,52)}</td>
+          </tr>`).join('')}</tbody></table>
+          <p class="muted" style="margin:.5rem 0 0">Clique na linha para dizer ao agente o que é.</p>`;
+      } else {
+        alvo.innerHTML = `<table><thead><tr>
+            <th>Documento</th><th>Motivo</th></tr></thead><tbody>
+          ${itens.map(n => `<tr>
+            <td>${txt(n.arquivo).slice(0,44)}</td>
+            <td class="muted">${txt(n.motivo)}</td>
+          </tr>`).join('')}</tbody></table>`;
+      }
+      pintarRodape();
+    }
+
+    function trocarAba(k) {
+      abaAtual = k;
+      document.getElementById('fxEnsinar').innerHTML = '';
+      pintarRevisao();
+    }
+
+    function pintarRodape() {
+      const pend = (rev.pendentes || []).length;
+      const url = `/api/fechamentos/${rev.client_id}/${rev.competencia}/planilha`;
+      document.getElementById('fxRodape').innerHTML = rev.planilha
+        ? `<a class="btn" href="${url}">Baixar planilha do Contmatic</a>
+           <span class="muted">${(rev.lancados||[]).length} lançamento(s)${
+             pend ? ` · <strong style="color:var(--warn)">${pend} ainda sem decisão</strong> — a planilha sai sem eles` : ' · nada pendente'}</span>`
+        : `<span class="muted">Planilha ainda não gerada.</span>`;
+    }
+
+    async function abrirEnsinar(i) {
+      const p = (rev.pendentes || [])[i];
+      const box = document.getElementById('fxEnsinar');
+      box.innerHTML = `<div class="ensinar"><p class="muted">lendo o documento…</p></div>`;
+      if (!contasCache) contasCache = await j('/api/contas');
+      let det = {texto: '', chaves_sugeridas: []};
+      try {
+        det = await j(`/api/fechamentos/${rev.client_id}/${rev.competencia}/pendente?arquivo=`
+                      + encodeURIComponent(p.arquivo));
+      } catch (e) { /* XML do eSocial, PDF sem texto: segue sem prévia */ }
+
+      const opcoes = contasCache.map(c =>
+        `<option value="${c.codigo}">${c.codigo} — ${txt(c.nome)}</option>`).join('');
+      box.innerHTML = `
+        <div class="ensinar">
+          <h4>${txt(p.arquivo)}</h4>
+          <p class="muted" style="margin:.1rem 0 .8rem">
+            R$ ${brl(p.valor)} · ${txt(p.data) || 'sem data'} · ${txt(p.motivo)}
+          </p>
+          ${det.texto ? `<div class="previa">${txt(det.texto.slice(0,900))}</div>` : ''}
+          <label>O que identifica este documento (vale para os próximos meses)</label>
+          <div class="chips" id="chips">
+            ${(det.chaves_sugeridas||[]).map(k =>
+              `<button class="chip" type="button" onclick="usarChave(this)">${txt(k)}</button>`).join('')
+              || '<span class="muted">Sem sugestão — digite abaixo.</span>'}
+          </div>
+          <input id="ensChave" placeholder="Ex.: 09.377.184/0001-88" />
+          <div class="row">
+            <div><label>Débito</label><select id="ensDeb">${opcoes}</select></div>
+            <div><label>Crédito</label><select id="ensCred">${opcoes}</select></div>
+          </div>
+          <label>Como chamar no histórico</label>
+          <input id="ensDesc" placeholder="Ex.: Honorários contábeis" />
+
+          <label style="display:flex;align-items:center;gap:.45rem;margin:.2rem 0 .6rem">
+            <input type="checkbox" id="ensRec" style="width:auto"
+                   onchange="document.getElementById('ensRecBox').style.display=this.checked?'block':'none'" />
+            É todo mês — provisionar mesmo quando não vier documento
+          </label>
+          <div id="ensRecBox" style="display:none">
+            <div class="row">
+              <div><label>Valor mensal</label>
+                <input id="ensRecValor" type="number" step="0.01" value="${p.valor ?? ''}" /></div>
+              <div><label>A partir de</label>
+                <input id="ensRecInicio" placeholder="AAAA-MM" value="${(rev.competencia||'')}" /></div>
+            </div>
+            <p class="muted" style="margin:-.4rem 0 .6rem">
+              A provisão entra no último dia do mês, contra a conta de crédito
+              escolhida acima. Em vários meses atrasados o boleto nem existe —
+              sem isso a despesa some e o resultado sai errado para mais.
+            </p>
+          </div>
+
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.4rem">
+            <button class="btn" type="button" onclick="ensinar()">Ensinar e reprocessar</button>
+            <button class="btn ghost" type="button"
+                    onclick="document.getElementById('fxEnsinar').innerHTML=''">Agora não</button>
+          </div>
+          <p class="muted" id="ensStatus" style="margin:.5rem 0 0"></p>
+        </div>`;
+      if ((det.chaves_sugeridas || []).length) {
+        document.getElementById('ensChave').value = det.chaves_sugeridas[0];
+        document.querySelector('#chips .chip')?.setAttribute('aria-pressed', 'true');
+      }
+    }
+
+    function usarChave(btn) {
+      document.querySelectorAll('#chips .chip').forEach(c => c.setAttribute('aria-pressed','false'));
+      btn.setAttribute('aria-pressed','true');
+      document.getElementById('ensChave').value = btn.textContent.trim();
+    }
+
+    async function ensinar() {
+      const st = document.getElementById('ensStatus');
+      const chave = document.getElementById('ensChave').value.trim();
+      if (!chave) { st.textContent = 'Diga o que identifica o documento — sem isso a regra casaria com tudo.'; return; }
+      st.textContent = 'gravando a regra e reprocessando a competência…';
+      try {
+        // A recorrência vai ANTES: o reprocessamento já traz a provisão junto,
+        // senão a pessoa veria o resultado sem ela e reprocessaria de novo.
+        if (document.getElementById('ensRec')?.checked) {
+          await j(`/api/recorrentes/${rev.client_id}`, {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({
+              descricao: document.getElementById('ensDesc').value.trim() || chave,
+              debito: document.getElementById('ensDeb').value,
+              credito: document.getElementById('ensCred').value,
+              valor: Number(document.getElementById('ensRecValor').value || 0),
+              inicio: document.getElementById('ensRecInicio').value.trim(),
+            })
+          });
+        }
+        const r = await j(`/api/fechamentos/${rev.client_id}/${rev.competencia}/ensinar`, {
+          method: 'POST', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({
+            arquivo: '', chave,
+            debito: document.getElementById('ensDeb').value,
+            credito: document.getElementById('ensCred').value,
+            descricao: document.getElementById('ensDesc').value.trim(),
+            reprocessar: true,
+          })
+        });
+        document.getElementById('fxEnsinar').innerHTML = '';
+        if (r.estado) { rev = r.estado; abaAtual = 'pendentes'; pintarRevisao(); }
+        document.getElementById('fxStatus').textContent =
+          `Regra criada para "${chave}". ${(rev.pendentes||[]).length} pendente(s) restante(s).`;
+        fxListar();
+      } catch (e) {
+        st.textContent = 'Falhou: ' + e.message;
+      }
+    }
 
     async function fxListar() {
       const itens = await j('/api/fechamentos');
@@ -545,8 +827,23 @@
           <td>${i.situacao}</td>
           <td>${i.total_lancados}</td>
           <td>${i.total_pendentes}</td>
-          <td>${i.planilha ? `<a href="/api/fechamentos/${i.client_id}/${i.competencia}/planilha">baixar</a>` : '—'}</td>
+          <td>
+            <button class="ghost" type="button"
+                    onclick="reabrir('${i.client_id}','${i.competencia}')">revisar</button>
+            ${i.planilha ? `<a href="/api/fechamentos/${i.client_id}/${i.competencia}/planilha">baixar</a>` : ''}
+          </td>
         </tr>`).join('') || '<tr><td colspan="6" class="muted">Nenhuma competência processada.</td></tr>';
+    }
+
+    // Reabrir uma competência já processada: o atraso é de meses, ninguém
+    // resolve tudo numa sentada.
+    async function reabrir(cliente, comp) {
+      const st = document.getElementById('fxStatus');
+      st.textContent = 'abrindo…';
+      try {
+        revisar(await j(`/api/fechamentos/${cliente}/${comp}`));
+        st.textContent = `${comp} de ${cliente}`;
+      } catch (e) { st.textContent = 'Falhou: ' + e.message; }
     }
 
     async function loadSelects() {
@@ -640,8 +937,32 @@
     async function loadAgents() {
       const agents = await j('/api/agents');
       document.getElementById('agentsBody').innerHTML = agents.map(a => `
-        <tr><td class="mono">${a.id}</td><td>${a.name}</td><td class="muted">${a.role}</td></tr>
+        <tr style="cursor:pointer" onclick="verAgente('${a.id}')">
+          <td class="mono">${a.id}</td><td>${a.name}</td><td class="muted">${a.role}</td></tr>
       `).join('');
+    }
+
+    // Clicar no agente e ver o que ele processou — sem isso a lista é só
+    // um cartaz de nomes.
+    async function verAgente(id) {
+      const box = document.getElementById('agenteDetalhe');
+      box.style.display = 'block';
+      box.textContent = 'carregando…';
+      try {
+        const a = await j(`/api/agentes/${id}/atividade`);
+        if (!a.execucoes.length) {
+          box.innerHTML = `<strong>${txt(a.nome)}</strong> — ${txt(a.papel)}
+            <p class="muted" style="margin:.4rem 0 0">Ainda não executou nada por aqui.</p>`;
+          return;
+        }
+        box.innerHTML = `<strong>${txt(a.nome)}</strong> — ${txt(a.papel)}
+          <p class="muted" style="margin:.3rem 0 .5rem">${a.total} execução(ões) recentes</p>
+          ${a.execucoes.map(e => `
+            <div style="border-top:1px solid var(--border);padding:.45rem 0">
+              <span class="mono muted">${txt(e.id)}</span> ${statusHtml(e.status)}
+              <div>${txt(e.title).slice(0,70)}</div>
+            </div>`).join('')}`;
+      } catch (e) { box.textContent = 'Falhou: ' + e.message; }
     }
 
     async function execReq(id) {
