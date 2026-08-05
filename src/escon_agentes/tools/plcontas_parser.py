@@ -9,7 +9,21 @@ from typing import Any
 
 from escon_agentes.config import PROJECT_ROOT
 
-DEFAULT_PLCONTAS = PROJECT_ROOT / "data" / "models" / "PlContas.TXT"
+# Na VPS o volume monta em /app/data e o deploy não envia data/ (clientes e
+# planilhas vivem só no volume). O PlContas.TXT vai em config/ para entrar no
+# image/deploy; data/models/ continua válido no PC de desenvolvimento.
+def _achar_plcontas() -> Path:
+    candidatos = (
+        PROJECT_ROOT / "config" / "PlContas.TXT",
+        PROJECT_ROOT / "data" / "models" / "PlContas.TXT",
+    )
+    for p in candidatos:
+        if p.exists():
+            return p
+    return candidatos[0]
+
+
+DEFAULT_PLCONTAS = _achar_plcontas()
 DEFAULT_CACHE = PROJECT_ROOT / "data" / "models" / "plcontas_index.json"
 
 # Ex. balanço:   1.1.1.01.001.00001   Caixa Geral            1111101    0000...D01
@@ -109,7 +123,7 @@ def load_or_build_index(
     force: bool = False,
 ) -> dict[str, Any]:
     cache_path = cache_path or DEFAULT_CACHE
-    plcontas_path = plcontas_path or DEFAULT_PLCONTAS
+    plcontas_path = plcontas_path or _achar_plcontas()
     if cache_path.exists() and not force:
         try:
             data = json.loads(cache_path.read_text(encoding="utf-8"))
@@ -119,8 +133,14 @@ def load_or_build_index(
             pass
     contas = parse_plcontas_file(plcontas_path)
     index = build_index(contas)
-    cache_path.parent.mkdir(parents=True, exist_ok=True)
-    cache_path.write_text(json.dumps(index, ensure_ascii=False, indent=2), encoding="utf-8")
+    try:
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        cache_path.write_text(
+            json.dumps(index, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+    except OSError:
+        # volume só-leitura ou path sem permissão: o índice em memória basta
+        pass
     return index
 
 

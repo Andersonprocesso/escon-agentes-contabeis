@@ -27,6 +27,8 @@ RUN pip install --no-cache-dir .
 COPY config/ ./config/
 COPY dashboard/ ./dashboard/
 COPY scripts/ ./scripts/
+# PlContas.TXT fica em config/ (não no volume data/) para o painel listar
+# as 477 contas reais ao ensinar regras — data/ é volume e chega vazio.
 
 # data/ é volume: cadastro de clientes, títulos em aberto e planilhas geradas
 # não podem morrer junto com o container.
