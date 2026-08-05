@@ -32,6 +32,20 @@ if ! "${SSH[@]}" "test -f $DESTINO/.env"; then
   exit 1
 fi
 
+# Chave SSH do Radar (MinIO em 76.x) dentro do container — sem ela o Drive
+# (Radar) falha e o fechamento dependia só do OneDrive. A chave NÃO vai no
+# tar do código; copia-se do PC (mesma usada neste deploy).
+echo "==> chave SSH do Radar em $DESTINO/secrets/"
+"${SSH[@]}" "mkdir -p $DESTINO/secrets && chmod 700 $DESTINO/secrets"
+if [[ -f "$CHAVE" ]]; then
+  scp -i "$CHAVE" -o StrictHostKeyChecking=no "$CHAVE" "$VPS:$DESTINO/secrets/radar_escon_vps"
+  "${SSH[@]}" "chmod 600 $DESTINO/secrets/radar_escon_vps"
+else
+  echo "!! Chave $CHAVE não encontrada no PC — Radar no container pode falhar."
+  # compose exige o arquivo do volume bind; cria vazio só para o mount não quebrar
+  "${SSH[@]}" "test -f $DESTINO/secrets/radar_escon_vps || : > $DESTINO/secrets/radar_escon_vps"
+fi
+
 echo "==> build e sobe"
 "${SSH[@]}" "cd $DESTINO && docker compose -f docker-compose.vps.yml up -d --build"
 

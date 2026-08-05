@@ -323,12 +323,15 @@ def create_app() -> FastAPI:
 
             s = get_settings()
             try:
+                # OneDrive automático (login anderson@ já autorizado) + Radar se
+                # a chave SSH estiver no container. Não pede link ao usuário.
                 estado = fx.executar(
                     s,
                     client_id=body.client_id,
                     competencia=competencia,
                     pasta_local=body.folder,
-                    usar_radar=True,  # na VPS a fonte natural é o Drive
+                    usar_onedrive=True,
+                    usar_radar=True,
                     forma_pagamento=forma,
                     usar_llm=False,
                 )
@@ -347,9 +350,25 @@ def create_app() -> FastAPI:
                 f"Aguardando você: {n_pend}\n\n"
             )
             if situacao == "sem_documentos":
+                # Mostra o que cada fonte respondeu — evita a impressão de que
+                # "tem OneDrive e o agente não usa".
+                et_linhas = []
+                for e in estado.get("etapas") or []:
+                    nome = e.get("etapa") or "?"
+                    if e.get("ok") is False:
+                        et_linhas.append(f"· {nome}: falhou — {e.get('erro') or e}")
+                    elif e.get("baixados") is not None:
+                        et_linhas.append(f"· {nome}: {e.get('baixados')} baixado(s)")
+                    elif e.get("copiados") is not None:
+                        et_linhas.append(f"· {nome}: {e.get('copiados')} copiado(s)")
+                    else:
+                        et_linhas.append(f"· {nome}: {e}")
+                reply += "Fontes tentadas:\n" + (
+                    "\n".join(et_linhas) if et_linhas else "(nenhuma etapa registrada)"
+                )
                 reply += (
-                    "Não achei documentos nessa competência. "
-                    "Marque o Drive (Radar) ou informe a pasta/OneDrive na aba Conferir."
+                    "\n\nSe o OneDrive falhou em achar a pasta, diga na aba Conferir o "
+                    "caminho (ex.: Documentos/Empresas/Nome da Empresa)."
                 )
             elif n_pend:
                 reply += (

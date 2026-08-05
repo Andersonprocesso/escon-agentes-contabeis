@@ -19,12 +19,16 @@ services:
     env_file: .env
     environment:
       ESCON_DATA_DIR: /app/data
+      # chave do Radar (VPS 76.x) montada abaixo — se faltar, OneDrive ainda funciona
+      ESCON_RADAR_SSH_KEY: /app/secrets/radar_escon_vps
     volumes:
       # cadastro de clientes, títulos em aberto e planilhas geradas não podem
       # morrer com o container
       - agentes_data:/app/data
       # cache do login da Microsoft: sem isso cada restart pede device code
       - agentes_msal:/app/.msal_cache
+      # SSH para o Radar (MinIO/Postgres). Arquivo no host: /opt/escon-agentes/secrets/
+      - ./secrets/radar_escon_vps:/app/secrets/radar_escon_vps:ro
     networks: [lancamentos_net]
     labels:
       - traefik.enable=true

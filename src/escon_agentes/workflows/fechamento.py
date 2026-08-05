@@ -20,7 +20,9 @@ from typing import Any
 
 from escon_agentes.config import Settings
 
-EXTENSOES = {".pdf", ".xml", ".ofx", ".txt", ".csv"}
+# jpg/jpeg entram porque comprovantes de pagamento (DAS, GPS) vêm assim no
+# OneDrive; o classificador decide se vira lançamento ou pendente.
+EXTENSOES = {".pdf", ".xml", ".ofx", ".txt", ".csv", ".jpg", ".jpeg", ".png"}
 RE_COMPETENCIA = re.compile(r"^\d{4}-\d{2}$")
 
 
@@ -210,13 +212,117 @@ def _e_pasta_do_mes(nome: str, ano: str, mes: str) -> bool:
     return bool(re.fullmatch(rf"0?{int(mes)}\s*[-_/.]?\s*{ano}", n))
 
 
+# Árvores reais do OneDrive do Anderson (perfil arquivos = anderson@).
+# O chat não pede o caminho: o agente descobre a pasta da empresa sozinho.
+_ONEDRIVE_BASES = (
+    "Documentos/Empresas",
+    "Anderson Ramos/Empresas",
+    "Anderson Ramos/Pessoal/Empresas",
+    "PUBLICO/Empresas",
+)
+
+
+def _norm_nome(s: str) -> str:
+    import unicodedata
+
+    t = unicodedata.normalize("NFKD", (s or "").lower())
+    t = "".join(c for c in t if not unicodedata.combining(c))
+    return re.sub(r"[^a-z0-9]+", " ", t).strip()
+
+
+def descobrir_pasta_onedrive(
+    settings: Settings, client_id: str, token: str | None = None
+) -> dict[str, Any]:
+    """Acha a pasta da empresa no OneDrive sem o humano colar o caminho.
+
+    Usa o nome do cadastro (e drive_folder_hint se houver) e varre as árvores
+    Empresas/* conhecidas. Quem tem login de arquivos já autorizado não precisa
+    passar link.
+    """
+    from escon_agentes.tools import graph_mail as gm
+    from escon_agentes.tools.clients import get_client
+
+    cliente = get_client(settings.clients_dir, client_id)
+    if not cliente:
+        return {"ok": False, "erro": f"Cliente {client_id} não encontrado no cadastro"}
+
+    if token is None:
+        try:
+            token = gm.get_access_token(settings, interactive_ok=False, perfil="arquivos")
+            gm.conferir_conta(token, settings, "arquivos")
+        except gm.MailboxUnavailable as e:
+            return {"ok": False, "erro": f"Login de arquivos indisponível: {e}"}
+
+    alvos = [
+        getattr(cliente, "drive_folder_hint", None) or "",
+        getattr(cliente, "name", None) or getattr(cliente, "nome", None) or "",
+    ]
+    # CNPJ formatado às vezes está no nome da pasta Contmatic (ex. " - 0061")
+    nomes_norm = {_norm_nome(a) for a in alvos if a and len(_norm_nome(a)) >= 4}
+    if not nomes_norm:
+        return {"ok": False, "erro": "Cadastro sem nome para buscar no OneDrive"}
+
+    # palavras significativas (ignora LTDA, ME, etc.)
+    stop = {"ltda", "me", "epp", "sa", "eireli", "de", "da", "do", "dos", "das", "e"}
+    tokens_cli = set()
+    for n in nomes_norm:
+        tokens_cli |= {w for w in n.split() if len(w) > 2 and w not in stop}
+
+    melhores: list[tuple[int, str]] = []
+    for base in _ONEDRIVE_BASES:
+        cod, itens = _onedrive_listar(base, token)
+        if cod != 200:
+            continue
+        for it in itens:
+            if "folder" not in it:
+                continue
+            nome = it.get("name") or ""
+            nn = _norm_nome(nome)
+            score = 0
+            if nn in nomes_norm:
+                score = 100
+            else:
+                toks = {w for w in nn.split() if len(w) > 2 and w not in stop}
+                comuns = tokens_cli & toks
+                if len(comuns) >= 2:
+                    score = 40 + 10 * len(comuns)
+                elif len(comuns) == 1 and len(tokens_cli) <= 2:
+                    score = 25
+            if score:
+                melhores.append((score, f"{base}/{nome}"))
+
+    if not melhores:
+        return {
+            "ok": False,
+            "erro": (
+                "Não achei a pasta da empresa no OneDrive "
+                f"(procurei em {', '.join(_ONEDRIVE_BASES)})."
+            ),
+            "nome_buscado": next(iter(nomes_norm), ""),
+        }
+
+    melhores.sort(key=lambda x: (-x[0], x[1]))
+    return {
+        "ok": True,
+        "pasta": melhores[0][1],
+        "score": melhores[0][0],
+        "candidatos": [p for _, p in melhores[:5]],
+    }
+
+
 def importar_do_onedrive(
-    settings: Settings, client_id: str, competencia: str, pasta_onedrive: str
+    settings: Settings,
+    client_id: str,
+    competencia: str,
+    pasta_onedrive: str | None = None,
 ) -> dict[str, Any]:
     """Baixa os documentos da competência a partir da pasta da empresa no OneDrive.
 
     Percorre subpastas: dentro do mês o Anderson separa em Boleto, Pgto,
     Nubank etc., e ler só o primeiro nível deixaria quase tudo para trás.
+
+    Se `pasta_onedrive` vier vazia, descobre sozinho pelo nome do cliente —
+    o login de arquivos já está autorizado na VPS.
     """
     import httpx
 
@@ -228,11 +334,20 @@ def importar_do_onedrive(
     except gm.MailboxUnavailable as e:
         return {"ok": False, "erro": f"Login de arquivos indisponível: {e}"}
 
+    descoberta = None
+    if not (pasta_onedrive or "").strip():
+        descoberta = descobrir_pasta_onedrive(settings, client_id, token=token)
+        if not descoberta.get("ok"):
+            return descoberta
+        pasta_onedrive = descoberta["pasta"]
+
     alvo = caminho_da_competencia(pasta_onedrive, competencia, token)
     if not alvo:
         return {
             "ok": False,
             "erro": f"Não achei a pasta de {competencia} dentro de '{pasta_onedrive}'.",
+            "pasta_empresa": pasta_onedrive,
+            "descoberta": descoberta,
         }
 
     destino = pasta_da_competencia(settings, client_id, competencia)
@@ -271,7 +386,9 @@ def importar_do_onedrive(
         "baixados": baixados,
         "ignorados": ignorados,
         "pasta_origem": alvo,
+        "pasta_empresa": pasta_onedrive,
         "destino": str(destino),
+        "descoberta": descoberta,
     }
 
 
@@ -283,14 +400,23 @@ def executar(
     pasta_local: str | None = None,
     usar_radar: bool = False,
     pasta_onedrive: str | None = None,
+    usar_onedrive: bool | None = None,
     forma_pagamento: str = "banco",
     usar_llm: bool = True,
 ) -> dict[str, Any]:
-    """Roda o fechamento inteiro e guarda o andamento a cada etapa."""
+    """Roda o fechamento inteiro e guarda o andamento a cada etapa.
+
+    Na VPS o caminho natural é OneDrive (login anderson@) e/ou Radar. Se
+    `usar_onedrive` não for passado, entra sozinho quando não há pasta do PC
+    — o chat não pede link; o agente descobre a pasta pelo nome do cliente.
+    """
     from escon_agentes.agents.alexandre import AlexandreAgent
     from escon_agentes.schema import AgentId, AgentTask
 
     competencia = normalizar_competencia(competencia)
+    # default: tenta OneDrive se não veio pasta do PC (caso home office / VPS)
+    if usar_onedrive is None:
+        usar_onedrive = not pasta_local
     etapas: list[dict[str, Any]] = []
     estado: dict[str, Any] = {
         "client_id": client_id,
@@ -306,8 +432,10 @@ def executar(
         etapas.append({"etapa": "pasta do PC", **r})
         salvar(settings, estado)
 
-    if pasta_onedrive:
-        r = importar_do_onedrive(settings, client_id, competencia, pasta_onedrive)
+    if usar_onedrive or pasta_onedrive:
+        r = importar_do_onedrive(
+            settings, client_id, competencia, pasta_onedrive or None
+        )
         etapas.append({"etapa": "OneDrive", **r})
         salvar(settings, estado)
 

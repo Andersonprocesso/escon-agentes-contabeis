@@ -18,8 +18,25 @@ from escon_agentes.tools.clients import get_client
 
 DEFAULT_HOST = "76.13.224.42"
 DEFAULT_USER = "root"
-DEFAULT_KEY = Path.home() / ".ssh" / "radar_escon_vps"
 DEFAULT_TIPOS = ("nfe_xml", "nfse_xml", "nfce_xml", "guia_pdf", "extrato")
+
+
+def _resolver_chave_ssh() -> Path:
+    """Onde a chave do Radar pode estar (PC, VPS host montada no container)."""
+    candidatos = [
+        os.environ.get("ESCON_RADAR_SSH_KEY"),
+        os.environ.get("RADAR_SSH_KEY"),
+        "/app/secrets/radar_escon_vps",
+        str(Path.home() / ".ssh" / "radar_escon_vps"),
+        "/root/.ssh/radar_escon_vps",
+    ]
+    for c in candidatos:
+        if c and Path(c).exists():
+            return Path(c)
+    return Path.home() / ".ssh" / "radar_escon_vps"
+
+
+DEFAULT_KEY = _resolver_chave_ssh()
 
 
 def _run_remote(script: str, *, host: str, user: str, key: Path, timeout: int = 300) -> str:
