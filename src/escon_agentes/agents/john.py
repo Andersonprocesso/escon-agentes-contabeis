@@ -27,8 +27,11 @@ Nunca marque conciliação como final sem revisão humana.
 
         bank_path = Path(bank_file) if bank_file else self._find_bank(folder)
         if not bank_path or not bank_path.exists():
-            return self.result_fail(
-                "Extrato OFX/CSV não encontrado. Informe bank_file ou coloque .ofx na pasta do cliente."
+            # No pipeline contábil o John é opcional: sem OFX ele devolve a vez
+            # sem derrubar Xavier/Bill/Alexandre.
+            return self.result_ok(
+                f"Sem extrato OFX/CSV em {folder} — John sem trabalho nesta rodada.",
+                data={"total": 0, "pulou": True},
             )
 
         bank = ofx_parser.load_bank_file(bank_path)
@@ -141,7 +144,13 @@ Nunca marque conciliação como final sem revisão humana.
         if task.input.get("folder"):
             return Path(task.input["folder"])
         if task.client_id:
-            return client_inbox(self.settings.inbox, task.client_id)
+            raiz = client_inbox(self.settings.inbox, task.client_id)
+            comp = task.input.get("competencia")
+            if comp:
+                da = raiz / str(comp)
+                if da.is_dir():
+                    return da
+            return raiz
         return self.settings.inbox
 
     def _find_bank(self, folder: Path) -> Path | None:

@@ -39,13 +39,22 @@ ROUTING_KEYWORDS: list[tuple[AgentId, list[str]]] = [
     (AgentId.FERNANDO, ["certificado digital", "certificado a1", "certificado", "renovação de certificado", "renovacao de certificado"]),
 ]
 
-# Pedido de contabilidade do mês — NÃO é a Anne e NÃO é o pipeline antigo
-# (Greg+Xavier+…). Quem lança é o Alexandre; a revisão fica no painel.
+# Pedido de contabilidade do mês. Multiagente de verdade:
+# cada especialista mastiga o que é dele; o Alexandre SÓ lança.
 _CONTABIL_KEYS = (
     "contabiliz", "contabilidade", "contábil", "contabil", "contmatic",
     "lançamento", "lancamento", "lançar", "lancar", "zerar atraso",
     "fazer a contabilidade", "processar competência", "processar competencia",
 )
+
+# Ordem importa: leitores → folha → contábil. Max orquestra; Alexandre no fim.
+PIPELINE_CONTABIL: list[AgentId] = [
+    AgentId.XAVIER,   # XML fiscal estruturado
+    AgentId.BILL,     # PDF/recibos estruturados
+    AgentId.JOHN,     # OFX / conciliação (se houver extrato)
+    AgentId.FABIANA,  # folha (se houver holerite)
+    AgentId.ALEXANDRE,  # único que gera lançamento Contmatic
+]
 
 
 class MaxAgent(BaseAgent):
@@ -89,16 +98,15 @@ Agentes disponíveis: Bella, Rachel, Greg, John, Bill, Anne, Lucy, Karen, Paul, 
             if any(k in low for k in keys):
                 hits.append(agent_id)
 
-        # Contabilidade / Contmatic: SEMPRE Alexandre. O pipeline antigo
-        # (Greg→Xavier→Bill…) só planejava e a equipe via "tarefa registrada"
-        # sem nenhum lançamento na tela.
+        # Contabilidade: equipe de especialistas → Alexandre lança.
+        # Greg/Anne/Cesar NÃO entram aqui (cobrança/tarefa/certidão ≠ mastigar doc).
         if any(k in low for k in _CONTABIL_KEYS) or (
-            "fechamento" in low and any(k in low for k in ("cont", "mês", "mes", "compet", "cliente"))
+            "fechamento" in low
+            and any(k in low for k in ("cont", "mês", "mes", "compet", "cliente", "contmatic"))
         ):
-            hits = [AgentId.ALEXANDRE]
+            hits = list(PIPELINE_CONTABIL)
         elif any(k in low for k in ("fechamento", "rotina do mês", "rotina do mes", "pipeline mensal")):
-            # fechamento genérico ainda aponta para contábil (prioridade #1)
-            hits = [AgentId.ALEXANDRE]
+            hits = list(PIPELINE_CONTABIL)
 
         if not hits:
             # tenta LLM se disponível
@@ -135,10 +143,17 @@ Agentes disponíveis: Bella, Rachel, Greg, John, Bill, Anne, Lucy, Karen, Paul, 
 
         params = _extract_paths(text)
         params.update(_extract_competencia_e_forma(text))
+        if ordered == list(PIPELINE_CONTABIL):
+            reasoning = (
+                "Pipeline contábil multiagente: Xavier (XML) → Bill (PDF) → "
+                "John (OFX) → Fabiana (folha) → Alexandre (lança o que a equipe mastigou)"
+            )
+        else:
+            reasoning = f"Roteamento por palavras-chave → {len(ordered)} agente(s)"
         return OrchestratorPlan(
             intent=text[:120],
             agents=ordered,
-            reasoning=f"Roteamento por palavras-chave → {len(ordered)} agente(s)",
+            reasoning=reasoning,
             client_id=client_id,
             params=params,
         )

@@ -410,9 +410,6 @@ def executar(
     `usar_onedrive` não for passado, entra sozinho quando não há pasta do PC
     — o chat não pede link; o agente descobre a pasta pelo nome do cliente.
     """
-    from escon_agentes.agents.alexandre import AlexandreAgent
-    from escon_agentes.schema import AgentId, AgentTask
-
     competencia = normalizar_competencia(competencia)
     # default: tenta OneDrive se não veio pasta do PC (caso home office / VPS)
     if usar_onedrive is None:
@@ -458,56 +455,173 @@ def executar(
         salvar(settings, estado)
         return estado
 
-    agente = AlexandreAgent(settings=settings)
-    resultado = agente.run(
-        AgentTask(
-            agent=AgentId.ALEXANDRE,
-            title=f"Fechamento {competencia}",
-            client_id=client_id,
-            input={
-                "folder": str(pasta),
-                "competencia": competencia,
-                "forma_pagamento": forma_pagamento,
-                "usar_llm": usar_llm,
-            },
-        )
+    # --- Equipe multiagente (conceito: especialista mastiga → Alexandre lança) ---
+    pedido = (
+        f"Fechamento contábil multiagente {competencia} "
+        f"cliente {client_id} forma {forma_pagamento}"
     )
-    dados = resultado.data or {}
-    etapas.append(
-        {
-            "etapa": "lançamentos (Alexandre)",
-            "ok": resultado.success,
-            "lancados": len(dados.get("lancados", [])),
-            "pendentes": len(dados.get("pendentes", [])),
-            "por_regra": dados.get("por_regra", 0),
-            "chamadas_llm": dados.get("chamadas_llm", 0),
-        }
+    run = _rodar_pipeline_fixa(
+        settings,
+        client_id=client_id,
+        pasta=pasta,
+        competencia=competencia,
+        forma_pagamento=forma_pagamento,
+        usar_llm=usar_llm,
+        pedido=pedido,
     )
 
-    # o Excel sai com nome da competência para não sobrescrever outro mês
+    dados: dict[str, Any] = {}
     planilha = None
-    for art in resultado.artifacts or []:
-        if art.endswith(".xlsx"):
-            origem = Path(art)
-            alvo = origem.with_name(f"lancamentos_{competencia}.xlsx")
-            if origem.exists():
-                shutil.move(str(origem), str(alvo))
-            planilha = str(alvo)
+    ok_alex = False
+    for r in run.get("results") or []:
+        etapas.append(
+            {
+                "etapa": f"agente {r.get('agent')}",
+                "ok": bool(r.get("success")),
+                "resumo": (r.get("summary") or "")[:500],
+                "artifacts": r.get("artifacts") or [],
+                "pulou": bool((r.get("data") or {}).get("pulou")),
+            }
+        )
+        if r.get("agent") == "alexandre":
+            dados = r.get("data") or {}
+            ok_alex = bool(r.get("success"))
+            for art in r.get("artifacts") or []:
+                if str(art).endswith(".xlsx"):
+                    origem = Path(art)
+                    alvo = origem.with_name(f"lancamentos_{competencia}.xlsx")
+                    if origem.exists() and origem != alvo:
+                        shutil.move(str(origem), str(alvo))
+                        planilha = str(alvo)
+                    else:
+                        planilha = str(art)
+
+    # Folha da Fabiana entra nos lançados se o Alexandre não a reprocessar
+    # (ele marca folha como "quem lança é a Fabiana").
+    folha_extra = []
+    for r in run.get("results") or []:
+        if r.get("agent") == "fabiana":
+            for l in (r.get("data") or {}).get("lancamentos") or []:
+                folha_extra.append(l)
+    lancados = list(dados.get("lancados") or [])
+    if folha_extra:
+        # normaliza formato Fabiana → linha de lançamento
+        for l in folha_extra:
+            if isinstance(l, dict) and l.get("valor"):
+                lancados.append(
+                    {
+                        "data": l.get("data"),
+                        "debito": l.get("debito"),
+                        "credito": l.get("credito"),
+                        "valor": l.get("valor"),
+                        "complemento": l.get("complemento") or "folha",
+                        "regra": "fabiana_folha",
+                        "origem": "fabiana",
+                        "arquivo": "folha",
+                    }
+                )
+
+    partes = [
+        f"→ {r.get('agent')}: {(r.get('summary') or '')[:220]}"
+        for r in (run.get("results") or [])
+    ]
+    resumo_equipe = "\n".join(partes)
 
     estado.update(
-        situacao="concluido" if resultado.success else "erro",
-        resumo=resultado.summary,
-        lancados=dados.get("lancados", []),
+        situacao="concluido" if ok_alex else "erro",
+        resumo=resumo_equipe,
+        lancados=lancados,
         pendentes=dados.get("pendentes", []),
         planilha=planilha,
         documentos=len(documentos),
         nao_contabilizaveis=dados.get("nao_contabilizaveis", []),
         titulos=(dados.get("titulos") or {}).get("resumo", {}),
         forma_pagamento=forma_pagamento,
+        pipeline=[r.get("agent") for r in (run.get("results") or [])],
+        run_id=run.get("id"),
         terminado_em=datetime.now().isoformat(timespec="seconds"),
     )
     salvar(settings, estado)
     return estado
+
+
+def _rodar_pipeline_fixa(
+    settings: Settings,
+    *,
+    client_id: str,
+    pasta: Path,
+    competencia: str,
+    forma_pagamento: str,
+    usar_llm: bool,
+    pedido: str,
+) -> dict[str, Any]:
+    """Xavier → Bill → John → Fabiana → Alexandre, com handoff de dados."""
+    from escon_agentes.agents import create_agent
+    from escon_agentes.agents.max import PIPELINE_CONTABIL
+    from escon_agentes.schema import AgentResult, AgentTask
+
+    results: list[dict[str, Any]] = []
+    handoff: dict[str, Any] = {
+        "folder": str(pasta),
+        "competencia": competencia,
+        "forma_pagamento": forma_pagamento,
+        "usar_llm": usar_llm,
+        "client_id": client_id,
+    }
+    handoff_artifacts: list[str] = []
+
+    for aid in PIPELINE_CONTABIL:
+        task = AgentTask(
+            agent=aid,
+            title=pedido[:100],
+            description=pedido,
+            client_id=client_id,
+            input={
+                **handoff,
+                "artifacts": list(handoff_artifacts),
+                "equipe_ja_rodou": [r["agent"] for r in results],
+            },
+        )
+        try:
+            result: AgentResult = create_agent(aid, settings=settings).run(task)
+        except Exception as exc:  # noqa: BLE001
+            result = AgentResult(success=False, summary=f"Erro: {exc}")
+
+        entry = {
+            "agent": aid.value,
+            "success": result.success,
+            "summary": result.summary,
+            "needs_human": result.needs_human,
+            "human_prompt": result.human_prompt,
+            "artifacts": list(result.artifacts or []),
+            "data_keys": list((result.data or {}).keys()),
+            # data completa fica no estado do fechamento (UI / Max report)
+            "data": result.data or {},
+        }
+        results.append(entry)
+
+        if result.data:
+            handoff[f"de_{aid.value}"] = result.data
+            if aid.value == "xavier" and result.data.get("documentos"):
+                handoff["xmls_estruturados"] = result.data["documentos"]
+            if aid.value == "bill" and result.data.get("items"):
+                handoff["docs_estruturados"] = result.data["items"]
+            if aid.value == "john":
+                handoff["conciliacao"] = result.data
+            if aid.value == "fabiana" and result.data.get("lancamentos"):
+                handoff["folha_lancamentos"] = result.data["lancamentos"]
+        for art in result.artifacts or []:
+            if art and art not in handoff_artifacts:
+                handoff_artifacts.append(art)
+
+    return {
+        "id": f"pipe-{client_id}-{competencia}",
+        "agents": [a.value for a in PIPELINE_CONTABIL],
+        "results": results,
+        "reasoning": (
+            "Pipeline contábil multiagente: Xavier→Bill→John→Fabiana→Alexandre"
+        ),
+    }
 
 
 def reprocessar(

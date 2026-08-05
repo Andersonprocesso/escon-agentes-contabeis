@@ -70,5 +70,11 @@ Classifique o tipo (DAS, DARF, boleto, folha, etc.), extraia valor/data/CNPJ e l
         if task.input.get("folder"):
             return Path(task.input["folder"])
         if task.client_id:
-            return client_inbox(self.settings.inbox, task.client_id)
+            raiz = client_inbox(self.settings.inbox, task.client_id)
+            comp = task.input.get("competencia")
+            if comp:
+                da = raiz / str(comp)
+                if da.is_dir():
+                    return da
+            return raiz
         return self.settings.inbox

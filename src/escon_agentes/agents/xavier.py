@@ -70,6 +70,12 @@ Sempre recomende revisão humana antes de importar no Contmatic.
         if paths:
             return Path(paths[0])
         if task.client_id:
-            return client_inbox(self.settings.inbox, task.client_id)
-        # tenta pasta raiz inbox
+            raiz = client_inbox(self.settings.inbox, task.client_id)
+            # Só a competência: senão XML de outro mês mistura no fechamento.
+            comp = task.input.get("competencia")
+            if comp:
+                da = raiz / str(comp)
+                if da.is_dir():
+                    return da
+            return raiz
         return self.settings.inbox

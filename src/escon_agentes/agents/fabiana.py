@@ -107,58 +107,113 @@ Folha que não fecha (proventos - descontos ≠ líquido) não vira lançamento.
         return str(self.contas.get(self.bancos.get((banco or "itau").lower(), "banco_itau"), ""))
 
     def run(self, task: AgentTask) -> AgentResult:
-        arquivo = task.input.get("arquivo")
-        if not arquivo or not Path(arquivo).exists():
-            return self.result_fail("Informe o PDF da folha em input['arquivo'].")
-
-        folha = ler_folha(documents.extract_text(Path(arquivo)))
-        pendencias = problemas(folha)
-        info = resumo(folha)
-
-        # Folha que não fecha não vira lançamento: erro aqui só aparece no
-        # balancete, semanas depois.
-        if pendencias:
+        arquivos = self._resolver_arquivos_folha(task)
+        if not arquivos:
             return self.result_ok(
-                "Folha NÃO foi contabilizada — precisa de conferência:\n  - "
-                + "\n  - ".join(pendencias[:10]),
-                data={"resumo": info, "problemas": pendencias, "lancamentos": []},
-                needs_human=True,
-                human_prompt="Confira a folha; nenhum lançamento foi gerado.",
+                "Nenhuma folha/holerite nesta pasta — Fabiana sem trabalho nesta rodada.",
+                data={"lancamentos": [], "pulou": True},
             )
 
         cliente = get_client(self.settings.clients_dir, task.client_id) if task.client_id else None
         banco = self.conta_banco(getattr(cliente, "banco_principal", None))
-        comp = task.input.get("competencia") or folha.competencia
-        if not comp:
-            return self.result_fail("Competência não identificada na folha.")
-        ano, mes = int(comp[:4]), int(comp[5:7])
-
-        # Datas reais informadas por quem pagou. Ex.:
-        #   {"fgts": {"data": "2020-09-15", "juros": 12.50, "multa": 33.34}}
-        # Sem isso vale o calendário padrão.
         reais: dict[str, dict] = task.input.get("pagamentos") or {}
-
-        # Anexo IV recolhe patronal por fora; o cadastro do cliente diz qual é
         anexo = getattr(cliente, "anexo_simples", None)
         rat = float(getattr(cliente, "aliquota_rat", 0.0) or 0.0)
         patronal = anexo == 4
 
-        lancs = self._montar(folha, comp, ano, mes, banco,
-                             patronal=patronal, rat=rat, reais=reais)
-        if task.input.get("provisionar", True):
-            lancs += self._provisoes(folha, ano, mes)
+        todos_lancs: list[Any] = []
+        resumos: list[dict] = []
+        problemas_geral: list[str] = []
+
+        for arquivo in arquivos:
+            folha = ler_folha(documents.extract_text(Path(arquivo)))
+            pendencias = problemas(folha)
+            info = resumo(folha)
+            resumos.append(info)
+
+            # Folha que não fecha não vira lançamento: erro aqui só aparece no
+            # balancete, semanas depois.
+            if pendencias:
+                problemas_geral.extend(
+                    f"{Path(arquivo).name}: {p}" for p in pendencias[:8]
+                )
+                continue
+
+            comp = task.input.get("competencia") or folha.competencia
+            if not comp:
+                problemas_geral.append(f"{Path(arquivo).name}: competência não identificada")
+                continue
+            ano, mes = int(comp[:4]), int(comp[5:7])
+
+            lancs = self._montar(
+                folha, comp, ano, mes, banco,
+                patronal=patronal, rat=rat, reais=reais,
+            )
+            if task.input.get("provisionar", True):
+                lancs += self._provisoes(folha, ano, mes)
+            todos_lancs.extend(lancs)
+
+        if problemas_geral and not todos_lancs:
+            return self.result_ok(
+                "Folha NÃO foi contabilizada — precisa de conferência:\n  - "
+                + "\n  - ".join(problemas_geral[:12]),
+                data={
+                    "resumo": resumos,
+                    "problemas": problemas_geral,
+                    "lancamentos": [],
+                },
+                needs_human=True,
+                human_prompt="Confira a folha; nenhum lançamento foi gerado.",
+            )
+
+        n_func = sum(int(r.get("funcionarios") or 0) for r in resumos if isinstance(r, dict))
         return self.result_ok(
-            f"{info['funcionarios']} funcionário(s) · folha fecha · "
-            f"{len(lancs)} lançamento(s): "
-            f"{sum(1 for x in lancs if x.etapa == 'provisao')} de provisão e "
-            f"{sum(1 for x in lancs if x.etapa == 'pagamento')} de pagamento.",
+            f"{len(arquivos)} arquivo(s) de folha · {n_func} funcionário(s) · "
+            f"{len(todos_lancs)} lançamento(s) de folha mastigados para o Alexandre"
+            + (f" · {len(problemas_geral)} problema(s)" if problemas_geral else ""),
             data={
-                "resumo": info,
-                "lancamentos": [x.__dict__ for x in lancs],
+                "resumo": resumos,
+                "problemas": problemas_geral,
+                "lancamentos": [
+                    x if isinstance(x, dict) else x.__dict__ for x in todos_lancs
+                ],
+                "arquivos": [str(a) for a in arquivos],
             },
-            needs_human=True,
+            needs_human=bool(problemas_geral) or bool(todos_lancs),
             human_prompt="Revise antes de importar; confira feriados nas datas de pagamento.",
         )
+
+    def _resolver_arquivos_folha(self, task: AgentTask) -> list[Path]:
+        """Um PDF explícito, ou busca na pasta da competência (pipeline Max)."""
+        arquivo = task.input.get("arquivo")
+        if arquivo and Path(arquivo).exists():
+            return [Path(arquivo)]
+
+        folder = None
+        if task.input.get("folder"):
+            folder = Path(task.input["folder"])
+        elif task.client_id:
+            from escon_agentes.tools.clients import client_inbox
+
+            raiz = client_inbox(self.settings.inbox, task.client_id)
+            comp = task.input.get("competencia")
+            folder = (raiz / str(comp)) if comp and (raiz / str(comp)).is_dir() else raiz
+
+        if not folder or not folder.exists():
+            return []
+
+        chaves = (
+            "folha", "holerite", "prolabore", "pró-labore", "pro-labore",
+            "pro labore", "pagamento e pro", "rescis", "trct",
+        )
+        achados: list[Path] = []
+        for p in sorted(folder.rglob("*")):
+            if not p.is_file() or p.suffix.lower() != ".pdf":
+                continue
+            nome = p.name.lower()
+            if any(k in nome for k in chaves):
+                achados.append(p)
+        return achados
 
     def _provisoes(self, folha: Folha, ano: int, mes: int) -> list[Lancamento]:
         """Férias e 13º: competência mensal que NÃO está na folha do mês.

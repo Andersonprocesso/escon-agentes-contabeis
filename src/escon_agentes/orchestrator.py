@@ -68,14 +68,22 @@ class Orchestrator:
 
         results: list[dict[str, Any]] = []
         needs_human: list[str] = []
+        # Handoff: cada especialista deixa o que mastigou no input do próximo.
+        # Sem isso o Max só "lista nomes" e o Alexandre refaz tudo sozinho —
+        # o que anula o multiagente.
+        handoff: dict[str, Any] = dict(params)
+        handoff_artifacts: list[str] = list(params.get("artifacts") or [])
 
         for aid in agents:
+            task_input = dict(handoff)
+            task_input["artifacts"] = list(handoff_artifacts)
+            task_input["equipe_ja_rodou"] = [r["agent"] for r in results]
             task = AgentTask(
                 agent=aid,
                 title=request[:100],
                 description=request,
                 client_id=client_id,
-                input=params,
+                input=task_input,
                 status=TaskStatus.RUNNING,
             )
             task.log(f"Iniciando {aid.value}")
@@ -105,6 +113,22 @@ class Orchestrator:
             results.append(entry)
             if result.needs_human:
                 needs_human.append(f"{aid.value}: {result.human_prompt or 'revisar'}")
+
+            # Propaga dados e artefatos para o próximo especialista
+            if result.data:
+                handoff[f"de_{aid.value}"] = result.data
+                # atalhos que o Alexandre / Fabiana já olham
+                if aid == AgentId.XAVIER and result.data.get("documentos"):
+                    handoff["xmls_estruturados"] = result.data.get("documentos")
+                if aid == AgentId.BILL and result.data.get("items"):
+                    handoff["docs_estruturados"] = result.data.get("items")
+                if aid == AgentId.JOHN:
+                    handoff["conciliacao"] = result.data
+                if aid == AgentId.FABIANA and result.data.get("lancamentos"):
+                    handoff["folha_lancamentos"] = result.data.get("lancamentos")
+            for art in result.artifacts or []:
+                if art and art not in handoff_artifacts:
+                    handoff_artifacts.append(art)
 
         status = TaskStatus.WAITING_HUMAN if needs_human else TaskStatus.DONE
         model_label = llm.model_id if llm.available else "offline"

@@ -342,13 +342,21 @@ def create_app() -> FastAPI:
             n_pend = len(estado.get("pendentes") or [])
             n_docs = estado.get("documentos") or 0
             situacao = estado.get("situacao") or ""
+            pipe = estado.get("pipeline") or ["alexandre"]
             reply = (
-                f"Acionei o Alexandre para {body.client_id} · {estado.get('competencia')}.\n\n"
+                f"Equipe acionada para {body.client_id} · {estado.get('competencia')}:\n"
+                f"{' → '.join(pipe)}\n\n"
                 f"Situação: {situacao}\n"
                 f"Documentos: {n_docs}\n"
                 f"Lançados: {n_lanc}\n"
                 f"Aguardando você: {n_pend}\n\n"
             )
+            # Reporta o que cada especialista fez (conceito multiagente)
+            for e in estado.get("etapas") or []:
+                if str(e.get("etapa") or "").startswith("agente "):
+                    quem = str(e.get("etapa")).replace("agente ", "")
+                    resumo_e = (e.get("resumo") or "")[:180]
+                    reply += f"→ {quem}: {resumo_e}\n"
             if situacao == "sem_documentos":
                 # Mostra o que cada fonte respondeu — evita a impressão de que
                 # "tem OneDrive e o agente não usa".
@@ -383,26 +391,42 @@ def create_app() -> FastAPI:
             if estado.get("resumo"):
                 reply += f"\n\n{estado['resumo']}"
 
-            return {
-                "id": f"fx-{body.client_id}-{estado.get('competencia')}",
-                "title": pedido[:120],
-                "client_id": body.client_id,
-                "status": "done" if situacao == "concluido" else situacao,
-                "reasoning": "Pedido de contabilidade → fechamento real (Alexandre)",
-                "agents": ["alexandre"],
-                "results": [
+            results_ui = []
+            for e in estado.get("etapas") or []:
+                if str(e.get("etapa") or "").startswith("agente "):
+                    quem = str(e.get("etapa")).replace("agente ", "")
+                    results_ui.append(
+                        {
+                            "agent": quem,
+                            "success": bool(e.get("ok")),
+                            "summary": e.get("resumo") or "",
+                            "needs_human": quem == "alexandre" and n_pend > 0,
+                            "artifacts": e.get("artifacts") or [],
+                            "data_keys": [],
+                        }
+                    )
+            if not results_ui:
+                results_ui = [
                     {
                         "agent": "alexandre",
                         "success": situacao in {"concluido", "sem_documentos"},
                         "summary": reply,
                         "needs_human": n_pend > 0,
-                        "human_prompt": "Revisar lançamentos e ensinar pendentes"
-                        if n_pend
-                        else None,
                         "artifacts": [estado["planilha"]] if estado.get("planilha") else [],
                         "data_keys": ["fechamento"],
                     }
-                ],
+                ]
+            return {
+                "id": f"fx-{body.client_id}-{estado.get('competencia')}",
+                "title": pedido[:120],
+                "client_id": body.client_id,
+                "status": "done" if situacao == "concluido" else situacao,
+                "reasoning": (
+                    "Pedido de contabilidade → pipeline multiagente "
+                    "(Xavier→Bill→John→Fabiana→Alexandre)"
+                ),
+                "agents": pipe,
+                "results": results_ui,
                 "needs_human": [f"alexandre: {n_pend} pendente(s)"] if n_pend else [],
                 "reply": reply,
                 "fechamento": {
@@ -412,6 +436,7 @@ def create_app() -> FastAPI:
                     "total_pendentes": n_pend,
                     "situacao": situacao,
                     "abrir_revisao": situacao == "concluido",
+                    "pipeline": pipe,
                 },
                 "llm": "regras (sem token)",
                 "provider": "local",
