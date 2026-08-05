@@ -172,12 +172,20 @@ def caminho_da_competencia(base: str, competencia: str, token: str) -> str | Non
     """
     base = base.strip().strip("/")
     ano, mes = competencia.split("-")
+
+    # O caminho informado JÁ é a pasta do mês? Decidir pelo nome dela, não pelo
+    # conteúdo: a pasta de setembro/2024 da Alumax tem 18 PDFs E as subpastas
+    # "Emitida", "Recebida" e "ESOCIAL" — a checagem antiga ("só arquivos,
+    # nenhuma pasta") não reconhecia, e o fechamento dizia que a competência
+    # não existia estando dentro dela.
+    if _e_pasta_do_mes(base.rsplit("/", 1)[-1], ano, mes):
+        return base
+
     cod, itens = _onedrive_listar(base, token)
     if cod != 200:
         return None
     nomes = {i["name"]: i for i in itens if "folder" in i}
 
-    # já é a pasta do mês?
     if any(not "folder" in i for i in itens) and not nomes:
         return base
 
@@ -190,9 +198,16 @@ def caminho_da_competencia(base: str, competencia: str, token: str) -> str | Non
         return None
 
     for nome in nomes:  # base já é o ano
-        if nome.strip() == f"{mes} {ano}":
+        if _e_pasta_do_mes(nome, ano, mes):
             return f"{base}/{nome}"
     return None
+
+
+def _e_pasta_do_mes(nome: str, ano: str, mes: str) -> bool:
+    """"09 2024", "9-2024", "09_2024", "092024" — o Anderson escreve de
+    formas diferentes conforme o ano, então aceitar as variações."""
+    n = (nome or "").strip()
+    return bool(re.fullmatch(rf"0?{int(mes)}\s*[-_/.]?\s*{ano}", n))
 
 
 def importar_do_onedrive(

@@ -438,6 +438,13 @@ Nunca invente conta que não esteja no plano.
         if suf == ".xml":
             from escon_agentes.tools import xml_fiscal
 
+            # eSocial não é documento fiscal: evtRemun, evtPgtos e
+            # evtFechaEvPer são eventos da folha. Vinham como "nota sem CFOP"
+            # e enchiam os pendentes — 13 dos 17 em set/2024 da Alumax.
+            if esocial := _e_esocial(arq):
+                return [Documento(caminho=str(arq), tipo="xml", texto="",
+                                  extras={"nao_lancavel": esocial})]
+
             try:
                 d = xml_fiscal.parse_xml_file(arq)
             except Exception:  # noqa: BLE001
@@ -483,16 +490,26 @@ Nunca invente conta que não esteja no plano.
             ]
 
         texto = documents.extract_text(arq)
-        if not texto.strip():
-            return [Documento(caminho=str(arq), tipo="pdf", texto="")]
 
         # Relatório, protocolo e declaração não viram lançamento — e a folha
         # tem agente próprio. Marcar aqui evita que virem "pendente", que é
         # onde deve ficar só o que realmente falta decidir.
+        #
+        # Vem ANTES do teste de texto vazio: o Balancete de set/2024 da Alumax
+        # não devolveu texto extraível e escapava por aqui, indo para pendentes
+        # como "faltou data, valor" — sendo que o nome do arquivo já bastava.
         motivo = _nao_lancavel(texto, arq.name)
         alvo = _sem_acento(f"{arq.name} {texto[:2500]}")
         if not motivo and any(k in alvo for k in DA_FABIANA):
             motivo = "Folha de pagamento — quem lança é a Fabiana"
+
+        if not texto.strip():
+            return [
+                Documento(
+                    caminho=str(arq), tipo="pdf", texto="",
+                    extras={"nao_lancavel": motivo} if motivo else {},
+                )
+            ]
 
         extraido = documents.process_document(arq)
         return [
@@ -573,6 +590,24 @@ NAO_LANCAVEIS: list[tuple[tuple[str, ...], str]] = [
 # alguém preparado para ela.
 DA_FABIANA = ("folha de pagamento", "holerite", "recibo de pagamento de salario",
               "folha de prolabore", "pro-labore", "termo de rescisao", "trct")
+
+
+def _e_esocial(arq: Path) -> str:
+    """Evento do eSocial disfarçado de XML na pasta da competência.
+
+    O nome do arquivo já entrega (`evtRemun`, `evtPgtos`, `evtFechaEvPer`), e
+    quem cuida de folha é a Fabiana. Se o nome não disser, o namespace diz.
+    """
+    n = arq.name.lower()
+    if n.startswith("evt") or "esocial" in n:
+        return "Evento do eSocial — folha; quem cuida é a Fabiana"
+    try:
+        cabeca = arq.read_text(encoding="utf-8", errors="ignore")[:600].lower()
+    except OSError:
+        return ""
+    if "esocial" in cabeca:
+        return "Evento do eSocial — folha; quem cuida é a Fabiana"
+    return ""
 
 
 def _nao_lancavel(texto: str, nome: str) -> str:
