@@ -204,6 +204,29 @@
 
     <section class="kpis" id="kpis"></section>
 
+    <div class="card" id="chatCard">
+      <h2>Falar com o Max <span class="muted">ele aciona a equipe</span></h2>
+      <div class="body">
+        <div class="row">
+          <div style="flex:3">
+            <label>O que você precisa</label>
+            <input id="chatPedido" placeholder="Ex.: Alexandre, quais títulos da Alumax estão vencidos?"
+                   onkeydown="if(event.key==='Enter')document.getElementById('chatEnviar').click()" />
+          </div>
+          <div style="flex:1">
+            <label>Cliente (opcional)</label>
+            <select id="chatCliente"></select>
+          </div>
+        </div>
+        <button id="chatEnviar" type="button" style="margin-top:.6rem">Enviar</button>
+        <p class="muted" style="margin:.5rem 0 0">
+          Aqui o pedido é <strong>executado</strong>, não só respondido: o Max escolhe o
+          agente e mostra o que ele fez de verdade.
+        </p>
+        <div id="chatResposta" class="detail" style="display:none;margin-top:.75rem"></div>
+      </div>
+    </div>
+
     <section class="grid2">
       <div class="card">
         <h2>Solicitar serviço <span class="muted">colaboradoras</span></h2>
@@ -415,9 +438,46 @@
     async function fxCarregarClientes() {
       const r = await j('/api/clients');
       const lista = Array.isArray(r) ? r : (r.clients || []);
-      document.getElementById('fxCliente').innerHTML =
-        lista.map(c => `<option value="${c.id}">${c.nome} (${c.id})</option>`).join('');
+      const opcoes = lista.map(c => `<option value="${c.id}">${c.nome} (${c.id})</option>`).join('');
+      document.getElementById('fxCliente').innerHTML = opcoes;
+      // o chat aceita pedido sem cliente ("liste os agentes"), então tem vazio
+      document.getElementById('chatCliente').innerHTML =
+        '<option value="">— nenhum —</option>' + opcoes;
     }
+
+    // ---------- Chat com o Max ----------
+    // Diferente do chat que existia no Vercel: ali era só conversa e o modelo
+    // respondia COMO SE tivesse executado. Aqui vai para /api/run, que aciona
+    // o agente de verdade e devolve o que ele realmente fez.
+    document.getElementById('chatEnviar').onclick = async () => {
+      const pedido = document.getElementById('chatPedido').value.trim();
+      const box = document.getElementById('chatResposta');
+      if (!pedido) return;
+      box.style.display = 'block';
+      box.textContent = 'pensando e executando…';
+      try {
+        const r = await j('/api/run', {
+          method: 'POST', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({
+            pedido,
+            client_id: document.getElementById('chatCliente').value || null,
+          })
+        });
+        const quem = (r.agents || []).join(', ') || '—';
+        const partes = (r.results || []).map(x => `
+          <div style="margin-top:.5rem">
+            <strong>${x.agent}</strong>
+            ${x.needs_human ? '<span class="muted"> · precisa da sua revisão</span>' : ''}
+            <div style="white-space:pre-wrap;margin-top:.2rem">${(x.summary||'').replace(/</g,'&lt;')}</div>
+            ${(x.artifacts||[]).map(a => `<div class="mono muted">→ ${a}</div>`).join('')}
+          </div>`).join('');
+        box.innerHTML = `<div class="muted">${r.reasoning || ''} · acionou: ${quem}</div>${partes}`;
+        document.getElementById('chatPedido').value = '';
+        loadRuns();
+      } catch (e) {
+        box.textContent = 'Falhou: ' + e.message;
+      }
+    };
 
     document.getElementById('fxVerPasta').onclick = async () => {
       const el = document.getElementById('fxPastaInfo');
