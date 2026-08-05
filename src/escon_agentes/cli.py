@@ -514,6 +514,30 @@ def plano_contas_cmd(
     console.print(ht)
 
 
+@app.command("graph-login")
+def graph_login_cmd(
+    perfil: str = typer.Option("mail", "--perfil", help="mail (contato@) ou arquivos (anderson@)"),
+) -> None:
+    """Autoriza o acesso à Microsoft por device code (uma vez por perfil).
+
+    São DOIS logins separados de propósito: `mail` é a caixa contato@ que a
+    Raquel lê, `arquivos` é o OneDrive do Anderson de onde vêm os documentos.
+    Misturar os dois já fez a Raquel operar na caixa errada uma vez.
+    """
+    from escon_agentes.tools.graph_mail import MailboxUnavailable, get_access_token
+
+    s = get_settings()
+    quem = s.ms_graph_mailbox if perfil == "mail" else s.ms_graph_files_user
+    console.print(f"[bold]Perfil {perfil}[/bold] — deve ser autorizado como: [cyan]{quem}[/cyan]")
+    console.print("[yellow]Entre com ESSA conta. Errar a conta aqui é o erro mais caro.[/yellow]\n")
+    try:
+        get_access_token(s, interactive_ok=True, perfil=perfil)
+    except MailboxUnavailable as e:
+        console.print(f"[red]{e}[/red]")
+        raise typer.Exit(1) from e
+    console.print(f"\n[green]Autorizado. O token fica em cache — não pedirá de novo.[/green]")
+
+
 @app.command("lancamentos")
 def lancamentos_cmd(
     cliente: str = typer.Option(..., "--cliente", "-c"),

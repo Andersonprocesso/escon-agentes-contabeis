@@ -52,6 +52,14 @@ class FechamentoIn(BaseModel):
 # Modelos de corpo ficam FORA de create_app: com `from __future__ import
 # annotations` o Pydantic não resolve os tipos de classe aninhada e o FastAPI
 # devolve 422 "Field required: body".
+class QuickRun(BaseModel):
+    pedido: str
+    client_id: Optional[str] = None
+    agent: Optional[str] = None
+    model: Optional[str] = None
+    folder: Optional[str] = None
+
+
 class BaixaIn(BaseModel):
     valor: float
     data: Optional[str] = None
@@ -261,13 +269,6 @@ def create_app() -> FastAPI:
         if not item:
             raise HTTPException(404, "Solicitação não encontrada")
         return _execute_request(item)
-
-    class QuickRun(BaseModel):
-        pedido: str
-        client_id: Optional[str] = None
-        agent: Optional[str] = None
-        model: Optional[str] = None
-        folder: Optional[str] = None
 
     @app.post("/api/run")
     def api_run(body: QuickRun) -> dict[str, Any]:
