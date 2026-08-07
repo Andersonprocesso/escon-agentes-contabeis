@@ -67,6 +67,13 @@ class Settings(BaseSettings):
     dashboard_host: str = "127.0.0.1"
     dashboard_port: int = 8787
 
+    # Login do painel (substitui Traefik basic auth)
+    escon_auth_enabled: bool = True
+    escon_session_secret: str = ""  # se vazio, deriva de dados locais (dev)
+    escon_admin_email: str = "anderson@escondigital.com.br"
+    escon_admin_password: str = ""  # só no .env da VPS — nunca no git
+    escon_admin_name: str = "Anderson"
+
     # Pasta local do Google Drive for Desktop (raiz "Radar Escon")
     google_drive_radar_root: str = ""
 

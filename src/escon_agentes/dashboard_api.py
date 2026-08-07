@@ -2,21 +2,23 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 from pathlib import Path
 from typing import Any, Optional
 
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse, HTMLResponse
+from fastapi import FastAPI, HTTPException, Request, Response
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
+from starlette.middleware.base import BaseHTTPMiddleware
 
 from escon_agentes.agents import AGENT_CLASSES
 from escon_agentes.config import PROJECT_ROOT, get_settings
 from escon_agentes.llm import list_model_aliases
 from escon_agentes.orchestrator import Orchestrator
-from escon_agentes.tools import requests_board, tasks as task_board
+from escon_agentes.tools import auth_users, requests_board, tasks as task_board
 from escon_agentes.tools.clients import (
     as_table,
     create_client,
@@ -31,6 +33,74 @@ from escon_agentes.workflows.contmatic_pipeline import run_contmatic_pipeline
 # ensure_demo_clients só no bootstrap vazio (import Radar preenche a carteira)
 
 STATIC_DIR = PROJECT_ROOT / "dashboard" / "static"
+
+# Rotas sem login (login/registro + health + estáticos)
+_AUTH_PUBLIC_PREFIXES = (
+    "/static/",
+    "/login",
+    "/register",
+    "/api/auth/login",
+    "/api/auth/register",
+    "/api/auth/me",
+    "/api/health",
+    "/favicon.ico",
+    "/docs",
+    "/openapi.json",
+    "/redoc",
+)
+
+
+def _session_secret(s) -> str:
+    secret = (s.escon_session_secret or "").strip()
+    if secret:
+        return secret
+    # dev/local: derivado estável do path de dados (não use em produção sem env)
+    raw = f"escon-dev|{s.data_dir}|{s.escon_admin_email}"
+    return hashlib.sha256(raw.encode()).hexdigest()
+
+
+def _bootstrap_admin(s) -> None:
+    if not s.escon_auth_enabled:
+        return
+    pwd = (s.escon_admin_password or "").strip()
+    if not pwd:
+        return
+    auth_users.ensure_admin(
+        s.data_dir,
+        email=s.escon_admin_email or "anderson@escondigital.com.br",
+        password=pwd,
+        name=s.escon_admin_name or "Anderson",
+    )
+
+
+class AuthMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        s = get_settings()
+        if not s.escon_auth_enabled:
+            request.state.user = None
+            return await call_next(request)
+
+        path = request.url.path or "/"
+        # estáticos e páginas públicas
+        if any(path == p or path.startswith(p) for p in _AUTH_PUBLIC_PREFIXES):
+            return await call_next(request)
+        if path.startswith("/static"):
+            return await call_next(request)
+
+        token = request.cookies.get(auth_users.COOKIE_NAME)
+        user = auth_users.read_session_token(_session_secret(s), token)
+        if user:
+            request.state.user = user
+            return await call_next(request)
+
+        # não autenticado
+        if path.startswith("/api/"):
+            return JSONResponse(
+                {"detail": "Não autenticado. Faça login."},
+                status_code=401,
+            )
+        # HTML → tela de login
+        return RedirectResponse(url="/login", status_code=302)
 
 
 
@@ -152,26 +222,175 @@ class RecorrenteIn(BaseModel):
     id: str = ""
 
 
+class LoginIn(BaseModel):
+    email: str
+    password: str
+
+
+class RegisterIn(BaseModel):
+    email: str
+    password: str
+    name: str = ""
+    invite_code: str
+
+
+class InviteIn(BaseModel):
+    label: str = ""
+
+
+class CreateUserIn(BaseModel):
+    email: str
+    password: str
+    name: str = ""
+    role: str = "colaboradora"
+
+
 def create_app() -> FastAPI:
     app = FastAPI(
         title="Escon Agentes — Dashboard",
         description="Painel operacional para colaboradoras",
-        version="0.2.0",
+        version="0.3.0",
     )
     settings = get_settings()
     # demos só se carteira vazia (import Radar preenche ~87 empresas)
     if not list(settings.clients_dir.glob("*.json")):
         ensure_demo_clients(settings.clients_dir)
+    _bootstrap_admin(settings)
+
+    # Auth ANTES das rotas (Starlette: último add = primeiro a rodar no request)
+    app.add_middleware(AuthMiddleware)
 
     if STATIC_DIR.exists():
         app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
+    @app.get("/login")
+    def login_page():
+        p = STATIC_DIR / "login.html"
+        if p.exists():
+            return FileResponse(p)
+        return HTMLResponse("<h1>Login</h1><p>Arquivo login.html ausente.</p>")
+
+    @app.get("/register")
+    def register_page():
+        p = STATIC_DIR / "register.html"
+        if p.exists():
+            return FileResponse(p)
+        return HTMLResponse("<h1>Criar acesso</h1><p>Arquivo register.html ausente.</p>")
+
     @app.get("/")
-    def index():
+    def index(request: Request):
         index_path = STATIC_DIR / "index.html"
         if not index_path.exists():
             return HTMLResponse("<h1>Dashboard não encontrado</h1>", status_code=500)
         return FileResponse(index_path)
+
+    def _set_session_cookie(
+        response: Response, user: dict[str, Any], request: Request | None = None
+    ) -> None:
+        s = get_settings()
+        token = auth_users.make_session_token(_session_secret(s), user)
+        # Secure só em HTTPS (VPS). Em http://127.0.0.1 o cookie precisa ir sem Secure.
+        scheme = (request.url.scheme if request else "https") or "https"
+        host = (request.url.hostname if request else "") or ""
+        secure = scheme == "https" or (
+            host not in ("127.0.0.1", "localhost", "0.0.0.0")
+        )
+        response.set_cookie(
+            key=auth_users.COOKIE_NAME,
+            value=token,
+            httponly=True,
+            samesite="lax",
+            secure=secure,
+            max_age=auth_users.SESSION_DAYS * 86400,
+            path="/",
+        )
+
+    @app.post("/api/auth/login")
+    def api_login(body: LoginIn, request: Request, response: Response) -> dict[str, Any]:
+        s = get_settings()
+        user = auth_users.authenticate(s.data_dir, body.email, body.password)
+        if not user:
+            raise HTTPException(401, "E-mail ou senha incorretos.")
+        _set_session_cookie(response, user, request)
+        return {"ok": True, "user": user}
+
+    @app.post("/api/auth/register")
+    def api_register(
+        body: RegisterIn, request: Request, response: Response
+    ) -> dict[str, Any]:
+        s = get_settings()
+        try:
+            user = auth_users.register_user(
+                s.data_dir,
+                email=body.email,
+                password=body.password,
+                name=body.name,
+                invite_code=body.invite_code,
+            )
+        except ValueError as e:
+            raise HTTPException(400, str(e)) from e
+        _set_session_cookie(response, user, request)
+        return {"ok": True, "user": user}
+
+    @app.post("/api/auth/logout")
+    def api_logout(response: Response) -> dict[str, Any]:
+        response.delete_cookie(auth_users.COOKIE_NAME, path="/")
+        return {"ok": True}
+
+    @app.get("/api/auth/me")
+    def api_me(request: Request) -> dict[str, Any]:
+        s = get_settings()
+        if not s.escon_auth_enabled:
+            return {
+                "ok": True,
+                "auth_enabled": False,
+                "user": {"email": "local", "name": "Local", "role": "admin"},
+            }
+        token = request.cookies.get(auth_users.COOKIE_NAME)
+        user = auth_users.read_session_token(_session_secret(s), token)
+        if not user:
+            return {"ok": False, "auth_enabled": True, "user": None}
+        return {"ok": True, "auth_enabled": True, "user": user}
+
+    @app.get("/api/auth/users")
+    def api_list_users(request: Request) -> dict[str, Any]:
+        user = getattr(request.state, "user", None)
+        if not user or user.get("role") != "admin":
+            raise HTTPException(403, "Só o administrador gerencia usuários.")
+        s = get_settings()
+        return {
+            "users": auth_users.list_users_public(s.data_dir),
+            "invites": auth_users.list_invites(s.data_dir),
+        }
+
+    @app.post("/api/auth/invites")
+    def api_create_invite(request: Request, body: InviteIn) -> dict[str, Any]:
+        user = getattr(request.state, "user", None)
+        if not user or user.get("role") != "admin":
+            raise HTTPException(403, "Só o administrador cria convites.")
+        inv = auth_users.create_invite(
+            get_settings().data_dir,
+            created_by=user.get("email") or "",
+            label=body.label,
+        )
+        return {"ok": True, "invite": inv}
+
+    @app.post("/api/auth/users")
+    def api_create_user(request: Request, body: CreateUserIn) -> dict[str, Any]:
+        user = getattr(request.state, "user", None)
+        if not user or user.get("role") != "admin":
+            raise HTTPException(403, "Só o administrador cria contas.")
+        try:
+            created = auth_users.create_user_by_admin(
+                get_settings().data_dir,
+                email=body.email,
+                password=body.password,
+                name=body.name,
+                role=body.role,
+            )
+        except ValueError as e:
+            raise HTTPException(400, str(e)) from e
+        return {"ok": True, "user": created}
 
     @app.get("/api/health")
     def health() -> dict[str, Any]:
@@ -182,6 +401,7 @@ def create_app() -> FastAPI:
             "llm_provider": s.active_provider(),
             "llm_model": s.resolve_model() if s.llm_available else None,
             "offline": s.escon_offline or not s.llm_available,
+            "auth_enabled": s.escon_auth_enabled,
         }
 
     @app.get("/api/overview")

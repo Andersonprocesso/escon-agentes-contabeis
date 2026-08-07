@@ -606,6 +606,8 @@
         <button class="icon-btn mobile-only" type="button" id="btn-panel-m" aria-label="Abrir painel" title="Painel">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M15.5 14a5 5 0 0 1 5.5 5"/></svg>
         </button>
+        <span id="user-chip" class="muted" style="font-size:.82rem;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title=""></span>
+        <button class="btn ghost" type="button" id="btn-logout" style="width:auto;padding:.35rem .65rem;font-size:.8rem;display:none">Sair</button>
         <button class="icon-btn" type="button" id="theme-toggle" aria-label="Alternar tema" title="Alternar tema clara/escura">
           <span id="theme-icon"></span>
         </button>
@@ -650,6 +652,10 @@
           <button class="tab" data-tab="overview" type="button" id="tab-btn-overview">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>
             <span>Visão geral</span>
+          </button>
+          <button class="tab" data-tab="acessos" type="button" id="tab-btn-acessos" style="display:none">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span>Acessos</span>
           </button>
         </div>
 
@@ -835,6 +841,52 @@
             <p class="muted" id="overview-note"></p>
           </div>
         </section>
+
+        <!-- ACESSOS (só admin) -->
+        <section class="panel" id="tab-acessos">
+          <div class="scroll" style="padding:1rem 1.1rem">
+            <h3 style="margin:0 0 .35rem">Acessos da equipe</h3>
+            <p class="muted" style="margin:0 0 1rem;font-size:.88rem;line-height:1.45">
+              Gere um <strong>código de convite</strong> e passe para a colaboradora.
+              Ela abre <em>/register</em>, cria e-mail e senha, e já entra no painel.
+            </p>
+            <div class="card" style="margin-bottom:1rem">
+              <div class="card-head"><span>Novo convite</span></div>
+              <div class="body" style="padding:1rem">
+                <label>Para quem (nome ou função)</label>
+                <input id="inviteLabel" placeholder="Ex.: Fabiana, contabilidade" style="margin-bottom:.65rem" />
+                <button class="btn" type="button" id="btn-gen-invite" style="width:auto">Gerar código de convite</button>
+                <p class="muted" id="inviteResult" style="margin:.65rem 0 0;font-size:.9rem"></p>
+              </div>
+            </div>
+            <div class="card" style="margin-bottom:1rem">
+              <div class="card-head"><span>Criar conta direto (sem convite)</span></div>
+              <div class="body" style="padding:1rem">
+                <label>Nome</label>
+                <input id="newUserName" placeholder="Nome" style="margin-bottom:.45rem" />
+                <label>E-mail</label>
+                <input id="newUserEmail" type="email" placeholder="email@..." style="margin-bottom:.45rem" />
+                <label>Senha temporária</label>
+                <input id="newUserPass" type="password" placeholder="mín. 8 caracteres" style="margin-bottom:.65rem" />
+                <button class="btn ghost" type="button" id="btn-create-user" style="width:auto">Criar colaboradora</button>
+                <p class="muted" id="createUserResult" style="margin:.55rem 0 0;font-size:.85rem"></p>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head"><span>Usuários e convites</span></div>
+              <div class="body" style="padding:0;overflow:auto">
+                <table>
+                  <thead><tr><th>Nome</th><th>E-mail</th><th>Papel</th></tr></thead>
+                  <tbody id="usersBody"></tbody>
+                </table>
+                <table style="margin-top:.5rem">
+                  <thead><tr><th>Convite</th><th>Para</th><th>Status</th></tr></thead>
+                  <tbody id="invitesBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
 
       <aside class="right" id="right">
@@ -932,8 +984,18 @@
         ? "—"
         : Number(v).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
+    let currentUser = null;
+
     async function j(url, opts = {}) {
-      const r = await fetch(url, opts);
+      const next = { credentials: "same-origin", ...opts };
+      if (next.headers && !(next.headers instanceof Headers)) {
+        next.headers = { ...next.headers };
+      }
+      const r = await fetch(url, next);
+      if (r.status === 401 && !String(url).includes("/api/auth/")) {
+        location.href = "/login";
+        throw new Error("Sessão expirada — faça login de novo.");
+      }
       if (!r.ok) {
         let msg = r.statusText;
         try {
@@ -952,6 +1014,71 @@
       const ct = r.headers.get("content-type") || "";
       if (ct.includes("application/json")) return r.json();
       return r.text();
+    }
+
+    async function ensureAuth() {
+      try {
+        const me = await j("/api/auth/me");
+        if (me.auth_enabled && !me.user) {
+          location.href = "/login";
+          return null;
+        }
+        currentUser = me.user || null;
+        const chip = document.getElementById("user-chip");
+        const btnOut = document.getElementById("btn-logout");
+        if (currentUser) {
+          const label = currentUser.name || currentUser.email || "";
+          if (chip) {
+            chip.textContent = label;
+            chip.title = (currentUser.email || "") + " · " + (currentUser.role || "");
+          }
+          if (btnOut) btnOut.style.display = "";
+          if (currentUser.role === "admin") {
+            const tab = document.getElementById("tab-btn-acessos");
+            if (tab) tab.style.display = "";
+          }
+        }
+        return currentUser;
+      } catch (_) {
+        location.href = "/login";
+        return null;
+      }
+    }
+
+    async function loadAcessos() {
+      if (!currentUser || currentUser.role !== "admin") return;
+      try {
+        const d = await j("/api/auth/users");
+        const ub = document.getElementById("usersBody");
+        const ib = document.getElementById("invitesBody");
+        if (ub) {
+          ub.innerHTML =
+            (d.users || [])
+              .map(
+                (u) =>
+                  `<tr><td>${txt(u.name)}</td><td class="mono">${txt(u.email)}</td><td>${txt(u.role)}</td></tr>`
+              )
+              .join("") ||
+            '<tr><td colspan="3" class="muted">Nenhum usuário</td></tr>';
+        }
+        if (ib) {
+          ib.innerHTML =
+            (d.invites || [])
+              .slice()
+              .reverse()
+              .map((inv) => {
+                const st = inv.used_by
+                  ? `usado por ${txt(inv.used_by)}`
+                  : `<strong style="color:var(--green)">livre</strong>`;
+                return `<tr><td class="mono">${txt(inv.code)}</td><td>${txt(inv.label)}</td><td>${st}</td></tr>`;
+              })
+              .join("") ||
+            '<tr><td colspan="3" class="muted">Nenhum convite ainda</td></tr>';
+        }
+      } catch (e) {
+        const el = document.getElementById("inviteResult");
+        if (el) el.textContent = "Falha ao listar: " + e.message;
+      }
     }
 
     function statusHtml(s) {
@@ -1004,6 +1131,7 @@
       }
       if (name === "overview") loadOverview().catch(() => {});
       if (name === "clients") renderClients();
+      if (name === "acessos") loadAcessos().catch(() => {});
       closeDrawers();
     }
 
@@ -2610,6 +2738,7 @@
     // ---------- boot ----------
     async function bootApp() {
       initTheme();
+      await ensureAuth();
 
       const [agentsRes, clientsRes, modelsRes] = await Promise.all([
         j("/api/agents"),
@@ -2732,6 +2861,58 @@
     };
     _bind("btn-fechar-rev", fecharRevisao);
     _bind("btn-reprocessar", reprocessarCompetencia);
+    _bind("btn-logout", async () => {
+      try {
+        await j("/api/auth/logout", { method: "POST" });
+      } catch (_) {}
+      location.href = "/login";
+    });
+    _bind("btn-gen-invite", async () => {
+      const el = document.getElementById("inviteResult");
+      if (!el) return;
+      el.textContent = "gerando…";
+      try {
+        const r = await j("/api/auth/invites", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            label: document.getElementById("inviteLabel")?.value?.trim() || "",
+          }),
+        });
+        const code = r.invite?.code || "";
+        const link = location.origin + "/register?code=" + encodeURIComponent(code);
+        el.innerHTML =
+          `Código: <strong class="mono">${txt(code)}</strong><br/>` +
+          `Link: <a href="${link}" target="_blank" rel="noopener">${txt(link)}</a><br/>` +
+          `<span class="muted">Passe o link ou o código para a colaboradora.</span>`;
+        loadAcessos();
+      } catch (e) {
+        el.textContent = "Falhou: " + e.message;
+      }
+    });
+    _bind("btn-create-user", async () => {
+      const el = document.getElementById("createUserResult");
+      if (!el) return;
+      el.textContent = "criando…";
+      try {
+        await j("/api/auth/users", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: document.getElementById("newUserName")?.value?.trim() || "",
+            email: document.getElementById("newUserEmail")?.value?.trim() || "",
+            password: document.getElementById("newUserPass")?.value || "",
+            role: "colaboradora",
+          }),
+        });
+        el.textContent = "Conta criada. Passe e-mail e senha para ela entrar em /login.";
+        const pass = document.getElementById("newUserPass");
+        if (pass) pass.value = "";
+        loadAcessos();
+      } catch (e) {
+        el.textContent = "Falhou: " + e.message;
+      }
+    });
     // Delegação: sobrevive a innerHTML do painel Corrigir
     const painelEl = document.getElementById("fxEnsinar");
     if (painelEl) {

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Entrar · Escon Agentes</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f6f8fb; --panel: #fff; --text: #0f172a; --muted: #475569;
+      --border: #dde3ec; --accent: #1d4ed8; --danger: #b91c1c; --radius: 14px;
+      --shadow: 0 20px 44px rgba(15,23,42,.12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; font-family: "DM Sans", system-ui, sans-serif;
+      background: var(--bg); color: var(--text);
+      display: flex; align-items: center; justify-content: center; padding: 1.5rem;
+    }
+    .card {
+      width: 100%; max-width: 400px; background: var(--panel);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 1.75rem 1.6rem 1.5rem;
+    }
+    .brand { display: flex; align-items: center; gap: .75rem; margin-bottom: 1.25rem; }
+    .logo {
+      width: 42px; height: 42px; border-radius: 12px; background: var(--accent);
+      color: #fff; display: grid; place-items: center; font-weight: 700; font-size: .95rem;
+    }
+    h1 { margin: 0; font-size: 1.15rem; }
+    p.sub { margin: .15rem 0 0; color: var(--muted); font-size: .88rem; }
+    label { display: block; font-size: .82rem; font-weight: 600; margin: .85rem 0 .3rem; color: var(--muted); }
+    input {
+      width: 100%; padding: .65rem .75rem; border: 1px solid var(--border);
+      border-radius: 10px; font: inherit; font-size: .95rem;
+    }
+    input:focus { outline: 2px solid rgba(29,78,216,.35); border-color: var(--accent); }
+    .btn {
+      width: 100%; margin-top: 1.15rem; padding: .7rem 1rem; border: 0; border-radius: 10px;
+      background: var(--accent); color: #fff; font: inherit; font-weight: 600;
+      font-size: .95rem; cursor: pointer;
+    }
+    .btn:disabled { opacity: .6; cursor: wait; }
+    .err { color: var(--danger); font-size: .85rem; margin-top: .75rem; min-height: 1.2em; }
+    .foot { margin-top: 1.1rem; font-size: .85rem; color: var(--muted); text-align: center; }
+    .foot a { color: var(--accent); font-weight: 600; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="brand">
+      <div class="logo">EA</div>
+      <div>
+        <h1>Escon Agentes Contábeis</h1>
+        <p class="sub">Entre com seu e-mail do escritório</p>
+      </div>
+    </div>
+    <form id="form">
+      <label for="email">E-mail</label>
+      <input id="email" type="email" autocomplete="username" required placeholder="voce@escondigital.com.br" />
+      <label for="password">Senha</label>
+      <input id="password" type="password" autocomplete="current-password" required placeholder="••••••••" />
+      <button class="btn" type="submit" id="btn">Entrar</button>
+      <p class="err" id="err"></p>
+    </form>
+    <p class="foot">
+      Colaboradora sem conta?
+      <a href="/register">Criar acesso com convite</a>
+    </p>
+  </div>
+  <script>
+    // se já logado, vai pro painel
+    fetch("/api/auth/me", { credentials: "same-origin" })
+      .then((r) => r.json())
+      .then((d) => { if (d.ok && d.user) location.href = "/"; })
+      .catch(() => {});
+
+    document.getElementById("form").onsubmit = async (e) => {
+      e.preventDefault();
+      const err = document.getElementById("err");
+      const btn = document.getElementById("btn");
+      err.textContent = "";
+      btn.disabled = true;
+      try {
+        const r = await fetch("/api/auth/login", {
+          method: "POST",
+          credentials: "same-origin",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: document.getElementById("email").value.trim(),
+            password: document.getElementById("password").value,
+          }),
+        });
+        const t = await r.text();
+        let d = {};
+        try { d = JSON.parse(t); } catch (_) { d = { detail: t }; }
+        if (!r.ok) throw new Error(d.detail || r.statusText || "Falha no login");
+        location.href = "/";
+      } catch (ex) {
+        err.textContent = ex.message || "Erro ao entrar";
+        btn.disabled = false;
+      }
+    };
+  </script>
+</body>
+</html>

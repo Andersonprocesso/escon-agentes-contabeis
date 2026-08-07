@@ -37,11 +37,8 @@ services:
       - traefik.http.routers.agentes.entrypoints=websecure
       - traefik.http.routers.agentes.tls.certresolver=letsencrypt
       - traefik.http.services.agentes.loadbalancer.server.port=8787
-      # O painel não tem login próprio, e na internet isso exporia o cadastro
-      # de 108 clientes. A senha fica aqui: uma linha, e não depende de eu
-      # acertar sessão/cookie/CSRF no Python.
-      - traefik.http.routers.agentes.middlewares=agentes-auth
-      - "traefik.http.middlewares.agentes-auth.basicauth.users=${PAINEL_BASICAUTH}"
+      # Login próprio no app (cookie + usuários em data/users.json).
+      # Basic auth do Traefik desligado — evitaria o login novo (dupla senha).
 
 volumes:
   agentes_data:
