@@ -60,7 +60,15 @@ def format_data_contmatic(data: Any) -> str:
     s = str(data).strip()
     if len(s) == 10 and s[2] == "." and s[5] == ".":
         return s
-    for fmt in ("%d/%m/%Y", "%Y-%m-%d", "%d-%m-%Y", "%d.%m.%Y", "%Y/%m/%d"):
+    for fmt in (
+        "%d/%m/%Y",
+        "%d/%m/%y",
+        "%Y-%m-%d",
+        "%d-%m-%Y",
+        "%d.%m.%Y",
+        "%d.%m.%y",
+        "%Y/%m/%d",
+    ):
         try:
             return datetime.strptime(s[:10], fmt).strftime("%d.%m.%Y")
         except ValueError:

@@ -79,6 +79,45 @@ class EnsinarIn(BaseModel):
     reprocessar: bool = True  # roda a competência de novo já com a regra nova
 
 
+class LancamentoLinhaIn(BaseModel):
+    """Uma linha de lançamento Contmatic (o contador preenche o que faltou)."""
+
+    data: str
+    debito: str
+    credito: str
+    valor: float
+    historico: int = 0
+    complemento: str = ""
+
+
+class CorrigirIn(BaseModel):
+    """Corrige um pendente como 1+ lançamentos (ex.: NFS com ISS e INSS retidos).
+
+    Diferente de 'ensinar' (que vira regra genérica 1 D/C): aqui o humano monta
+    o(s) lançamento(s) deste documento e eles entram na planilha na hora.
+    """
+
+    arquivo: str
+    lancamentos: list[LancamentoLinhaIn]
+    # opcional: se só 1 linha e veio chave, grava regra para o próximo mês
+    chave: str = ""
+    descricao: str = ""
+    ensinar_regra: bool = False
+
+
+class DesconsiderarIn(BaseModel):
+    """Marca o documento como sem efeito contábil (relatório, medição, etc.)."""
+
+    arquivo: str
+    motivo: str = ""
+
+
+class ReprocessarIn(BaseModel):
+    """Roda de novo a competência sem rebaixar OneDrive/Radar."""
+
+    usar_llm: bool = False
+
+
 class RecorrenteIn(BaseModel):
     """Despesa de contrato — o honorário do mês existe mesmo sem boleto."""
 
@@ -591,8 +630,23 @@ def create_app() -> FastAPI:
 
         from escon_agentes.workflows import fechamento as fx
 
-        estado = fx.carregar(get_settings(), client_id, competencia) or {}
-        caminho = estado.get("planilha")
+        s = get_settings()
+        estado = fx.carregar(s, client_id, competencia) or {}
+        lancados = estado.get("lancados") or []
+        # Regenera na hora a partir do conjunto final (folha + manuais + regras).
+        # Assim o download nunca fica com planilha velha do Alexandre só.
+        if lancados:
+            caminho = fx.gerar_planilha(
+                s,
+                client_id=client_id,
+                competencia=competencia,
+                lancados=lancados,
+            )
+            if caminho:
+                estado["planilha"] = caminho
+                fx.salvar(s, estado)
+        else:
+            caminho = estado.get("planilha")
         if not caminho or not Path(caminho).exists():
             raise HTTPException(status_code=404, detail="Planilha ainda não gerada")
         return FileResponse(
@@ -600,6 +654,94 @@ def create_app() -> FastAPI:
             filename=f"lancamentos_{client_id}_{competencia}.xlsx",
             media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         )
+
+    @app.post("/api/fechamentos/{client_id}/{competencia}/corrigir")
+    def api_corrigir(client_id: str, competencia: str, body: CorrigirIn) -> dict[str, Any]:
+        """Pendente vira lançamento(s) editados pelo contador — entram na planilha."""
+        from escon_agentes.workflows import fechamento as fx
+
+        if not body.arquivo:
+            raise HTTPException(400, "arquivo é obrigatório")
+        if not body.lancamentos:
+            raise HTTPException(400, "informe ao menos um lançamento")
+        ensinar = None
+        if body.ensinar_regra and body.chave:
+            ensinar = {"chave": body.chave, "descricao": body.descricao}
+        try:
+            estado = fx.corrigir_pendente(
+                get_settings(),
+                client_id=client_id,
+                competencia=competencia,
+                arquivo=body.arquivo,
+                lancamentos=[ln.model_dump() for ln in body.lancamentos],
+                ensinar=ensinar,
+            )
+        except FileNotFoundError as e:
+            raise HTTPException(404, str(e)) from e
+        except ValueError as e:
+            raise HTTPException(400, str(e)) from e
+        except Exception as e:
+            raise HTTPException(500, f"Falha ao salvar correção: {e}") from e
+        return {
+            "ok": True,
+            "total_lancados": len(estado.get("lancados") or []),
+            "total_pendentes": len(estado.get("pendentes") or []),
+            "estado": estado,
+        }
+
+    @app.post("/api/fechamentos/{client_id}/{competencia}/desconsiderar")
+    def api_desconsiderar(
+        client_id: str, competencia: str, body: DesconsiderarIn
+    ) -> dict[str, Any]:
+        """Tira o documento de 'Aguardando você' → 'Sem lançamento'."""
+        from escon_agentes.workflows import fechamento as fx
+
+        if not body.arquivo:
+            raise HTTPException(400, "arquivo é obrigatório")
+        try:
+            estado = fx.desconsiderar_pendente(
+                get_settings(),
+                client_id=client_id,
+                competencia=competencia,
+                arquivo=body.arquivo,
+                motivo=body.motivo,
+            )
+        except FileNotFoundError as e:
+            raise HTTPException(404, str(e)) from e
+        except ValueError as e:
+            raise HTTPException(400, str(e)) from e
+        return {
+            "ok": True,
+            "total_lancados": len(estado.get("lancados") or []),
+            "total_pendentes": len(estado.get("pendentes") or []),
+            "estado": estado,
+        }
+
+    @app.post("/api/fechamentos/{client_id}/{competencia}/reprocessar")
+    def api_reprocessar(
+        client_id: str, competencia: str, body: ReprocessarIn | None = None
+    ) -> dict[str, Any]:
+        """Roda de novo sem rebaixar Drive — corrige data/valor e regras novas."""
+        from escon_agentes.workflows import fechamento as fx
+
+        s = get_settings()
+        estado = fx.carregar(s, client_id, competencia) or {}
+        try:
+            novo = fx.reprocessar(
+                s,
+                client_id=client_id,
+                competencia=competencia,
+                forma_pagamento=estado.get("forma_pagamento") or "caixa",
+                usar_llm=bool(body.usar_llm) if body else False,
+            )
+        except Exception as e:
+            raise HTTPException(500, f"Falha ao reprocessar: {e}") from e
+        return {
+            "ok": True,
+            "total_lancados": len(novo.get("lancados") or []),
+            "total_pendentes": len(novo.get("pendentes") or []),
+            "estado": novo,
+        }
 
     @app.get("/api/contas")
     def api_contas() -> list[dict[str, str]]:

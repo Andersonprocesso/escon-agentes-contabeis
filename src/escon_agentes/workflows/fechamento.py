@@ -73,6 +73,368 @@ def salvar(settings: Settings, estado: dict[str, Any]) -> Path:
     return p
 
 
+def _parse_valor_br(v: Any) -> float | None:
+    """Aceita 1234.56, '1.234,56', '1234,56' ou número."""
+    if v is None or v == "":
+        return None
+    if isinstance(v, (int, float)):
+        return float(v)
+    s = str(v).strip().replace("R$", "").replace(" ", "")
+    if not s:
+        return None
+    try:
+        if "," in s and "." in s:
+            # 1.234,56 → 1234.56
+            s = s.replace(".", "").replace(",", ".")
+        elif "," in s:
+            s = s.replace(",", ".")
+        return float(s)
+    except ValueError:
+        return None
+
+
+def _normalizar_data(data: Any) -> str:
+    """Normaliza para DD.MM.AAAA (layout Contmatic). Aceita DD/MM/AA também."""
+    from escon_agentes.tools.contmatic import format_data_contmatic
+
+    s = str(data or "").strip()
+    if not s:
+        return ""
+    out = format_data_contmatic(s)
+    # se não reconheceu, devolve vazio para o validador recusar
+    if out == s and not re.match(r"^\d{2}[./]\d{2}[./]\d{2,4}$", s):
+        if not re.match(r"^\d{4}-\d{2}-\d{2}", s):
+            return ""
+    return out
+
+
+def _normalizar_linha_lancamento(l: dict[str, Any], *, origem: str = "manual") -> dict[str, Any] | None:
+    """Aceita dict da Fabiana/Alexandre/painel e devolve linha padronizada.
+
+    Sem valor numérico > 0 não entra — evita lixo na planilha.
+    Data aceita DD/MM/AA, DD/MM/AAAA, AAAA-MM-DD e vira DD.MM.AAAA.
+    """
+    if not isinstance(l, dict):
+        return None
+    valor = _parse_valor_br(l.get("valor"))
+    if valor is None or valor <= 0:
+        return None
+    debito = str(l.get("debito") or "").strip()
+    credito = str(l.get("credito") or "").strip()
+    if not debito or not credito:
+        return None
+    data = _normalizar_data(l.get("data"))
+    if not data:
+        return None
+    hist = l.get("historico") if l.get("historico") is not None else l.get("historico_codigo")
+    try:
+        hist_n = int(hist or 0)
+    except (TypeError, ValueError):
+        hist_n = 0
+    return {
+        "data": data,
+        "debito": debito,
+        "credito": credito,
+        "valor": valor,
+        "historico": hist_n,
+        "historico_texto": l.get("historico_texto") or "",
+        "complemento": (l.get("complemento") or l.get("historico_texto") or origem)[:120],
+        "regra": l.get("regra") or origem,
+        "origem": l.get("origem") or origem,
+        "arquivo": l.get("arquivo") or "",
+        "observacao": l.get("observacao") or "",
+    }
+
+
+def gerar_planilha(
+    settings: Settings,
+    *,
+    client_id: str,
+    competencia: str,
+    lancados: list[dict[str, Any]],
+) -> str | None:
+    """Escreve Excel Contmatic com TODOS os lançados (Alexandre + Fabiana + manuais).
+
+    Antes a planilha saía só do Alexandre e a folha (217 linhas) sumia no download
+    mesmo aparecendo na aba Lançados.
+    """
+    if not lancados:
+        return None
+    from escon_agentes.tools import contmatic
+    from escon_agentes.tools.clients import get_client
+
+    cliente = get_client(settings.clients_dir, client_id)
+    saida = settings.outbox / client_id
+    saida.mkdir(parents=True, exist_ok=True)
+    xlsx = saida / f"lancamentos_{competencia}.xlsx"
+    linhas = []
+    for i, r in enumerate(lancados, start=1):
+        linhas.append(
+            {
+                "lancamento": i,
+                "data": r.get("data"),
+                "debito": r.get("debito"),
+                "credito": r.get("credito"),
+                "valor": r.get("valor"),
+                "historico": r.get("historico") or 0,
+                "complemento": r.get("complemento") or "",
+                "ccdb": "",
+                "cccr": "",
+                "cnpj": r.get("cnpj") or "",
+            }
+        )
+    contmatic.write_lancamentos(
+        linhas,
+        xlsx,
+        empresa=getattr(cliente, "name", None) if cliente else None,
+        competencia=competencia,
+    )
+    return str(xlsx)
+
+
+def aplicar_manuais(
+    lancados: list[dict[str, Any]],
+    pendentes: list[dict[str, Any]],
+    manuais: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Reaplica correções humanas salvas após reprocessar o pipeline.
+
+    Cada item de manuais: {arquivo, lancamentos: [{data, debito, credito, valor, ...}]}.
+    Remove o arquivo da lista de pendentes e acrescenta as linhas nos lançados.
+    """
+    if not manuais:
+        return lancados, pendentes
+    arquivos_ok = set()
+    out_lanc = list(lancados)
+    # tira manuais antigos do mesmo arquivo (reprocess + reaplicar)
+    out_lanc = [
+        l
+        for l in out_lanc
+        if not (
+            (l.get("origem") == "manual" or l.get("regra") == "correcao_manual")
+            and any(
+                (m.get("arquivo") or "") == (l.get("arquivo") or "")
+                for m in manuais
+            )
+        )
+    ]
+    for m in manuais:
+        arq = m.get("arquivo") or ""
+        linhas = m.get("lancamentos") or []
+        ok_alguma = False
+        for raw in linhas:
+            linha = _normalizar_linha_lancamento(
+                {**raw, "arquivo": arq, "origem": "manual", "regra": "correcao_manual"},
+                origem="manual",
+            )
+            if linha:
+                out_lanc.append(linha)
+                ok_alguma = True
+        if ok_alguma and arq:
+            arquivos_ok.add(arq)
+    out_pend = [p for p in pendentes if (p.get("arquivo") or "") not in arquivos_ok]
+    return out_lanc, out_pend
+
+
+def aplicar_desconsiderados(
+    pendentes: list[dict[str, Any]],
+    nao_contabilizaveis: list[dict[str, Any]],
+    desconsiderados: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Tira da fila 'Aguardando você' o que o humano marcou como sem efeito contábil.
+
+    Sobrevive ao reprocessar — senão o relatório de medição volta todo mês.
+    """
+    if not desconsiderados:
+        return pendentes, nao_contabilizaveis
+    arqs = {(d.get("arquivo") or "") for d in desconsiderados if d.get("arquivo")}
+    if not arqs:
+        return pendentes, nao_contabilizaveis
+
+    out_pend = [p for p in pendentes if (p.get("arquivo") or "") not in arqs]
+    ja = {(n.get("arquivo") or "") for n in nao_contabilizaveis}
+    out_ign = list(nao_contabilizaveis)
+    for d in desconsiderados:
+        arq = d.get("arquivo") or ""
+        if not arq or arq in ja:
+            continue
+        out_ign.append(
+            {
+                "arquivo": arq,
+                "data": d.get("data"),
+                "valor": d.get("valor"),
+                "natureza": "desconsiderado",
+                "motivo": d.get("motivo")
+                or "Desconsiderado por você — sem informação contábil",
+            }
+        )
+        ja.add(arq)
+    return out_pend, out_ign
+
+
+def desconsiderar_pendente(
+    settings: Settings,
+    *,
+    client_id: str,
+    competencia: str,
+    arquivo: str,
+    motivo: str = "",
+) -> dict[str, Any]:
+    """Humano marca o documento como sem lançamento (relatório, medição, etc.)."""
+    estado = carregar(settings, client_id, competencia)
+    if not estado:
+        raise FileNotFoundError(f"Fechamento {client_id}/{competencia} não encontrado")
+    if not arquivo:
+        raise ValueError("arquivo é obrigatório")
+
+    pendentes = list(estado.get("pendentes") or [])
+    achado = next((p for p in pendentes if (p.get("arquivo") or "") == arquivo), None)
+    # aceita match por nome final se veio com path
+    if not achado:
+        achado = next(
+            (
+                p
+                for p in pendentes
+                if Path(p.get("arquivo") or "").name == Path(arquivo).name
+            ),
+            None,
+        )
+        if achado:
+            arquivo = achado.get("arquivo") or arquivo
+
+    motivo_final = (motivo or "").strip() or (
+        f"Desconsiderado — {(achado or {}).get('motivo') or 'sem informação contábil'}"
+    )[:160]
+
+    desconsiderados = [
+        d for d in (estado.get("desconsiderados") or []) if (d.get("arquivo") or "") != arquivo
+    ]
+    desconsiderados.append(
+        {
+            "arquivo": arquivo,
+            "motivo": motivo_final,
+            "data": (achado or {}).get("data"),
+            "valor": (achado or {}).get("valor"),
+        }
+    )
+
+    # também remove de manuais se alguém tinha tentado corrigir antes
+    manuais = [m for m in (estado.get("manuais") or []) if (m.get("arquivo") or "") != arquivo]
+
+    pendentes, nao = aplicar_desconsiderados(
+        pendentes,
+        list(estado.get("nao_contabilizaveis") or []),
+        desconsiderados,
+    )
+    # se o arquivo ainda estiver em lancados por engano, não mexe — desconsiderar
+    # é só para a fila de pendentes
+
+    estado.update(
+        pendentes=pendentes,
+        nao_contabilizaveis=nao,
+        desconsiderados=desconsiderados,
+        manuais=manuais,
+        situacao="concluido",
+    )
+    salvar(settings, estado)
+    return estado
+
+
+def corrigir_pendente(
+    settings: Settings,
+    *,
+    client_id: str,
+    competencia: str,
+    arquivo: str,
+    lancamentos: list[dict[str, Any]],
+    ensinar: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Humano completa o(s) lançamento(s) de um documento com falha.
+
+    Um pendente pode virar N linhas (ex.: NFS com ISS + INSS retidos + líquido).
+    Opcionalmente grava a 1ª linha como regra aprendida (casos simples 1:1).
+    """
+    estado = carregar(settings, client_id, competencia)
+    if not estado:
+        raise FileNotFoundError(f"Fechamento {client_id}/{competencia} não encontrado")
+
+    # pendente pode vir com path; normaliza para o nome guardado na lista
+    pendentes_brutos = list(estado.get("pendentes") or [])
+    arq_match = arquivo
+    for p in pendentes_brutos:
+        pa = p.get("arquivo") or ""
+        if pa == arquivo or Path(pa).name == Path(arquivo).name:
+            arq_match = pa
+            break
+
+    linhas_ok: list[dict[str, Any]] = []
+    erros: list[str] = []
+    for i, raw in enumerate(lancamentos, start=1):
+        linha = _normalizar_linha_lancamento(
+            {**raw, "arquivo": arq_match, "origem": "manual", "regra": "correcao_manual"},
+            origem="manual",
+        )
+        if linha:
+            linhas_ok.append(linha)
+        else:
+            erros.append(
+                f"linha {i}: precisa data, débito, crédito e valor > 0 "
+                f"(recebido data={raw.get('data')!r} valor={raw.get('valor')!r} "
+                f"D={raw.get('debito')!r} C={raw.get('credito')!r})"
+            )
+    if not linhas_ok:
+        raise ValueError(
+            "Nenhum lançamento válido. "
+            + ("; ".join(erros[:3]) if erros else "Preencha data, débito, crédito e valor.")
+        )
+
+    manuais = list(estado.get("manuais") or [])
+    manuais = [m for m in manuais if (m.get("arquivo") or "") != arq_match]
+    manuais.append({"arquivo": arq_match, "lancamentos": linhas_ok})
+
+    # se estava desconsiderado e o humano corrigiu, tira da lista de ignorados
+    desconsiderados = [
+        d
+        for d in (estado.get("desconsiderados") or [])
+        if (d.get("arquivo") or "") != arq_match
+    ]
+
+    lancados, pendentes = aplicar_manuais(
+        list(estado.get("lancados") or []),
+        pendentes_brutos,
+        manuais,
+    )
+
+    regra = None
+    if ensinar and ensinar.get("chave"):
+        from escon_agentes.tools import aprendizado
+
+        # regra simples 1:1 = primeira linha (casos multi-linha ficam só no manual)
+        primeira = linhas_ok[0]
+        if len(linhas_ok) == 1:
+            regra = aprendizado.registrar(
+                chave=str(ensinar["chave"]),
+                debito=primeira["debito"],
+                credito=primeira["credito"],
+                descricao=str(ensinar.get("descricao") or primeira.get("complemento") or ""),
+                historico=int(primeira.get("historico") or 0),
+            )
+
+    planilha = gerar_planilha(
+        settings, client_id=client_id, competencia=competencia, lancados=lancados
+    )
+    estado.update(
+        lancados=lancados,
+        pendentes=pendentes,
+        manuais=manuais,
+        desconsiderados=desconsiderados,
+        planilha=planilha,
+        situacao="concluido",
+    )
+    salvar(settings, estado)
+    return estado
+
+
 def listar(settings: Settings) -> list[dict[str, Any]]:
     raiz = settings.data_dir / "fechamentos"
     if not raiz.exists():
@@ -414,6 +776,12 @@ def executar(
     # default: tenta OneDrive se não veio pasta do PC (caso home office / VPS)
     if usar_onedrive is None:
         usar_onedrive = not pasta_local
+    # Correções humanas da rodada anterior (multi-lançamento por pendente).
+    # Guardar ANTES de sobrescrever o estado — senão o reprocessar apaga o que
+    # o contador já digitou. Desconsiderados (relatório/medição) também.
+    prev = carregar(settings, client_id, competencia) or {}
+    manuais_anteriores = list(prev.get("manuais") or [])
+    desconsiderados_anteriores = list(prev.get("desconsiderados") or [])
     etapas: list[dict[str, Any]] = []
     estado: dict[str, Any] = {
         "client_id": client_id,
@@ -421,6 +789,8 @@ def executar(
         "iniciado_em": datetime.now().isoformat(timespec="seconds"),
         "situacao": "em_andamento",
         "etapas": etapas,
+        "manuais": manuais_anteriores,
+        "desconsiderados": desconsiderados_anteriores,
     }
     salvar(settings, estado)
 
@@ -496,49 +866,113 @@ def executar(
                     else:
                         planilha = str(art)
 
-    # Folha da Fabiana entra nos lançados se o Alexandre não a reprocessar
-    # (ele marca folha como "quem lança é a Fabiana").
-    folha_extra = []
+    # Folha da Fabiana entra nos lançados (Alexandre marca folha como "quem
+    # lança é a Fabiana" e NÃO gera linha). Antes só entrava no estado da UI —
+    # a planilha Excel saía sem as 200+ linhas de folha.
+    folha_extra: list[dict[str, Any]] = []
+    problemas_folha: list[dict[str, Any]] = []
     for r in run.get("results") or []:
-        if r.get("agent") == "fabiana":
-            for l in (r.get("data") or {}).get("lancamentos") or []:
+        if r.get("agent") != "fabiana":
+            continue
+        data_f = r.get("data") or {}
+        for l in data_f.get("lancamentos") or []:
+            if isinstance(l, dict):
                 folha_extra.append(l)
-    lancados = list(dados.get("lancados") or [])
-    if folha_extra:
-        # normaliza formato Fabiana → linha de lançamento
-        for l in folha_extra:
-            if isinstance(l, dict) and l.get("valor"):
-                lancados.append(
+        for prob in data_f.get("problemas") or []:
+            # "arquivo.pdf: folha não fecha" → pendente editável no painel
+            if isinstance(prob, str) and ":" in prob:
+                arq, motivo = prob.split(":", 1)
+                problemas_folha.append(
                     {
-                        "data": l.get("data"),
-                        "debito": l.get("debito"),
-                        "credito": l.get("credito"),
-                        "valor": l.get("valor"),
-                        "complemento": l.get("complemento") or "folha",
-                        "regra": "fabiana_folha",
+                        "arquivo": arq.strip(),
+                        "data": "",
+                        "valor": None,
+                        "debito": "",
+                        "credito": "",
+                        "motivo": motivo.strip(),
                         "origem": "fabiana",
-                        "arquivo": "folha",
                     }
                 )
+            elif isinstance(prob, str):
+                problemas_folha.append(
+                    {
+                        "arquivo": "folha",
+                        "data": "",
+                        "valor": None,
+                        "debito": "",
+                        "credito": "",
+                        "motivo": prob,
+                        "origem": "fabiana",
+                    }
+                )
+
+    lancados = list(dados.get("lancados") or [])
+    for l in folha_extra:
+        linha = _normalizar_linha_lancamento(
+            {
+                **l,
+                "arquivo": l.get("arquivo") or "folha",
+                "regra": "fabiana_folha",
+                "origem": "fabiana",
+                "complemento": l.get("complemento") or "folha",
+            },
+            origem="fabiana",
+        )
+        if linha:
+            lancados.append(linha)
+
+    pendentes = list(dados.get("pendentes") or [])
+    # Problemas de folha (não fecha, TRCT sem parser…) entram em Aguardando você
+    # como lançamento incompleto para o humano completar.
+    arqs_pend = {(p.get("arquivo") or "") for p in pendentes}
+    for pf in problemas_folha:
+        if pf["arquivo"] not in arqs_pend:
+            pendentes.append(pf)
+            arqs_pend.add(pf["arquivo"])
+
+    # Correções manuais de rodadas anteriores sobrevivem ao reprocessar
+    manuais = list(manuais_anteriores)
+    if manuais:
+        lancados, pendentes = aplicar_manuais(lancados, pendentes, manuais)
+
+    # Documentos que o humano desconsiderou (medição, relatório GPS…)
+    nao_contab = list(dados.get("nao_contabilizaveis") or [])
+    desconsiderados = list(desconsiderados_anteriores)
+    if desconsiderados:
+        pendentes, nao_contab = aplicar_desconsiderados(
+            pendentes, nao_contab, desconsiderados
+        )
+
+    # SEMPRE regenera a planilha a partir do conjunto final (Alexandre+Fabiana+manuais)
+    planilha_full = gerar_planilha(
+        settings, client_id=client_id, competencia=competencia, lancados=lancados
+    )
+    if planilha_full:
+        planilha = planilha_full
 
     partes = [
         f"→ {r.get('agent')}: {(r.get('summary') or '')[:220]}"
         for r in (run.get("results") or [])
     ]
     resumo_equipe = "\n".join(partes)
+    if folha_extra:
+        resumo_equipe += f"\n→ planilha: {len(folha_extra)} lançamento(s) de folha incluído(s)"
 
     estado.update(
         situacao="concluido" if ok_alex else "erro",
         resumo=resumo_equipe,
         lancados=lancados,
-        pendentes=dados.get("pendentes", []),
+        pendentes=pendentes,
+        manuais=manuais,
+        desconsiderados=desconsiderados,
         planilha=planilha,
         documentos=len(documentos),
-        nao_contabilizaveis=dados.get("nao_contabilizaveis", []),
+        nao_contabilizaveis=nao_contab,
         titulos=(dados.get("titulos") or {}).get("resumo", {}),
         forma_pagamento=forma_pagamento,
         pipeline=[r.get("agent") for r in (run.get("results") or [])],
         run_id=run.get("id"),
+        total_folha=len(folha_extra),
         terminado_em=datetime.now().isoformat(timespec="seconds"),
     )
     salvar(settings, estado)

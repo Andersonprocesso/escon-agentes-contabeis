@@ -45,6 +45,10 @@ class XmlDoc:
     # confiável de saber que a nota é devolução, remessa ou bonificação —
     # coisas que parecem compra quando se olha só emitente e valor.
     cfops: list[str] = field(default_factory=list)
+    # Retenções na NFS-e (padrão do razão Jorge: multi-linha).
+    iss_retido: float | None = None
+    inss_retido: float | None = None
+    valor_liquido: float | None = None
 
 
 def _normalizar_data(bruto: str | None) -> str | None:
@@ -78,6 +82,61 @@ def detect_tipo(root: ET.Element) -> str:
     return "desconhecido"
 
 
+def _para_float_xml(s: str | None) -> float | None:
+    if s is None or str(s).strip() == "":
+        return None
+    try:
+        return float(str(s).replace(",", ".").strip())
+    except ValueError:
+        return None
+
+
+def _ler_retencoes(root: ET.Element) -> tuple[float | None, float | None, float | None]:
+    """ISS e INSS retidos + líquido — tags variam por prefeitura.
+
+    Padrão contábil (razão Jorge): bruto na receita, retenções baixam Clientes
+    Diversos, líquido entra no caixa/banco.
+    """
+    # ISS retido
+    iss = None
+    for nome in (
+        "ValorIssRetido", "vISSRet", "IssRetido", "ValorISSRetido",
+        "vISSRetido", "BaseCalculo",  # BaseCalculo sozinho NÃO é ISS — last resort skip
+    ):
+        if nome == "BaseCalculo":
+            continue
+        v = _para_float_xml(_find_text(root, nome))
+        if v and v > 0:
+            iss = v
+            break
+    # flag IssRetido = 1 sem valor: tenta ValorISS / alíquota
+    if not iss:
+        flag = (_find_text(root, "IssRetido", "ISSRetido") or "").strip()
+        if flag in ("1", "true", "S", "s", "sim"):
+            iss = _para_float_xml(_find_text(root, "ValorISS", "vISS", "ValorIss"))
+
+    # INSS retido (Lei 9.711/98)
+    inss = None
+    for nome in (
+        "ValorInss", "vRetINSS", "ValorINSS", "Inss", "vINSS",
+        "ValorRetidoINSS", "RetencaoINSS",
+    ):
+        v = _para_float_xml(_find_text(root, nome))
+        if v and v > 0:
+            inss = v
+            break
+
+    liquido = None
+    for nome in ("ValorLiquidoNfse", "ValorLiquido", "vLiq", "ValorLiquidoNfs"):
+        v = _para_float_xml(_find_text(root, nome))
+        if v and v > 0:
+            liquido = v
+            break
+
+    # valor dos serviços (bruto) — preferir sobre ValorLiquidoNfse como total
+    return iss, inss, liquido
+
+
 def parse_xml_file(path: Path) -> XmlDoc:
     tree = ET.parse(path)
     root = tree.getroot()
@@ -86,27 +145,59 @@ def parse_xml_file(path: Path) -> XmlDoc:
     chave = _find_text(root, "chNFe", "chCTe", "CodigoVerificacao")
     emit = None
     dest = None
+    prestador = None
+    tomador = None
     for el in root.iter():
         ln = _local(el.tag)
         if ln == "emit" and emit is None:
             emit = el
         if ln in ("dest", "toma", "toma4") and dest is None:
             dest = el
+        if ln in ("PrestadorServico", "Prestador", "prestador") and prestador is None:
+            prestador = el
+        if ln in ("TomadorServico", "Tomador", "tomador") and tomador is None:
+            tomador = el
+
+    # NFS-e municipal: emitente costuma ser o prestador, não a tag <emit>
+    if tipo == "nfse":
+        if prestador is not None and emit is None:
+            emit = prestador
+        if tomador is not None and dest is None:
+            dest = tomador
+
+    iss_r, inss_r, liq = _ler_retencoes(root) if tipo == "nfse" else (None, None, None)
+
+    # Bruto do serviço: ValorServicos > vServ > ValorLiquido + retenções
+    valor_bruto = _find_text(
+        root, "ValorServicos", "vServ", "BaseCalculo", "vNF", "vCFe", "vTPrest"
+    )
+    if not valor_bruto and tipo == "nfse":
+        # reconstruir bruto se só veio líquido
+        liq_f = liq or _para_float_xml(_find_text(root, "ValorLiquidoNfse", "ValorLiquido"))
+        if liq_f is not None:
+            valor_bruto = str(round(liq_f + (iss_r or 0) + (inss_r or 0), 2))
+        else:
+            valor_bruto = _find_text(root, "ValorLiquidoNfse", "ValorLiquido")
 
     return XmlDoc(
         path=str(path),
         tipo=tipo,
         chave=chave or _find_text(root, "Id"),
         emit_cnpj=_find_text(emit, "CNPJ", "CPF"),
-        emit_nome=_find_text(emit, "xNome"),
+        emit_nome=_find_text(emit, "xNome", "RazaoSocial", "NomeFantasia"),
         dest_cnpj=_find_text(dest, "CNPJ", "CPF"),
-        dest_nome=_find_text(dest, "xNome"),
+        dest_nome=_find_text(dest, "xNome", "RazaoSocial"),
         # o CFe (SAT) usa dEmi no formato AAAAMMDD e vCFe — nao dhEmi/vNF
-        data_emissao=_normalizar_data(_find_text(root, "dhEmi", "dEmi", "DataEmissao")),
-        valor_total=_find_text(root, "vNF", "vCFe", "vTPrest", "ValorLiquidoNfse", "vServ"),
-        numero=_find_text(root, "nNF", "nCT", "Numero"),
-        natureza=_find_text(root, "natOp", "xProd"),
+        data_emissao=_normalizar_data(
+            _find_text(root, "dhEmi", "dEmi", "DataEmissao", "DataCompetencia")
+        ),
+        valor_total=valor_bruto,
+        numero=_find_text(root, "nNF", "nCT", "Numero", "NumeroNfse"),
+        natureza=_find_text(root, "natOp", "xProd", "Discriminacao", "Descricao"),
         cfops=_ler_cfops(root),
+        iss_retido=iss_r,
+        inss_retido=inss_r,
+        valor_liquido=liq,
     )
 
 

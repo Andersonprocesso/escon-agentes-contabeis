@@ -530,6 +530,23 @@
 
     .ensinar { padding: 1rem 1.1rem; }
     .ensinar h4 { margin: 0 0 0.2rem; font-size: 0.98rem; line-height: 1.3; }
+    .lanc-linhas { display: flex; flex-direction: column; gap: 0.65rem; margin: 0.5rem 0 0.75rem; }
+    .lanc-linha {
+      border: 1px solid var(--border); border-radius: 10px; padding: 0.65rem 0.75rem;
+      background: var(--bg); position: relative;
+    }
+    .lanc-linha .lh {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 0.4rem; font-size: 0.78rem; font-weight: 650; color: var(--muted);
+    }
+    .lanc-linha .grid-l {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem 0.55rem;
+    }
+    .lanc-linha .grid-l .full { grid-column: 1 / -1; }
+    .lanc-linha label { font-size: 0.72rem; margin: 0 0 0.15rem; display: block; color: var(--muted); }
+    .lanc-linha input, .lanc-linha select {
+      width: 100%; font-size: 0.82rem; padding: 0.35rem 0.45rem;
+    }
     .chips { display: flex; gap: 0.35rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
     .chip-key {
       background: var(--bg); border: 1px solid var(--border); color: var(--text);
@@ -741,7 +758,10 @@
                   <h3 id="revTitulo">Revisão</h3>
                   <p class="muted" id="revSub" style="margin:.25rem 0 0"></p>
                 </div>
-                <div class="row" style="flex:0">
+                <div class="row" style="flex:0;gap:.4rem;flex-wrap:wrap">
+                  <button class="btn ghost" type="button" id="btn-reprocessar" style="width:auto" title="Roda de novo os documentos já baixados (data/valor/regras)">
+                    Reprocessar
+                  </button>
                   <button class="btn ghost" type="button" id="btn-fechar-rev" style="width:auto">Fechar revisão</button>
                 </div>
               </div>
@@ -1517,14 +1537,22 @@
               <td class="num">${brl(p.valor)}</td>
               <td>${txt(p.data) || "—"}</td>
               <td class="muted">${txt(p.motivo || "sem regra").slice(0, 64)}</td>
-              <td><button class="btn ghost" type="button" style="padding:.35rem .6rem;font-size:.78rem;width:auto"
-                          data-ensinar="${i}">Ensinar</button></td>
+              <td style="white-space:nowrap">
+                <button class="btn ghost" type="button" style="padding:.35rem .55rem;font-size:.75rem;width:auto"
+                        data-ensinar="${i}">Corrigir</button>
+                <button class="btn warn" type="button" style="padding:.35rem .55rem;font-size:.75rem;width:auto"
+                        data-desc="${i}" title="Tira da fila — relatório/controle sem lançamento contábil">
+                  Apagar da fila
+                </button>
+              </td>
             </tr>`
             )
             .join("")}</tbody></table>
           <p class="muted" style="padding:.5rem 1rem">
-            Clique em <strong>Ensinar</strong>: você escolhe as contas na lista (nunca digita código)
-            e a regra vale para os próximos meses.
+            <strong>Apagar da fila</strong> = documento sem contábil (controle de valores pagos,
+            medição, relatório GPS/receita…) — some de “Aguardando você”.
+            <strong>Corrigir</strong> = vira lançamento Contmatic (data, D, C, valor).
+            <strong>Reprocessar</strong> no topo se faltam datas em vários arquivos.
           </p>`;
         alvo.querySelectorAll("tr[data-pend]").forEach((tr) => {
           tr.onclick = () => abrirEnsinar(Number(tr.dataset.pend));
@@ -1533,6 +1561,12 @@
           b.onclick = (e) => {
             e.stopPropagation();
             abrirEnsinar(Number(b.dataset.ensinar));
+          };
+        });
+        alvo.querySelectorAll("button[data-desc]").forEach((b) => {
+          b.onclick = (e) => {
+            e.stopPropagation();
+            desconsiderarPendente(Number(b.dataset.desc));
           };
         });
       } else {
@@ -1584,15 +1618,126 @@
           </p>
           <button class="btn ghost" type="button" id="btn-fechar-painel" style="width:auto">Fechar</button>
         </div>`;
-      document.getElementById("btn-fechar-painel").onclick = fecharPainel;
+      // Fechar: delegação em #fxEnsinar (id btn-fechar-painel)
       pintarRevisao();
     }
 
-    function fecharPainel() {
+    function fecharPainel(e) {
+      if (e && e.preventDefault) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
       linhaAberta = null;
-      document.getElementById("fxEnsinar").innerHTML = "";
-      document.getElementById("revBody").classList.remove("com-painel");
+      corrCtx = { pendIdx: -1, linhas: [] };
+      const painel = document.getElementById("fxEnsinar");
+      if (painel) painel.innerHTML = "";
+      const body = document.getElementById("revBody");
+      if (body) body.classList.remove("com-painel");
       pintarRevisao();
+    }
+
+    /** Uma linha vazia para o formulário de correção. */
+    function linhaCorrVazia(base) {
+      base = base || {};
+      return {
+        data: base.data || (rev ? dataFimCompetencia(rev.competencia) : "") || "",
+        valor: "",
+        debito: "",
+        credito: "",
+        historico: 0,
+        complemento: "",
+      };
+    }
+
+    /**
+     * Clicks do painel lateral (Corrigir) por delegação — o HTML do painel é
+     * recriado com innerHTML; onclick por elemento se perdia ou falhava em
+     * silêncio (ex.: "remover" com 1 linha só fazia return).
+     */
+    function onPainelEnsinarClick(e) {
+      const t = e.target;
+      if (!t || !t.closest) return;
+      const btn = t.closest("button");
+      if (!btn || !document.getElementById("fxEnsinar")?.contains(btn)) return;
+
+      // Fechar / Agora não
+      if (
+        btn.id === "btn-fechar-ens" ||
+        btn.id === "btn-ens-agora-nao" ||
+        btn.id === "btn-fechar-painel"
+      ) {
+        e.preventDefault();
+        e.stopPropagation();
+        fecharPainel();
+        return;
+      }
+
+      // Remover linha de lançamento
+      if (btn.hasAttribute("data-rm")) {
+        e.preventDefault();
+        e.stopPropagation();
+        const box = document.getElementById("corrLinhas");
+        if (box?.querySelector(".lanc-linha")) {
+          corrCtx.linhas = lerLinhasDoDom().map((l) => ({
+            ...l,
+            valor: Number.isFinite(l.valor) ? l.valor : "",
+          }));
+        }
+        const i = Number(btn.getAttribute("data-rm"));
+        const st = document.getElementById("ensStatus");
+        if (!Number.isFinite(i) || i < 0) return;
+        if (corrCtx.linhas.length <= 1) {
+          // 1 linha: limpa campos em vez de sumir com o formulário
+          const base = corrCtx.linhas[0] || {};
+          corrCtx.linhas = [linhaCorrVazia({ data: base.data })];
+          pintarLinhasCorr();
+          if (st) st.textContent = "Linha limpa. Preencha de novo ou feche com “Agora não”.";
+          return;
+        }
+        corrCtx.linhas.splice(i, 1);
+        pintarLinhasCorr();
+        if (st) st.textContent = `Linha ${i + 1} removida · ${corrCtx.linhas.length} restante(s).`;
+        return;
+      }
+
+      if (btn.id === "btn-corrigir") {
+        e.preventDefault();
+        e.stopPropagation();
+        salvarCorrecao();
+        return;
+      }
+      if (btn.id === "btn-desconsiderar") {
+        e.preventDefault();
+        e.stopPropagation();
+        desconsiderarPendente(corrCtx.pendIdx);
+        return;
+      }
+      if (btn.id === "btn-add-linha") {
+        e.preventDefault();
+        e.stopPropagation();
+        corrCtx.linhas = lerLinhasDoDom().map((l) => ({
+          ...l,
+          valor: Number.isFinite(l.valor) ? l.valor : "",
+        }));
+        const base = corrCtx.linhas[0] || {};
+        corrCtx.linhas.push(linhaCorrVazia({ data: base.data }));
+        pintarLinhasCorr();
+        return;
+      }
+      if (btn.id === "btn-tpl-nfs") {
+        e.preventDefault();
+        e.stopPropagation();
+        const p = (rev?.pendentes || [])[corrCtx.pendIdx];
+        if (!p) return;
+        corrCtx.linhas = templateNfsRetencao(p);
+        pintarLinhasCorr();
+        return;
+      }
+      if (btn.classList.contains("chip-key")) {
+        e.preventDefault();
+        e.stopPropagation();
+        usarChave(btn);
+      }
     }
 
     function pintarRodape() {
@@ -1604,8 +1749,8 @@
       let hint = "";
       if (pend > 0) {
         hint = `<strong>${pend} documento(s) ainda sem decisão.</strong>
-          Resolva na aba “Aguardando você” (ensine o agente) antes de importar no Contmatic.
-          A planilha sai <em>sem</em> esses itens se você emitir agora.`;
+          Resolva na aba “Aguardando você” (corrija como lançamento) antes de importar no Contmatic.
+          A planilha sai <em>sem</em> esses itens se você emitir agora — mas a <em>folha já entra</em>.`;
       } else if (nLanc > 0) {
         hint = `Conferência limpa: ${nLanc} lançamento(s), nada pendente.
           Revise a aba Lançados e, se estiver ok, emita a planilha para o Contmatic.`;
@@ -1646,17 +1791,239 @@
       window.location.href = url;
     }
 
+    // Estado do formulário de correção multi-linha (Aguardando você)
+    let corrCtx = { pendIdx: -1, linhas: [] };
+
+    function dataBrFromIso(s) {
+      if (!s) return "";
+      const t = String(s).trim();
+      if (/^\d{2}[./]\d{2}[./]\d{2,4}/.test(t)) return t.replace(/\./g, "/").slice(0, 10);
+      if (/^\d{4}-\d{2}-\d{2}/.test(t)) {
+        const [y, m, d] = t.slice(0, 10).split("-");
+        return `${d}/${m}/${y.slice(2)}`;
+      }
+      return t;
+    }
+
+    /** Último dia da competência (AAAA-MM) em DD/MM/AA — pré-preenche quando falta data. */
+    function dataFimCompetencia(comp) {
+      if (!comp || !/^\d{4}-\d{2}/.test(comp)) return "";
+      const [y, m] = comp.slice(0, 7).split("-");
+      const last = new Date(Number(y), Number(m), 0).getDate();
+      return `${String(last).padStart(2, "0")}/${m}/${String(y).slice(2)}`;
+    }
+
+    /** Aceita 1234.56, 1.234,56 ou 1234,56. */
+    function parseValorBr(v) {
+      if (v === null || v === undefined || v === "") return NaN;
+      if (typeof v === "number") return v;
+      let t = String(v).trim().replace(/R\$\s?/i, "").replace(/\s/g, "");
+      if (!t) return NaN;
+      if (t.includes(",") && t.includes(".")) t = t.replace(/\./g, "").replace(",", ".");
+      else if (t.includes(",")) t = t.replace(",", ".");
+      const n = Number(t);
+      return Number.isFinite(n) ? n : NaN;
+    }
+
+    function opcoesContasHtml(selected) {
+      const lista = contasCache || [];
+      const blank = `<option value="">— escolha a conta —</option>`;
+      return (
+        blank +
+        lista
+          .map(
+            (c) =>
+              `<option value="${c.codigo}" ${String(c.codigo) === String(selected) ? "selected" : ""}>${c.codigo} — ${txt(c.nome)}</option>`
+          )
+          .join("")
+      );
+    }
+
+    function linhaCorrHtml(idx, ln) {
+      const valorShow =
+        ln.valor === "" || ln.valor === null || ln.valor === undefined
+          ? ""
+          : ln.valor;
+      return `
+        <div class="lanc-linha" data-li="${idx}">
+          <div class="lh">
+            <span>Lançamento ${idx + 1}</span>
+            <button class="btn ghost" type="button" data-rm="${idx}"
+              style="padding:.2rem .45rem;font-size:.72rem;width:auto;color:var(--warn)"
+              title="Só limpa esta linha do formulário — não apaga o documento da fila">
+              limpar linha
+            </button>
+          </div>
+          <div class="grid-l">
+            <div>
+              <label>Data <span class="muted">(DD/MM/AA)</span></label>
+              <input data-f="data" value="${txt(ln.data || "")}" placeholder="31/01/21" />
+            </div>
+            <div>
+              <label>Valor</label>
+              <input data-f="valor" inputmode="decimal" value="${txt(String(valorShow))}" placeholder="1.234,56" />
+            </div>
+            <div class="full">
+              <label>Débito</label>
+              <input type="search" data-f="debFiltro" placeholder="Buscar conta…" />
+              <select data-f="debito">${opcoesContasHtml(ln.debito || "")}</select>
+            </div>
+            <div class="full">
+              <label>Crédito</label>
+              <input type="search" data-f="credFiltro" placeholder="Buscar conta…" />
+              <select data-f="credito">${opcoesContasHtml(ln.credito || "")}</select>
+            </div>
+            <div>
+              <label>Histórico padrão</label>
+              <input data-f="historico" type="number" value="${ln.historico ?? 0}" />
+            </div>
+            <div class="full">
+              <label>Complemento</label>
+              <input data-f="complemento" value="${txt(ln.complemento || "")}"
+                placeholder="Ex.: NFS 026 Premovale…" />
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function lerLinhasDoDom() {
+      const box = document.getElementById("corrLinhas");
+      if (!box) return [];
+      return [...box.querySelectorAll(".lanc-linha")].map((el) => ({
+        data: el.querySelector('[data-f="data"]')?.value?.trim() || "",
+        valor: parseValorBr(el.querySelector('[data-f="valor"]')?.value),
+        debito: el.querySelector('[data-f="debito"]')?.value || "",
+        credito: el.querySelector('[data-f="credito"]')?.value || "",
+        historico: Number(el.querySelector('[data-f="historico"]')?.value || 0),
+        complemento: el.querySelector('[data-f="complemento"]')?.value?.trim() || "",
+      }));
+    }
+
+    function pintarLinhasCorr() {
+      const box = document.getElementById("corrLinhas");
+      if (!box) return;
+      // preserva o que o usuário já digitou (sem NaN no valor)
+      if (box.querySelector(".lanc-linha")) {
+        corrCtx.linhas = lerLinhasDoDom().map((l) => ({
+          ...l,
+          valor: Number.isFinite(l.valor) ? l.valor : "",
+        }));
+      }
+      if (!corrCtx.linhas.length) {
+        corrCtx.linhas = [linhaCorrVazia()];
+      }
+      box.innerHTML = corrCtx.linhas.map((ln, i) => linhaCorrHtml(i, ln)).join("");
+      // filtros de conta: rebind (inputs, não botões)
+      box.querySelectorAll('[data-f="debFiltro"]').forEach((inp) => {
+        inp.oninput = () => {
+          const sel = inp.parentElement.querySelector('[data-f="debito"]');
+          filtrarSelectEl(sel, inp.value);
+        };
+      });
+      box.querySelectorAll('[data-f="credFiltro"]').forEach((inp) => {
+        inp.oninput = () => {
+          const sel = inp.parentElement.querySelector('[data-f="credito"]');
+          filtrarSelectEl(sel, inp.value);
+        };
+      });
+    }
+
+    function filtrarSelectEl(sel, qraw) {
+      if (!sel) return;
+      const q = (qraw || "").toLowerCase();
+      const atual = sel.value;
+      const lista = contasCache || [];
+      const opts = lista.filter(
+        (c) => !q || c.codigo.includes(q) || (c.nome || "").toLowerCase().includes(q)
+      );
+      sel.innerHTML =
+        `<option value="">— escolha a conta —</option>` +
+        opts
+          .map((c) => `<option value="${c.codigo}">${c.codigo} — ${txt(c.nome)}</option>`)
+          .join("");
+      if (opts.some((c) => String(c.codigo) === String(atual))) sel.value = atual;
+    }
+
+    function templateNfsRetencao(p) {
+      const data = dataBrFromIso(p.data) || "01/01/21";
+      const bruto = Number(p.valor) || 0;
+      const arq = (p.arquivo || "").replace(/\.[^.]+$/, "");
+      const num = (arq.match(/\d{2,}/) || ["XXX"])[0];
+      // Modelo Escon: bruto → receita; ISS/INSS retidos; líquido no banco (forma=banco).
+      // Valores de retenção ficam 0 se desconhecidos — o contador completa.
+      const forma = (rev.forma_pagamento || "banco").toLowerCase();
+      const contaRec = forma === "caixa" ? "1111101" : ""; // vazio = contador escolhe o banco
+      return [
+        {
+          data,
+          debito: "1121102",
+          credito: "4111201",
+          valor: bruto || "",
+          historico: 0,
+          complemento: `NFS ${num} — valor total`,
+        },
+        {
+          data,
+          debito: "4121303",
+          credito: "1121102",
+          valor: "",
+          historico: 0,
+          complemento: `NFS ${num} ISS Retido na Fonte`,
+        },
+        {
+          data,
+          debito: "1131910",
+          credito: "1121102",
+          valor: "",
+          historico: 0,
+          complemento: `NFS ${num} INSS Retido na Fonte`,
+        },
+        {
+          data,
+          debito: contaRec || "1112201",
+          credito: "1121102",
+          valor: "",
+          historico: 0,
+          complemento: `Valor ref: a NFS ${num}`,
+        },
+      ];
+    }
+
     async function abrirEnsinar(i) {
       const p = (rev.pendentes || [])[i];
       if (!p) return;
       linhaAberta = i;
+      const dataPref =
+        dataBrFromIso(p.data) || dataFimCompetencia(rev.competencia) || "";
+      const valorPref =
+        p.valor != null && p.valor !== "" && Number(p.valor) > 0 ? p.valor : "";
+      corrCtx = {
+        pendIdx: i,
+        linhas: [
+          {
+            data: dataPref,
+            valor: valorPref,
+            debito: p.debito || "",
+            credito: p.credito || "",
+            historico: p.historico || 0,
+            complemento: (p.complemento || p.historico_texto || "").toString().slice(0, 80),
+          },
+        ],
+      };
       abaAtual = "pendentes";
       const painel = document.getElementById("fxEnsinar");
       document.getElementById("revBody").classList.add("com-painel");
       painel.innerHTML = `<div class="ensinar"><p class="muted">lendo o documento…</p></div>`;
       pintarRevisao();
 
-      await carregarContas();
+      try {
+        await carregarContas();
+      } catch (e) {
+        painel.innerHTML = `<div class="ensinar"><p style="color:var(--warn)">Não carregou o plano de contas: ${txt(e.message)}. Tente de novo.</p>
+          <button class="btn ghost" type="button" id="btn-fechar-ens" style="width:auto">Fechar</button></div>`;
+        document.getElementById("btn-fechar-ens").onclick = fecharPainel;
+        return;
+      }
       let det = { texto: "", chaves_sugeridas: [] };
       try {
         det = await j(
@@ -1667,95 +2034,264 @@
         /* XML eSocial, PDF imagem: segue sem prévia */
       }
 
-      const opcoes = contasCache
-        .map((c) => `<option value="${c.codigo}">${c.codigo} — ${txt(c.nome)}</option>`)
-        .join("");
-
       painel.innerHTML = `
         <div class="ensinar">
           <div style="display:flex;justify-content:space-between;gap:.5rem;align-items:flex-start">
-            <h4>Ensinar o Alexandre</h4>
+            <h4>Corrigir como lançamento</h4>
             <button class="btn ghost" type="button" id="btn-fechar-ens" style="padding:.3rem .55rem;font-size:.75rem;width:auto">Fechar</button>
           </div>
           <p class="muted" style="margin:.1rem 0 .55rem;word-break:break-all">${txt(p.arquivo)}</p>
-          <p style="margin:0 0 .75rem;font-size:.9rem">
-            <strong>R$ ${brl(p.valor)}</strong>
+          <p style="margin:0 0 .55rem;font-size:.9rem">
+            <strong>${p.valor != null && p.valor !== "" && Number(p.valor) > 0 ? "R$ " + brl(p.valor) : "sem valor"}</strong>
             <span class="muted"> · ${txt(p.data) || "sem data"} · ${txt(p.motivo || "")}</span>
           </p>
+          ${
+            !p.data || !p.valor || Number(p.valor) <= 0
+              ? `<p class="muted" style="margin:0 0 .55rem;font-size:.82rem;color:var(--warn)">
+                  Complete <strong>data</strong> e <strong>valor</strong> abaixo (pré-preenchidos quando possível).
+                </p>`
+              : ""
+          }
           ${
             det.texto
               ? `<label>O que o agente leu no documento</label>
                <div class="previa">${txt(det.texto.slice(0, 1200))}</div>`
-              : `<p class="muted">Sem texto extraível — use o nome do arquivo ou o que você sabe do documento.</p>`
+              : `<p class="muted">Sem texto extraível — complete os campos com o que você sabe do documento.</p>`
           }
 
-          <label>O que identifica este documento <span class="muted">(vale para os próximos meses)</span></label>
-          <div class="chips" id="chips">
-            ${(det.chaves_sugeridas || [])
-              .map((k) => `<button class="chip-key" type="button" data-chave="${txt(k)}">${txt(k)}</button>`)
-              .join("") ||
-            '<span class="muted">Sem sugestão automática — digite abaixo (CNPJ, nome do fornecedor…).</span>'}
-          </div>
-          <input id="ensChave" placeholder="Ex.: 09.377.184/0001-88 ou DIAS DE PAULA" />
-
-          <div class="row">
-            <div class="select-busca">
-              <label>Débito (conta que sobe)</label>
-              <input type="search" id="ensDebFiltro" placeholder="Buscar conta…" />
-              <select id="ensDeb">${opcoes}</select>
-            </div>
-            <div class="select-busca">
-              <label>Crédito (conta que desce)</label>
-              <input type="search" id="ensCredFiltro" placeholder="Buscar conta…" />
-              <select id="ensCred">${opcoes}</select>
-            </div>
+          <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin:.2rem 0 .5rem">
+            <button class="btn ghost" type="button" id="btn-tpl-nfs" style="width:auto;font-size:.78rem">
+              Modelo NFS c/ retenções (4 linhas)
+            </button>
+            <button class="btn ghost" type="button" id="btn-add-linha" style="width:auto;font-size:.78rem">
+              + Novo lançamento
+            </button>
           </div>
 
-          <label>Como chamar no histórico</label>
-          <input id="ensDesc" placeholder="Ex.: Honorários contábeis" />
+          <div class="lanc-linhas" id="corrLinhas"></div>
 
-          <label style="display:flex;align-items:center;gap:.45rem;margin:.2rem 0 .6rem">
-            <input type="checkbox" id="ensRec" style="width:auto;margin:0" />
-            É todo mês — provisionar mesmo quando não vier documento
-          </label>
-          <div id="ensRecBox" style="display:none">
-            <div class="row">
-              <div><label>Valor mensal</label>
-                <input id="ensRecValor" type="number" step="0.01" value="${p.valor ?? ""}" /></div>
-              <div><label>A partir de</label>
-                <input id="ensRecInicio" placeholder="AAAA-MM" value="${rev.competencia || ""}" /></div>
+          <details style="margin:.4rem 0 .75rem">
+            <summary style="cursor:pointer;font-size:.85rem;color:var(--muted)">
+              Também ensinar regra (só se for 1 lançamento simples)
+            </summary>
+            <div style="margin-top:.55rem">
+              <label>O que identifica este documento nos próximos meses</label>
+              <div class="chips" id="chips">
+                ${(det.chaves_sugeridas || [])
+                  .map((k) => `<button class="chip-key" type="button">${txt(k)}</button>`)
+                  .join("") ||
+                '<span class="muted">Sem sugestão — digite CNPJ ou nome do fornecedor.</span>'}
+              </div>
+              <input id="ensChave" placeholder="Ex.: Premovale ou 00.000.000/0001-00" />
+              <label style="display:flex;align-items:center;gap:.45rem;margin:.45rem 0">
+                <input type="checkbox" id="ensinarRegra" style="width:auto;margin:0" />
+                Gravar como regra do Alexandre (apenas 1 linha D/C)
+              </label>
             </div>
-            <p class="muted" style="margin:-.3rem 0 .6rem">
-              Em meses atrasados o boleto muitas vezes não está na pasta — sem a
-              recorrência a despesa some e o resultado sai errado para mais.
-            </p>
-          </div>
+          </details>
 
-          <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem">
-            <button class="btn" type="button" id="btn-ensinar" style="width:auto">Ensinar e reprocessar</button>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.35rem;align-items:center">
+            <button class="btn" type="button" id="btn-corrigir" style="width:auto">Salvar lançamento(s)</button>
+            <button class="btn warn" type="button" id="btn-desconsiderar" style="width:auto"
+              title="Remove este arquivo de Aguardando você (sem lançamento contábil)">
+              Apagar da fila (sem contábil)
+            </button>
             <button class="btn ghost" type="button" id="btn-ens-agora-nao" style="width:auto">Agora não</button>
           </div>
-          <p class="muted" id="ensStatus" style="margin:.55rem 0 0"></p>
+          <p class="muted" style="margin:.45rem 0 0;font-size:.78rem">
+            <strong>Apagar da fila</strong> tira o documento (ex.: controle de valores pagos).
+            <strong>limpar linha</strong> só zera os campos do formulário.
+          </p>
+          <p class="muted" id="ensStatus" style="margin:.35rem 0 0"></p>
         </div>`;
 
-      document.getElementById("btn-fechar-ens").onclick = fecharPainel;
-      document.getElementById("btn-ens-agora-nao").onclick = fecharPainel;
-      document.getElementById("btn-ensinar").onclick = ensinar;
-      document.getElementById("ensDebFiltro").oninput = () => filtrarSelect("ensDeb", "ensDebFiltro");
-      document.getElementById("ensCredFiltro").oninput = () => filtrarSelect("ensCred", "ensCredFiltro");
-      document.getElementById("ensRec").onchange = function () {
-        document.getElementById("ensRecBox").style.display = this.checked ? "block" : "none";
-      };
-      document.querySelectorAll("#chips .chip-key").forEach((btn) => {
-        btn.onclick = () => usarChave(btn);
-      });
+      // Botões vêm da delegação em #fxEnsinar (não depende de onclick por elemento)
+      pintarLinhasCorr();
 
       if ((det.chaves_sugeridas || []).length) {
-        document.getElementById("ensChave").value = det.chaves_sugeridas[0];
+        const ens = document.getElementById("ensChave");
+        if (ens) ens.value = det.chaves_sugeridas[0];
         document.querySelector("#chips .chip-key")?.setAttribute("aria-pressed", "true");
       }
-      if (p.debito) document.getElementById("ensDeb").value = p.debito;
-      if (p.credito) document.getElementById("ensCred").value = p.credito;
+      const st = document.getElementById("ensStatus");
+      if (st) {
+        st.textContent =
+          "Para tirar este PDF da lista use “Apagar da fila”. “limpar linha” só apaga campos do formulário.";
+      }
+    }
+
+    async function salvarCorrecao() {
+      const st = document.getElementById("ensStatus");
+      if (!st) return;
+      const p = (rev.pendentes || [])[corrCtx.pendIdx];
+      if (!p) {
+        st.textContent = "Pendente não encontrado — reabra a correção.";
+        return;
+      }
+      if (!contasCache || !contasCache.length) {
+        st.textContent = "Plano de contas não carregou — clique de novo em Corrigir.";
+        try {
+          await carregarContas();
+        } catch (e) {
+          st.textContent = "Falha ao carregar contas: " + e.message;
+          return;
+        }
+      }
+      const linhas = lerLinhasDoDom();
+      const validas = linhas.filter(
+        (l) => l.data && l.debito && l.credito && Number.isFinite(l.valor) && l.valor > 0
+      );
+      if (!validas.length) {
+        const dicas = [];
+        linhas.forEach((l, i) => {
+          const f = [];
+          if (!l.data) f.push("data");
+          if (!l.debito) f.push("débito");
+          if (!l.credito) f.push("crédito");
+          if (!Number.isFinite(l.valor) || l.valor <= 0) f.push("valor");
+          if (f.length) dicas.push(`L${i + 1}: falta ${f.join(", ")}`);
+        });
+        st.textContent =
+          "Preencha data, débito, crédito e valor > 0. " + (dicas[0] || "");
+        return;
+      }
+      const incompletas = linhas.filter((l) => {
+        const temAlgo =
+          l.data || l.debito || l.credito || (Number.isFinite(l.valor) && l.valor > 0);
+        const ok =
+          l.data && l.debito && l.credito && Number.isFinite(l.valor) && l.valor > 0;
+        return temAlgo && !ok;
+      });
+      if (incompletas.length) {
+        st.textContent = `${incompletas.length} linha(s) incompleta(s). Complete ou remova antes de salvar.`;
+        return;
+      }
+      st.textContent = "salvando lançamento(s) e atualizando a planilha…";
+      const btn = document.getElementById("btn-corrigir");
+      if (btn) btn.disabled = true;
+      try {
+        const payload = {
+          arquivo: p.arquivo,
+          lancamentos: validas.map((l) => ({
+            data: l.data,
+            debito: String(l.debito),
+            credito: String(l.credito),
+            valor: Number(l.valor),
+            historico: Number(l.historico) || 0,
+            complemento: l.complemento || "",
+          })),
+          chave: (document.getElementById("ensChave")?.value || "").trim(),
+          descricao: validas[0]?.complemento || "",
+          ensinar_regra: !!document.getElementById("ensinarRegra")?.checked,
+        };
+        const r = await j(`/api/fechamentos/${rev.client_id}/${rev.competencia}/corrigir`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (r.estado) {
+          rev = r.estado;
+          abaAtual = (rev.pendentes || []).length ? "pendentes" : "lancados";
+        }
+        fecharPainel();
+        document.getElementById("fxStatus").textContent =
+          `${validas.length} lançamento(s) salvos para ${p.arquivo}. ` +
+          `${(rev.pendentes || []).length} pendente(s) restante(s) · ` +
+          `${(rev.lancados || []).length} na planilha.`;
+        atualizarPillPendentes();
+        fxListar();
+        pintarRevisao();
+      } catch (e) {
+        st.textContent = "Falhou: " + e.message;
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    async function desconsiderarPendente(idx) {
+      const p = (rev.pendentes || [])[idx];
+      if (!p || !rev) {
+        alert("Documento não encontrado na fila. Feche e abra de novo a competência.");
+        return;
+      }
+      const ok = confirm(
+        `Apagar da fila?\n\n${p.arquivo}\n\n` +
+          `Vai para “Sem lançamento” (controle/relatório sem contábil).\n` +
+          `Não entra na planilha Contmatic.\n\n` +
+          `Isso NÃO é o botão “limpar linha” do formulário.`
+      );
+      if (!ok) return;
+      const st = document.getElementById("ensStatus");
+      if (st) st.textContent = "apagando da fila…";
+      try {
+        const r = await j(
+          `/api/fechamentos/${rev.client_id}/${rev.competencia}/desconsiderar`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              arquivo: p.arquivo,
+              motivo:
+                p.motivo ||
+                "Desconsiderado — sem informação contábil (controle/relatório)",
+            }),
+          }
+        );
+        if (r.estado) {
+          rev = r.estado;
+          abaAtual = (rev.pendentes || []).length ? "pendentes" : "ignorados";
+        }
+        fecharPainel();
+        const msg =
+          `"${p.arquivo}" saiu da fila · ` +
+          `${(rev.pendentes || []).length} pendente(s) · ` +
+          `veja em “Sem lançamento”.`;
+        const fx = document.getElementById("fxStatus");
+        if (fx) fx.textContent = msg;
+        atualizarPillPendentes();
+        fxListar();
+        pintarRevisao();
+      } catch (e) {
+        const err = "Falhou ao apagar da fila: " + e.message;
+        if (st) st.textContent = err;
+        else alert(err);
+      }
+    }
+
+    async function reprocessarCompetencia() {
+      if (!rev) return;
+      const ok = confirm(
+        `Reprocessar ${rev.competencia}?\n\nRoda de novo os documentos já baixados (sem OneDrive).\nCorreções manuais e desconsiderados são mantidos.`
+      );
+      if (!ok) return;
+      const st = document.getElementById("fxStatus");
+      if (st) st.textContent = "Reprocessando competência… pode levar um minuto.";
+      const btn = document.getElementById("btn-reprocessar");
+      if (btn) btn.disabled = true;
+      try {
+        const r = await j(
+          `/api/fechamentos/${rev.client_id}/${rev.competencia}/reprocessar`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ usar_llm: false }),
+          }
+        );
+        if (r.estado) {
+          await revisar(r.estado);
+          if (st)
+            st.textContent =
+              `Reprocessado: ${(r.estado.lancados || []).length} lançado(s), ` +
+              `${(r.estado.pendentes || []).length} pendente(s), ` +
+              `${(r.estado.nao_contabilizaveis || []).length} sem lançamento.`;
+        }
+        fxListar();
+      } catch (e) {
+        if (st) st.textContent = "Reprocessar falhou: " + e.message;
+        else alert("Reprocessar falhou: " + e.message);
+      } finally {
+        if (btn) btn.disabled = false;
+      }
     }
 
     function filtrarSelect(selectId, filtroId) {
@@ -1996,7 +2532,19 @@
 
     document.getElementById("client-filter").oninput = renderClients;
     document.getElementById("setupToggle").onclick = toggleSetup;
-    document.getElementById("btn-fechar-rev").onclick = fecharRevisao;
+    // Bind seguro: um botão ausente não pode matar o resto (era o caso se
+    // btn-reprocessar falhasse antes da delegação do painel).
+    const _bind = (id, fn) => {
+      const el = document.getElementById(id);
+      if (el) el.onclick = fn;
+    };
+    _bind("btn-fechar-rev", fecharRevisao);
+    _bind("btn-reprocessar", reprocessarCompetencia);
+    // Delegação: sobrevive a innerHTML do painel Corrigir
+    const painelEl = document.getElementById("fxEnsinar");
+    if (painelEl) {
+      painelEl.addEventListener("click", onPainelEnsinarClick);
+    }
     document.getElementById("revBusca").oninput = () => pintarRevisao();
 
     document.getElementById("fxVerPasta").onclick = async () => {

@@ -23,7 +23,11 @@ contas:
   banco_mercadopago: 1112208
   banco_nubank: 1112211
   duplicatas_receber: 1121101
-  inss_retido_fonte: 1131910
+  # Clientes Diversos — conta usada no razão do Jorge (NFS com/sem retenção).
+  # Diferente de Duplicatas a receber (1121101): serviço prestado entra aqui.
+  clientes_diversos: 1121102
+  inss_retido_fonte: 1131910  # INSS retido na fonte a compensar (razão 1.1.3.01.009.00010)
+  iss_retido: 4121303         # ISS retido na fonte (razão 4.1.2.01.003.00003)
 
   # Passivo
   fornecedores: 2121101  # Fornecedores Nacionais (era 2111101, inexistente)

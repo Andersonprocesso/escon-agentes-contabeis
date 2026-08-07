@@ -218,22 +218,55 @@ regras:
     historico: 0
     descricao: "Duplicata emitida sem a NF correspondente — confira se não duplica a nota."
 
-  - id: servico_a_vista
-    quando: {tipo: xml, documento: nfse, recebido: true}
-    debito: "@banco"
+  # NFS-e de SERVIÇO PRESTADO (cliente emitente). Padrão do razão Jorge
+  # (Diário/Razão 2020 — Premovale, União Química, Santa Casa):
+  #   1) D 1121102 Clientes Diversos / C 4111201 Receita  → valor total
+  #   2) D 4121303 ISS / C 1121102                       → se ISS retido
+  #   3) D 1131910 INSS a compensar / C 1121102          → se INSS retido
+  #   4) D @recebimento / C 1121102                      → líquido (caixa ou banco)
+  # A expansão multi-linha é feita no Alexandre (_expandir_nfs_servico).
+  - id: servico_prestado
+    quando: {tipo: xml, documento: nfse, sentido: saida}
+    debito: 1121102
     credito: 4111201
     historico: 9             # Prestação de Serviços
-    visto_no_razao: 300      # somando as variações por cliente
-    descricao: "NFS-e recebida na hora — entra direto no banco"
+    visto_no_razao: 300
+    descricao: "NFS-e prestada — multi-linha (bruto + retenções + líquido) via razão Jorge"
+
+  # PDF NFS-e municipal (São José dos Campos): "Nota Fiscal de Serviços Eletrônica"
+  # Bloco RETENÇÕES com ISSQN/INSS — multi-linha no Alexandre.
+  - id: servico_prestado_pdf
+    quando: {tipo: pdf, contem: ["NOTA FISCAL DE SERVICOS ELETRONICA", "NFS-E"]}
+    debito: 1121102
+    credito: 4111201
+    historico: 9
+    visto_no_razao: 40
+    descricao: "NFS-e impressa (prefeitura) — multi-linha bruto+ISS+INSS+líquido"
+
+  - id: servico_prestado_pdf_retencao
+    quando: {tipo: pdf, contem: ["ISS RETIDO", "INSS RETIDO", "RETENCOES"]}
+    debito: 1121102
+    credito: 4111201
+    historico: 9
+    visto_no_razao: 20
+    descricao: "NFS com retenção no texto — multi-linha (razão Jorge)"
+
+  - id: servico_a_vista
+    quando: {tipo: xml, documento: nfse, recebido: true}
+    debito: 1121102
+    credito: 4111201
+    historico: 9
+    visto_no_razao: 300
+    descricao: "legado: preferir servico_prestado; expansão multi-linha no Alexandre"
 
   - id: servico_a_prazo
     quando: {tipo: xml, documento: nfse, recebido: false}
-    debito: 1121101          # Duplicatas a receber
+    debito: 1121102          # Clientes Diversos (não 1121101 — razão Jorge)
     credito: 4111201
     historico: 9
     abre_titulo: receber
     visto_no_razao: 68
-    descricao: "NFS-e a receber — baixa depois pelo extrato"
+    descricao: "NFS-e a prazo — abre título; retenções na expansão multi-linha"
 
   - id: recebimento_duplicata
     quando: {tipo: ofx, credito_banco: true, contem: ["REC", "PIX", "TED", "DEP"]}

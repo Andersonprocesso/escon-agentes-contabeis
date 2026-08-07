@@ -199,7 +199,18 @@ Nunca invente conta que não esteja no plano.
                         valor=doc.valor, data=doc.data,
                     )
 
-            lancados.append(registro)
+            # NFS de serviço (razão Jorge): 1 doc → 2 a 4 lançamentos
+            # (bruto + ISS retido + INSS retido + líquido no caixa/banco).
+            multi = _expandir_nfs_servico(
+                doc, cls, banco=banco, forma=forma,
+                classificador=self.classificador,
+            )
+            if multi:
+                if cls.origem == "regra":
+                    por_regra += len(multi) - 1  # já contou 1 acima
+                lancados.extend(multi)
+            else:
+                lancados.append(registro)
 
         carteira.salvar()
 
@@ -499,6 +510,10 @@ Nunca invente conta que não esteja no plano.
                         "natureza_cfop": info.natureza,
                         "cfop_contabiliza": info.contabiliza,
                         "cfop_descricao": info.descricao,
+                        # retenções (NFS-e) — multi-linha no razão Jorge
+                        "iss_retido": d.iss_retido,
+                        "inss_retido": d.inss_retido,
+                        "valor_liquido": d.valor_liquido,
                     },
                 )
             ]
@@ -526,24 +541,301 @@ Nunca invente conta que não esteja no plano.
             ]
 
         extraido = documents.process_document(arq)
+        extras_pdf: dict[str, Any] = {
+            "tem_encargos": _tem_encargos(texto),
+            **({"nao_lancavel": motivo} if motivo else {}),
+        }
+        data_doc = getattr(extraido, "data", None)
+        valor_doc = _para_float(getattr(extraido, "valor", None))
+
+        # NFS-e municipal impressa (SJC etc.) — layout com bloco RETENÇÕES
+        nfse_pdf = _parse_nfse_pdf(texto, self._cnpj_cliente if hasattr(self, "_cnpj_cliente") else "")
+        if nfse_pdf:
+            extras_pdf.update(nfse_pdf["extras"])
+            data_doc = data_doc or nfse_pdf.get("data")
+            valor_doc = valor_doc or nfse_pdf.get("valor")
+        else:
+            iss_pdf, inss_pdf = _retencoes_do_texto(texto)
+            if iss_pdf or inss_pdf:
+                extras_pdf["iss_retido"] = iss_pdf
+                extras_pdf["inss_retido"] = inss_pdf
+                extras_pdf["documento"] = "nfse"
+                extras_pdf["sentido"] = "saida"
+
         return [
             Documento(
                 caminho=str(arq),
                 tipo="pdf",
                 texto=texto[:6000],
-                data=getattr(extraido, "data", None),
-                valor=_para_float(getattr(extraido, "valor", None)),
+                data=data_doc,
+                valor=valor_doc,
                 e_pagamento=_parece_pagamento(texto),
-                extras={
-                    "tem_encargos": _tem_encargos(texto),
-                    **({"nao_lancavel": motivo} if motivo else {}),
-                },
+                extras=extras_pdf,
             )
         ]
 
 
 def _so_digitos(v: Any) -> str:
     return re.sub(r"\D", "", str(v or ""))
+
+
+_RE_MONEY = r"([\d.]+,\d{2})"
+
+
+def _parse_nfse_pdf(texto: str, cnpj_cliente: str = "") -> dict[str, Any] | None:
+    """NFS-e da prefeitura (São José dos Campos e layout parecido).
+
+    Exemplo real 026.pdf Jorge:
+      RETENÇÕES
+      ISSQN (R$) IRRF ... INSS (R$) ...
+      505,57 0,00 0,00 0,00 1.317,84 0,00 0,00
+      Valor Serviço 11.980,35 · Valor Líquido ...
+    """
+    if not texto:
+        return None
+    up = _sem_acento(texto)
+    if "nota fiscal de servicos eletronica" not in up and "nfs-e" not in up:
+        return None
+
+    # número: "01/2021 26 / E" ou "Número ... 26 / E"
+    numero = None
+    m_num = re.search(
+        r"(?:competencia da nfs-e\s+)?numero[^\n]{0,40}?(\d{1,6})\s*/\s*[A-Z]",
+        up,
+        re.I,
+    )
+    if not m_num:
+        m_num = re.search(r"\b(\d{1,6})\s*/\s*E\b", texto)
+    if m_num:
+        numero = m_num.group(1)
+
+    # data emissão no topo: 04/01/2021 17:35:48
+    data = None
+    m_data = re.search(r"\b(\d{2}/\d{2}/\d{4})\s+\d{2}:\d{2}", texto)
+    if m_data:
+        d, m, a = m_data.group(1).split("/")
+        data = f"{a}-{m}-{d}"
+
+    # valor do serviço (bruto)
+    valor = None
+    m_vs = re.search(
+        r"Valor\s+Servi[cç]o[^\d]{0,40}" + _RE_MONEY,
+        texto,
+        re.I,
+    )
+    if m_vs:
+        valor = _para_float(m_vs.group(1))
+    if not valor:
+        m_vs2 = re.search(
+            r"C[AÁ]LCULO DO ISSQN\s*\n[^\d]*" + _RE_MONEY,
+            texto,
+            re.I,
+        )
+        if m_vs2:
+            valor = _para_float(m_vs2.group(1))
+
+    # bloco RETENÇÕES: 7 valores — ISSQN, IRRF, PIS, COFINS, INSS, CSLL, Outras
+    iss = inss = None
+    m_ret = re.search(
+        r"RETEN[CÇ][OÕ]ES\s*\n[^\n]*\n\s*"
+        + r"\s+".join([_RE_MONEY] * 7),
+        texto,
+        re.I,
+    )
+    if m_ret:
+        vals = [_para_float(m_ret.group(i)) or 0.0 for i in range(1, 8)]
+        iss = vals[0] if vals[0] > 0 else None
+        inss = vals[4] if vals[4] > 0 else None
+
+    # fallback texto "ISS Retido" (razão antigo / outros municípios)
+    if not iss and not inss:
+        iss, inss = _retencoes_do_texto(texto)
+
+    liquido = None
+    # Linha do total: Base | Retenções | Descontos | Valor Líquido
+    m_tot = re.search(
+        r"VALOR\s+TOTAL\s+DA\s+NOTA.*?"
+        + _RE_MONEY
+        + r"\s+"
+        + _RE_MONEY
+        + r"\s+"
+        + _RE_MONEY
+        + r"\s+"
+        + _RE_MONEY,
+        texto,
+        re.I | re.S,
+    )
+    if m_tot:
+        liquido = _para_float(m_tot.group(4))
+    if liquido is None:
+        m_liq = re.search(
+            r"Valor\s+L[ií]quido\s*\(R\$\)[^\d\n]{0,10}" + _RE_MONEY, texto, re.I
+        )
+        if m_liq:
+            liquido = _para_float(m_liq.group(1))
+
+    # tomador (contraparte) — bloco TOMADOR DO SERVIÇO → Nome/Razão Social
+    contraparte = ""
+    m_tom = re.search(
+        r"TOMADOR DO SERVI[CÇ]O.*?Nome/Raz[aã]o Social:\s*E-mail:\s*\n([^\n]+)",
+        texto,
+        re.I | re.S,
+    )
+    if m_tom:
+        contraparte = m_tom.group(1).strip()
+        # às vezes o e-mail cola na mesma linha
+        contraparte = re.split(r"\s+\S+@\S+", contraparte)[0].strip()
+
+    # emitente = prestador? Se o CNPJ do emitente é o cliente → saída (prestou)
+    sentido = "saida"
+    m_emit = re.search(
+        r"EMITENTE DA NFS-e.*?CPF/CNPJ:\s*Inscri[^\n]*\n\s*([\d./-]+)",
+        texto,
+        re.I | re.S,
+    )
+    if m_emit and cnpj_cliente:
+        if _so_digitos(m_emit.group(1)) != _so_digitos(cnpj_cliente):
+            sentido = "entrada"  # cliente tomou serviço de terceiros
+
+    return {
+        "data": data,
+        "valor": valor,
+        "extras": {
+            "documento": "nfse",
+            "sentido": sentido,
+            "numero": numero or "",
+            "contraparte": contraparte,
+            "iss_retido": iss,
+            "inss_retido": inss,
+            "valor_liquido": liquido,
+            "nfse_pdf": True,
+        },
+    }
+
+
+def _retencoes_do_texto(texto: str) -> tuple[float | None, float | None]:
+    """ISS/INSS retidos no PDF (texto livre / razão / outros layouts).
+
+    Padrão do Diário Jorge: 'NF 008 ISS Retido na Fonte 351,36'.
+    """
+    if not texto:
+        return None, None
+    iss = inss = None
+    m_iss = re.search(
+        r"ISS\s*Retid[oa]\s*(?:na\s*Fonte)?[^\d]{0,20}R?\$?\s*([\d.]+,\d{2}|\d+\.\d{2})",
+        texto,
+        re.I,
+    )
+    if m_iss:
+        iss = _para_float(m_iss.group(1))
+    m_inss = re.search(
+        r"INSS\s*Retid[oa]\s*(?:na\s*Fonte)?[^\d]{0,20}R?\$?\s*([\d.]+,\d{2}|\d+\.\d{2})",
+        texto,
+        re.I,
+    )
+    if m_inss:
+        inss = _para_float(m_inss.group(1))
+    return iss, inss
+
+
+def _expandir_nfs_servico(
+    doc: Documento,
+    cls: Classificacao,
+    *,
+    banco: str | None,
+    forma: str,
+    classificador: Classificador,
+) -> list[dict[str, Any]] | None:
+    """Multi-linha de NFS prestada — copiado do razão do Jorge (Premovale etc.).
+
+        D 1121102 / C 4111201   valor total (Clientes Diversos × Receita)
+        D 4121303 / C 1121102   ISS retido (se houver)
+        D 1131910 / C 1121102   INSS retido a compensar (se houver)
+        D @recebimento / C 1121102  líquido (caixa ou banco) — só à vista
+
+    Devolve None se o documento não for NFS de serviço prestado.
+    """
+    ex = doc.extras or {}
+    regra = (cls.regra_id or "").lower()
+    eh_servico = (
+        ex.get("documento") == "nfse"
+        and ex.get("sentido") == "saida"
+    ) or regra.startswith("servico")
+    # PDF com retenções marcadas no texto
+    if not eh_servico and (ex.get("iss_retido") or ex.get("inss_retido")):
+        eh_servico = True
+    if not eh_servico:
+        return None
+
+    bruto = float(doc.valor or 0)
+    if bruto <= 0:
+        return None
+
+    iss = float(ex.get("iss_retido") or 0) or 0.0
+    inss = float(ex.get("inss_retido") or 0) or 0.0
+    liq_doc = ex.get("valor_liquido")
+    try:
+        liquido = float(liq_doc) if liq_doc not in (None, "") else None
+    except (TypeError, ValueError):
+        liquido = None
+    if liquido is None:
+        liquido = round(bruto - iss - inss, 2)
+    if liquido < 0:
+        liquido = 0.0
+
+    contas = classificador.contas
+    clientes = str(contas.get("clientes_diversos") or "1121102")
+    receita = str(contas.get("receita_servicos") or "4111201")
+    c_iss = str(contas.get("iss_retido") or "4121303")
+    c_inss = str(contas.get("inss_retido_fonte") or "1131910")
+    receb = classificador._resolver("@recebimento", banco, forma)
+
+    num = str(ex.get("numero") or "").strip() or Path(doc.caminho).stem[:12]
+    quem = (ex.get("contraparte") or "").strip()
+    base_comp = f"NFS {num}" + (f" {quem}" if quem else "")
+    arq = Path(doc.caminho).name
+    data = doc.data
+    a_prazo = bool(ex.get("a_prazo"))
+
+    def linha(deb: str, cred: str, valor: float, hist: int, comp: str, regra_id: str) -> dict[str, Any]:
+        return {
+            "arquivo": arq,
+            "data": data,
+            "valor": round(float(valor), 2),
+            "debito": deb,
+            "credito": cred,
+            "historico": hist,
+            "historico_texto": classificador.historicos.get(hist, "") if hist else "",
+            "complemento": comp[:120],
+            "regra": regra_id,
+            "origem": cls.origem,
+            "observacao": "multi-linha NFS (razão Jorge)",
+        }
+
+    out: list[dict[str, Any]] = [
+        linha(clientes, receita, bruto, 9, base_comp.strip(), "servico_prestado_bruto"),
+    ]
+    if iss > 0:
+        out.append(
+            linha(c_iss, clientes, iss, 0, f"NFS {num} ISS Retido na Fonte", "servico_iss_retido")
+        )
+    if inss > 0:
+        out.append(
+            linha(
+                c_inss, clientes, inss, 34,
+                f"NFS {num} INSS Retido na Fonte", "servico_inss_retido",
+            )
+        )
+    # À vista: zera Clientes Diversos no caixa/banco. A prazo: deixa em aberto
+    # (abre_titulo no classificador) — o líquido entra quando o extrato baixar.
+    if not a_prazo and liquido > 0 and receb:
+        out.append(
+            linha(
+                receb, clientes, liquido, 26,
+                f"Valor ref: a NFS {num}", "servico_recebimento",
+            )
+        )
+    return out
 
 
 def _para_float(v: Any) -> float | None:
@@ -574,7 +866,8 @@ def _para_float(v: Any) -> float | None:
 # atrasada eles enchiam a lista de pendentes e escondiam o que era de verdade.
 # Cada chave é comparada com o texto E com o nome do arquivo.
 NAO_LANCAVEIS: list[tuple[tuple[str, ...], str]] = [
-    (("balancete", "balanco patrimonial", "demonstracao do resultado"),
+    (("balancete", "balanco patrimonial", "demonstracao do resultado",
+      "demonstrativo do resultado"),
      "Relatório contábil — é resultado da contabilidade, não documento dela"),
     # O DANFE é a representação impressa da NF-e: a nota já entra pelo XML.
     # Lançar os dois duplica. Na Alumax de jan/21 eram 43 lançamentos a mais —
@@ -584,20 +877,36 @@ NAO_LANCAVEIS: list[tuple[tuple[str, ...], str]] = [
      "DANFE — a nota já é lançada pelo XML; lançar o PDF duplicaria"),
     (("protocolo de transmissao", "protocolo de entrega", "protocolo de envio",
       "recibo de entrega de arquivo", "comprovante de transmissao",
-      "conectividade social", "procuracao eletronica"),
+      "conectividade social", "procuracao eletronica",
+      # nome de arquivo curto comum no OneDrive
+      "protocolo.pdf", "protocolo "),
      "Protocolo de transmissão — não movimenta conta"),
     (("notas emitidas", "relatorio de notas", "relacao de notas",
-      "listagem de notas", "espelho de nota"),
+      "listagem de notas", "espelho de nota", "relatorionotasemitidas"),
      "Relatório de notas — as notas em si já são lidas"),
     (("sedif", "gia ", "sintegra", "efd icms", "sped fiscal", "efd contribuicoes"),
      "Declaração acessória — obrigação, não lançamento"),
-    (("relatorio de notas", "relacao de notas", "listagem de notas",
-      "espelho de nota"), "Relatório de notas — as notas em si já são lidas"),
     (("livro razao", "razao analitico", "livro diario"),
      "Livro contábil — saída da contabilidade, não entrada"),
     (("cartao cnpj", "comprovante de inscricao", "contrato social",
       "certidao negativa", "consulta de optantes"),
      "Documento cadastral — sem efeito contábil"),
+    # Pedido Anderson 2026-08-07: planilha de medição, relatório de receita e
+    # relatório de GPS não têm informação contábil para lançar.
+    (("planilha de medicao", "planilha medicao", "medicao de obra",
+      "boletim de medicao", "relacao de medicao"),
+     "Planilha/boletim de medição — controle de obra, não lançamento"),
+    (("relatorio da receita", "relatorio de receita", "resumo da receita",
+      "demonstrativo de receita", "relatorio receita"),
+     "Relatório da receita — espelho gerencial, não documento de lançamento"),
+    (("relatorio de gps", "relatorio gps", "resumo de gps", "resumo gps",
+      "demonstrativo gps", "relatorio da gps"),
+     "Relatório de GPS — resumo da guia; o lançamento vem da GPS/comprovante"),
+    # Controle gerencial da folha/caixa — não é documento de partida dobrada
+    (("controle de valores pagos", "controle valores pagos",
+      "valores pagos", "controle de pagamentos", "relacao de pagamentos",
+      "controle de valores"),
+     "Controle de valores pagos — planilha gerencial, sem lançamento contábil"),
 ]
 
 # A folha tem agente próprio: mandá-la para pendentes escondia que existe
@@ -627,9 +936,34 @@ def _e_esocial(arq: Path) -> str:
 def _nao_lancavel(texto: str, nome: str) -> str:
     """Devolve o motivo se o documento não é lançamento; senão, string vazia."""
     alvo = _sem_acento(f"{nome} {texto[:2500]}")
+    stem = _sem_acento(Path(nome).stem)
+    # nomes curtos comuns no OneDrive: Protocolo.pdf, Balancete.pdf, SEDIF…
+    if stem in ("protocolo", "balancete", "sedif", "danfe") or stem.startswith(
+        ("protocolo", "balancete", "relatorionotas", "relatorio_notas",
+         "planilhademedicao", "planilha_medicao", "medicao",
+         "relatoriodareceita", "relatorio_receita", "relatoriodegps",
+         "relatorio_gps", "resumogps")
+    ):
+        # cai nas chaves abaixo; se o stem já bastar, devolve motivo genérico
+        pass
     for chaves, motivo in NAO_LANCAVEIS:
         if any(k in alvo for k in chaves):
             return motivo
+    # stem isolado (arquivo sem texto extraível)
+    if stem in ("protocolo",) or stem.startswith("protocolo"):
+        return "Protocolo de transmissão — não movimenta conta"
+    if stem in ("balancete",) or stem.startswith("balancete"):
+        return "Relatório contábil — é resultado da contabilidade, não documento dela"
+    if "medicao" in stem:
+        return "Planilha/boletim de medição — controle de obra, não lançamento"
+    if "receita" in stem and "relatorio" in stem:
+        return "Relatório da receita — espelho gerencial, não documento de lançamento"
+    if "gps" in stem and ("relatorio" in stem or "resumo" in stem):
+        return "Relatório de GPS — resumo da guia; o lançamento vem da GPS/comprovante"
+    if "valores" in stem and ("pago" in stem or "pagos" in stem or "controle" in stem):
+        return "Controle de valores pagos — planilha gerencial, sem lançamento contábil"
+    if stem.startswith("controle") and ("valor" in stem or "pagamento" in stem):
+        return "Controle de valores pagos — planilha gerencial, sem lançamento contábil"
     return ""
 
 

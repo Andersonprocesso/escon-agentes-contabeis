@@ -68,10 +68,11 @@ o financeiro.** Nunca rodar `docker compose down` fora de `/opt/escon-agentes`.
    - **Lançados** — o que foi contabilizado
    - **Aguardando você** — o que o agente não soube
    - **Sem lançamento** — DANFE, protocolo, declaração, folha (existem, estão certos, não viram lançamento)
-5. Clica num pendente → o painel mostra o documento e **sugere o que o
-   identifica** → escolhe as contas numa lista → **vira regra** e a competência
-   é reprocessada
-6. Só então baixa a planilha do Contmatic
+5. Clica num pendente → **Corrigir como lançamento**: preenche data/débito/
+   crédito/valor/complemento (pode **adicionar linhas** — ex. NFS com ISS e
+   INSS retidos). Opcional: ensinar regra 1:1 se for caso simples.
+6. Só então baixa a planilha do Contmatic (já inclui **folha da Fabiana** +
+   correções manuais; o download regenera o Excel na hora)
 
 ## Como o sistema quase não gasta token
 
@@ -142,6 +143,25 @@ verdade. Nenhuma apareceria em teste sintético.
    antes de gravar o token.
 9. **Gerar hash de senha dentro de `ssh "..."`** faz o shell remoto expandir
    `$2y`/`$05`. Gerar no servidor, com heredoc `<<'FIM'`.
+
+## NFS de serviço com retenção (padrão do razão Jorge)
+
+Quando o cliente **presta serviço** (NFS-e saída), o lançamento **não é 1 linha**.
+Veio do Diário/Razão do Jorge (Premovale, União Química, Santa Casa) e está
+fixado no Alexandre (`_expandir_nfs_servico`):
+
+| Ordem | Débito | Crédito | Quando |
+|------:|--------|---------|--------|
+| 1 | 1121102 Clientes Diversos | 4111201 Receita serviços | sempre (bruto) |
+| 2 | 4121303 ISS | 1121102 | se houver ISS retido |
+| 3 | 1131910 INSS a compensar | 1121102 | se houver INSS retido |
+| 4 | caixa **ou** banco (`forma_pagamento`) | 1121102 | líquido, se à vista |
+
+- Só ISS (sem INSS) → 3 linhas (caso Santa Casa).
+- Sem retenção → 2 linhas (bruto + recebimento).
+- A prazo → sem linha 4; abre título no líquido/bruto conforme regra.
+
+**Não voltar** a lançar NFS prestada como D banco × C receita em uma linha só.
 
 ## Regras invioláveis
 

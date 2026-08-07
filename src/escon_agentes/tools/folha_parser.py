@@ -30,6 +30,8 @@ RE_RESCISAO = re.compile(
     re.IGNORECASE,
 )
 RE_FUNC = re.compile(r"Func:\s*(\d+)\s+(.+?)\s+Adm", re.IGNORECASE)
+# Adm20/02/2017 Dem15/01/2021  — Dem sem data = ainda ativo
+RE_DEMISSAO = re.compile(r"Dem(\d{2}/\d{2}/\d{4})", re.IGNORECASE)
 RE_TOTAIS = re.compile(
     r"Proventos:\s*([\d.,]+).*?Vantagens:\s*([\d.,]+).*?Descontos:\s*([\d.,]+).*?"
     r"L[ií]quido:\s*([\d.,]+)",
@@ -53,13 +55,21 @@ RUBRICAS: list[tuple[tuple[str, ...], str, str]] = [
     # Indenizatórias não sofrem INSS/IRRF e têm conta própria; misturá-las com
     # salário distorce a base de encargos.
     (("aviso previo indenizado", "aviso previo ind"), "rescisao", "desp_aviso_previo"),
-    (("ferias indenizadas", "ferias proporcionais", "ferias vencidas"),
+    (("ferias indenizadas", "ferias proporcionais", "ferias vencidas",
+      "horas ferias proporc", "1/3 s/ferias"),
      "rescisao", "desp_ferias"),
-    (("13o proporcional", "13 proporcional", "gratificacao natalina prop"),
+    (("13o proporcional", "13 proporcional", "13o salario proporcional",
+      "gratificacao natalina prop"),
      "rescisao", "desp_13"),
-    (("saldo de salario", "saldo salario"), "rescisao", "desp_salarios"),
-    (("multa fgts", "multa 40", "multa rescisoria", "indenizacao 40"),
+    (("saldo de salario", "saldo salario", "saldo de salario diurno"),
+     "rescisao", "desp_salarios"),
+    (("fim contrato",), "rescisao", "desp_salarios"),
+    (("multa fgts", "multa 40", "multa rescisoria", "indenizacao 40",
+      "fgts multa"),
      "rescisao", "desp_multa_fgts"),
+    # desconto que zera o líquido na folha quando a rescisão já foi paga
+    (("desconto liquido rescisao", "desconto liquido da rescisao"),
+     "desconto", "rescisao_pagar"),
 
     (("pro-labore", "pro labore", "prolabore"), "provento", "desp_prolabore"),
     # "Horas Normais Diurnas" e o provento principal na folha da Escon — sem
@@ -114,6 +124,8 @@ class Funcionario:
     # socio recebe pro-labore, empregado recebe salario: contas diferentes.
     # O arquivo costuma trazer os dois juntos ("Folha de Pagamento e Pro labore").
     tipo: str = "folha"
+    # AAAA-MM-DD quando o PDF traz DemDD/MM/AAAA; None = ativo no mês
+    data_demissao: str | None = None
 
     @property
     def fecha(self) -> bool:
@@ -123,6 +135,35 @@ class Funcionario:
     @property
     def diferenca(self) -> float:
         return round((self.proventos + self.vantagens - self.descontos) - self.liquido, 2)
+
+    @property
+    def is_rescisao(self) -> bool:
+        """Demitido no mês: data de demissão ou verbas típicas de desligamento.
+
+        Não usa só natureza=='rescisao' — 'férias proporcionais' em holerite
+        comum não pode transformar o funcionário em rescisão.
+        """
+        if self.data_demissao:
+            return True
+        for r in self.rubricas:
+            d = _norm(r.descricao)
+            if any(
+                k in d
+                for k in (
+                    "aviso previo",
+                    "fim contrato",
+                    "multa fgts",
+                    "fgts multa",
+                    "desconto liquido rescis",
+                    "saldo de salario",
+                    " grfc",
+                    "grfc ",
+                    " grrf",
+                    "grrf ",
+                )
+            ):
+                return True
+        return False
 
 
 @dataclass
@@ -173,6 +214,12 @@ def ler_folha(texto: str) -> Folha:
         bloco = texto[ini:fim]
 
         f = Funcionario(codigo=m.group(1), nome=m.group(2).strip()[:60])
+        # data de demissão fica na mesma linha do Func: (logo após Adm…)
+        cabecalho = texto[m.start() : m.end() + 80]
+        if dem := RE_DEMISSAO.search(cabecalho):
+            d, mo, y = dem.group(1).split("/")
+            f.data_demissao = f"{y}-{mo}-{d}"
+
         if tot := RE_TOTAIS.search(bloco):
             f.proventos, f.vantagens = _num(tot.group(1)), _num(tot.group(2))
             f.descontos, f.liquido = _num(tot.group(3)), _num(tot.group(4))
@@ -239,13 +286,21 @@ def problemas(folha: Folha) -> list[str]:
 
 
 def resumo(folha: Folha) -> dict[str, Any]:
+    rescisao = [f for f in folha.funcionarios if f.is_rescisao]
+    normais = [f for f in folha.funcionarios if not f.is_rescisao]
     return {
         "tipo": folha.tipo,
         "competencia": folha.competencia,
         "funcionarios": len(folha.funcionarios),
+        "normais": len(normais),
+        "rescisoes": len(rescisao),
         "proventos": folha.total_proventos,
         "descontos": folha.total_descontos,
         "liquido": folha.total_liquido,
+        "proventos_resumo": round(
+            sum(f.proventos + f.vantagens for f in normais), 2
+        ),
+        "liquido_resumo": round(sum(f.liquido for f in normais), 2),
         "fecha": folha.fecha,
         "problemas": problemas(folha),
     }
