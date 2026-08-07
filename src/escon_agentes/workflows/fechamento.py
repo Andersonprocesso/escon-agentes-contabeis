@@ -272,6 +272,151 @@ def aplicar_desconsiderados(
     return out_pend, out_ign
 
 
+def editar_lancado(
+    settings: Settings,
+    *,
+    client_id: str,
+    competencia: str,
+    indice: int,
+    campos: dict[str, Any],
+) -> dict[str, Any]:
+    """Edita um lançamento já na aba Lançados (conferência final)."""
+    estado = carregar(settings, client_id, competencia)
+    if not estado:
+        raise FileNotFoundError(f"Fechamento {client_id}/{competencia} não encontrado")
+    lancados = list(estado.get("lancados") or [])
+    if indice < 0 or indice >= len(lancados):
+        raise ValueError(f"Índice {indice} fora da lista (0..{len(lancados) - 1})")
+
+    atual = dict(lancados[indice])
+    merged = {
+        **atual,
+        "data": campos.get("data", atual.get("data")),
+        "debito": campos.get("debito", atual.get("debito")),
+        "credito": campos.get("credito", atual.get("credito")),
+        "valor": campos.get("valor", atual.get("valor")),
+        "historico": campos.get("historico", atual.get("historico") or 0),
+        "complemento": campos.get(
+            "complemento", atual.get("complemento") or atual.get("historico_texto") or ""
+        ),
+        "arquivo": atual.get("arquivo") or "",
+        "origem": atual.get("origem") or "manual",
+        "regra": atual.get("regra") or "edicao_manual",
+        "observacao": (atual.get("observacao") or "") + " · editado na conferência",
+    }
+    linha = _normalizar_linha_lancamento(merged, origem="manual")
+    if not linha:
+        raise ValueError(
+            "Dados inválidos: informe data, débito, crédito e valor > 0."
+        )
+    # preserva metadados úteis
+    linha["arquivo"] = atual.get("arquivo") or ""
+    linha["regra"] = atual.get("regra") or "edicao_manual"
+    linha["origem"] = "manual"
+    linha["observacao"] = merged["observacao"][:200]
+    lancados[indice] = linha
+
+    planilha = gerar_planilha(
+        settings, client_id=client_id, competencia=competencia, lancados=lancados
+    )
+    estado.update(lancados=lancados, planilha=planilha, situacao="concluido")
+    salvar(settings, estado)
+    return estado
+
+
+def remover_lancados(
+    settings: Settings,
+    *,
+    client_id: str,
+    competencia: str,
+    indice: int | None = None,
+    arquivo: str | None = None,
+    desconsiderar_doc: bool = False,
+) -> dict[str, Any]:
+    """Remove 1 lançamento (índice) ou todos do mesmo arquivo (NFS multi-linha).
+
+    Se desconsiderar_doc=True e há arquivo, o documento entra em desconsiderados
+    para não voltar no reprocessar (caso NFS cancelada já lançada por engano).
+    """
+    estado = carregar(settings, client_id, competencia)
+    if not estado:
+        raise FileNotFoundError(f"Fechamento {client_id}/{competencia} não encontrado")
+    lancados = list(estado.get("lancados") or [])
+
+    if arquivo:
+        arq = arquivo
+        # aceita só o nome do arquivo
+        novos = [
+            l
+            for l in lancados
+            if (l.get("arquivo") or "") != arq
+            and Path(l.get("arquivo") or "").name != Path(arq).name
+        ]
+        if len(novos) == len(lancados):
+            raise ValueError(f"Nenhum lançamento com arquivo {arquivo!r}")
+        lancados = novos
+    elif indice is not None:
+        if indice < 0 or indice >= len(lancados):
+            raise ValueError(f"Índice {indice} fora da lista")
+        arq = lancados[indice].get("arquivo") or ""
+        del lancados[indice]
+    else:
+        raise ValueError("Informe indice ou arquivo")
+
+    desconsiderados = list(estado.get("desconsiderados") or [])
+    if desconsiderar_doc and arq:
+        desconsiderados = [d for d in desconsiderados if (d.get("arquivo") or "") != arq]
+        desconsiderados.append(
+            {
+                "arquivo": Path(arq).name,
+                "motivo": "Removido na conferência (ex.: NFS cancelada)",
+            }
+        )
+        # tira de pendentes se ainda estiver
+        pendentes = [
+            p
+            for p in (estado.get("pendentes") or [])
+            if (p.get("arquivo") or "") != Path(arq).name
+        ]
+        nao = list(estado.get("nao_contabilizaveis") or [])
+        pendentes, nao = aplicar_desconsiderados(pendentes, nao, desconsiderados)
+        estado["pendentes"] = pendentes
+        estado["nao_contabilizaveis"] = nao
+        estado["desconsiderados"] = desconsiderados
+
+    planilha = gerar_planilha(
+        settings, client_id=client_id, competencia=competencia, lancados=lancados
+    )
+    estado.update(lancados=lancados, planilha=planilha, situacao="concluido")
+    salvar(settings, estado)
+    return estado
+
+
+def achar_documento(
+    settings: Settings,
+    client_id: str,
+    competencia: str,
+    arquivo: str,
+) -> Path | None:
+    """Localiza o PDF/XML na pasta da competência (para visualizar na conferência)."""
+    if not arquivo:
+        return None
+    pasta = pasta_da_competencia(settings, client_id, competencia)
+    if not pasta.exists():
+        return None
+    nome = Path(arquivo).name
+    # match exato pelo nome
+    for p in pasta.rglob("*"):
+        if p.is_file() and p.name == nome:
+            return p
+    # match case-insensitive
+    low = nome.lower()
+    for p in pasta.rglob("*"):
+        if p.is_file() and p.name.lower() == low:
+            return p
+    return None
+
+
 def desconsiderar_pendente(
     settings: Settings,
     *,

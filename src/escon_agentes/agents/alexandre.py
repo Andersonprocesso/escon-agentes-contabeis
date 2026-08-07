@@ -474,6 +474,27 @@ Nunca invente conta que não esteja no plano.
                 d = xml_fiscal.parse_xml_file(arq)
             except Exception:  # noqa: BLE001
                 return []
+            # Nota cancelada (NFS 028 etc.) — nunca lança; vai para "Sem lançamento"
+            if getattr(d, "cancelada", False):
+                return [
+                    Documento(
+                        caminho=str(arq),
+                        tipo="xml",
+                        texto=f"{d.tipo} n° {d.numero or ''} cancelada",
+                        data=d.data_emissao,
+                        valor=_para_float(d.valor_total),
+                        extras={
+                            "nao_lancavel": (
+                                f"Nota cancelada"
+                                + (f" — {d.cancel_motivo}" if d.cancel_motivo else "")
+                                + (f" (n° {d.numero})" if d.numero else "")
+                            ),
+                            "documento": d.tipo,
+                            "numero": d.numero,
+                            "cancelada": True,
+                        },
+                    )
+                ]
             # Os campos do Xavier sao data_emissao/valor_total — ler "data"/"valor"
             # devolvia None e mandava toda nota fiscal para pendentes.
             from escon_agentes.tools import cfop as cfop_tool
@@ -531,6 +552,9 @@ Nunca invente conta que não esteja no plano.
         alvo = _sem_acento(f"{arq.name} {texto[:2500]}")
         if not motivo and any(k in alvo for k in DA_FABIANA):
             motivo = "Folha de pagamento — quem lança é a Fabiana"
+        # NFS/NF cancelada no PDF (texto ou nome do arquivo)
+        if not motivo and _pdf_nota_cancelada(texto, arq.name):
+            motivo = "Nota fiscal cancelada — sem lançamento contábil"
 
         if not texto.strip():
             return [
@@ -554,6 +578,11 @@ Nunca invente conta que não esteja no plano.
             extras_pdf.update(nfse_pdf["extras"])
             data_doc = data_doc or nfse_pdf.get("data")
             valor_doc = valor_doc or nfse_pdf.get("valor")
+            if nfse_pdf.get("cancelada"):
+                extras_pdf["nao_lancavel"] = (
+                    f"NFS-e n° {nfse_pdf['extras'].get('numero') or '?'} cancelada"
+                )
+                extras_pdf["cancelada"] = True
         else:
             iss_pdf, inss_pdf = _retencoes_do_texto(texto)
             if iss_pdf or inss_pdf:
@@ -582,6 +611,19 @@ def _so_digitos(v: Any) -> str:
 _RE_MONEY = r"([\d.]+,\d{2})"
 
 
+def _pdf_nota_cancelada(texto: str, nome: str = "") -> bool:
+    """PDF de NFS/NF com carimbo ou situação CANCELADA."""
+    alvo = _sem_acento(f"{nome} {texto[:4000]}")
+    if "cancelad" in alvo:  # cancelada / cancelado
+        # evita falso positivo em "sem cancelamento"
+        if re.search(r"\bsem\s+cancelad", alvo):
+            return False
+        return True
+    if re.search(r"situacao\s*(da\s*nfs-?e\s*)?[:=]?\s*cancel", alvo):
+        return True
+    return False
+
+
 def _parse_nfse_pdf(texto: str, cnpj_cliente: str = "") -> dict[str, Any] | None:
     """NFS-e da prefeitura (São José dos Campos e layout parecido).
 
@@ -596,6 +638,8 @@ def _parse_nfse_pdf(texto: str, cnpj_cliente: str = "") -> dict[str, Any] | None
     up = _sem_acento(texto)
     if "nota fiscal de servicos eletronica" not in up and "nfs-e" not in up:
         return None
+
+    cancelada = _pdf_nota_cancelada(texto, "")
 
     # número: "01/2021 26 / E" ou "Número ... 26 / E"
     numero = None
@@ -700,6 +744,7 @@ def _parse_nfse_pdf(texto: str, cnpj_cliente: str = "") -> dict[str, Any] | None
     return {
         "data": data,
         "valor": valor,
+        "cancelada": cancelada,
         "extras": {
             "documento": "nfse",
             "sentido": sentido,
@@ -709,6 +754,7 @@ def _parse_nfse_pdf(texto: str, cnpj_cliente: str = "") -> dict[str, Any] | None
             "inss_retido": inss,
             "valor_liquido": liquido,
             "nfse_pdf": True,
+            "cancelada": cancelada,
         },
     }
 
@@ -756,6 +802,8 @@ def _expandir_nfs_servico(
     Devolve None se o documento não for NFS de serviço prestado.
     """
     ex = doc.extras or {}
+    if ex.get("cancelada") or ex.get("nao_lancavel"):
+        return None  # cancelada já foi para "Sem lançamento"
     regra = (cls.regra_id or "").lower()
     eh_servico = (
         ex.get("documento") == "nfse"

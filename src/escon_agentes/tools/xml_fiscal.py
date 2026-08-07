@@ -49,6 +49,9 @@ class XmlDoc:
     iss_retido: float | None = None
     inss_retido: float | None = None
     valor_liquido: float | None = None
+    # Cancelada = sem lançamento (NFS 028 cancelada entrava como 4 linhas erradas)
+    cancelada: bool = False
+    cancel_motivo: str = ""
 
 
 def _normalizar_data(bruto: str | None) -> str | None:
@@ -179,6 +182,8 @@ def parse_xml_file(path: Path) -> XmlDoc:
         else:
             valor_bruto = _find_text(root, "ValorLiquidoNfse", "ValorLiquido")
 
+    cancelada, cancel_motivo = _detectar_cancelada(root, tipo)
+
     return XmlDoc(
         path=str(path),
         tipo=tipo,
@@ -198,6 +203,8 @@ def parse_xml_file(path: Path) -> XmlDoc:
         iss_retido=iss_r,
         inss_retido=inss_r,
         valor_liquido=liq,
+        cancelada=cancelada,
+        cancel_motivo=cancel_motivo,
     )
 
 
@@ -208,6 +215,54 @@ def _ler_cfops(root: ET.Element) -> list[str]:
         for el in root.iter()
         if _local(el.tag).upper() == "CFOP" and (el.text or "").strip()
     ]
+
+
+def _detectar_cancelada(root: ET.Element, tipo: str) -> tuple[bool, str]:
+    """Nota cancelada não gera lançamento contábil.
+
+    NFS-e: Situacao/Status Cancelada, CodigoCancelamento preenchido.
+    NF-e: cStat 101 (cancelamento) ou evento 110111 no procEventoNFe.
+    """
+    # Evento de cancelamento de NF-e
+    for el in root.iter():
+        if _local(el.tag) == "tpEvento" and (el.text or "").strip() == "110111":
+            return True, "Evento de cancelamento NF-e (110111)"
+        if _local(el.tag) == "cStat" and (el.text or "").strip() in (
+            "101",  # Cancelamento de NF-e homologado
+            "135",  # Evento registrado e vinculado (cancel)
+            "155",  # Cancelamento homologado fora de prazo
+        ):
+            # 100 = autorizada; só marca se o contexto for cancel
+            desc = (_find_text(root, "xMotivo", "xJust", "DescEvento") or "").lower()
+            if "cancel" in desc or (el.text or "").strip() == "101":
+                return True, f"cStat {(el.text or '').strip()} — cancelada"
+
+    # Tags de situação NFS-e (prefeituras variam)
+    for nome in (
+        "Situacao", "SituacaoNfse", "Status", "StatusNFe", "CodigoSituacao",
+        "SituacaoNota", "DescricaoSituacao", "StatusNota",
+    ):
+        v = (_find_text(root, nome) or "").strip()
+        if not v:
+            continue
+        low = v.lower()
+        if "cancel" in low or v in ("2", "C", "c", "3"):  # 2=cancelada em vários layouts
+            # "2" sozinho em Status genérico pode ser ambíguo — exige contexto NFS
+            if v in ("2", "3") and tipo != "nfse":
+                continue
+            if v in ("2", "3") and "cancel" not in low:
+                # SituacaoNfse numérico: 1=normal 2=cancelada é o mais comum
+                if nome.lower().startswith("situa") or "nfse" in nome.lower():
+                    return True, f"{nome}={v} (cancelada)"
+                continue
+            return True, f"{nome}={v}"
+
+    # Código de cancelamento preenchido
+    cod = _find_text(root, "CodigoCancelamento", "CodigoCancelamentoNfse", "cMotivo")
+    if cod and cod.strip() not in ("0", "00", ""):
+        return True, f"CodigoCancelamento={cod.strip()}"
+
+    return False, ""
 
 
 def scan_folder(folder: Path) -> list[XmlDoc]:

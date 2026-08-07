@@ -1503,12 +1503,13 @@
         alvo.innerHTML = `<div class="vazio"><strong>Nada com esse filtro</strong>Tente outro termo na busca.</div>`;
       } else if (abaAtual === "lancados") {
         alvo.innerHTML = `<table><thead><tr>
-            <th>Data</th><th>Débito</th><th>Crédito</th><th class="num">Valor</th>
+            <th class="num">#</th><th>Data</th><th>Débito</th><th>Crédito</th><th class="num">Valor</th>
             <th>Histórico</th><th>Origem</th><th>Documento</th></tr></thead><tbody>
           ${filtrados
             .map(
               ({ it: l, i }) => `
             <tr class="linha-lanc ${linhaAberta === i ? "aberta" : ""}" data-lanc="${i}">
+              <td class="num mono muted">${i + 1}</td>
               <td>${txt(l.data)}</td>
               <td>${htmlConta(l.debito)}</td>
               <td>${htmlConta(l.credito)}</td>
@@ -1520,7 +1521,7 @@
             )
             .join("")}</tbody></table>
           <p class="muted" style="padding:.5rem 1rem">
-            ${filtrados.length} de ${lista.length} · clique na linha para ver o detalhe
+            ${filtrados.length} de ${lista.length} · # = número na planilha Contmatic · clique na linha para editar ou ver o PDF
           </p>`;
         alvo.querySelectorAll("tr[data-lanc]").forEach((tr) => {
           tr.onclick = () => abrirLancamento(Number(tr.dataset.lanc));
@@ -1593,33 +1594,224 @@
       pintarRevisao();
     }
 
-    function abrirLancamento(i) {
+    function urlArquivoDoc(nome) {
+      if (!rev || !nome) return "";
+      const base = (String(nome).split(/[/\\]/).pop() || nome);
+      return (
+        `/api/fechamentos/${encodeURIComponent(rev.client_id)}/${encodeURIComponent(rev.competencia)}/arquivo?nome=` +
+        encodeURIComponent(base)
+      );
+    }
+
+    async function abrirLancamento(i) {
       const l = (rev.lancados || [])[i];
       if (!l) return;
       linhaAberta = i;
+      corrCtx.pendIdx = -1;
+      corrCtx.editIdx = i;
       const painel = document.getElementById("fxEnsinar");
       document.getElementById("revBody").classList.add("com-painel");
-      painel.innerHTML = `
-        <div class="ensinar">
-          <h4>Lançamento conferido</h4>
-          <p class="muted" style="margin:.15rem 0 .75rem">${txt(l.arquivo)}</p>
-          <table>
-            <tr><th>Data</th><td>${txt(l.data)}</td></tr>
-            <tr><th>Valor</th><td class="num">R$ ${brl(l.valor)}</td></tr>
-            <tr><th>Débito</th><td>${htmlConta(l.debito)}</td></tr>
-            <tr><th>Crédito</th><td>${htmlConta(l.credito)}</td></tr>
-            <tr><th>Histórico</th><td>${txt(l.complemento || l.historico_texto || "—")}</td></tr>
-            <tr><th>Regra</th><td>${txt(l.regra || "—")} ${tagOrigem(l)}</td></tr>
-            <tr><th>Obs.</th><td class="muted">${txt(l.observacao || "—")}</td></tr>
-          </table>
-          <p class="muted" style="margin:.85rem 0 .4rem">
-            Se este lançamento estiver errado, anote e avise o Anderson — o aprendizado vale para
-            <em>documentos pendentes</em> (aba Aguardando você).
-          </p>
-          <button class="btn ghost" type="button" id="btn-fechar-painel" style="width:auto">Fechar</button>
-        </div>`;
-      // Fechar: delegação em #fxEnsinar (id btn-fechar-painel)
+      painel.innerHTML = `<div class="ensinar"><p class="muted">carregando…</p></div>`;
       pintarRevisao();
+      try {
+        await carregarContas();
+      } catch (_) {
+        /* segue com cache vazio */
+      }
+
+      const dataPref = dataBrFromIso(l.data) || String(l.data || "");
+      const linkDoc = l.arquivo ? urlArquivoDoc(l.arquivo) : "";
+      const nDoc = (rev.lancados || []).filter(
+        (x) => (x.arquivo || "") === (l.arquivo || "")
+      ).length;
+
+      painel.innerHTML = `
+        <div class="ensinar" data-edit-lanc="1">
+          <div style="display:flex;justify-content:space-between;gap:.5rem;align-items:flex-start">
+            <h4>Lançamento #${i + 1}</h4>
+            <button class="btn ghost" type="button" id="btn-fechar-painel" style="padding:.3rem .55rem;font-size:.75rem;width:auto">Fechar</button>
+          </div>
+          <p class="muted" style="margin:.15rem 0 .35rem;word-break:break-all">
+            ${txt(l.arquivo || "—")}
+            ${
+              linkDoc
+                ? ` · <a href="${linkDoc}" target="_blank" rel="noopener" style="color:var(--accent);font-weight:600">Abrir documento</a>`
+                : ""
+            }
+          </p>
+          <p class="muted" style="margin:0 0 .65rem;font-size:.8rem">
+            Origem: ${txt(l.regra || l.origem || "—")} ${tagOrigem(l)}
+            · edite se a conferência final achar erro
+          </p>
+
+          <div class="grid-l">
+            <div>
+              <label>Data</label>
+              <input id="editData" value="${txt(dataPref)}" placeholder="31/01/21" />
+            </div>
+            <div>
+              <label>Valor</label>
+              <input id="editValor" inputmode="decimal" value="${l.valor != null ? txt(String(l.valor)) : ""}" />
+            </div>
+            <div class="full">
+              <label>Débito</label>
+              <input type="search" id="editDebFiltro" placeholder="Buscar conta…" />
+              <select id="editDebito">${opcoesContasHtml(l.debito || "")}</select>
+            </div>
+            <div class="full">
+              <label>Crédito</label>
+              <input type="search" id="editCredFiltro" placeholder="Buscar conta…" />
+              <select id="editCredito">${opcoesContasHtml(l.credito || "")}</select>
+            </div>
+            <div>
+              <label>Histórico</label>
+              <input id="editHist" type="number" value="${l.historico || 0}" />
+            </div>
+            <div class="full">
+              <label>Complemento</label>
+              <input id="editComp" value="${txt(l.complemento || l.historico_texto || "")}" />
+            </div>
+          </div>
+
+          <div style="display:flex;gap:.45rem;flex-wrap:wrap;margin-top:.75rem">
+            <button class="btn" type="button" id="btn-salvar-lanc" style="width:auto">Salvar alteração</button>
+            <button class="btn ghost" type="button" id="btn-rm-lanc" style="width:auto;color:var(--warn)">
+              Remover este (#${i + 1})
+            </button>
+            ${
+              l.arquivo && nDoc > 1
+                ? `<button class="btn warn" type="button" id="btn-rm-doc" style="width:auto"
+                    title="Remove as ${nDoc} linhas deste arquivo (ex.: NFS multi-linha cancelada)">
+                    Remover as ${nDoc} linhas do documento
+                  </button>`
+                : l.arquivo
+                  ? `<button class="btn warn" type="button" id="btn-rm-doc" style="width:auto">
+                      Remover e não relançar
+                    </button>`
+                  : ""
+            }
+          </div>
+          <p class="muted" id="editStatus" style="margin:.55rem 0 0"></p>
+          ${
+            linkDoc
+              ? `<div style="margin-top:.85rem">
+                  <label>Prévia do documento</label>
+                  <iframe src="${linkDoc}" style="width:100%;height:280px;border:1px solid var(--border);border-radius:8px;background:#fff"></iframe>
+                </div>`
+              : ""
+          }
+        </div>`;
+
+      document.getElementById("editDebFiltro").oninput = () =>
+        filtrarSelectEl(document.getElementById("editDebito"), document.getElementById("editDebFiltro").value);
+      document.getElementById("editCredFiltro").oninput = () =>
+        filtrarSelectEl(document.getElementById("editCredito"), document.getElementById("editCredFiltro").value);
+
+      document.getElementById("btn-salvar-lanc").onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        salvarEdicaoLancado(i);
+      };
+      document.getElementById("btn-rm-lanc").onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        removerLancadoUi({ indice: i, desconsiderar: false });
+      };
+      const btnDoc = document.getElementById("btn-rm-doc");
+      if (btnDoc) {
+        btnDoc.onclick = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          removerLancadoUi({
+            arquivo: l.arquivo,
+            desconsiderar: true,
+          });
+        };
+      }
+      // re-highlight row without wiping panel
+      document.querySelectorAll("tr.linha-lanc").forEach((tr) => {
+        tr.classList.toggle("aberta", Number(tr.dataset.lanc) === i);
+      });
+    }
+
+    async function salvarEdicaoLancado(indice) {
+      const st = document.getElementById("editStatus");
+      const data = document.getElementById("editData")?.value?.trim() || "";
+      const valor = parseValorBr(document.getElementById("editValor")?.value);
+      const debito = document.getElementById("editDebito")?.value || "";
+      const credito = document.getElementById("editCredito")?.value || "";
+      const historico = Number(document.getElementById("editHist")?.value || 0);
+      const complemento = document.getElementById("editComp")?.value?.trim() || "";
+      if (!data || !debito || !credito || !Number.isFinite(valor) || valor <= 0) {
+        if (st) st.textContent = "Preencha data, débito, crédito e valor > 0.";
+        return;
+      }
+      if (st) st.textContent = "salvando…";
+      try {
+        const r = await j(
+          `/api/fechamentos/${rev.client_id}/${rev.competencia}/editar-lancado`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              indice,
+              data,
+              debito,
+              credito,
+              valor: Number(valor),
+              historico,
+              complemento,
+            }),
+          }
+        );
+        if (r.estado) rev = r.estado;
+        abaAtual = "lancados";
+        fecharPainel();
+        const fx = document.getElementById("fxStatus");
+        if (fx) fx.textContent = `Lançamento #${indice + 1} atualizado · planilha regenerada.`;
+        atualizarPillPendentes();
+        fxListar();
+        pintarRevisao();
+      } catch (e) {
+        if (st) st.textContent = "Falhou: " + e.message;
+        else alert(e.message);
+      }
+    }
+
+    async function removerLancadoUi({ indice, arquivo, desconsiderar }) {
+      const msg = arquivo
+        ? `Remover TODAS as linhas do documento "${arquivo}"?\n\nÚtil para NFS cancelada (várias linhas).\n${desconsiderar ? "O documento não voltará no reprocessar." : ""}`
+        : `Remover o lançamento #${(indice ?? 0) + 1} da planilha?`;
+      if (!confirm(msg)) return;
+      const st = document.getElementById("editStatus");
+      if (st) st.textContent = "removendo…";
+      try {
+        const r = await j(
+          `/api/fechamentos/${rev.client_id}/${rev.competencia}/remover-lancado`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              indice: arquivo ? null : indice,
+              arquivo: arquivo || "",
+              desconsiderar_doc: !!desconsiderar,
+            }),
+          }
+        );
+        if (r.estado) rev = r.estado;
+        abaAtual = "lancados";
+        fecharPainel();
+        const fx = document.getElementById("fxStatus");
+        if (fx)
+          fx.textContent =
+            `Removido · ${(rev.lancados || []).length} lançamento(s) restantes · planilha atualizada.`;
+        atualizarPillPendentes();
+        fxListar();
+        pintarRevisao();
+      } catch (e) {
+        if (st) st.textContent = "Falhou: " + e.message;
+        else alert(e.message);
+      }
     }
 
     function fecharPainel(e) {

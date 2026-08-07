@@ -118,6 +118,27 @@ class ReprocessarIn(BaseModel):
     usar_llm: bool = False
 
 
+class EditarLancadoIn(BaseModel):
+    """Edita um lançamento da aba Lançados (conferência final)."""
+
+    indice: int
+    data: str
+    debito: str
+    credito: str
+    valor: float
+    historico: int = 0
+    complemento: str = ""
+
+
+class RemoverLancadoIn(BaseModel):
+    """Remove 1 linha (indice) ou todas do documento (arquivo)."""
+
+    indice: int | None = None
+    arquivo: str = ""
+    # se True, o doc não volta no reprocessar (NFS cancelada etc.)
+    desconsiderar_doc: bool = False
+
+
 class RecorrenteIn(BaseModel):
     """Despesa de contrato — o honorário do mês existe mesmo sem boleto."""
 
@@ -742,6 +763,84 @@ def create_app() -> FastAPI:
             "total_pendentes": len(novo.get("pendentes") or []),
             "estado": novo,
         }
+
+    @app.post("/api/fechamentos/{client_id}/{competencia}/editar-lancado")
+    def api_editar_lancado(
+        client_id: str, competencia: str, body: EditarLancadoIn
+    ) -> dict[str, Any]:
+        """Conferência final: corrige um lançamento já listado e regenera a planilha."""
+        from escon_agentes.workflows import fechamento as fx
+
+        try:
+            estado = fx.editar_lancado(
+                get_settings(),
+                client_id=client_id,
+                competencia=competencia,
+                indice=body.indice,
+                campos=body.model_dump(),
+            )
+        except FileNotFoundError as e:
+            raise HTTPException(404, str(e)) from e
+        except ValueError as e:
+            raise HTTPException(400, str(e)) from e
+        return {
+            "ok": True,
+            "total_lancados": len(estado.get("lancados") or []),
+            "estado": estado,
+        }
+
+    @app.post("/api/fechamentos/{client_id}/{competencia}/remover-lancado")
+    def api_remover_lancado(
+        client_id: str, competencia: str, body: RemoverLancadoIn
+    ) -> dict[str, Any]:
+        """Remove lançamento(s) errados (ex.: NFS cancelada com 4 linhas)."""
+        from escon_agentes.workflows import fechamento as fx
+
+        try:
+            estado = fx.remover_lancados(
+                get_settings(),
+                client_id=client_id,
+                competencia=competencia,
+                indice=body.indice,
+                arquivo=body.arquivo or None,
+                desconsiderar_doc=body.desconsiderar_doc,
+            )
+        except FileNotFoundError as e:
+            raise HTTPException(404, str(e)) from e
+        except ValueError as e:
+            raise HTTPException(400, str(e)) from e
+        return {
+            "ok": True,
+            "total_lancados": len(estado.get("lancados") or []),
+            "estado": estado,
+        }
+
+    @app.get("/api/fechamentos/{client_id}/{competencia}/arquivo")
+    def api_arquivo_documento(client_id: str, competencia: str, nome: str):
+        """Abre o PDF/XML original na conferência (link no detalhe do lançamento)."""
+        from fastapi.responses import FileResponse as _FR
+
+        from escon_agentes.workflows import fechamento as fx
+
+        if not nome or ".." in nome or "/" in nome or "\\" in nome:
+            # só o basename — evita path traversal
+            nome = Path(nome).name if nome else ""
+        if not nome:
+            raise HTTPException(400, "nome do arquivo obrigatório")
+        path = fx.achar_documento(get_settings(), client_id, competencia, nome)
+        if not path or not path.exists():
+            raise HTTPException(404, f"Arquivo não encontrado na pasta: {nome}")
+        media = "application/pdf"
+        suf = path.suffix.lower()
+        if suf == ".xml":
+            media = "application/xml"
+        elif suf in (".jpg", ".jpeg"):
+            media = "image/jpeg"
+        elif suf == ".png":
+            media = "image/png"
+        elif suf in (".ofx", ".txt"):
+            media = "text/plain"
+        return _FR(path, filename=path.name, media_type=media)
 
     @app.get("/api/contas")
     def api_contas() -> list[dict[str, str]]:
