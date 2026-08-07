@@ -11,6 +11,7 @@ module.exports = [
   { id: "pedro", name: "Pedro Henrique", role: "Cadastro de empresas (Acessórias)", color: "#818cf8" },
   { id: "alexandre", name: "Alexandre", role: "Lançamentos contábeis", color: "#f59e0b" },
   { id: "fabiana", name: "Fabiana", role: "Folha de pagamento", color: "#a3e635" },
+  { id: "clara", name: "Clara", role: "Conferência de lançamentos", color: "#22d3ee" },
   { id: "lucy", name: "Lucy", role: "Reforma Tributária", color: "#c084fc" },
   { id: "karen", name: "Karen", role: "Notícias e briefing", color: "#2dd4bf" },
   { id: "paul", name: "Paul", role: "Diretor financeiro", color: "#60a5fa" },

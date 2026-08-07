@@ -47,13 +47,15 @@ _CONTABIL_KEYS = (
     "fazer a contabilidade", "processar competência", "processar competencia",
 )
 
-# Ordem importa: leitores → folha → contábil. Max orquestra; Alexandre no fim.
+# Ordem importa: leitores → folha → contábil → conferência.
+# Max orquestra; Alexandre lança; Clara confere duplicatas/erros.
 PIPELINE_CONTABIL: list[AgentId] = [
     AgentId.XAVIER,   # XML fiscal estruturado
     AgentId.BILL,     # PDF/recibos estruturados
     AgentId.JOHN,     # OFX / conciliação (se houver extrato)
     AgentId.FABIANA,  # folha (se houver holerite)
-    AgentId.ALEXANDRE,  # único que gera lançamento Contmatic
+    AgentId.ALEXANDRE,  # gera lançamento Contmatic
+    AgentId.CLARA,    # confere o conjunto (XML+PDF da mesma NFS, etc.)
 ]
 
 
@@ -65,7 +67,8 @@ class MaxAgent(BaseAgent):
 Você coordena a operação multiagente do escritório contábil.
 Sua função é entender a demanda, escolher os agentes certos e resumir o andamento.
 Nunca execute lançamentos finais sem flag de revisão humana.
-Agentes disponíveis: Bella, Rachel, Greg, John, Bill, Anne, Lucy, Karen, Paul, Cesar, Xavier, Fernando, Pedro.
+Agentes disponíveis: Bella, Rachel, Greg, John, Bill, Anne, Lucy, Karen, Paul, Cesar, Xavier, Fernando, Pedro, Alexandre, Fabiana, Clara.
+Clara confere os lançamentos do Alexandre e marca duplicatas (ex.: NFS em XML e PDF).
 """
 
     def run(self, task: AgentTask) -> AgentResult:

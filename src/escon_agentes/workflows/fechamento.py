@@ -1051,7 +1051,27 @@ def executar(
                     }
                 )
 
+    # Base = Alexandre. Clara confere só isso (folha multi-linha legítima
+    # não entra na caça a "XML+PDF da mesma NFS").
     lancados = list(dados.get("lancados") or [])
+
+    conferencia: dict[str, Any] = {}
+    reavaliar_clara: list[dict[str, Any]] = []
+    for r in run.get("results") or []:
+        if r.get("agent") != "clara":
+            continue
+        data_c = r.get("data") or {}
+        conferencia = data_c.get("conferencia") or {
+            "stats": data_c.get("stats"),
+            "avisos": data_c.get("avisos") or [],
+            "resumo": r.get("summary") or "",
+        }
+        if data_c.get("lancados") is not None:
+            lancados = list(data_c.get("lancados") or [])
+        reavaliar_clara = list(data_c.get("reavaliar") or [])
+        break
+
+    # Folha da Fabiana entra depois da conferência (provisão por resumo / pagamentos)
     for l in folha_extra:
         linha = _normalizar_linha_lancamento(
             {
@@ -1067,6 +1087,24 @@ def executar(
             lancados.append(linha)
 
     pendentes = list(dados.get("pendentes") or [])
+    # Duplicatas da Clara → Aguardando você (humano decide). Fora da planilha.
+    for item in reavaliar_clara:
+        pendentes.append(
+            {
+                "arquivo": item.get("arquivo") or "",
+                "data": item.get("data"),
+                "valor": item.get("valor"),
+                "debito": item.get("debito") or "",
+                "credito": item.get("credito") or "",
+                "historico": item.get("historico") or 0,
+                "complemento": item.get("complemento") or "",
+                "motivo": item.get("motivo")
+                or "Clara: possível duplicata — reavalie",
+                "origem": "clara",
+                "tipo_achado": item.get("tipo_achado"),
+                "indice_original": item.get("indice_original"),
+            }
+        )
     # Problemas de folha (não fecha, TRCT sem parser…) entram em Aguardando você
     # como lançamento incompleto para o humano completar.
     arqs_pend = {(p.get("arquivo") or "") for p in pendentes}
@@ -1102,6 +1140,11 @@ def executar(
     resumo_equipe = "\n".join(partes)
     if folha_extra:
         resumo_equipe += f"\n→ planilha: {len(folha_extra)} lançamento(s) de folha incluído(s)"
+    if reavaliar_clara:
+        resumo_equipe += (
+            f"\n→ Clara: {len(reavaliar_clara)} lançamento(s) duplicado(s) "
+            "tirados da planilha → reavaliação"
+        )
 
     estado.update(
         situacao="concluido" if ok_alex else "erro",
@@ -1113,6 +1156,7 @@ def executar(
         planilha=planilha,
         documentos=len(documentos),
         nao_contabilizaveis=nao_contab,
+        conferencia=conferencia,
         titulos=(dados.get("titulos") or {}).get("resumo", {}),
         forma_pagamento=forma_pagamento,
         pipeline=[r.get("agent") for r in (run.get("results") or [])],
@@ -1134,7 +1178,7 @@ def _rodar_pipeline_fixa(
     usar_llm: bool,
     pedido: str,
 ) -> dict[str, Any]:
-    """Xavier → Bill → John → Fabiana → Alexandre, com handoff de dados."""
+    """Xavier → Bill → John → Fabiana → Alexandre → Clara, com handoff de dados."""
     from escon_agentes.agents import create_agent
     from escon_agentes.agents.max import PIPELINE_CONTABIL
     from escon_agentes.schema import AgentResult, AgentTask
@@ -1150,6 +1194,14 @@ def _rodar_pipeline_fixa(
     handoff_artifacts: list[str] = []
 
     for aid in PIPELINE_CONTABIL:
+        # Clara precisa da lista já montada pelo Alexandre (+ folha se já no handoff)
+        extra_in: dict[str, Any] = {}
+        if aid.value == "clara":
+            de_alex = handoff.get("de_alexandre") or {}
+            # só o que o Alexandre gerou — multi-linha da mesma NFS no mesmo
+            # arquivo é legítima; folha da Fabiana não entra nesta caça
+            extra_in["lancados"] = list(de_alex.get("lancados") or [])
+
         task = AgentTask(
             agent=aid,
             title=pedido[:100],
@@ -1157,6 +1209,7 @@ def _rodar_pipeline_fixa(
             client_id=client_id,
             input={
                 **handoff,
+                **extra_in,
                 "artifacts": list(handoff_artifacts),
                 "equipe_ja_rodou": [r["agent"] for r in results],
             },
@@ -1189,6 +1242,12 @@ def _rodar_pipeline_fixa(
                 handoff["conciliacao"] = result.data
             if aid.value == "fabiana" and result.data.get("lancamentos"):
                 handoff["folha_lancamentos"] = result.data["lancamentos"]
+            if aid.value == "alexandre" and result.data.get("lancados"):
+                handoff["lancados_alexandre"] = result.data["lancados"]
+            if aid.value == "clara":
+                # lista limpa substitui a do Alexandre no handoff
+                if result.data.get("lancados") is not None:
+                    handoff["lancados_conferidos"] = result.data["lancados"]
         for art in result.artifacts or []:
             if art and art not in handoff_artifacts:
                 handoff_artifacts.append(art)
@@ -1198,7 +1257,7 @@ def _rodar_pipeline_fixa(
         "agents": [a.value for a in PIPELINE_CONTABIL],
         "results": results,
         "reasoning": (
-            "Pipeline contábil multiagente: Xavier→Bill→John→Fabiana→Alexandre"
+            "Pipeline contábil: Xavier→Bill→John→Fabiana→Alexandre→Clara"
         ),
     }
 

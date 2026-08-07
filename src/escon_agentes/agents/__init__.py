@@ -8,6 +8,7 @@ from escon_agentes.agents.base import BaseAgent
 from escon_agentes.agents.bella import BellaAgent
 from escon_agentes.agents.bill import BillAgent
 from escon_agentes.agents.cesar import CesarAgent
+from escon_agentes.agents.clara import ClaraAgent
 from escon_agentes.agents.fabiana import FabianaAgent
 from escon_agentes.agents.fernando import FernandoAgent
 from escon_agentes.agents.greg import GregAgent
@@ -37,6 +38,7 @@ AGENT_CLASSES: dict[AgentId, type[BaseAgent]] = {
     AgentId.FERNANDO: FernandoAgent,
     AgentId.ALEXANDRE: AlexandreAgent,
     AgentId.FABIANA: FabianaAgent,
+    AgentId.CLARA: ClaraAgent,
     AgentId.PEDRO: PedroAgent,
 }
 

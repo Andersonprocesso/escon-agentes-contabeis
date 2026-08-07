@@ -42,6 +42,7 @@ class AgentId(str, Enum):
     FERNANDO = "fernando"
     ALEXANDRE = "alexandre"
     FABIANA = "fabiana"
+    CLARA = "clara"  # conferência dos lançamentos (duplicatas / erros)
     PEDRO = "pedro"
 
 
