@@ -1,0 +1,97 @@
+# Padrão de lançamento da FOLHA PELO RESUMO
+# Extraído do Diário/Razão Jorge (37.747.220/0001-93) — 01/2021
+# Fontes: Downloads/Diario.pdf + Downloads/razao.pdf (2026-08-07)
+#
+# REGRA DE OURO (Anderson):
+#   - Provisão/descontos/encargos → RESUMO da empresa (sem nome de funcionário)
+#   - Rescisão → individual no dia da demissão
+#   - Pagamentos (adiantamento e líquido) → individuais
+
+empresa_exemplo: JORGE PAULO RODRIGUES ARAUJO ACABAMENTO
+competencia_exemplo: 2021-01
+
+# Lançamentos de RESUMO no último dia do mês (trecho Diário #141–#160, #304)
+resumo_folha:
+  - historico: Horas Normais Diurnas
+    debito: 3221101   # Salarios e ordenados
+    credito: 2141101  # Salarios a pagar
+    valor_exemplo: 22387.37
+  - historico: Horas DSR Diurnas
+    debito: 3111201
+    credito: 2141101
+    valor_exemplo: 696.60
+  - historico: Vale Transporte Mes
+    debito: 2141101
+    credito: 3221117  # Transporte de Empregados
+    valor_exemplo: 1291.72
+  - historico: INSS sobre Salarios
+    debito: 2141101
+    credito: 2141201
+    valor_exemplo: 1843.87
+  - historico: FGTS do Mes
+    debito: 3221107   # (Diário também usa 3111207 no lote resumo)
+    credito: 2141202
+    valor_exemplo: 1884.76
+  - historico: IRRF
+    debito: 2141101
+    credito: 2131117
+    valor_exemplo: 131.80
+  - historico: Falta
+    debito: 2141101
+    credito: 3111201
+    valor_exemplo: 691.89
+  - historico: Desconto de Vales - Sem
+    debito: 2141101
+    credito: 3111201
+    valor_exemplo: 3502.00
+  - historico: Desconto de Adiantamento de Salario
+    debito: 2141101
+    credito: 3111201
+    valor_exemplo: 6331.93
+    nota: "No holerite o líquido já desconta adiantamento; o pagamento do adiantamento é no dia 20."
+
+# Pró-labore (sócio) — Diário #138/#139
+prolabore:
+  - historico: Pro-Labore do Mes
+    debito: 3212102
+    credito: 2141102
+  - historico: INSS sobre Pro-Labore
+    debito: 2141102
+    credito: 2141201
+
+# Pagamentos (sempre com nome)
+pagamentos:
+  adiantamento:
+    dia: 20
+    debito: 2141101
+    credito: "@banco_ou_caixa"
+    historico: "Salario do Mes Adiantamento {NOME} - comp MM/AAAA"
+  salario:
+    dia: "5o util mes seguinte"
+    debito: 2141101
+    credito: "@banco_ou_caixa"
+    historico: "Salario do Mes Pagamento {NOME} - comp MM/AAAA"
+  prolabore:
+    debito: 2141102
+    credito: "@banco"
+    historico: "Pro-Labore do Mes Pagamento {NOME} - comp MM/AAAA"
+
+# Rescisão (individual, dia da demissão) — Diário #148–#158, #297–#300
+rescisao:
+  conta_pagar: 2141106
+  exemplos:
+    - historico: Saldo de Salário Diurno
+      debito: 3111201
+      credito: 2141106
+    - historico: Horas Férias Proporc.Diurnas
+      debito: 3221105
+      credito: 2141106
+    - historico: 13o Salário Proporcional
+      debito: 3212104
+      credito: 2141106
+    - historico: Desconto Líquido Rescisão
+      debito: 2141106
+      credito: 3221119
+    - historico: INSS Sobre Rescisão
+      debito: 2141106
+      credito: 2141201

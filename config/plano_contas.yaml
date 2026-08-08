@@ -49,6 +49,11 @@ contas:
   desp_13: 3221104              # 13o Salario
   salarios_pagar: 2141101
   prolabore_pagar: 2141102  # Pro-labore a pagar (era 2141202 = FGTS a recolher!)
+  irrf_pagar: 2131117  # IRRF a Recolher (Diário Jorge 31/01 IRRF)
+  # Conta de resultado usada no Diário para DSR / falta / desconto adiantamento
+  # (3.1.1.01.002.00001) — distinta de desp_salarios 3221101.
+  salarios_resultado: 3111201
+  fgts_desp_resultado: 3111207  # FGTS do Mes no Diário (lote resumo)
 
   # Resultado
   receita_produtos: 4111103
@@ -57,6 +62,7 @@ contas:
   desp_inss_prolabore: 2141201  # INSS a recolher — no razao a contrapartida e balanco
   desp_salarios: 3221101  # Salarios e ordenados (era 4121301 = IPI!)
   desp_fgts: 3221107  # FGTS (era 4121401, inexistente)
+  desp_rescisao: 3221119  # Rescisão (Diário Jorge)
   desp_simples: 4121205  # ( - ) S/ Prestacao de Servicos (era 4121501, inexistente)
   desp_aluguel: 3221201  # Alugueis de imoveis (era 4122101, inexistente)
   desp_energia: 3221401  # Energia eletrica (era 4122201, inexistente)

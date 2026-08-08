@@ -84,13 +84,13 @@ class FabianaAgent(BaseAgent):
     role = "Folha de Pagamento"
     system_prompt = """
 Você cuida dos lançamentos da folha de pagamento.
-A PROVISÃO (contabilização) da folha normal é pelo RESUMO da empresa
-(totais do Resumo Contrato), no último dia da competência — não um a um.
-RESCISÕES são a exceção: provisionadas individualmente no dia da demissão.
-Os PAGAMENTOS continuam individuais (nome do empregado + competência).
-Calendário: salário no 5º dia útil do mês seguinte, adiantamento dia 20,
-FGTS dia 7 e INSS dia 20 do mês seguinte.
-Folha que não fecha (proventos - descontos ≠ líquido) não vira lançamento.
+Padrão do Diário/Razão Jorge (treino 2026-08-07):
+- PROVISÃO pelo RESUMO de rubricas (Horas Normais, VT, INSS, FGTS, IRRF…)
+  no último dia — SEM nome de funcionário no complemento.
+- PAGAMENTOS (adiantamento dia 20 e líquido no 5º útil) INDIVIDUAIS com nome.
+- RESCISÃO individual no dia da demissão.
+- Pró-labore: D 3212102 / C 2141102 + INSS D 2141102 / C 2141201.
+Folha que não fecha não vira lançamento.
 """
 
     def __init__(self, *args, **kwargs):
@@ -295,47 +295,59 @@ Folha que não fecha (proventos - descontos ≠ líquido) não vira lançamento.
         data_inss = quando("inss", data_inss)
         data_adiant = quando("adiantamento", data_adiant)
 
-        # ---- 1) PROVISÃO PELO RESUMO (ativos) + rescisões no dia da demissão ----
-        # Acumuladores do resumo: chave = (debito_alias_ou_codigo, credito, hist, rotulo)
-        # Usamos códigos já resolvidos para somar.
+        # ---- Padrão do Diário/Razão Jorge (treinado em 2026-08-07) ----
+        # Provisão pelo RESUMO de rubricas no último dia:
+        #   Horas Normais  D 3221101 C 2141101
+        #   DSR            D 3111201 C 2141101
+        #   VT (desconto)  D 2141101 C 3221117
+        #   INSS           D 2141101 C 2141201
+        #   FGTS           D 3221107 C 2141202  (Diário também usa 3111207)
+        #   IRRF           D 2141101 C 2131117
+        #   Falta/vales    D 2141101 C 3111201
+        # Pagamentos e adiantamentos: SEMPRE individuais.
+        # Rescisão: individual no dia da demissão.
         resumo_prov: dict[tuple[str, str, int, str], float] = {}
 
         def add_resumo(deb: str, cred: str, valor: float, hist: int, rotulo: str) -> None:
-            if not valor or not deb or not cred:
+            if not valor or valor < 0.005 or not deb or not cred:
                 return
             k = (deb, cred, hist, rotulo)
             resumo_prov[k] = round(resumo_prov.get(k, 0.0) + valor, 2)
 
         total_inss = total_fgts = 0.0
-        # base da CPP: só ativos (rescisão tem CPP própria se houver — já no resumo
-        # de verbas quando for o caso; por ora a CPP mensal exclui demitidos)
         base_cpp = 0.0
-
+        # adiantamentos: pagamento no dia 20 (individual) — o desconto no
+        # resumo do Diário (#304) zera o líquido; aqui o líquido do holerite
+        # já vem líquido do adiantamento, então só pagamos o que sobrou.
         arquivo_rescisao = folha.tipo == "rescisao"
         ref_resumo = f"resumo comp {mes:02d}/{ano}"
+
+        c_sal = self.conta("desp_salarios")          # 3221101
+        c_sal_res = self.conta("salarios_resultado") or c_sal  # 3111201
+        c_pagar = self.conta("salarios_pagar")       # 2141101
+        c_inss = self.conta("inss_pagar")            # 2141201
+        c_fgts_desp = self.conta("desp_fgts")        # 3221107
+        c_fgts = self.conta("fgts_pagar")            # 2141202
+        c_vt = self.conta("desp_vale_transp")        # 3221117
+        c_irrf = self.conta("irrf_pagar")            # 2131117
+        c_prolab = self.conta("desp_prolabore")
+        c_prolab_pagar = self.conta("prolabore_pagar")
 
         for f in folha.funcionarios:
             prolabore = f.tipo == "prolabore"
             rescisao = arquivo_rescisao or f.is_rescisao
-            desp = self.conta("desp_prolabore" if prolabore else "desp_salarios")
+            hist_prov = 1 if prolabore else 3
+            quem = f"{f.nome[:34]} - comp {mes:02d}/{ano}"
+            bruto = round(f.proventos + f.vantagens, 2)
+            data_prov = (f.data_demissao or fim) if rescisao else fim
             pagar = self.conta(
                 "rescisao_pagar" if rescisao
                 else ("prolabore_pagar" if prolabore else "salarios_pagar")
             )
-            hist_prov = 1 if prolabore else 3
-            quem = f"{f.nome[:34]} - comp {mes:02d}/{ano}"
-            bruto = round(f.proventos + f.vantagens, 2)
-
-            # Data da provisão deste funcionário
-            if rescisao:
-                data_prov = f.data_demissao or fim
-            else:
-                data_prov = fim
+            desp = c_prolab if prolabore else c_sal
 
             if rescisao:
-                # ---- RESCISÃO: individual, no dia da demissão ----
-                # Preferir verbas classificadas (somam o bruto no TRCT); se
-                # faltar cobertura, completa o residual — nunca bruto + verbas.
+                # ---- RESCISÃO: individual, no dia da demissão (exceção) ----
                 verbas_r = [r for r in f.rubricas if r.natureza == "rescisao"]
                 soma_verbas = round(sum(r.valor for r in verbas_r), 2)
                 if verbas_r:
@@ -344,7 +356,7 @@ Folha que não fecha (proventos - descontos ≠ líquido) não vira lançamento.
                             data_prov,
                             self.conta(r.conta_alias or "desp_salarios"),
                             pagar, r.valor,
-                            f"{r.descricao[:28]} {quem}", "provisao", 0,
+                            f"{r.descricao[:40]} {quem}", "provisao", 0,
                         ))
                     residual = round(bruto - soma_verbas, 2)
                     if residual > 0.01:
@@ -361,84 +373,130 @@ Folha que não fecha (proventos - descontos ≠ líquido) não vira lançamento.
                     if r.natureza == "desconto" and r.conta_alias == "inss_pagar":
                         total_inss += r.valor
                         out.append(Lancamento(
-                            data_prov, pagar, self.conta("inss_pagar"), r.valor,
-                            f"INSS retido {quem}", "provisao",
-                            2 if prolabore else 6,
+                            data_prov, pagar, c_inss, r.valor,
+                            f"INSS retido {quem}", "provisao", 6,
                         ))
                     elif r.natureza == "encargo" and r.conta_alias == "fgts_pagar":
                         total_fgts += r.valor
                         out.append(Lancamento(
-                            data_prov, self.conta("desp_fgts"),
-                            self.conta("fgts_pagar"), r.valor,
+                            data_prov, c_fgts_desp, c_fgts, r.valor,
                             f"FGTS rescisao {quem}", "provisao", 5,
                         ))
-            else:
-                # ---- ATIVO: acumula no RESUMO da empresa ----
+            elif prolabore:
+                # ---- PRÓ-LABORE: resumo (sócio) — Diário #138/#139 ----
                 if bruto:
-                    rotulo = "Folha prolabore" if prolabore else "Folha salarios"
-                    add_resumo(desp, pagar, bruto, hist_prov, rotulo)
-                if not prolabore:
-                    base_cpp += bruto
-
+                    add_resumo(c_prolab, c_prolab_pagar, bruto, 1, "Pro-Labore do Mes")
                 for r in f.rubricas:
                     if r.natureza == "desconto" and r.conta_alias == "inss_pagar":
                         total_inss += r.valor
                         add_resumo(
-                            pagar, self.conta("inss_pagar"), r.valor,
-                            2 if prolabore else 6,
-                            "INSS retido prolabore" if prolabore else "INSS retido salarios",
+                            c_prolab_pagar, c_inss, r.valor, 2,
+                            "INSS sobre Pro-Labore",
                         )
+            else:
+                # ---- ATIVO: RESUMO por rubrica (Diário Jorge #141+) ----
+                base_cpp += bruto
+                # proventos: se houver rubricas classificadas, usa elas;
+                # senão cai o bruto em "Horas Normais Diurnas"
+                proventos_rub = [
+                    r for r in f.rubricas if r.natureza == "provento" and r.valor
+                ]
+                if proventos_rub:
+                    for r in proventos_rub:
+                        alias = r.conta_alias or "desp_salarios"
+                        if alias == "dsr":
+                            # Diário: D 3111201 C 2141101 Horas DSR Diurnas
+                            add_resumo(
+                                c_sal_res, c_pagar, r.valor, 3, "Horas DSR Diurnas",
+                            )
+                        elif alias == "estouro":
+                            add_resumo(c_sal, c_pagar, r.valor, 3, "Estouro do Mes")
+                        else:
+                            # Horas Normais e demais proventos de salário
+                            rotulo = "Horas Normais Diurnas"
+                            dlow = (r.descricao or "").lower()
+                            if "hora extra" in dlow or "he " in dlow:
+                                rotulo = "Horas Extras"
+                            elif "ferias" in dlow or "férias" in dlow:
+                                rotulo = "Ferias"
+                            add_resumo(c_sal, c_pagar, r.valor, 3, rotulo)
+                elif bruto:
+                    add_resumo(c_sal, c_pagar, bruto, 3, "Horas Normais Diurnas")
+
+                for r in f.rubricas:
+                    if r.natureza == "desconto" and r.conta_alias == "inss_pagar":
+                        total_inss += r.valor
+                        add_resumo(c_pagar, c_inss, r.valor, 6, "INSS sobre Salarios")
                     elif r.natureza == "encargo" and r.conta_alias == "fgts_pagar":
                         total_fgts += r.valor
+                        add_resumo(c_fgts_desp, c_fgts, r.valor, 5, "FGTS do Mes")
+                    elif r.natureza == "desconto" and r.conta_alias == "desp_vale_transp":
+                        # Diário #142: D 2141101 C 3221117 Vale Transporte Mes
+                        add_resumo(c_pagar, c_vt, r.valor, 8, "Vale Transporte Mes")
+                    elif r.natureza == "desconto" and r.conta_alias == "irrf_pagar":
+                        add_resumo(c_pagar, c_irrf, r.valor, 0, "IRRF")
+                    elif r.natureza == "desconto" and r.conta_alias == "falta":
+                        add_resumo(c_pagar, c_sal_res, r.valor, 0, "Falta")
+                    elif r.natureza == "desconto" and r.conta_alias == "vales":
                         add_resumo(
-                            self.conta("desp_fgts"), self.conta("fgts_pagar"),
-                            r.valor, 5, "FGTS",
+                            c_pagar, c_sal_res, r.valor, 0, "Desconto de Vales - Sem",
                         )
-                    elif r.natureza == "desconto" and r.conta_alias == "salarios_pagar":
-                        # adiantamento: pagamento individual (não entra no resumo)
+                    elif r.natureza == "desconto" and r.conta_alias in (
+                        "adiantamento", "salarios_pagar",
+                    ):
+                        # pagamento individual no dia 20 (Diário)
                         out.append(Lancamento(
-                            data_adiant, pagar, banco, r.valor,
-                            f"Adiantamento {quem}", "pagamento", hist_prov,
+                            data_adiant, c_pagar, banco, r.valor,
+                            f"Salario do Mes Adiantamento {quem}", "pagamento", 3,
                         ))
+                    elif r.natureza == "desconto" and r.conta_alias == "sindicato_pagar":
+                        add_resumo(
+                            c_pagar, self.conta("sindicato_pagar"), r.valor, 0,
+                            "Taxa Assistencial",
+                        )
 
-            # ---- PAGAMENTO sempre individual ----
+            # ---- PAGAMENTO do líquido: sempre individual ----
             liquido = round(f.liquido, 2)
             if liquido:
                 data_pag = data_prov if rescisao else data_salario
-                rotulo_pag = "Pagamento rescisao" if rescisao else "Pagamento"
+                if rescisao:
+                    rotulo_pag = f"Pagamento rescisao {quem}"
+                elif prolabore:
+                    rotulo_pag = f"Pro-Labore do Mes Pagamento {quem}"
+                else:
+                    rotulo_pag = f"Salario do Mes Pagamento {quem}"
                 out.append(Lancamento(
                     data_pag, pagar, banco, liquido,
-                    f"{rotulo_pag} {quem}", "pagamento", hist_prov,
+                    rotulo_pag, "pagamento", hist_prov,
                 ))
 
-        # Materializa o resumo no último dia da competência
+        # Materializa o RESUMO no último dia (sem nome de funcionário)
         for (deb, cred, hist, rotulo), valor in resumo_prov.items():
             out.append(Lancamento(
                 fim, deb, cred, valor,
                 f"{rotulo} {ref_resumo}", "provisao", hist,
             ))
 
-        # CPP patronal: só Anexo IV, sobre a base do resumo (ativos)
+        # CPP patronal Anexo IV
         if patronal:
             valor_cpp = round(base_cpp * (CPP_PATRONAL + rat), 2)
             if valor_cpp:
                 out.append(Lancamento(
                     fim, self.conta("desp_inss_patronal"),
-                    self.conta("inss_pagar"), valor_cpp,
+                    c_inss, valor_cpp,
                     f"CPP patronal {CPP_PATRONAL:.0%}"
                     + (f" + RAT {rat:.2%}" if rat else "")
                     + f" {ref_resumo}", "provisao", 6,
                 ))
                 total_inss += valor_cpp
 
-        # guias em lançamento único (como são recolhidas)
         if total_inss:
-            out.append(Lancamento(data_inss, self.conta("inss_pagar"), banco,
+            out.append(Lancamento(data_inss, c_inss, banco,
                                   round(total_inss, 2),
                                   f"GPS INSS comp {mes:02d}/{ano}", "pagamento", 15))
         if total_fgts:
             ref_fgts = f"GRF FGTS comp {mes:02d}/{ano}"
-            out.append(Lancamento(data_fgts, self.conta("fgts_pagar"), banco,
+            out.append(Lancamento(data_fgts, c_fgts, banco,
                                   round(total_fgts, 2), ref_fgts, "pagamento", 5))
             out += encargos("fgts", ref_fgts)
         return out
