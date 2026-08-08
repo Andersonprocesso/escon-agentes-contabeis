@@ -39,7 +39,7 @@ contas:
   provisao_13: 2141302          # Provisao para 13o Salario
   fgts_provisao_ferias: 2141305 # FGTS s/ provisao para ferias
   fgts_provisao_13: 2141306     # FGTS s/ provisao para 13o
-  desp_inss_patronal: 3221108  # CPP patronal Anexo IV (CONFERIR codigo)
+  desp_inss_patronal: 3221106  # INSS (despesa) — CPP + RAT Anexo IV; PlContas 3.2.2.01.001.00006
   desp_aviso_previo: 3221109  # Aviso previo indenizado (CONFERIR)
   desp_multa_fgts: 3221110  # Multa 40% FGTS rescisorio (CONFERIR)
   rescisao_pagar: 2141106  # Rescisao a pagar (visto no razao)
@@ -70,6 +70,11 @@ contas:
   desp_telefone: 3221403  # Telefone e Internet (era 4122301, inexistente)
   desp_honorario: 3111303  # Servicos de terceiros (era 4122401, inexistente)
   desp_material_escr: 3221406  # Material de escritorio (era 4122501, inexistente)
+  # Compras de entrada (NF-e):
+  #   empresa de SERVIÇOS (Jorge) → materiais de consumo indireto
+  #   empresa de COMÉRCIO → compra de mercadoria (CMV)
+  desp_material_consumo: 5150906  # Materiais de consumo indireto (PlContas 3.1.1.04.002)
+  compra_mercadoria: 5131102      # Compra de Mercadoria (só comércio/revenda)
   desp_combustivel: 3111301  # Combustiveis e lubrificantes (era 4122601, inexistente)
   desp_manutencao: 3212602  # Manutencao e reparos (era 4122701, inexistente)
   desp_publicidade: 3212301  # Propaganda e publicidade (era 4122801, inexistente)

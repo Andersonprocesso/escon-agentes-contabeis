@@ -4,6 +4,8 @@
   "cnpj": "37.747.220/0001-93",
   "regime": "simples_nacional",
   "banco_principal": "itau",
+  "ramo": "servicos",
+  "anexo_simples": 4,
   "contatos": {
     "whatsapp": "11964287119",
     "telefone": "11964287119",
@@ -13,7 +15,9 @@
   "email": "jp84araujo@gmail.com",
   "tags": [
     "radar",
-    "simples_nacional"
+    "simples_nacional",
+    "servicos",
+    "acabamento"
   ],
   "radar_id": "12b7d44e-f8e2-402b-9f49-1823e347b773",
   "uf": "SP",

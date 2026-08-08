@@ -112,6 +112,11 @@ class ClientProfile(BaseModel):
     # CPP patronal FORA do DAS, via GPS — nos demais ela ja esta no DAS.
     anexo_simples: int | None = None
     aliquota_rat: float = 0.0  # RAT ajustado pelo FAP, sai da GFIP do cliente
+    # Ramo da atividade — define se NF-e de entrada vira CMV ou despesa:
+    #   servicos  → Materiais de consumo indireto (5150906)  — Jorge, acabamento
+    #   comercio  → Compra de Mercadoria (5131102)
+    #   industria → pode evoluir para estoque/CMV próprio
+    ramo: str = "servicos"  # servicos | comercio | industria
     procuracao_ok: bool | None = None
     monitoramento_ativo: bool | None = None
     drive_folder_hint: str | None = None  # pasta esperada no Google Drive / MinIO

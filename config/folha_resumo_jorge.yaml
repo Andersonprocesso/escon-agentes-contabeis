@@ -24,10 +24,16 @@ resumo_folha:
     debito: 2141101
     credito: 3221117  # Transporte de Empregados
     valor_exemplo: 1291.72
+  # INSS: valores SEMPRE do Demonstrativo das Contribuições por FPAS
+  # (não da soma dos holerites). Exemplo 01/2021 Jorge:
+  #   Segurado empregados 2.050,18 | CI 137,50
+  #   Empresa empregados 5.017,15 | CI 250,00 | RAT 752,56
+  #   (−) Retenção 9.711 8.207,39 → TOTAL A RECOLHER 0,00
   - historico: INSS sobre Salarios
     debito: 2141101
     credito: 2141201
-    valor_exemplo: 1843.87
+    valor_exemplo: 2050.18
+    fonte: Demonstrativo FPAS (Segurado Empregados/Avulsos)
   - historico: FGTS do Mes
     debito: 3221107   # (Diário também usa 3111207 no lote resumo)
     credito: 2141202
@@ -58,6 +64,31 @@ prolabore:
   - historico: INSS sobre Pro-Labore
     debito: 2141102
     credito: 2141201
+    valor_exemplo: 137.50
+    fonte: Demonstrativo FPAS (Segurado Contribuintes Individuais)
+
+# Parte empresa + RAT + retenção (Demonstrativo FPAS — Anexo IV)
+inss_fpas:
+  - historico: INSS patronal Empregados
+    debito: 3221106
+    credito: 2141201
+    valor_exemplo: 5017.15
+  - historico: INSS patronal Contribuintes Individuais
+    debito: 3221106
+    credito: 2141201
+    valor_exemplo: 250.00
+  - historico: RAT
+    debito: 3221106
+    credito: 2141201
+    valor_exemplo: 752.56
+  - historico: Retencao Lei 9711 abatida
+    debito: 2141201
+    credito: 1131910
+    valor_exemplo: 8207.39
+  - historico: GPS INSS (só se TOTAL A RECOLHER > 0)
+    debito: 2141201
+    credito: "@banco"
+    valor_exemplo: 0.00
 
 # Pagamentos (sempre com nome)
 pagamentos:

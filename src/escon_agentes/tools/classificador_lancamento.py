@@ -78,9 +78,35 @@ class Classificador:
         alias = self.bancos.get((banco or "itau").lower(), "banco_itau")
         return str(self.contas.get(alias, ""))
 
-    def _resolver(self, valor: Any, banco: str | None, forma: str = "banco") -> str:
-        """@banco = conta do banco; @recebimento = caixa ou banco, conforme a
-        forma informada no fechamento ("via caixa" / "via banco")."""
+    def conta_compra(self, ramo: str | None) -> str:
+        """NF-e de entrada: serviço ≠ comércio.
+
+        Prestador de serviços (acabamento, construção, limpeza…): materiais
+        de consumo indireto — não vira estoque/CMV.
+        Comércio/revenda: Compra de Mercadoria.
+        """
+        r = (ramo or "servicos").lower().strip()
+        if r in ("comercio", "comercial", "revenda", "varejo", "atacado", "loja"):
+            return str(
+                self.contas.get("compra_mercadoria")
+                or self.contas_resultado.get("5131102")
+                or "5131102"
+            )
+        # padrão da carteira Escon: Simples prestador de serviço
+        return str(
+            self.contas.get("desp_material_consumo")
+            or self.contas_resultado.get("5150906")
+            or "5150906"
+        )
+
+    def _resolver(
+        self,
+        valor: Any,
+        banco: str | None,
+        forma: str = "banco",
+        ramo: str | None = None,
+    ) -> str:
+        """@banco / @recebimento / @compra (ramo do cliente)."""
         if isinstance(valor, str):
             if valor.startswith("@banco"):
                 return self.conta_do_banco(banco)
@@ -88,6 +114,8 @@ class Classificador:
                 if (forma or "banco").lower().startswith("caixa"):
                     return str(self.contas.get("caixa", ""))
                 return self.conta_do_banco(banco)
+            if valor.startswith("@compra"):
+                return self.conta_compra(ramo)
         return str(valor)
 
     def _casa(self, regra: dict, doc: Documento) -> bool:
@@ -114,15 +142,20 @@ class Classificador:
         return True
 
     def classificar(
-        self, doc: Documento, *, banco: str | None = None, forma: str = "banco"
+        self,
+        doc: Documento,
+        *,
+        banco: str | None = None,
+        forma: str = "banco",
+        ramo: str | None = None,
     ) -> Classificacao:
         for regra in self.regras:
             if not self._casa(regra, doc):
                 continue
             cod = int(regra.get("historico") or 0)
             return Classificacao(
-                debito=self._resolver(regra.get("debito"), banco, forma),
-                credito=self._resolver(regra.get("credito"), banco, forma),
+                debito=self._resolver(regra.get("debito"), banco, forma, ramo),
+                credito=self._resolver(regra.get("credito"), banco, forma, ramo),
                 historico_codigo=cod,
                 historico_texto=self.historicos.get(cod, "") if cod else "",
                 regra_id=str(regra.get("id") or ""),

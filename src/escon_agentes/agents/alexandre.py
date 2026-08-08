@@ -55,6 +55,9 @@ Nunca invente conta que não esteja no plano.
 
         cliente = get_client(self.settings.clients_dir, task.client_id) if task.client_id else None
         banco = getattr(cliente, "banco_principal", None) or "itau"
+        # Ramo decide se NF-e de entrada é consumo (serviços) ou mercadoria (comércio).
+        # Padrão da carteira Escon = prestador de serviços (ex.: Jorge acabamento).
+        ramo = self._ramo_do_cliente(cliente)
         # guardado para o _ler saber se a nota e de venda ou de compra
         self._cnpj_cliente = getattr(cliente, "cnpj", None) or (task.client_id or "")
         usar_llm = bool(task.input.get("usar_llm", True))
@@ -121,7 +124,7 @@ Nunca invente conta que não esteja no plano.
                         pendentes.append(item)
                     continue
 
-            cls = self.classificador.classificar(doc, banco=banco, forma=forma)
+            cls = self.classificador.classificar(doc, banco=banco, forma=forma, ramo=ramo)
 
             if cls.origem == "desconhecido" and usar_llm and self.llm.available:
                 bruto = self.think(self.classificador.prompt_para_llm(doc))
@@ -412,6 +415,39 @@ Nunca invente conta que não esteja no plano.
             documento=Path(doc.caminho).name,
         )
         return alvo, ""
+
+    @staticmethod
+    def _ramo_do_cliente(cliente) -> str:
+        """servicos (padrão) | comercio | industria — define @compra no classificador.
+
+        Prestador (Jorge / acabamento): materiais de consumo indireto 5150906.
+        Comércio/revenda: compra de mercadoria 5131102.
+        """
+        if cliente is None:
+            return "servicos"
+        ramo = (getattr(cliente, "ramo", None) or "").strip().lower()
+        if ramo:
+            return ramo
+        tags = " ".join(getattr(cliente, "tags", None) or []).lower()
+        nome = (getattr(cliente, "name", None) or "").lower()
+        pista = f"{tags} {nome}"
+        if any(
+            t in pista
+            for t in (
+                "comercio",
+                "comercial",
+                "revenda",
+                "varejo",
+                "atacado",
+                "loja",
+                "materiais de construcao",
+                "materiais de construção",
+            )
+        ):
+            return "comercio"
+        if "industria" in pista or "indústria" in pista:
+            return "industria"
+        return "servicos"
 
     def _resolve_folder(self, task: AgentTask) -> Path:
         from escon_agentes.tools.clients import client_inbox
@@ -950,6 +986,14 @@ NAO_LANCAVEIS: list[tuple[tuple[str, ...], str]] = [
     (("relatorio de gps", "relatorio gps", "resumo de gps", "resumo gps",
       "demonstrativo gps", "relatorio da gps"),
      "Relatório de GPS — resumo da guia; o lançamento vem da GPS/comprovante"),
+    # Demonstrativo FPAS: a Fabiana lê e lança o INSS; Alexandre não mexe.
+    (("demonstrativo das contribuicoes", "contribuicoes devidas a previdencia",
+      "por fpas", "comprovante de declaracao das contribuicoes",
+      "apuracao do valor a recolher", "outras entidades por fpas"),
+     "Demonstrativo FPAS — apuração do INSS; quem lança é a Fabiana"),
+    (("relatorio de valor de retencao", "retencao lei 9711", "retencao lei 9.711",
+      "relacao de tomador", "relatorio analitico de gps", "relatorio analitico da grf"),
+     "Relatório SEFIP/GFIP auxiliar — valores já saem do Demonstrativo FPAS"),
     # Controle gerencial da folha/caixa — não é documento de partida dobrada
     (("controle de valores pagos", "controle valores pagos",
       "valores pagos", "controle de pagamentos", "relacao de pagamentos",

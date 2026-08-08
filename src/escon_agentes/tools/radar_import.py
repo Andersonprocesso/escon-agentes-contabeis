@@ -148,7 +148,7 @@ def import_radar_clients(
         dest = clients_dir / f"{client.id}.json"
         if dest.exists():
             existing = json.loads(dest.read_text(encoding="utf-8"))
-            # preserva banco, tags e contatos manuais (telefone/e-mail editados no painel)
+            # preserva banco, tags, ramo e contatos manuais (editados no painel)
             if existing.get("banco_principal"):
                 client.banco_principal = existing["banco_principal"]
             extra_tags = [
@@ -165,13 +165,19 @@ def import_radar_clients(
                 cont.setdefault("whatsapp", existing["telefone"])
             if existing.get("email") and not client.email:
                 cont["email"] = existing["email"]
-            client = client.model_copy(
-                update={
-                    "contatos": cont,
-                    "telefone": client.telefone or existing.get("telefone") or cont.get("telefone"),
-                    "email": client.email or existing.get("email") or cont.get("email"),
-                }
-            )
+            preserva = {
+                "contatos": cont,
+                "telefone": client.telefone or existing.get("telefone") or cont.get("telefone"),
+                "email": client.email or existing.get("email") or cont.get("email"),
+            }
+            # ramo / anexo / RAT: se já foram calibrados no cadastro, não zera no sync
+            if existing.get("ramo"):
+                preserva["ramo"] = existing["ramo"]
+            if existing.get("anexo_simples") is not None:
+                preserva["anexo_simples"] = existing["anexo_simples"]
+            if existing.get("aliquota_rat"):
+                preserva["aliquota_rat"] = existing["aliquota_rat"]
+            client = client.model_copy(update=preserva)
             updated.append(client.id)
         else:
             created.append(client.id)

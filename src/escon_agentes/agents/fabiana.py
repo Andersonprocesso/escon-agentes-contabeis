@@ -16,6 +16,12 @@ from escon_agentes.schema import AgentId, AgentResult, AgentTask
 from escon_agentes.tools import documents
 from escon_agentes.tools.clients import get_client
 from escon_agentes.tools.folha_parser import Folha, ler_folha, problemas, resumo
+from escon_agentes.tools.fpas_parser import (
+    FpasDemonstrativo,
+    as_dict as fpas_as_dict,
+    ler_fpas,
+    localizar_fpas,
+)
 
 # Quando cada coisa é paga. O calendário da Escon, confirmado pelo Anderson.
 DIA_ADIANTAMENTO = 20  # no próprio mês da competência
@@ -85,11 +91,13 @@ class FabianaAgent(BaseAgent):
     system_prompt = """
 Você cuida dos lançamentos da folha de pagamento.
 Padrão do Diário/Razão Jorge (treino 2026-08-07):
-- PROVISÃO pelo RESUMO de rubricas (Horas Normais, VT, INSS, FGTS, IRRF…)
+- PROVISÃO pelo RESUMO de rubricas (Horas Normais, VT, FGTS, IRRF…)
   no último dia — SEM nome de funcionário no complemento.
+- INSS: valores SEMPRE do Demonstrativo das Contribuições por FPAS
+  (segurado, empresa/CPP, RAT, retenção 9.711, valor a recolher GPS).
 - PAGAMENTOS (adiantamento dia 20 e líquido no 5º útil) INDIVIDUAIS com nome.
 - RESCISÃO individual no dia da demissão.
-- Pró-labore: D 3212102 / C 2141102 + INSS D 2141102 / C 2141201.
+- Pró-labore: D 3212102 / C 2141102 + INSS do FPAS (CI).
 Folha que não fecha não vira lançamento.
 """
 
@@ -121,11 +129,26 @@ Folha que não fecha não vira lançamento.
         reais: dict[str, dict] = task.input.get("pagamentos") or {}
         anexo = getattr(cliente, "anexo_simples", None)
         rat = float(getattr(cliente, "aliquota_rat", 0.0) or 0.0)
+        # Anexo IV: CPP/RAT fora do DAS. Se houver FPAS, os valores vêm de lá;
+        # senão cai no cálculo % sobre a base (legado).
         patronal = anexo == 4
+
+        # Demonstrativo FPAS = fonte oficial do INSS (Anderson, 2026-08-07).
+        pasta = self._pasta_competencia(task)
+        fpas: FpasDemonstrativo | None = None
+        fpas_path = None
+        if task.input.get("fpas"):
+            fpas_path = Path(task.input["fpas"])
+        elif pasta:
+            fpas_path = localizar_fpas(pasta)
+        if fpas_path and fpas_path.exists():
+            fpas = ler_fpas(fpas_path)
 
         todos_lancs: list[Any] = []
         resumos: list[dict] = []
         problemas_geral: list[str] = []
+        comp_usada: str | None = None
+        ano = mes = 0
 
         for arquivo in arquivos:
             folha = ler_folha(documents.extract_text(Path(arquivo)))
@@ -146,14 +169,35 @@ Folha que não fecha não vira lançamento.
                 problemas_geral.append(f"{Path(arquivo).name}: competência não identificada")
                 continue
             ano, mes = int(comp[:4]), int(comp[5:7])
+            comp_usada = comp
 
+            # Com FPAS: INSS não sai do holerite (evita dobrar / divergir da GPS).
             lancs = self._montar(
                 folha, comp, ano, mes, banco,
-                patronal=patronal, rat=rat, reais=reais,
+                patronal=patronal and fpas is None,
+                rat=rat,
+                reais=reais,
+                pular_inss=fpas is not None and fpas.ok(),
             )
             if task.input.get("provisionar", True):
                 lancs += self._provisoes(folha, ano, mes)
             todos_lancs.extend(lancs)
+
+        # INSS uma vez por competência, a partir do Demonstrativo FPAS.
+        fpas_info: dict | None = None
+        if fpas and fpas.ok() and comp_usada and ano and mes:
+            if fpas.competencia and fpas.competencia != comp_usada:
+                problemas_geral.append(
+                    f"FPAS é da competência {fpas.competencia}, pasta/pedido é {comp_usada}"
+                )
+            inss_lancs = self._montar_inss_fpas(fpas, ano, mes, banco, reais=reais)
+            todos_lancs.extend(inss_lancs)
+            fpas_info = fpas_as_dict(fpas)
+        elif not fpas or not fpas.ok():
+            problemas_geral.append(
+                "Demonstrativo FPAS não encontrado/lido — INSS veio da folha "
+                "(ou CPP % se Anexo IV). Coloque o PDF na pasta da competência."
+            )
 
         if problemas_geral and not todos_lancs:
             return self.result_ok(
@@ -163,15 +207,18 @@ Folha que não fecha não vira lançamento.
                     "resumo": resumos,
                     "problemas": problemas_geral,
                     "lancamentos": [],
+                    "fpas": fpas_info,
                 },
                 needs_human=True,
                 human_prompt="Confira a folha; nenhum lançamento foi gerado.",
             )
 
         n_func = sum(int(r.get("funcionarios") or 0) for r in resumos if isinstance(r, dict))
+        origem_inss = "FPAS" if fpas and fpas.ok() else "folha"
         return self.result_ok(
             f"{len(arquivos)} arquivo(s) de folha · {n_func} funcionário(s) · "
             f"{len(todos_lancs)} lançamento(s) de folha mastigados para o Alexandre"
+            f" · INSS via {origem_inss}"
             + (f" · {len(problemas_geral)} problema(s)" if problemas_geral else ""),
             data={
                 "resumo": resumos,
@@ -180,10 +227,27 @@ Folha que não fecha não vira lançamento.
                     x if isinstance(x, dict) else x.__dict__ for x in todos_lancs
                 ],
                 "arquivos": [str(a) for a in arquivos],
+                "fpas": fpas_info,
+                "origem_inss": origem_inss,
             },
             needs_human=bool(problemas_geral) or bool(todos_lancs),
             human_prompt="Revise antes de importar; confira feriados nas datas de pagamento.",
         )
+
+    def _pasta_competencia(self, task: AgentTask) -> Path | None:
+        if task.input.get("folder"):
+            return Path(task.input["folder"])
+        if task.input.get("arquivo"):
+            return Path(task.input["arquivo"]).parent
+        if task.client_id:
+            from escon_agentes.tools.clients import client_inbox
+
+            raiz = client_inbox(self.settings.inbox, task.client_id)
+            comp = task.input.get("competencia")
+            if comp and (raiz / str(comp)).is_dir():
+                return raiz / str(comp)
+            return raiz
+        return None
 
     def _resolver_arquivos_folha(self, task: AgentTask) -> list[Path]:
         """Um PDF explícito, ou busca na pasta da competência (pipeline Max)."""
@@ -191,16 +255,7 @@ Folha que não fecha não vira lançamento.
         if arquivo and Path(arquivo).exists():
             return [Path(arquivo)]
 
-        folder = None
-        if task.input.get("folder"):
-            folder = Path(task.input["folder"])
-        elif task.client_id:
-            from escon_agentes.tools.clients import client_inbox
-
-            raiz = client_inbox(self.settings.inbox, task.client_id)
-            comp = task.input.get("competencia")
-            folder = (raiz / str(comp)) if comp and (raiz / str(comp)).is_dir() else raiz
-
+        folder = self._pasta_competencia(task)
         if not folder or not folder.exists():
             return []
 
@@ -208,14 +263,103 @@ Folha que não fecha não vira lançamento.
             "folha", "holerite", "prolabore", "pró-labore", "pro-labore",
             "pro labore", "pagamento e pro", "rescis", "trct",
         )
+        # Não confundir com Demonstrativo FPAS / relatórios de GPS
+        excluir = ("demonstrativo", "fpas", "relatorio de gps", "relatório de gps", "grf")
         achados: list[Path] = []
         for p in sorted(folder.rglob("*")):
             if not p.is_file() or p.suffix.lower() != ".pdf":
                 continue
             nome = p.name.lower()
+            if any(x in nome for x in excluir):
+                continue
             if any(k in nome for k in chaves):
                 achados.append(p)
         return achados
+
+    def _montar_inss_fpas(
+        self,
+        fpas: FpasDemonstrativo,
+        ano: int,
+        mes: int,
+        banco: str,
+        *,
+        reais: dict[str, dict] | None = None,
+    ) -> list[Lancamento]:
+        """Lançamentos de INSS com valores do Demonstrativo por FPAS.
+
+        Provisão (último dia):
+          Segurado empregados  D 2141101 C 2141201  INSS sobre Salarios
+          Segurado CI          D 2141102 C 2141201  INSS sobre Pro-Labore
+          Empresa empregados   D 3221106 C 2141201  INSS patronal empregados
+          Empresa CI           D 3221106 C 2141201  INSS patronal CI
+          RAT                  D 3221106 C 2141201  RAT
+          (−) Retenção 9.711   D 2141201 C 1131910  abate da GPS
+        Pagamento (dia 20 mês seguinte, se total a recolher > 0):
+          D 2141201 C banco    valor da GPS
+        """
+        out: list[Lancamento] = []
+        fim = _ultimo_dia(ano, mes).isoformat()
+        ano2, mes2 = _mes_seguinte(ano, mes)
+        data_inss = _proximo_util(date(ano2, mes2, DIA_INSS)).isoformat()
+        reais = reais or {}
+        if (reais.get("inss") or {}).get("data"):
+            data_inss = str(reais["inss"]["data"])
+
+        ref = f"FPAS comp {mes:02d}/{ano}"
+        c_pagar = self.conta("salarios_pagar")
+        c_prolab_pagar = self.conta("prolabore_pagar")
+        c_inss = self.conta("inss_pagar")
+        c_desp_inss = self.conta("desp_inss_patronal") or "3221106"
+        c_retido = self.conta("inss_retido_fonte") or "1131910"
+
+        def add(deb: str, cred: str, valor: float, hist: int, rotulo: str) -> None:
+            if not valor or valor < 0.005 or not deb or not cred:
+                return
+            out.append(Lancamento(
+                fim, deb, cred, round(valor, 2),
+                f"{rotulo} {ref}", "provisao", hist,
+            ))
+
+        # Segurado (desconto em folha / pró-labore)
+        add(c_pagar, c_inss, fpas.segurado_empregados, 6, "INSS sobre Salarios")
+        add(c_prolab_pagar, c_inss, fpas.segurado_ci, 2, "INSS sobre Pro-Labore")
+
+        # Parte empresa (Anexo IV / construção civil) + RAT
+        add(c_desp_inss, c_inss, fpas.empresa_empregados, 6, "INSS patronal Empregados")
+        add(c_desp_inss, c_inss, fpas.empresa_ci, 6, "INSS patronal Contribuintes Individuais")
+        add(c_desp_inss, c_inss, fpas.rat, 6, "RAT")
+        add(c_desp_inss, c_inss, fpas.rat_agentes_nocivos, 6, "RAT Agentes Nocivos")
+
+        # Compensação com retenção nas NFS (Lei 9.711/98) — abate o que já
+        # está em 1131910 (lançado pelo Alexandre nas notas).
+        if fpas.retencao_lei_9711 >= 0.005:
+            out.append(Lancamento(
+                fim, c_inss, c_retido, round(fpas.retencao_lei_9711, 2),
+                f"Retencao Lei 9711 abatida {ref}", "provisao", 15,
+            ))
+        if fpas.salario_familia_maternidade >= 0.005:
+            # Salário-família/maternidade também abate a GPS (raro na carteira)
+            out.append(Lancamento(
+                fim, c_inss, c_pagar, round(fpas.salario_familia_maternidade, 2),
+                f"Salario-familia/maternidade {ref}", "provisao", 0,
+            ))
+
+        a_recolher = round(fpas.total_recolher or fpas.valor_recolher_previdencia or 0, 2)
+        if a_recolher >= 0.005:
+            out.append(Lancamento(
+                data_inss, c_inss, banco, a_recolher,
+                f"GPS INSS {ref} cod {fpas.cod_gps or '2100'}", "pagamento", 15,
+            ))
+            # juros/multa do comprovante real, se informados
+            info = reais.get("inss") or {}
+            for campo, alias in (("juros", CONTA_JUROS), ("multa", CONTA_MULTA)):
+                valor = round(float(info.get(campo) or 0), 2)
+                if valor:
+                    out.append(Lancamento(
+                        data_inss, self.conta(alias), banco, valor,
+                        f"{campo.capitalize()} atraso GPS {ref}", "pagamento", 0,
+                    ))
+        return out
 
     def _provisoes(self, folha: Folha, ano: int, mes: int) -> list[Lancamento]:
         """Férias e 13º pelo RESUMO (totais da empresa), não por holerite.
@@ -261,8 +405,13 @@ Folha que não fecha não vira lançamento.
         self, folha: Folha, comp: str, ano: int, mes: int, banco: str,
         *, patronal: bool = False, rat: float = 0.0,
         reais: dict[str, dict] | None = None,
+        pular_inss: bool = False,
     ) -> list[Lancamento]:
-        """Provisão pelo RESUMO; rescisão no dia da demissão; pagamentos individuais."""
+        """Provisão pelo RESUMO; rescisão no dia da demissão; pagamentos individuais.
+
+        pular_inss=True quando o Demonstrativo FPAS já cuida do INSS (regra
+        do escritório: valores da apuração da guia, não da soma dos holerites).
+        """
         out: list[Lancamento] = []
         fim = _ultimo_dia(ano, mes).isoformat()
         ano2, mes2 = _mes_seguinte(ano, mes)
@@ -300,7 +449,7 @@ Folha que não fecha não vira lançamento.
         #   Horas Normais  D 3221101 C 2141101
         #   DSR            D 3111201 C 2141101
         #   VT (desconto)  D 2141101 C 3221117
-        #   INSS           D 2141101 C 2141201
+        #   INSS           ← Demonstrativo FPAS (não holerite)
         #   FGTS           D 3221107 C 2141202  (Diário também usa 3111207)
         #   IRRF           D 2141101 C 2131117
         #   Falta/vales    D 2141101 C 3111201
@@ -371,6 +520,8 @@ Folha que não fecha não vira lançamento.
                     ))
                 for r in f.rubricas:
                     if r.natureza == "desconto" and r.conta_alias == "inss_pagar":
+                        if pular_inss:
+                            continue  # total já no FPAS (Empregados/Avulsos)
                         total_inss += r.valor
                         out.append(Lancamento(
                             data_prov, pagar, c_inss, r.valor,
@@ -388,6 +539,8 @@ Folha que não fecha não vira lançamento.
                     add_resumo(c_prolab, c_prolab_pagar, bruto, 1, "Pro-Labore do Mes")
                 for r in f.rubricas:
                     if r.natureza == "desconto" and r.conta_alias == "inss_pagar":
+                        if pular_inss:
+                            continue
                         total_inss += r.valor
                         add_resumo(
                             c_prolab_pagar, c_inss, r.valor, 2,
@@ -425,6 +578,8 @@ Folha que não fecha não vira lançamento.
 
                 for r in f.rubricas:
                     if r.natureza == "desconto" and r.conta_alias == "inss_pagar":
+                        if pular_inss:
+                            continue
                         total_inss += r.valor
                         add_resumo(c_pagar, c_inss, r.valor, 6, "INSS sobre Salarios")
                     elif r.natureza == "encargo" and r.conta_alias == "fgts_pagar":
@@ -477,8 +632,8 @@ Folha que não fecha não vira lançamento.
                 f"{rotulo} {ref_resumo}", "provisao", hist,
             ))
 
-        # CPP patronal Anexo IV
-        if patronal:
+        # CPP patronal Anexo IV — só se NÃO houver FPAS (fallback %)
+        if patronal and not pular_inss:
             valor_cpp = round(base_cpp * (CPP_PATRONAL + rat), 2)
             if valor_cpp:
                 out.append(Lancamento(
@@ -490,7 +645,7 @@ Folha que não fecha não vira lançamento.
                 ))
                 total_inss += valor_cpp
 
-        if total_inss:
+        if total_inss and not pular_inss:
             out.append(Lancamento(data_inss, c_inss, banco,
                                   round(total_inss, 2),
                                   f"GPS INSS comp {mes:02d}/{ano}", "pagamento", 15))

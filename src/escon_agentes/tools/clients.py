@@ -96,6 +96,9 @@ def update_client(
         "radar_id",
         "procuracao_ok",
         "monitoramento_ativo",
+        "ramo",
+        "anexo_simples",
+        "aliquota_rat",
     ):
         if key in patch and patch[key] is not None:
             data[key] = patch[key]
@@ -153,6 +156,9 @@ def create_client(clients_dir: Path, payload: dict[str, Any], inbox_root: Path |
             source=payload.get("source") or "manual",
             drive_folder_hint=payload.get("drive_folder_hint"),
             radar_id=payload.get("radar_id"),
+            ramo=payload.get("ramo") or "servicos",
+            anexo_simples=payload.get("anexo_simples"),
+            aliquota_rat=float(payload.get("aliquota_rat") or 0),
         )
     )
     save_client(clients_dir, client)
